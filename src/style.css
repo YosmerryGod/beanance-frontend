@@ -97,3 +97,13 @@ h2{font-size:19px;margin:0}
 .toast{position:fixed;z-index:60;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);padding:11px 16px;border-radius:12px;background:#f4f5f7;color:#16191e;font-size:12px;font-weight:700;box-shadow:0 8px 25px rgba(0,0,0,.3);white-space:nowrap;animation:pageIn .2s ease}
 @media(min-width:700px){.app-shell{padding-bottom:35px}.app-content{width:min(100% - 64px,760px)}.topbar{height:84px}.page{padding-top:42px}.balance-card{min-height:225px}.bottom-nav{bottom:24px}.simple-page{min-height:calc(100vh - 220px)}}
 @media(max-width:420px){.app-content{width:calc(100% - 32px)}.topbar{height:68px}.welcome-row{align-items:flex-start;flex-direction:column}.status-pill{margin-top:0}.balance-card{padding:19px 18px;min-height:190px}.balance-value{font-size:35px}.wallet-address{right:16px;bottom:14px}.quick-actions{gap:4px}.quick-actions button{font-size:10px}.quick-actions button span{width:45px;height:45px}.bottom-nav{width:calc(100% - 22px);height:65px;bottom:calc(8px + env(safe-area-inset-bottom));padding:5px 6px}.nav-item.active{padding:0 8px;gap:5px}.nav-label{font-size:10px}.nav-item svg{width:20px}.create-orb{width:44px;height:44px}}
+
+.dapp-list{margin-top:15px;border:1px solid var(--line);background:#131820;border-radius:18px;padding:2px 15px}
+.dapp-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.dapp-row:last-child{border-bottom:0}
+.dapp-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;font-size:20px;flex:none}
+.dapp-yellow{background:#3a321e;color:#f5c34f}.dapp-purple{background:#302747;color:#c3a4ff}.dapp-blue{background:#1e3042;color:#80c5ff}.dapp-pink{background:#3a2436;color:#ff9bd4}
+.dapp-info{min-width:0;display:flex;flex-direction:column;gap:4px;flex:1}
+.dapp-info strong{font-size:12px}.dapp-info span,.dapp-info small{font-size:10px;color:var(--muted)}.dapp-info small{white-space:normal;line-height:1.35}
+.dapp-connect{border:1px solid rgba(245,184,46,.25);background:rgba(245,184,46,.09);color:var(--gold);font-size:10px;font-weight:700;border-radius:9px;padding:8px 11px}
+.solana{background:#27263b;color:#b6a8ff}.xrp{background:#272d34;color:#e6e9ed}
