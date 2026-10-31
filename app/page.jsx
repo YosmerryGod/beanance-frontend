@@ -66,6 +66,7 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
+  const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -186,7 +187,11 @@ function App() {
               </div>
             </section>
 
-            <section className="dashboard-section">
+            <div className="mobile-dashboard-tabs" role="tablist" aria-label="Dashboard data">
+              <button role="tab" aria-selected={mobileDashboardTab === "traders"} className={mobileDashboardTab === "traders" ? "selected" : ""} onClick={() => setMobileDashboardTab("traders")}>Top Traders</button>
+              <button role="tab" aria-selected={mobileDashboardTab === "market"} className={mobileDashboardTab === "market" ? "selected" : ""} onClick={() => setMobileDashboardTab("market")}>Market Overview</button>
+            </div>
+            <section className={`dashboard-section mobile-tab-panel mobile-traders-panel ${mobileDashboardTab === "traders" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading traders-heading">
                 <div><h2>Top Traders</h2><p className="muted">Most consistent and successful traders</p></div>
                 <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => setNotice("All traders are coming soon")}>See All <ChevronRight size={15} /></button></div>
@@ -207,7 +212,7 @@ function App() {
               </div>
             </section>
 
-            <section className="dashboard-section market-overview-section">
+            <section className={`dashboard-section market-overview-section mobile-tab-panel mobile-market-panel ${mobileDashboardTab === "market" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading">
                 <div><h2>Market Overview</h2><p className="muted">Top futures pairs by volume</p></div>
                 <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>See All <ChevronRight size={15} /></button></div>
