@@ -813,3 +813,84 @@ h2{font-size:19px;margin:0}
   .app-content{padding-top:68px;}
   .app-content>.topbar{height:68px;}
 }
+
+
+/* [ADDED] Trader profile page */
+.trader-profile-page{display:flex;flex-direction:column;gap:25px;padding-top:24px;}
+.trader-profile-back{height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text,#f4f5f7);font-size:12px;font-weight:700;}
+.trader-profile-hero,.trader-profile-section{min-width:0;border:1px solid var(--line);border-radius:19px;background:var(--panel);overflow:hidden;}
+.trader-profile-cover{height:125px;position:relative;display:flex;align-items:flex-start;justify-content:space-between;padding:17px 20px;background:radial-gradient(circle at 82% 10%,rgba(245,184,46,.24),transparent 35%),linear-gradient(115deg,#202a32,#171e27 58%,#28251b);color:#f5d58a;overflow:hidden;}
+.trader-profile-cover>span{font-size:9px;font-weight:800;letter-spacing:2px;opacity:.8;}
+.trader-profile-cover-mark{position:absolute;right:25px;top:-48px;font-family:Manrope,sans-serif;font-size:190px;line-height:1;font-weight:900;color:rgba(245,184,46,.08);}
+.trader-profile-identity{position:relative;display:flex;align-items:center;gap:13px;padding:0 20px;margin-top:-30px;}
+.trader-profile-avatar{width:66px;height:66px;flex:none;display:grid;place-items:center;border:4px solid var(--panel);border-radius:50%;background:linear-gradient(145deg,#e6b74d,#8d6824);color:#20180a;font-size:27px;font-weight:900;}
+.trader-profile-avatar.trader-avatar-2{background:linear-gradient(145deg,#9b8be8,#4a3b86);color:#fff}.trader-profile-avatar.trader-avatar-3{background:linear-gradient(145deg,#d78eae,#784366);color:#fff}.trader-profile-avatar.trader-avatar-4{background:linear-gradient(145deg,#69b9a3,#28695b);color:#fff}.trader-profile-avatar.trader-avatar-5{background:linear-gradient(145deg,#6ca8e5,#315b91);color:#fff}
+.trader-profile-name{min-width:0;flex:1;padding-top:28px;}
+.trader-profile-name>div{display:flex;align-items:center;gap:7px;}
+.trader-profile-name h1{margin:0;font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-.5px;}
+.trader-profile-name p{margin:5px 0 0;color:var(--muted);font-size:10px;}
+.trader-follow-button{flex:none;margin-top:27px;padding:9px 13px;border:0;border-radius:10px;background:#20bd68;color:#07130c;font-size:10px;font-weight:800;}
+.trader-profile-bio{margin:16px 20px 12px;color:var(--text,#e8ebef);font-size:12px;line-height:1.6;}
+.trader-profile-meta{display:flex;flex-wrap:wrap;gap:15px;padding:0 20px 18px;color:var(--muted);font-size:10px;}
+.trader-profile-meta span{display:flex;align-items:center;gap:6px;}
+.trader-profile-section{padding:19px;}
+.trader-profile-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:15px;}
+.trader-profile-section-heading .eyebrow{margin-bottom:5px;}
+.trader-profile-section-heading h2{margin:0;font-family:Manrope,sans-serif;font-size:18px;}
+.trader-profile-section-heading .muted{margin:5px 0 0;font-size:10px;}
+.trader-period-pill,.trader-strategy-count{padding:7px 9px;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:9px;white-space:nowrap;}
+.trader-profile-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
+.trader-profile-stats article{min-width:0;display:flex;flex-direction:column;gap:6px;padding:13px 11px;border:1px solid var(--line);border-radius:12px;background:var(--panel-soft);}
+.trader-profile-stats article>span,.trader-profile-stats article>small{color:var(--muted);font-size:9px;}
+.trader-profile-stats article>strong{font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-.6px;white-space:nowrap;}
+.trader-profile-stats article>small{font-size:8px;}
+.trader-performance-card{margin-top:13px;padding:15px;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft);}
+.trader-performance-card>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.trader-performance-card>div:first-child>div{display:flex;flex-direction:column;gap:4px;}
+.trader-performance-card>div:first-child strong{font-size:11px;}
+.trader-performance-card>div:first-child span,.trader-chart-axis{font-size:9px;color:var(--muted);}
+.trader-performance-card>svg{display:block;width:100%;height:135px;margin-top:10px;overflow:visible;}
+.trader-chart-axis{display:flex;justify-content:space-between;}
+.trader-owned-strategies{display:flex;flex-direction:column;gap:9px;}
+.trader-owned-strategy{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-soft);}
+.trader-owned-strategy-icon{width:37px;height:37px;flex:none;display:grid;place-items:center;border-radius:11px;background:rgba(245,184,46,.12);color:var(--gold);}
+.trader-owned-strategy-main,.trader-owned-strategy-stats{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.trader-owned-strategy-main{flex:1;}
+.trader-owned-strategy-main strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.trader-owned-strategy-main span,.trader-owned-strategy-stats span{font-size:9px;color:var(--muted);}
+.trader-owned-strategy-stats{align-items:flex-end;white-space:nowrap;}
+.trader-owned-strategy-stats strong{font-family:Manrope,sans-serif;font-size:13px;}
+.trader-profile-disclaimer{margin:-10px 0 0;color:var(--muted);font-size:9px;line-height:1.5;text-align:center;}
+.strategy-owner-link,.discover-owner-link{width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:var(--muted);font:inherit;font-size:10px;text-align:left;cursor:pointer;}
+.strategy-owner-link:hover,.discover-owner-link:hover{text-decoration:underline;color:var(--gold);}
+.trader-name-button{padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;}
+.trader-discover-card{cursor:pointer;}
+.trader-discover-card:focus-visible,.trader-name-button:focus-visible,.strategy-owner-link:focus-visible,.discover-owner-link:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px;}
+.app-shell.theme-light .trader-profile-hero,.app-shell.theme-light .trader-profile-section{background:#fff;border-color:rgba(26,35,50,.1);}
+.app-shell.theme-light .trader-profile-avatar{border-color:#fff;}
+.app-shell.theme-light .trader-profile-bio{color:#303b4c;}
+@media(max-width:760px){
+  .trader-profile-page{gap:17px;padding-top:18px;}
+  .trader-profile-cover{height:105px;padding:14px;}
+  .trader-profile-identity{gap:9px;padding:0 13px;margin-top:-27px;}
+  .trader-profile-avatar{width:58px;height:58px;font-size:23px;}
+  .trader-profile-name{padding-top:25px;}
+  .trader-profile-name h1{font-size:17px;}
+  .trader-profile-name p{font-size:9px;}
+  .trader-follow-button{margin-top:24px;padding:8px 10px;font-size:9px;}
+  .trader-profile-bio{margin:13px 14px 10px;font-size:11px;}
+  .trader-profile-meta{padding:0 14px 15px;gap:10px;font-size:9px;}
+  .trader-profile-section{padding:14px;}
+  .trader-profile-section-heading h2{font-size:16px;}
+  .trader-profile-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+  .trader-profile-stats article{padding:11px 10px;}
+  .trader-profile-stats article>strong{font-size:18px;}
+  .trader-performance-card>svg{height:110px;}
+}
+@media(max-width:370px){
+  .trader-profile-identity{gap:7px;padding:0 10px;}
+  .trader-profile-name h1{font-size:15px;}
+  .trader-follow-button{padding:7px 8px;font-size:8px;}
+  .trader-profile-meta{flex-direction:column;gap:7px;}
+  .trader-owned-strategy{gap:8px;padding:10px;}
+}
