@@ -239,16 +239,7 @@ function App() {
 
         {active === "dapps" && (
           <section className="page page-enter simple-page discover-page">
-            <div className="discover-intro">
-              <p className="eyebrow">BEANANCE COMMUNITY</p>
-              <h1>Discover</h1>
-              <p className="muted">Temukan strategi trading dan trader terbaik dari komunitas.</p>
-            </div>
-
             <section className="discover-top-section">
-              <div className="discover-section-heading">
-                <div><h2>Top 3</h2><p className="muted">Peringkat terbaik komunitas</p></div>
-              </div>
               <div className="discover-podium">
                 {(discoverTopTab === "strategies" ? [
                   {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",avatar:"₿",tone:"bitcoin"},
