@@ -64,6 +64,8 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [traderPeriod, setTraderPeriod] = useState("All");
+  const [marketFilter, setMarketFilter] = useState("Favorites");
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -113,98 +115,70 @@ function App() {
           </div>
           <div className="top-actions">
             {active === "dashboard" && (
-              <div className="notification-wrap">
-                <button className="icon-button notification-button" aria-label="Notifications" aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
-                  <Bell size={19} />
-                  <i />
-                </button>
-                {showNotifications && (
-                  <div className="notification-popover">
-                    <div className="notification-heading"><strong>Notifications</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
-                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>Wallet connected</strong><p>Your demo wallet is ready to use.</p><small>Just now</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol">↗</span><div><strong>Market update</strong><p>Bitcoin is up 2.45% in the demo market.</p><small>12 minutes ago</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol">✦</span><div><strong>Welcome to Beanance</strong><p>Explore assets and discover Web3 apps.</p><small>Today</small></div></div>
-                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>Mark all as read</button>
-                  </div>
-                )}
+          <section className="page page-enter dashboard-page">
+            <section className="dashboard-section">
+              <div className="section-heading dashboard-section-heading">
+                <div><h2>Top Strategies</h2><p className="muted">Best performing strategies from our community</p></div>
+                <button className="text-link" onClick={() => setNotice("All strategies are coming soon")}>See All <ChevronRight size={15} /></button>
               </div>
-            )}
-            {(active === "dapps" || active === "market") && (
-              <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
-                <Search size={18} />
-                <input
-                  ref={searchInputRef}
-                  aria-label={active === "dapps" ? "Search dApps" : "Search market assets"}
-                  placeholder={active === "dapps" ? "Search dApps..." : "Search assets..."}
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
-                  tabIndex={searchOpen ? 0 : -1}
-                />
-                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label="Close search"><X size={17} /></button>}
-                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Open search" />}
-              </div>
-            )}
-            {active !== "profile" && (
-              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} onClick={toggleTheme}>
-                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
-              </button>
-            )}
-          </div>
-        </header>
-
-        {active === "dashboard" && (
-          <section className="page page-enter">
-            <div className="dashboard-subtitle">
-              <p className="muted">Here’s what’s happening with your wallet.</p>
-              <span className="status-pill"><i /> Wallet connected</span>
-            </div>
-
-            <section className="balance-card">
-              <div className="balance-card-top">
-                <div className="balance-label"><Wallet size={16} /> Total balance</div>
-                <button className="visibility-button" onClick={() => setBalanceVisible(!balanceVisible)} aria-label="Toggle balance visibility">
-                  {balanceVisible ? <Eye size={18} /> : <EyeOff size={18} />}
-                </button>
-              </div>
-              <div className="balance-value">{balanceVisible ? "$12,840.50" : "••••••••"}</div>
-              <div className="balance-change"><span>↗ 8.42%</span><small>+$997.24 this month</small></div>
-              <div className="balance-glow glow-one" />
-              <div className="balance-glow glow-two" />
-              <div className="balance-watermark">B</div>
-              <div className="wallet-address">
-                <span><i /> 0x71C7...976F</span>
-                <button onClick={copyAddress} aria-label="Copy wallet address"><Copy size={14} /></button>
-              </div>
-            </section>
-
-            <div className="quick-actions">
-              <button onClick={() => setNotice("Receive flow is coming soon")}><span><ArrowDownLeft size={20} /></span>Receive</button>
-              <button onClick={() => setNotice("Send flow is coming soon")}><span><ArrowUpRight size={20} /></span>Send</button>
-              <button onClick={() => setShowCreate(true)}><span><Plus size={20} /></span>Buy crypto</button>
-              <button onClick={() => setActive("dapps")}><span><Compass size={20} /></span>Explore</button>
-            </div>
-
-            <section className="section-block">
-              <div className="section-heading">
-                <div><p className="eyebrow">YOUR PORTFOLIO</p><h2>Your assets</h2></div>
-                <button className="text-link" onClick={() => setActive("market")}>View market <ChevronRight size={15} /></button>
-              </div>
-              <div className="asset-list">
-                {assets.map((asset) => (
-                  <article className="asset-row" key={asset.symbol}>
-                    <div className={`asset-icon ${asset.tone}`}>{asset.icon}</div>
-                    <div className="asset-info"><strong>{asset.name}</strong><span>{asset.amount}</span></div>
-                    <div className="asset-values"><strong>{balanceVisible ? asset.value : "••••"}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div>
+              <div className="strategy-grid">
+                {[
+                  {name:"BTC Trend Master",user:"@tradewiz",symbol:"₿",tone:"bitcoin",returns:"+124.5%",win:"68%",type:"Trend Following",risk:"Medium Risk",riskTone:"medium",chart:"M2 40 L18 31 L34 35 L50 23 L66 29 L82 19 L98 27 L114 17 L130 23 L146 12 L162 18 L178 9 L194 16 L210 5 L226 12 L242 3 L258 10 L274 0"},
+                  {name:"Scalping AI v2",user:"@cryptofox",symbol:"◆",tone:"ethereum",returns:"+89.2%",win:"72%",type:"Scalping",risk:"Low Risk",riskTone:"low",chart:"M2 42 L18 35 L34 38 L50 28 L66 31 L82 20 L98 26 L114 18 L130 22 L146 13 L162 18 L178 8 L194 13 L210 5 L226 10 L242 2 L258 7 L274 -1"},
+                  {name:"ETH Breakout",user:"@moontrade",symbol:"◎",tone:"solana",returns:"+68.1%",win:"63%",type:"Breakout",risk:"Medium Risk",riskTone:"medium",chart:"M2 43 L18 35 L34 39 L50 29 L66 34 L82 24 L98 29 L114 19 L130 24 L146 14 L162 20 L178 10 L194 15 L210 7 L226 12 L242 3 L258 8 L274 -2"}
+                ].map((strategy) => (
+                  <article className="strategy-card" key={strategy.name}>
+                    <div className="strategy-card-head">
+                      <div className={`strategy-coin ${strategy.tone}`}>{strategy.symbol}</div>
+                      <div className="strategy-identity"><strong>{strategy.name}</strong><span>{strategy.user}</span></div>
+                      <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={() => setNotice(`${strategy.name} details are coming soon`)}>•••</button>
+                    </div>
+                    <svg className="strategy-chart" viewBox="0 0 276 48" preserveAspectRatio="none" aria-label="Strategy performance chart">
+                      <defs><linearGradient id={`strategy-fill-${strategy.name.replaceAll(" ","-")}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20c56a" stopOpacity=".24"/><stop offset="100%" stopColor="#20c56a" stopOpacity="0"/></linearGradient></defs>
+                      <path d={`${strategy.chart} L274 48 L2 48 Z`} fill={`url(#strategy-fill-${strategy.name.replaceAll(" ","-")})`}/>
+                      <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
+                    </svg>
+                    <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>Total Return</span></div><div><strong>{strategy.win}</strong><span>Win Rate</span></div></div>
+                    <div className="strategy-card-footer"><span className="strategy-tag">{strategy.type}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{strategy.risk}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>Follow</button></div>
                   </article>
                 ))}
               </div>
             </section>
 
-            <section className="promo-card">
-              <div className="promo-icon"><ShieldCheck size={21} /></div>
-              <div><strong>Your assets, your control.</strong><p>Keep your wallet secure. Never share your recovery phrase.</p></div>
-              <ChevronRight size={18} />
+            <section className="dashboard-section">
+              <div className="section-heading dashboard-section-heading traders-heading">
+                <div><h2>Top Traders</h2><p className="muted">Most consistent and successful traders</p></div>
+                <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => setNotice("All traders are coming soon")}>See All <ChevronRight size={15} /></button></div>
+              </div>
+              <div className="dashboard-table-wrap">
+                <table className="dashboard-table trader-table">
+                  <thead><tr><th>#</th><th>Trader</th><th>Followers</th><th>Return ({traderPeriod === "All" ? "30D" : traderPeriod})</th><th>Win Rate</th><th>Equity Curve</th><th>Action</th></tr></thead>
+                  <tbody>
+                    {[
+                      ["tradewiz","342","+124.5%","68%","🥇"],
+                      ["cryptofox","1.2K","+89.2%","72%","🥈"],
+                      ["moontrade","856","+68.1%","63%","🥉"],
+                      ["quantalab","432","+54.3%","58%",""],
+                      ["solking","321","+48.7%","61%",""]
+                    ].map((trader,index) => <tr key={trader[0]}><td><span className="rank-cell">{index+1}</span></td><td><div className="trader-name"><span className={`trader-avatar trader-avatar-${index+1}`}>{["T","C","M","Q","S"][index]}</span><strong>{trader[0]}</strong><span className="verified-mark">✓</span></div></td><td>{trader[1]}</td><td className="positive">{trader[2]}</td><td>{trader[3]}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d="M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" fill="none" stroke="#20bd68" strokeWidth="1.8"/></svg></td><td><button className="table-follow" onClick={() => setNotice(`Following @${trader[0]} is a demo action`)}>Follow</button></td></tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section className="dashboard-section market-overview-section">
+              <div className="section-heading dashboard-section-heading">
+                <div><h2>Market Overview</h2><p className="muted">Top futures pairs by volume</p></div>
+                <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>See All <ChevronRight size={15} /></button></div>
+              </div>
+              <div className="dashboard-table-wrap">
+                <table className="dashboard-table market-table">
+                  <thead><tr><th>#</th><th>Pair</th><th>Price</th><th>24h Change</th><th>24h Volume</th><th>Chart</th><th>★</th></tr></thead>
+                  <tbody>
+                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol}><td>{index+1}</td><td><div className="market-pair"><span className={`asset-icon ${asset.tone}`}>{asset.icon}</span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={() => setNotice(`${asset.symbol} favorites are demo only`)}>☆</button></td></tr>)}
+                  </tbody>
+                </table>
+              </div>
             </section>
           </section>
         )}
