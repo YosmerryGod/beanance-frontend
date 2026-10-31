@@ -1012,3 +1012,30 @@ h2{font-size:19px;margin:0}
 @media(max-width:999px){
   .app-shell:has(.trader-profile-page) .app-content{padding-top:0!important}
 }
+
+
+/* [MODIFIED] Compact trade activity cards for a cleaner trader profile */
+.trader-trade-list{gap:7px}
+.trader-trade-card{padding:11px 13px;border-radius:11px}
+.trader-trade-top{gap:9px}
+.trader-trade-pair{gap:8px}
+.trader-trade-coin{width:32px;height:32px;border-radius:9px;font-size:15px}
+.trader-trade-pair>div{gap:2px}
+.trader-trade-pair strong{font-size:11px}
+.trader-trade-pair small{font-size:8px}
+.trade-side-badge,.trade-status-badge{padding:5px 7px;font-size:7px}
+.trader-trade-data{gap:8px;margin-top:10px;padding:9px 0}
+.trader-trade-data>div{gap:4px}
+.trader-trade-data>div>span{font-size:8px}
+.trader-trade-data>div>strong{font-size:10px}
+.trader-trade-data>div:last-child>strong small{font-size:7px}
+.trader-trade-footer{padding-top:8px;font-size:8px}
+@media(max-width:760px){
+  .trader-trade-list{gap:6px}
+  .trader-trade-card{padding:10px;border-radius:10px}
+  .trader-trade-coin{width:30px;height:30px;font-size:14px}
+  .trader-trade-data{gap:9px 8px;margin-top:9px;padding:9px 0}
+  .trader-trade-data>div>span{font-size:8px}
+  .trader-trade-data>div>strong{font-size:10px}
+  .trader-trade-footer{padding-top:7px;font-size:7px}
+}
