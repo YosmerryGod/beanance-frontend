@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -22,6 +22,8 @@ import {
   X,
   BarChart3,
   Bitcoin,
+  Moon,
+  Sun,
 } from "lucide-react";
 
 const navigation = [
@@ -58,6 +60,18 @@ function App() {
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [notice, setNotice] = useState("");
+  const [theme, setTheme] = useState("dark");
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("beanance-theme");
+    if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("beanance-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
 
   const selectTab = (item) => {
     if (item.id === "create") {
@@ -79,33 +93,37 @@ function App() {
   };
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
         <header className="topbar">
-          <a className="brand" href="#home" onClick={() => setActive("dashboard")} aria-label="Beanance home">
-            <span className="brand-mark"><span /></span>
-            <span>beanance</span>
-          </a>
+          <div className="nav-greeting">
+            <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
+            <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
+          </div>
           <div className="top-actions">
-            <button className="icon-button" aria-label="Search" onClick={() => setNotice("Search is coming soon")}>
-              <Search size={19} />
-            </button>
-            <button className="icon-button notification-button" aria-label="Notifications" onClick={() => setNotice("You're all caught up")}>
-              <Bell size={19} />
-              <i />
-            </button>
-            <button className="avatar-button" aria-label="Open profile" onClick={() => setActive("profile")}>E</button>
+            {active !== "profile" && (
+              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} onClick={toggleTheme}>
+                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+              </button>
+            )}
+            {active === "dashboard" && (
+              <button className="icon-button notification-button" aria-label="Notifications" onClick={() => setNotice("You're all caught up")}>
+                <Bell size={19} />
+                <i />
+              </button>
+            )}
+            {(active === "dapps" || active === "market") && (
+              <button className="icon-button" aria-label="Search" onClick={() => setNotice("Search is coming soon")}>
+                <Search size={19} />
+              </button>
+            )}
           </div>
         </header>
 
         {active === "dashboard" && (
           <section className="page page-enter">
-            <div className="welcome-row">
-              <div>
-                <p className="eyebrow">SATURDAY, OCTOBER 31</p>
-                <h1>Welcome back, Ezy <span>✦</span></h1>
-                <p className="muted">Here’s what’s happening with your wallet.</p>
-              </div>
+            <div className="dashboard-subtitle">
+              <p className="muted">Here’s what’s happening with your wallet.</p>
               <span className="status-pill"><i /> Wallet connected</span>
             </div>
 
