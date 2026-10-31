@@ -140,8 +140,8 @@ function App() {
                 <Search size={18} />
                 <input
                   ref={searchInputRef}
-                  aria-label={active === "dapps" ? "Search dApps" : "Search market assets"}
-                  placeholder={active === "dapps" ? "Search dApps..." : "Search assets..."}
+                  aria-label={active === "dapps" ? "Search strategies and traders" : "Search market assets"}
+                  placeholder={active === "dapps" ? "Search strategies or traders..." : "Search assets..."}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                   onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
@@ -290,7 +290,7 @@ function App() {
                   {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",tone:"ethereum",symbol:"◆",tag:"Low Risk"},
                   {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",tone:"solana",symbol:"◎",tag:"Trending"},
                   {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",tone:"bnb",symbol:"◆",tag:"Low Risk"}
-                ].filter((item) => discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
                     <div className="discover-card-main"><strong>{item.name}</strong><span>{item.user} · {item.type}</span><small>{item.risk}</small></div>
@@ -303,7 +303,7 @@ function App() {
                   {name:"moontrade",followers:"856",returns:"+68.1%",win:"63%",avatar:"M",tone:"trader-avatar-3",verified:true},
                   {name:"quantalab",followers:"432",returns:"+54.3%",win:"58%",avatar:"Q",tone:"trader-avatar-4",verified:true},
                   {name:"solking",followers:"321",returns:"+48.7%",win:"61%",avatar:"S",tone:"trader-avatar-5",verified:true}
-                ].filter((item) => discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
                     <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader</small></div>
