@@ -155,7 +155,7 @@ function App() {
           {active === "trader-profile" ? (
             <div className="trader-profile-header-placeholder" />
           ) : (
-            <div className={`nav-greeting ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
+            <div className={`nav-greeting navbar-greeting-hidden ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
               <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
               <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
             </div>
