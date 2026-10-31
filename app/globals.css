@@ -1093,3 +1093,10 @@ h2{font-size:19px;margin:0}
   .trader-strategy-name-line{gap:5px;flex-wrap:wrap}
   .trader-strategy-risk-inline{font-size:6px;padding:3px 5px}
 }
+
+
+/* [MODIFIED] Place the Back control inside the trader profile banner */
+.trader-profile-cover{align-items:flex-start}
+.trader-profile-cover>span{margin-left:auto;padding:8px 0}
+.trader-profile-inline-back{position:relative;z-index:2;height:32px;padding:0 9px;border-color:rgba(255,255,255,.2);background:rgba(10,15,20,.3);color:#fff;font-size:10px;backdrop-filter:blur(8px)}
+.trader-profile-inline-back:hover{background:rgba(10,15,20,.48)}
