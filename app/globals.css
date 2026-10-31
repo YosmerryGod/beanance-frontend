@@ -992,3 +992,15 @@ h2{font-size:19px;margin:0}
 .trader-empty-state{min-height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);text-align:center}
 .trader-empty-state strong{color:var(--text);font-size:12px}
 .trader-empty-state span{font-size:10px}
+
+
+/* [ADDED] Copy action for active trader strategies and focused trader profile navigation */
+.trader-strategy-actions{display:flex;align-items:center;gap:7px;flex:none}
+.trader-copy-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 11px;border:1px solid rgba(32,189,104,.35);border-radius:8px;background:rgba(32,189,104,.1);color:#20bd68;font-size:10px;font-weight:800;cursor:pointer;transition:background .2s ease,border-color .2s ease}
+.trader-copy-button:hover{background:rgba(32,189,104,.18);border-color:#20bd68}
+.bottom-nav-hidden{display:none!important}
+.trader-profile-page{padding-bottom:30px}
+@media(max-width:760px){
+  .trader-copy-button{padding:7px 9px;font-size:9px}
+  .trader-strategy-actions{gap:5px}
+}
