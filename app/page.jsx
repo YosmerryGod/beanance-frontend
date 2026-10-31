@@ -471,11 +471,7 @@ function App() {
         )}
 
         {active === "market" && (
-          <section className="page page-enter simple-page market-page">
-            <p className="eyebrow">BINANCE FUTURES</p><h1>Market</h1>
-            <p className="muted">USDT-M perpetual contracts overview.</p>
-            <div className="market-summary"><span>Market universe</span><strong>USDT-M Futures <b>↗</b></strong><small>Demo market data · Binance Futures integration pending</small></div>
-            <div className="section-heading market-heading"><div><p className="eyebrow">MARKET SCREENER</p><h2>All coins</h2></div><span className="market-count">{marketAssets.length} pairs</span></div>
+          <section className="page page-enter simple-page market-page market-page-full">
             <div className="market-table-wrap">
               <div className="market-table market-table-head">
                 <span className="market-star-column" aria-hidden="true">★</span>
