@@ -442,15 +442,7 @@ function App() {
                           <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
                           <div><span>Risk Level</span><strong>{strategy.risk.replace(" Risk","")}</strong></div>
                         </div>
-                        <div className="trader-strategy-chart">
-                          <div><strong>Performance history</strong><span>Sample performance data</span></div>
-                          <svg viewBox="0 0 600 100" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
-                            <defs><linearGradient id={`strategy-profile-fill-${selectedTrader}-${index}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".22"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
-                            <path d={index % 2 === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5 L600 100 L0 100 Z" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6 L600 100 L0 100 Z"} fill={`url(#strategy-profile-fill-${selectedTrader}-${index})`}/>
-                            <path d={index % 2 === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
-                          </svg>
-                          <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
-                        </div>
+
                       </article>
                     ))}
                   </div>
