@@ -2012,3 +2012,63 @@ body{background:#090909;color:var(--text)}
   .market-pair small{font-size:8px}
   .market-change-pill{min-width:59px;padding:5px 6px;font-size:8px}
 }
+
+
+/* [FIXED] Force the Market screener grid layout on mobile and desktop */
+.app-shell .market-page .market-table-wrap{display:block!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;box-sizing:border-box!important}
+.app-shell .market-page .market-table-wrap .market-table{
+  display:grid!important;
+  grid-template-columns:34px minmax(112px,1.35fr) minmax(72px,.8fr) minmax(92px,1fr) minmax(88px,.9fr)!important;
+  align-items:center!important;
+  column-gap:8px!important;
+  width:100%!important;
+  min-width:540px!important;
+  box-sizing:border-box!important;
+  padding:0 12px!important;
+}
+.app-shell .market-page .market-table-head{min-height:44px!important}
+.app-shell .market-page .market-table-head .market-sort{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  width:100%!important;min-width:0!important;height:auto!important;margin:0!important;
+  padding:5px 0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  color:var(--muted)!important;font:700 10px/1.2 inherit!important;
+  white-space:nowrap!important;cursor:pointer!important;
+}
+.app-shell .market-page .market-table-head .market-sort:nth-of-type(1){justify-content:flex-start!important}
+.app-shell .market-page .market-table-head .market-sort.active,
+.app-shell .market-page .market-table-head .market-sort.active span{color:var(--gold)!important}
+.app-shell .market-page .market-table-body{display:flex!important;flex-direction:column!important;width:100%!important}
+.app-shell .market-page .market-table-row{display:grid!important;grid-template-columns:34px minmax(112px,1.35fr) minmax(72px,.8fr) minmax(92px,1fr) minmax(88px,.9fr)!important;min-height:64px!important}
+.app-shell .market-page .market-table-row>*{min-width:0!important}
+.app-shell .market-page .market-table-row .favorite-star{
+  display:grid!important;place-items:center!important;width:30px!important;height:34px!important;
+  padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;color:var(--muted)!important;
+}
+.app-shell .market-page .market-table-row .favorite-star.is-pinned{color:#e5b500!important}
+.app-shell .market-page .market-volume,.app-shell .market-page .market-last-price{
+  display:block!important;text-align:right!important;white-space:nowrap!important;font-size:10px!important;
+}
+.app-shell .market-page .market-change-pill{
+  display:inline-flex!important;justify-self:end!important;align-items:center!important;justify-content:center!important;
+  min-width:68px!important;padding:6px 9px!important;border:0!important;border-radius:35%!important;
+  font-size:9px!important;font-weight:750!important;white-space:nowrap!important;
+}
+.app-shell .market-page .market-change-pill.positive{color:#159653!important;background:rgba(32,197,106,.13)!important}
+.app-shell .market-page .market-change-pill.negative{color:#e05252!important;background:rgba(232,75,75,.13)!important}
+@media(max-width:600px){
+  .app-shell .market-page .market-table-wrap .market-table{
+    grid-template-columns:28px minmax(108px,1.3fr) minmax(70px,.8fr) minmax(90px,1fr) minmax(86px,.9fr)!important;
+    min-width:510px!important;column-gap:6px!important;padding:0 9px!important;
+  }
+  .app-shell .market-page .market-table-head{min-height:40px!important}
+  .app-shell .market-page .market-table-head .market-sort{font-size:9px!important}
+  .app-shell .market-page .market-table-row{min-height:60px!important}
+  .app-shell .market-page .market-pair{display:flex!important;align-items:center!important;gap:6px!important}
+  .app-shell .market-page .market-pair .asset-icon{width:27px!important;height:27px!important;font-size:14px!important}
+  .app-shell .market-page .market-pair strong{font-size:10px!important}
+  .app-shell .market-page .market-pair small{font-size:8px!important}
+  .app-shell .market-page .market-volume,.app-shell .market-page .market-last-price{font-size:9px!important}
+  .app-shell .market-page .market-change-pill{min-width:62px!important;padding:5px 7px!important;font-size:8px!important}
+}
