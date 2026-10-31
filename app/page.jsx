@@ -420,10 +420,12 @@ function App() {
                   <div className="trader-profile-section-heading"><div><p className="eyebrow">STRATEGY PORTFOLIO</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Setiap strategi memiliki performa dan status tersendiri.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
                   <div className="trader-subtabs" role="tablist" aria-label="Strategy status">
                     <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>Active <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
-                    <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.min(1,traderProfiles[selectedTrader].strategies.length)}</span></button>
+                    <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.max(0,traderProfiles[selectedTrader].strategies.length-Math.max(1,traderProfiles[selectedTrader].strategies.length-1))}</span></button>
                   </div>
                   <div className="trader-strategy-performance-list">
-                    {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
+                    {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).length === 0 ? (
+                      <div className="trader-empty-state"><Activity size={20}/><strong>No inactive strategies</strong><span>Trader ini belum memiliki strategi yang dinonaktifkan.</span></div>
+                    ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
                           <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
