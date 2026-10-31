@@ -430,7 +430,10 @@ function App() {
                         <div className="trader-strategy-performance-heading">
                           <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
                           <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
-                          <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
+                          <div className="trader-strategy-actions">
+                            <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
+                            {traderStrategyFilter === "active" && <button className="trader-copy-button" onClick={() => setNotice(`Copy trading for ${strategy.name} is coming soon`)}><Copy size={13}/> Copy</button>}
+                          </div>
                         </div>
                         <div className="trader-strategy-metrics">
                           <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
@@ -481,7 +484,7 @@ function App() {
         )}
       </div>
 
-      <nav className="bottom-nav" aria-label="Main navigation">
+      <nav className={`bottom-nav ${active === "trader-profile" ? "bottom-nav-hidden" : ""}`} aria-label="Main navigation">
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
