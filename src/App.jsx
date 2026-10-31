@@ -18,7 +18,7 @@ import {
   UserRound,
   Wallet,
   X,
-  ChartNoAxesCombined,
+  BarChart3,
   Bitcoin,
 } from "lucide-react";
 
@@ -26,7 +26,7 @@ const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "dapps", label: "dApps", icon: Grid2X2 },
   { id: "create", label: "Create", icon: Plus, primary: true },
-  { id: "market", label: "Market", icon: ChartNoAxesCombined },
+  { id: "market", label: "Market", icon: BarChart3 },
   { id: "profile", label: "Profile", icon: UserRound },
 ];
 
