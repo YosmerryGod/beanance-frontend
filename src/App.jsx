@@ -36,6 +36,21 @@ const assets = [
   { symbol: "BNB", name: "BNB", amount: "4.520 BNB", value: "$2,945.60", change: "-0.64%", positive: false, icon: "◆", tone: "bnb" },
 ];
 
+const dapps = [
+  { name: "PancakeSwap", category: "DeFi · Exchange", description: "Swap tokens and provide liquidity.", icon: "🥞", color: "dapp-yellow", users: "2.4M" },
+  { name: "Venus", category: "DeFi · Lending", description: "Supply and borrow digital assets.", icon: "☄", color: "dapp-purple", users: "840K" },
+  { name: "OpenSea", category: "NFT · Marketplace", description: "Discover digital collectibles.", icon: "🌊", color: "dapp-blue", users: "1.2M" },
+  { name: "Galxe", category: "Web3 · Community", description: "Explore quests and Web3 campaigns.", icon: "✦", color: "dapp-pink", users: "960K" },
+];
+
+const marketAssets = [
+  { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "₿", tone: "bitcoin", volume: "$28.4B" },
+  { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "Ξ", tone: "ethereum", volume: "$14.2B" },
+  { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "◆", tone: "bnb", volume: "$1.8B" },
+  { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "◎", tone: "solana", volume: "$3.9B" },
+  { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, icon: "X", tone: "xrp", volume: "$1.1B" },
+];
+
 function App() {
   const [active, setActive] = useState("dashboard");
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -147,7 +162,7 @@ function App() {
             <p className="muted">Find decentralized apps across your favorite networks.</p>
             <div className="search-field"><Search size={18} /><span>Search decentralized apps</span></div>
             <div className="feature-tile"><div className="feature-symbol"><Compass /></div><div><strong>Discover something new</strong><p>Explore DeFi, games, NFT and more.</p></div><ChevronRight /></div>
-            <div className="empty-state"><Grid2X2 size={28} /><strong>Your dApp shortcuts will appear here</strong><span>Save your favorite apps for quick access.</span></div>
+            <div className="dapp-list">{dapps.map((dapp) => <article className="dapp-row" key={dapp.name}><div className={`dapp-icon ${dapp.color}`}>{dapp.icon}</div><div className="dapp-info"><strong>{dapp.name}</strong><span>{dapp.category}</span><small>{dapp.description}</small></div><button className="dapp-connect" onClick={() => setNotice(`Connecting to ${dapp.name} is a demo action`)}>Open</button></article>)}</div>
           </section>
         )}
 
@@ -157,7 +172,7 @@ function App() {
             <p className="muted">A quick look at the crypto market.</p>
             <div className="market-summary"><span>Market sentiment</span><strong>Optimistic <b>↗</b></strong><small>Demo market data</small></div>
             <div className="section-heading market-heading"><div><p className="eyebrow">WATCHLIST</p><h2>Top assets</h2></div><button className="text-link" onClick={() => setNotice("Full market is coming soon")}>See all <ChevronRight size={15} /></button></div>
-            <div className="asset-list">{assets.map((asset) => <article className="asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol}</span></div><div className="asset-values"><strong>{asset.value}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+            <div className="asset-list">{marketAssets.map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
           </section>
         )}
 
