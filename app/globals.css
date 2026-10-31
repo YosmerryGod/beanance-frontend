@@ -894,3 +894,29 @@ h2{font-size:19px;margin:0}
   .trader-profile-meta{flex-direction:column;gap:7px;}
   .trader-owned-strategy{gap:8px;padding:10px;}
 }
+
+
+/* [MODIFIED] Present each trader strategy as an independent performance overview */
+.trader-strategy-performance-list{display:flex;flex-direction:column;gap:13px;}
+.trader-strategy-performance-card{min-width:0;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft);}
+.trader-strategy-performance-heading{display:flex;align-items:center;gap:10px;min-width:0;}
+.trader-strategy-performance-heading .trader-owned-strategy-main{flex:1;}
+.trader-strategy-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px;}
+.trader-strategy-metrics>div{display:flex;flex-direction:column;gap:6px;min-width:0;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);}
+.trader-strategy-metrics>div>span{color:var(--muted);font-size:9px;}
+.trader-strategy-metrics>div>strong{font-family:Manrope,sans-serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.trader-strategy-chart{margin-top:11px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--panel);}
+.trader-strategy-chart>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.trader-strategy-chart>div:first-child strong{font-size:10px;}
+.trader-strategy-chart>div:first-child span{color:var(--muted);font-size:8px;}
+.trader-strategy-chart>svg{display:block;width:100%;height:82px;margin-top:8px;}
+.app-shell.theme-light .trader-strategy-performance-card,.app-shell.theme-light .trader-strategy-metrics>div,.app-shell.theme-light .trader-strategy-chart{background:#f8f9fb;border-color:rgba(26,35,50,.1);}
+@media(max-width:760px){
+  .trader-strategy-performance-list{gap:10px;}
+  .trader-strategy-performance-card{padding:11px;}
+  .trader-strategy-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:11px;}
+  .trader-strategy-metrics>div{padding:9px;}
+  .trader-strategy-metrics>div>strong{font-size:14px;}
+  .trader-strategy-chart{padding:10px;}
+  .trader-strategy-chart>svg{height:70px;}
+}
