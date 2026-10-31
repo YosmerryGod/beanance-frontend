@@ -441,7 +441,19 @@ function App() {
                           <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
                           <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
                         </div>
-
+                        <div className="trader-strategy-chart trader-strategy-chart-compact">
+                          <svg viewBox="0 0 600 90" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
+                            <defs>
+                              <linearGradient id={`strategy-chart-fill-${selectedTrader}-${index}`} x1="0" x2="0" y1="0" y2="1">
+                                <stop offset="0%" stopColor="#20bd68" stopOpacity=".2"/>
+                                <stop offset="100%" stopColor="#20bd68" stopOpacity="0"/>
+                              </linearGradient>
+                            </defs>
+                            <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6 L600 90 L0 90 Z" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5 L600 90 L0 90 Z"} fill={`url(#strategy-chart-fill-${selectedTrader}-${index})`}/>
+                            <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
+                          </svg>
+                          <div className="trader-chart-axis"><span>30D ago</span><span>Today</span></div>
+                        </div>
                       </article>
                     ))}
                   </div>
