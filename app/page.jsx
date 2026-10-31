@@ -61,6 +61,9 @@ function App() {
   const [showCreate, setShowCreate] = useState(false);
   const [notice, setNotice] = useState("");
   const [theme, setTheme] = useState("dark");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beanance-theme");
@@ -79,6 +82,9 @@ function App() {
       return;
     }
     setActive(item.id);
+    setSearchOpen(false);
+    setSearchQuery("");
+    setShowNotifications(false);
   };
 
   const copyAddress = async () => {
@@ -95,26 +101,47 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        <header className="topbar">
+        <header className={`topbar ${searchOpen ? "search-expanded" : ""}`}>
           <div className="nav-greeting">
             <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
             <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
           </div>
           <div className="top-actions">
+            {active === "dashboard" && (
+              <div className="notification-wrap">
+                <button className="icon-button notification-button" aria-label="Notifications" aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
+                  <Bell size={19} />
+                  <i />
+                </button>
+                {showNotifications && (
+                  <div className="notification-popover">
+                    <div className="notification-heading"><strong>Notifications</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
+                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>Wallet connected</strong><p>Your demo wallet is ready to use.</p><small>Just now</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">↗</span><div><strong>Market update</strong><p>Bitcoin is up 2.45% in the demo market.</p><small>12 minutes ago</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">✦</span><div><strong>Welcome to Beanance</strong><p>Explore assets and discover Web3 apps.</p><small>Today</small></div></div>
+                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>Mark all as read</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {(active === "dapps" || active === "market") && (
+              <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
+                <Search size={18} />
+                <input
+                  aria-label={active === "dapps" ? "Search dApps" : "Search market assets"}
+                  placeholder={active === "dapps" ? "Search dApps..." : "Search assets..."}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
+                  tabIndex={searchOpen ? 0 : -1}
+                />
+                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label="Close search"><X size={17} /></button>}
+                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Open search" />}
+              </div>
+            )}
             {active !== "profile" && (
               <button className="icon-button theme-toggle" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} onClick={toggleTheme}>
                 {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
-              </button>
-            )}
-            {active === "dashboard" && (
-              <button className="icon-button notification-button" aria-label="Notifications" onClick={() => setNotice("You're all caught up")}>
-                <Bell size={19} />
-                <i />
-              </button>
-            )}
-            {(active === "dapps" || active === "market") && (
-              <button className="icon-button" aria-label="Search" onClick={() => setNotice("Search is coming soon")}>
-                <Search size={19} />
               </button>
             )}
           </div>
@@ -182,7 +209,7 @@ function App() {
             <p className="muted">Find decentralized apps across your favorite networks.</p>
             <div className="search-field"><Search size={18} /><span>Search decentralized apps</span></div>
             <div className="feature-tile"><div className="feature-symbol"><Compass /></div><div><strong>Discover something new</strong><p>Explore DeFi, games, NFT and more.</p></div><ChevronRight /></div>
-            <div className="dapp-list">{dapps.map((dapp) => <article className="dapp-row" key={dapp.name}><div className={`dapp-icon ${dapp.color}`}>{dapp.icon}</div><div className="dapp-info"><strong>{dapp.name}</strong><span>{dapp.category}</span><small>{dapp.description}</small></div><button className="dapp-connect" onClick={() => setNotice(`Connecting to ${dapp.name} is a demo action`)}>Open</button></article>)}</div>
+            <div className="dapp-list">{dapps.filter((dapp) => `${dapp.name} ${dapp.category} ${dapp.description}`.toLowerCase().includes(searchQuery.toLowerCase())).map((dapp) => <article className="dapp-row" key={dapp.name}><div className={`dapp-icon ${dapp.color}`}>{dapp.icon}</div><div className="dapp-info"><strong>{dapp.name}</strong><span>{dapp.category}</span><small>{dapp.description}</small></div><button className="dapp-connect" onClick={() => setNotice(`Connecting to ${dapp.name} is a demo action`)}>Open</button></article>)}</div>
           </section>
         )}
 
@@ -192,7 +219,7 @@ function App() {
             <p className="muted">A quick look at the crypto market.</p>
             <div className="market-summary"><span>Market sentiment</span><strong>Optimistic <b>↗</b></strong><small>Demo market data</small></div>
             <div className="section-heading market-heading"><div><p className="eyebrow">WATCHLIST</p><h2>Top assets</h2></div><button className="text-link" onClick={() => setNotice("Full market is coming soon")}>See all <ChevronRight size={15} /></button></div>
-            <div className="asset-list">{marketAssets.map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+            <div className="asset-list">{marketAssets.filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
           </section>
         )}
 
