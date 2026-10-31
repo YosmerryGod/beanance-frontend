@@ -593,3 +593,80 @@ h2{font-size:19px;margin:0}
   .mobile-dashboard-tabs{display:none}
   .mobile-tab-panel{display:flex!important}
 }
+
+
+/* [ADDED] Discover page: strategy and trader rankings with filterable cards */
+.discover-page{display:flex;flex-direction:column;gap:28px;padding-top:28px}
+.discover-intro h1{margin:2px 0 5px;font-family:Manrope,sans-serif;font-size:30px;letter-spacing:-1px}
+.discover-intro>.muted{margin:0;font-size:13px}
+.discover-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:15px}
+.discover-section-heading h2{margin:0 0 4px;font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-.5px}
+.discover-section-heading .muted{margin:0;font-size:12px}
+.discover-switch,.discover-filters{display:flex;align-items:center;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel-soft)}
+.discover-switch button,.discover-filters button{border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:9px 14px;white-space:nowrap}
+.discover-switch button.selected,.discover-filters button.selected{background:var(--panel);color:var(--text,#f4f5f7);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.discover-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:13px;padding:14px 0 0}
+.discover-podium-card{position:relative;min-width:0;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;padding:24px 13px 14px;border:1px solid var(--line);border-radius:17px;background:var(--panel);text-align:center}
+.discover-podium-card.podium-rank-1{min-height:235px;border-color:rgba(245,184,46,.5);box-shadow:0 10px 30px rgba(245,184,46,.09)}
+.podium-rank{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:29px;height:29px;display:grid;place-items:center;border:2px solid var(--bg);border-radius:50%;background:#aeb7c4;color:#17202a;font-size:12px;font-weight:900}
+.podium-rank-1 .podium-rank{width:34px;height:34px;background:linear-gradient(135deg,#ffe08a,#e6a72b);color:#332407}
+.podium-rank-3 .podium-rank{background:#c98552;color:#24170f}
+.discover-avatar{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;font-size:20px;font-weight:800}
+.discover-avatar.bitcoin,.discover-avatar.bnb{background:rgba(245,158,11,.14);color:#f5b82e}
+.discover-avatar.ethereum{background:rgba(99,102,241,.14);color:#9ca7ff}
+.discover-avatar.solana{background:rgba(139,92,246,.15);color:#b69aff}
+.discover-avatar.trader-avatar-1,.discover-avatar.trader-avatar-2,.discover-avatar.trader-avatar-3,.discover-avatar.trader-avatar-4,.discover-avatar.trader-avatar-5{color:#fff}
+.discover-podium-card>strong{font-size:13px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.discover-podium-card>small,.podium-detail{font-size:10px;color:var(--muted)}
+.discover-podium-card>b{font-family:Manrope,sans-serif;font-size:20px}
+.discover-podium-card>button,.discover-list-card>button{border:0;border-radius:9px;background:#101820;color:#fff;font-size:10px;font-weight:700;padding:9px 14px;white-space:nowrap}
+.discover-list-section{min-width:0}
+.discover-list-heading{align-items:center}
+.discover-filters{width:max-content;max-width:100%;margin:0 0 13px;overflow-x:auto}
+.discover-filters button{padding:8px 12px;font-size:10px}
+.discover-card-list{display:flex;flex-direction:column;gap:10px}
+.discover-list-card{min-width:0;display:flex;align-items:center;gap:13px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.discover-card-main{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.discover-card-main>strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.discover-card-main>span,.discover-card-main>small,.discover-card-stats>span{font-size:10px;color:var(--muted)}
+.discover-card-main>small{font-size:9px}
+.discover-card-stats{display:flex;flex-direction:column;align-items:flex-end;gap:4px;white-space:nowrap}
+.discover-card-stats>strong{font-family:Manrope,sans-serif;font-size:15px}
+.app-shell.theme-light .discover-podium-card,.app-shell.theme-light .discover-list-card{background:#fff;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .discover-switch,.app-shell.theme-light .discover-filters{background:#eef1f5;border-color:rgba(26,35,50,.08)}
+.app-shell.theme-light .discover-switch button.selected,.app-shell.theme-light .discover-filters button.selected{background:#fff;color:#202938}
+.app-shell.theme-light .discover-podium-card>button,.app-shell.theme-light .discover-list-card>button{background:#17202a;color:#fff}
+@media(max-width:760px){
+  .discover-page{gap:23px;padding-top:22px}
+  .discover-intro h1{font-size:26px}
+  .discover-section-heading{align-items:center;gap:9px}
+  .discover-section-heading h2{font-size:17px}
+  .discover-section-heading .muted{font-size:10px}
+  .discover-switch button{padding:8px 10px;font-size:10px}
+  .discover-podium{gap:7px;padding-top:13px}
+  .discover-podium-card{min-height:170px;padding:22px 6px 10px;gap:6px;border-radius:13px}
+  .discover-podium-card.podium-rank-1{min-height:190px}
+  .discover-avatar{width:34px;height:34px;font-size:17px}
+  .discover-podium-card>strong{font-size:10px}
+  .discover-podium-card>small,.podium-detail{font-size:8px}
+  .discover-podium-card>b{font-size:15px}
+  .discover-podium-card>button{width:100%;padding:8px 3px;font-size:8px}
+  .discover-list-heading{align-items:flex-start;flex-direction:column}
+  .discover-list-switch{align-self:flex-start}
+  .discover-filters{width:100%;justify-content:flex-start}
+  .discover-filters button{padding:8px 10px;font-size:9px}
+  .discover-list-card{gap:9px;padding:11px 9px}
+  .discover-list-card .discover-avatar{width:34px;height:34px}
+  .discover-card-main>strong{font-size:11px}
+  .discover-card-main>span{font-size:9px}
+  .discover-card-stats>strong{font-size:12px}
+  .discover-card-stats>span{font-size:8px}
+  .discover-list-card>button{padding:8px 10px;font-size:9px}
+}
+@media(max-width:380px){
+  .discover-podium{gap:5px}
+  .discover-podium-card{padding-left:4px;padding-right:4px}
+  .discover-podium-card>strong{font-size:9px}
+  .discover-list-card{gap:7px;padding:10px 7px}
+  .discover-card-stats>strong{font-size:11px}
+}
