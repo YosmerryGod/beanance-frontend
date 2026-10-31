@@ -430,7 +430,7 @@ function App() {
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
                           <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
-                          <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
+                          <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={`trader-strategy-risk-inline ${strategy.risk.toLowerCase().replace(" risk","")}`}>{strategy.risk}</span></div><span>{strategy.type}</span></div>
                           <div className="trader-strategy-actions">
                             <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
                             {traderStrategyFilter === "active" && <button className="trader-copy-button" onClick={() => setNotice(`Copy trading for ${strategy.name} is coming soon`)}><Copy size={13}/> Copy</button>}
@@ -440,7 +440,6 @@ function App() {
                           <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
                           <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
                           <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
-                          <div><span>Risk Level</span><strong>{strategy.risk.replace(" Risk","")}</strong></div>
                         </div>
 
                       </article>
