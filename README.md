@@ -381,6 +381,193 @@ Aturan WebSocket:
 - [ ] Satu WebSocket manager dipakai lintas halaman.
 - [ ] REST snapshot dan WebSocket update tidak saling menimpa dengan data lebih lama.
 - [ ] Loading, empty, error, reconnect, dan stale-data state ditangani frontend.
+## Trader Profile — Backend API Requirements
+
+Halaman Trader Profile menampilkan identitas trader, statistik, open/closed trades, serta strategi yang dimiliki trader. Data saat ini masih demo/hardcoded. Bagian ini melengkapi kontrak Dashboard + Discover di atas dan harus memakai model serta service yang sama.
+
+### 1. Endpoint
+
+| Method | Endpoint | Fungsi | Auth |
+| --- | --- | --- | --- |
+| GET | `/api/v1/traders/:username` | Detail profil dan ringkasan statistik trader | Public |
+| GET | `/api/v1/traders/:username/strategies` | Daftar strategi trader, termasuk status dan metrik | Public |
+| GET | `/api/v1/traders/:username/trades` | Riwayat posisi open dan trade closed yang diizinkan untuk publik | Public, mengikuti visibility policy |
+| PUT | `/api/v1/traders/:traderId/follow` | Follow trader | Required |
+| DELETE | `/api/v1/traders/:traderId/follow` | Unfollow trader | Required |
+
+Follow endpoint menggunakan endpoint yang sama dengan Dashboard dan Discover. Jangan membuat endpoint follow khusus profile.
+
+### 2. Trader Profile
+
+Request:
+
+    GET /api/v1/traders/tradewiz
+
+Contoh response:
+
+    {
+      "success": true,
+      "data": {
+        "id": "trader_001",
+        "username": "tradewiz",
+        "display_name": "TradeWiz",
+        "avatar_url": null,
+        "verified": true,
+        "bio": "Trend trader focused on disciplined entries and risk management.",
+        "followers_count": 342,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "stats": {
+          "return_percent": 124.5,
+          "return_period": "30d",
+          "win_rate": 68.0,
+          "total_trades": 680,
+          "strategies_count": 3
+        },
+        "is_following": false
+      }
+    }
+
+Ketentuan:
+- `username` adalah identifier publik yang stabil dan digunakan untuk membuka profile dari Dashboard maupun Discover.
+- `id` adalah ID internal trader dan dipakai untuk relasi follow serta foreign key.
+- `joined_at` digunakan frontend untuk menghitung umur akun; jangan menyimpan umur akun sebagai teks statis.
+- `followers_count` dan `is_following` berasal dari relasi follow yang sama dengan Dashboard/Discover.
+- Statistik harus dihitung dari sumber transaksi/performa backend. Return wajib menyebut periode pengukuran.
+- Jika statistik belum tersedia, gunakan null atau nilai yang didefinisikan kontrak; jangan membuat angka demo.
+
+### 3. Trader Strategies
+
+Request:
+
+    GET /api/v1/traders/tradewiz/strategies?status=active&page=1&limit=20&period=30d
+
+Query:
+- `status`: `active`, `inactive`, atau `all`; default `active`.
+- `page`, `limit`: pagination; default page 1 dan limit 20.
+- `period`: `7d`, `30d`, `90d`, atau `1y`; menentukan periode return dan chart.
+- Sorting dapat memakai `sort=return`, `win_rate`, `total_trades`, atau `newest`.
+
+Contoh response:
+
+    {
+      "success": true,
+      "data": [
+        {
+          "id": "strategy_001",
+          "name": "BTC Trend Master",
+          "slug": "btc-trend-master",
+          "type": "trend_following",
+          "risk_level": "medium",
+          "status": "active",
+          "metrics": {
+            "return_percent": 124.5,
+            "return_period": "30d",
+            "win_rate": 68.0,
+            "total_trades": 680
+          },
+          "performance": [
+            { "timestamp": "2026-10-01T00:00:00Z", "value": 100 },
+            { "timestamp": "2026-10-02T00:00:00Z", "value": 102.4 }
+          ]
+        }
+      ],
+      "meta": { "page": 1, "limit": 20, "total": 3, "has_more": false, "status": "active", "period": "30d" }
+    }
+
+Ketentuan:
+- Strategi harus berasal dari relasi owner trader; jangan mengirim strategi milik trader lain.
+- `status` harus disimpan dan dikelola sebagai status strategi sebenarnya. Jangan menentukan Active/Inactive berdasarkan urutan array seperti data demo frontend.
+- `risk_level`: `low`, `medium`, atau `high`.
+- `performance` berisi titik chart berurutan berdasarkan timestamp; skala dan definisi `value` harus konsisten di semua endpoint strategi.
+- Struktur strategi dan metrics harus kompatibel dengan `/api/v1/dashboard/strategies` agar frontend dapat memakai komponen/model yang sama.
+- Tombol Copy pada UI saat ini masih placeholder. Jangan menganggap endpoint follow sebagai copy trading; copy trading memerlukan fitur, izin, dan kontrak API terpisah.
+
+### 4. Trader Trades
+
+Request:
+
+    GET /api/v1/traders/tradewiz/trades?status=open&page=1&limit=20
+
+Query:
+- `status`: `open` atau `closed`; wajib/default `open` sesuai tab yang aktif.
+- `page`, `limit`: pagination; default page 1 dan limit 20.
+- Opsional `symbol`, `side`, `strategy_id`, `from`, dan `to` dapat ditambahkan untuk filter lanjutan.
+
+Contoh response:
+
+    {
+      "success": true,
+      "data": [
+        {
+          "id": "trade_001",
+          "symbol": "BTCUSDT",
+          "side": "LONG",
+          "status": "open",
+          "entry_price": 67420.5,
+          "mark_price": 68215.8,
+          "position_size": 0.42,
+          "position_size_asset": "BTC",
+          "unrealized_pnl": 333.97,
+          "pnl_percent": 1.18,
+          "leverage": 5,
+          "margin_mode": "isolated",
+          "opened_at": "2026-10-31T10:00:00Z",
+          "closed_at": null,
+          "strategy": { "id": "strategy_001", "name": "BTC Trend Master" }
+        }
+      ],
+      "meta": { "page": 1, "limit": 20, "total": 2, "has_more": false, "status": "open" }
+    }
+
+Untuk trade `closed`, response menyediakan `exit_price`, `realized_pnl`, `pnl_percent`, `opened_at`, dan `closed_at`. Field `mark_price` dan `unrealized_pnl` khusus posisi open; field yang tidak relevan dikirim null atau dihilangkan secara konsisten.
+
+Ketentuan privasi dan akurasi:
+- Trade history hanya boleh menampilkan data yang trader izinkan untuk publik. Sediakan pengaturan visibility per trader atau per posisi.
+- Jangan pernah mengirim API key exchange, private key, wallet secret, credential, data akun exchange, atau informasi sensitif.
+- Untuk posisi open, `mark_price` dan unrealized PnL harus berasal dari mark/price feed backend yang relevan dan menyertakan `updated_at` bila diperlukan.
+- Jelaskan satuan `position_size`, PnL, dan persentase secara konsisten. Nilai numerik dikirim sebagai angka, bukan string berformat mata uang.
+- Jangan mengasumsikan semua trade menggunakan USDT; sertakan quote asset/currency bila dibutuhkan.
+- Jika tidak ada trade yang boleh ditampilkan, kembalikan array kosong dengan metadata pagination, bukan data contoh.
+
+### 5. WebSocket pada Trader Profile
+
+Gunakan koneksi dan channel WebSocket bersama yang sudah didefinisikan di bagian Shared API Architecture. Tidak perlu membuat WebSocket endpoint atau koneksi baru untuk profile.
+
+Ketika profile terbuka, frontend dapat subscribe:
+
+    { "type": "subscribe", "channels": ["trader.metrics", "strategy.metrics", "market.ticker"] }
+
+Filter event di client berdasarkan `trader_id`, `strategy_id`, dan symbol yang sedang ditampilkan. Event yang relevan:
+
+- `trader.metrics.updated`: memperbarui followers/statistik trader.
+- `strategy.metrics.updated`: memperbarui return, win rate, total trades, dan metrik strategi.
+- `market.ticker.updated`: memperbarui mark price posisi open dan kalkulasi tampilan PnL jika payload/price feed mendukungnya.
+
+REST tetap digunakan untuk initial snapshot, pagination, daftar trade, dan metadata profile. WebSocket hanya untuk perubahan realtime. Jangan mengirim trade privat ke channel publik; pastikan visibility policy diterapkan sebelum broadcast.
+
+### 6. Konsistensi Data dan Service Backend
+
+- Gunakan satu `TraderService` untuk profile, followers, dan statistik trader; dipakai Dashboard, Discover, dan Trader Profile.
+- Gunakan satu `StrategyService` untuk daftar strategi, detail strategi, status, dan metrics; jangan membuat model strategi berbeda untuk profile.
+- Gunakan satu `FollowService` untuk follow/unfollow trader dan strategy pada semua halaman.
+- Gunakan satu sumber agregasi trade/performance agar angka return, win rate, dan total trades sama di Dashboard, Discover, profile, dan strategy cards.
+- Endpoint profile mengambil detail berdasarkan username, tetapi seluruh relasi internal menggunakan trader ID.
+- Semua list endpoint mendukung pagination, empty state, validasi query, dan error format standar pada dokumen ini.
+- Terapkan authorization dan visibility policy di backend, bukan hanya menyembunyikan elemen di frontend.
+
+### 7. Checklist Integrasi Trader Profile
+
+- [ ] Ganti `traderProfiles` hardcoded dengan `GET /api/v1/traders/:username`.
+- [ ] Ganti strategi demo dengan `GET /api/v1/traders/:username/strategies`.
+- [ ] Ganti trade demo dengan `GET /api/v1/traders/:username/trades`.
+- [ ] Hubungkan Follow Trader ke endpoint follow bersama Dashboard/Discover.
+- [ ] Gunakan status strategi asli dari backend untuk tab Active/Inactive.
+- [ ] Hubungkan period metrics dan performance chart ke data API.
+- [ ] Terapkan pagination dan loading/empty/error state untuk trades dan strategies.
+- [ ] Terapkan aturan publikasi/privasi trade trader.
+- [ ] Subscribe channel WebSocket bersama saat profile aktif dan unsubscribe sesuai kebutuhan saat keluar.
+- [ ] Hapus disclaimer demo setelah semua data profile benar-benar berasal dari backend.
+
 ## Development Notes
 
 - Angka demo di UI bukan data produksi.
