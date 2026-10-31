@@ -739,3 +739,12 @@ h2{font-size:19px;margin:0}
   .discover-nav-tabs button{padding:7px 7px;font-size:9px}
   .top-actions{gap:4px}
 }
+
+
+/* [MODIFIED] Hide the greeting on Discover and keep navbar category tabs clickable */
+.topbar .nav-greeting.discover-greeting-hidden{display:none!important}
+.topbar .discover-nav-tabs{z-index:5;pointer-events:auto}
+.topbar .top-actions{z-index:1}
+.topbar.search-expanded .top-actions{z-index:6}
+.topbar.search-expanded .discover-nav-tabs{pointer-events:none}
+.topbar.search-expanded .header-search.is-open{position:relative;z-index:7}
