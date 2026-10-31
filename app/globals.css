@@ -986,3 +986,9 @@ h2{font-size:19px;margin:0}
   .trade-side-badge,.trade-status-badge{padding:5px 6px;font-size:7px}
   .trader-trade-pair strong{font-size:11px}
 }
+
+
+/* [ADDED] Empty state for traders with no inactive strategies */
+.trader-empty-state{min-height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);text-align:center}
+.trader-empty-state strong{color:var(--text);font-size:12px}
+.trader-empty-state span{font-size:10px}
