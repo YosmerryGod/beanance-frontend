@@ -774,3 +774,7 @@ h2{font-size:19px;margin:0}
 .discover-filter-popover>label{min-width:0;}
 .discover-filter-popover select{min-width:0;}
 @media(max-width:420px){.discover-filter-popover{width:min(340px,calc(100vw - 32px));gap:10px;}}
+
+
+/* [MODIFIED] Keep Risk Level and Sort By in the same two-column filter grid */
+.discover-filter-popover>label:nth-of-type(n+5){grid-column:auto;}
