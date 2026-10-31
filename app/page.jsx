@@ -222,12 +222,12 @@ function App() {
           const Icon = item.icon;
           const isActive = active === item.id;
           if (item.primary) {
-            return <button className="nav-item nav-create" key={item.id} onClick={() => selectTab(item)} aria-label="Create"><span className="create-orb"><Icon size={24} strokeWidth={2.4} /></span></button>;
+            return <button className="nav-item nav-create" key={item.id} onClick={() => selectTab(item)} aria-label="Create"><span className="create-orb"><Icon size={24} strokeWidth={2.4} /></span><span className="nav-label">Create</span></button>;
           }
           return (
             <button className={`nav-item ${isActive ? "active" : ""}`} key={item.id} onClick={() => selectTab(item)} aria-label={item.label} aria-current={isActive ? "page" : undefined}>
               <Icon size={21} strokeWidth={isActive ? 2.3 : 1.8} />
-              {isActive && <span className="nav-label">{item.label}</span>}
+              <span className="nav-label">{item.label}</span>
             </button>
           );
         })}
