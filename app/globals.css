@@ -2228,3 +2228,25 @@ body{background:#090909;color:var(--text)}
   .app-shell .market-page .market-table-flat .market-last-price{font-size:13px!important}
   .app-shell .market-page .market-table-flat .market-change-pill{font-size:11px!important}
 }
+
+
+/* [FIXED] Remove the Market card surface at the element level */
+.app-shell .market-page .market-table-flat{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.app-shell .market-page .market-table-flat::before,
+.app-shell .market-page .market-table-flat::after{
+  display:none!important;
+  content:none!important;
+}
