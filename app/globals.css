@@ -920,3 +920,69 @@ h2{font-size:19px;margin:0}
   .trader-strategy-chart{padding:10px;}
   .trader-strategy-chart>svg{height:70px;}
 }
+
+
+/* [ADDED] Professional trader profile workspace, trade history and strategy status tabs */
+.trader-profile-workspace{display:flex;flex-direction:column;gap:0;min-width:0}
+.trader-profile-hero{box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.trader-profile-meta span:last-child{color:var(--text);font-weight:700}
+.trader-profile-tabs{display:flex;align-items:center;gap:8px;padding:8px;margin:0 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.trader-profile-tabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:43px;padding:9px 14px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:750;cursor:pointer;transition:background .2s ease,color .2s ease}
+.trader-profile-tabs button span{padding:3px 7px;border-radius:6px;background:var(--panel-soft);font-size:9px;font-weight:650}
+.trader-profile-tabs button.selected{background:var(--panel-soft);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.trader-profile-section.trader-activity-section{padding:20px}
+.trader-subtabs{display:flex;align-items:center;gap:7px;margin:0 0 15px;padding:4px;border-radius:11px;background:var(--panel-soft);width:max-content;max-width:100%}
+.trader-subtabs button{display:flex;align-items:center;gap:8px;padding:9px 12px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}
+.trader-subtabs button span{min-width:19px;padding:3px 5px;border-radius:6px;background:rgba(128,138,150,.13);font-size:9px;text-align:center}
+.trader-subtabs button.selected{background:var(--panel);color:var(--text);box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.trader-trade-list{display:flex;flex-direction:column;gap:10px}
+.trader-trade-card{min-width:0;padding:15px 16px;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft)}
+.trader-trade-top,.trader-trade-pair,.trader-trade-badges,.trader-trade-footer{display:flex;align-items:center}
+.trader-trade-top{justify-content:space-between;gap:12px}
+.trader-trade-pair{gap:10px;min-width:0}
+.trader-trade-coin{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:11px;font-size:18px;font-weight:800}
+.trader-trade-coin-btc{background:rgba(247,147,26,.14);color:#f7931a}
+.trader-trade-coin-eth{background:rgba(126,139,190,.16);color:#8795d1}
+.trader-trade-coin-sol{background:rgba(126,92,246,.14);color:#a18af9}
+.trader-trade-coin-bnb{background:rgba(240,185,11,.14);color:#d9a900}
+.trader-trade-pair>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.trader-trade-pair strong{font-size:12px}
+.trader-trade-pair small{color:var(--muted);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trader-trade-badges{gap:6px}
+.trade-side-badge,.trade-status-badge,.strategy-status-pill{padding:6px 8px;border-radius:7px;font-size:8px;font-weight:800;letter-spacing:.35px}
+.trade-side-badge.long{background:rgba(32,189,104,.12);color:#20bd68}
+.trade-side-badge.short{background:rgba(228,91,91,.12);color:#e45b5b}
+.trade-status-badge.open,.strategy-status-pill.active{background:rgba(32,189,104,.12);color:#20bd68}
+.trade-status-badge.closed{background:rgba(128,138,150,.14);color:var(--muted)}
+.strategy-status-pill.inactive{background:rgba(228,91,91,.11);color:#df7777}
+.trader-trade-data{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.trader-trade-data>div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.trader-trade-data>div>span{font-size:9px;color:var(--muted)}
+.trader-trade-data>div>strong{font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.trader-trade-data>div:last-child>strong{display:flex;flex-direction:column;gap:3px}
+.trader-trade-data>div:last-child>strong small{font-size:8px;font-weight:650}
+.trader-trade-footer{justify-content:space-between;gap:10px;padding-top:11px;color:var(--muted);font-size:9px}
+.app-shell.theme-light .trader-profile-tabs,.app-shell.theme-light .trader-profile-section.trader-activity-section{background:#fff;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .trader-profile-tabs button.selected,.app-shell.theme-light .trader-subtabs button.selected{background:#f1f4f7;color:#202938}
+.app-shell.theme-light .trader-trade-card{background:#fafbfd;border-color:rgba(26,35,50,.1)}
+@media(max-width:760px){
+  .trader-profile-tabs{margin-bottom:11px;padding:6px}
+  .trader-profile-tabs button{min-height:40px;font-size:11px}
+  .trader-profile-section.trader-activity-section{padding:13px}
+  .trader-subtabs{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .trader-subtabs button{justify-content:center;padding:9px 7px;font-size:9px}
+  .trader-trade-card{padding:12px}
+  .trader-trade-coin{width:34px;height:34px}
+  .trader-trade-data{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 10px;margin-top:12px;padding:12px 0}
+  .trader-trade-data>div>span{font-size:8px}
+  .trader-trade-data>div>strong{font-size:10px}
+  .trader-trade-footer{font-size:8px}
+}
+@media(max-width:380px){
+  .trader-profile-identity{align-items:flex-start}
+  .trader-profile-name{min-width:0}
+  .trader-follow-button{white-space:nowrap}
+  .trader-trade-badges{gap:4px}
+  .trade-side-badge,.trade-status-badge{padding:5px 6px;font-size:7px}
+  .trader-trade-pair strong{font-size:11px}
+}
