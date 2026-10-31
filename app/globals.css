@@ -778,3 +778,15 @@ h2{font-size:19px;margin:0}
 
 /* [MODIFIED] Keep Risk Level and Sort By in the same two-column filter grid */
 .discover-filter-popover>label:nth-of-type(n+5){grid-column:auto;}
+
+
+/* [ADDED] Keep the main navbar visible while the page scrolls */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:var(--bg);
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
