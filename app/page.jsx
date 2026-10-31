@@ -117,6 +117,12 @@ function App() {
             <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
             <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
           </div>
+          {active === "dapps" && (
+            <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Discover category">
+              <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverListTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
+              <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
+            </div>
+          )}
           <div className="top-actions">
             {active === "dashboard" && (
               <div className="notification-wrap">
@@ -273,10 +279,10 @@ function App() {
 
             <section className="discover-list-section">
               <div className="discover-section-heading discover-list-heading">
-                <div><h2>{discoverListTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverListTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
+                <div><h2>{discoverTopTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverListTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
                 <div className="discover-switch discover-list-switch" role="tablist" aria-label="Discover list">
                   <button className={discoverListTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverListTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
-                  <button className={discoverListTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
+                  <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
                 </div>
               </div>
               <div className="discover-filters" aria-label="Filter discover results">
