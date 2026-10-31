@@ -381,7 +381,7 @@ function App() {
               {traderProfileTab === "trades" && (
                 <section className="trader-profile-section trader-activity-section">
                   <div className="trader-profile-section-heading">
-                    <div><p className="eyebrow">TRADING ACTIVITY</p><h2>Trade history</h2><p className="muted">Pantau posisi aktif dan riwayat transaksi trader.</p></div>
+                    <div><h2>Trade history</h2></div>
                     <span className="trader-strategy-count">Demo activity</span>
                   </div>
                   <div className="trader-subtabs" role="tablist" aria-label="Trade status">
@@ -418,7 +418,7 @@ function App() {
 
               {traderProfileTab === "strategies" && (
                 <section className="trader-profile-section trader-strategy-overview-section">
-                  <div className="trader-profile-section-heading"><div><p className="eyebrow">STRATEGY PORTFOLIO</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Setiap strategi memiliki performa dan status tersendiri.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
+                  <div className="trader-profile-section-heading"><div><h2>Strategies by @{selectedTrader}</h2></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
                   <div className="trader-subtabs" role="tablist" aria-label="Strategy status">
                     <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>Active <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
                     <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.max(0,traderProfiles[selectedTrader].strategies.length-Math.max(1,traderProfiles[selectedTrader].strategies.length-1))}</span></button>
