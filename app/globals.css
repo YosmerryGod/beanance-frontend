@@ -1919,3 +1919,24 @@ body{background:#090909;color:var(--text)}
 .app-shell.theme-light .trader-profile-inline-back{color:#28200b;background:rgba(255,248,223,.82);border-color:rgba(91,68,0,.18)}
 .app-shell.theme-light .toast{background:#28200b;color:#fff8df}
 .app-shell.theme-light .status-pill{color:#24784d}
+
+
+/* [FIXED] Keep Discover podium rank numbers readable in Dark Mode */
+.app-shell.theme-dark .podium-rank{
+  color:#252016;
+  background:linear-gradient(145deg,#d9dee5,#8994a3);
+  border-color:#101010;
+  text-shadow:none;
+  z-index:3;
+}
+.app-shell.theme-dark .podium-rank-1 .podium-rank{
+  color:#352500;
+  background:linear-gradient(145deg,#ffe58a,#e5ad28);
+  border-color:#101010;
+  box-shadow:0 2px 10px rgba(245,196,0,.22);
+}
+.app-shell.theme-dark .podium-rank-3 .podium-rank{
+  color:#321b0d;
+  background:linear-gradient(145deg,#e5ad82,#b87545);
+  border-color:#101010;
+}
