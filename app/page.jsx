@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   Plus,
   Search,
+  SlidersHorizontal,
   Settings,
   ShieldCheck,
   UserRound,
@@ -69,6 +70,8 @@ function App() {
   const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
   const [discoverTopTab, setDiscoverTopTab] = useState("strategies");
   const [discoverFilter, setDiscoverFilter] = useState("All");
+  const [showDiscoverFilter, setShowDiscoverFilter] = useState(false);
+  const [discoverCriteria, setDiscoverCriteria] = useState({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" });
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -266,19 +269,28 @@ function App() {
             <section className="discover-list-section">
               <div className="discover-section-heading discover-list-heading">
                 <div><h2>{discoverTopTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverTopTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
-              </div>
-              <div className="discover-filters" aria-label="Filter discover results">
-                {(discoverTopTab === "strategies" ? ["All","Trending","Low Risk","High Return"] : ["All","Verified","Most Followers","Top Return"]).map((filter) => (
-                  <button key={filter} className={discoverFilter === filter ? "selected" : ""} onClick={() => setDiscoverFilter(filter)}>{filter}</button>
-                ))}
+                <div className="discover-filter-wrap">
+                  <button className={`discover-filter-icon ${showDiscoverFilter ? "selected" : ""}`} aria-label="Open filters" aria-expanded={showDiscoverFilter} onClick={() => setShowDiscoverFilter((value) => !value)}><SlidersHorizontal size={17} /></button>
+                  {showDiscoverFilter && (
+                    <div className="discover-filter-popover">
+                      <div className="discover-filter-popover-head"><strong>Filter {discoverTopTab === "strategies" ? "strategies" : "traders"}</strong><button aria-label="Close filters" onClick={() => setShowDiscoverFilter(false)}><X size={16} /></button></div>
+                      <label>Minimum win rate<select value={discoverCriteria.minWinRate} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minWinRate: event.target.value }))}><option value="0">Any win rate</option><option value="50">Above 50%</option><option value="60">Above 60%</option><option value="70">Above 70%</option><option value="80">Above 80%</option></select></label>
+                      <label>Trader age<select value={discoverCriteria.minAge} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minAge: event.target.value }))}><option value="0">Any age</option><option value="30">30+ days</option><option value="90">90+ days</option><option value="180">6+ months</option><option value="365">1+ year</option></select></label>
+                      <label>Minimum total trades<select value={discoverCriteria.minTrades} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minTrades: event.target.value }))}><option value="0">Any trades</option><option value="50">50+ trades</option><option value="100">100+ trades</option><option value="500">500+ trades</option><option value="1000">1,000+ trades</option></select></label>
+                      {discoverTopTab === "strategies" && <><label>Minimum return<select value={discoverCriteria.minReturn} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minReturn: event.target.value }))}><option value="0">Any return</option><option value="20">Above 20%</option><option value="50">Above 50%</option><option value="80">Above 80%</option><option value="100">Above 100%</option></select></label><label>Risk level<select value={discoverCriteria.risk} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, risk: event.target.value }))}><option value="All">All risk levels</option><option value="Low Risk">Low risk</option><option value="Medium Risk">Medium risk</option><option value="High Risk">High risk</option></select></label></>}
+                      <label>Sort by<select value={discoverCriteria.sort} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, sort: event.target.value }))}><option value="popular">Most popular</option><option value="newest">Newest</option><option value="win">Highest win rate</option><option value="return">Highest return</option></select></label>
+                      <div className="discover-filter-actions"><button onClick={() => { setDiscoverCriteria({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" }); setDiscoverFilter("All"); }}>Reset</button><button className="apply" onClick={() => setShowDiscoverFilter(false)}>Apply filters</button></div>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="discover-card-list">
                 {discoverTopTab === "strategies" ? [
-                  {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",tone:"bitcoin",symbol:"₿",tag:"Trending"},
-                  {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",tone:"ethereum",symbol:"◆",tag:"Low Risk"},
-                  {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",tone:"solana",symbol:"◎",tag:"Trending"},
-                  {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",tone:"bnb",symbol:"◆",tag:"Low Risk"}
-                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                  {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",age:240,trades:680,tone:"bitcoin",symbol:"₿",tag:"Trending"},
+                  {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",age:120,trades:1240,tone:"ethereum",symbol:"◆",tag:"Low Risk"},
+                  {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",age:75,trades:310,tone:"solana",symbol:"◎",tag:"Trending"},
+                  {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"◆",tag:"Low Risk"}
+                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
                     <div className="discover-card-main"><strong>{item.name}</strong><span>{item.user} · {item.type}</span><small>{item.risk}</small></div>
@@ -286,12 +298,12 @@ function App() {
                     <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>Follow</button>
                   </article>
                 )) : [
-                  {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",avatar:"T",tone:"trader-avatar-1",verified:true},
-                  {name:"cryptofox",followers:"1.2K",returns:"+89.2%",win:"72%",avatar:"C",tone:"trader-avatar-2",verified:true},
-                  {name:"moontrade",followers:"856",returns:"+68.1%",win:"63%",avatar:"M",tone:"trader-avatar-3",verified:true},
-                  {name:"quantalab",followers:"432",returns:"+54.3%",win:"58%",avatar:"Q",tone:"trader-avatar-4",verified:true},
-                  {name:"solking",followers:"321",returns:"+48.7%",win:"61%",avatar:"S",tone:"trader-avatar-5",verified:true}
-                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                  {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",age:240,trades:680,avatar:"T",tone:"trader-avatar-1",verified:true},
+                  {name:"cryptofox",followers:"1.2K",returns:"+89.2%",win:"72%",age:120,trades:1240,avatar:"C",tone:"trader-avatar-2",verified:true},
+                  {name:"moontrade",followers:"856",returns:"+68.1%",win:"63%",age:75,trades:310,avatar:"M",tone:"trader-avatar-3",verified:true},
+                  {name:"quantalab",followers:"432",returns:"+54.3%",win:"58%",age:35,trades:92,avatar:"Q",tone:"trader-avatar-4",verified:true},
+                  {name:"solking",followers:"321",returns:"+48.7%",win:"61%",age:18,trades:45,avatar:"S",tone:"trader-avatar-5",verified:true}
+                ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : discoverCriteria.sort === "popular" ? parseFloat(b.followers) - parseFloat(a.followers) : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
                     <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader</small></div>
