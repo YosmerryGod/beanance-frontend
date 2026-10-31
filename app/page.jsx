@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownLeft,
+  ArrowLeft,
   ArrowUpRight,
   Bell,
   ChevronRight,
@@ -48,6 +49,14 @@ const dapps = [
   { name: "Galxe", category: "Web3 · Community", description: "Explore quests and Web3 campaigns.", icon: "✦", color: "dapp-pink", users: "960K" },
 ];
 
+const traderProfiles = {
+  tradewiz: { name: "TradeWiz", bio: "Trend trader focused on disciplined entries, market structure, and consistent risk management.", followers: "342", returns: "+124.5%", win: "68%", trades: "680", age: "240 days", strategies: [{ name: "BTC Trend Master", type: "Trend Following", risk: "Medium Risk", returns: "+124.5%", win: "68%" }, { name: "BTC Momentum", type: "Momentum", risk: "Medium Risk", returns: "+42.8%", win: "65%" }, { name: "Market Structure Pro", type: "Swing Trading", risk: "Low Risk", returns: "+28.4%", win: "71%" }] },
+  cryptofox: { name: "CryptoFox", bio: "Systematic scalper looking for high-probability setups across major crypto pairs.", followers: "1.2K", returns: "+89.2%", win: "72%", trades: "1,240", age: "120 days", strategies: [{ name: "Scalping AI v2", type: "Scalping", risk: "Low Risk", returns: "+89.2%", win: "72%" }, { name: "ETH Quick Moves", type: "Scalping", risk: "Medium Risk", returns: "+36.7%", win: "69%" }] },
+  moontrade: { name: "MoonTrade", bio: "Breakout trader combining momentum and volatility to capture market opportunities.", followers: "856", returns: "+68.1%", win: "63%", trades: "310", age: "75 days", strategies: [{ name: "ETH Breakout", type: "Breakout", risk: "Medium Risk", returns: "+68.1%", win: "63%" }, { name: "SOL Momentum", type: "Momentum", risk: "High Risk", returns: "+31.2%", win: "61%" }] },
+  quantalab: { name: "QuantaLab", bio: "Quant-minded trader exploring rule-based strategies and measurable market edges.", followers: "432", returns: "+54.3%", win: "58%", trades: "92", age: "35 days", strategies: [{ name: "BNB Momentum", type: "Momentum", risk: "Low Risk", returns: "+54.3%", win: "58%" }] },
+  solking: { name: "SolKing", bio: "Solana ecosystem trader focused on momentum and trend continuation.", followers: "321", returns: "+48.7%", win: "61%", trades: "45", age: "18 days", strategies: [{ name: "SOL Trend Rider", type: "Trend Following", risk: "Medium Risk", returns: "+48.7%", win: "61%" }] }
+};
+
 const marketAssets = [
   { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "₿", tone: "bitcoin", volume: "$28.4B" },
   { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "Ξ", tone: "ethereum", volume: "$14.2B" },
@@ -72,6 +81,8 @@ function App() {
   const [discoverFilter, setDiscoverFilter] = useState("All");
   const [showDiscoverFilter, setShowDiscoverFilter] = useState(false);
   const [discoverCriteria, setDiscoverCriteria] = useState({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" });
+  const [selectedTrader, setSelectedTrader] = useState("tradewiz");
+  const [traderReturnTo, setTraderReturnTo] = useState("dashboard");
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -84,6 +95,22 @@ function App() {
   }, [theme]);
 
   const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
+
+  const openTrader = (username) => {
+    const normalized = String(username || "").replace(/^@/, "").toLowerCase();
+    setSelectedTrader(traderProfiles[normalized] ? normalized : "tradewiz");
+    setTraderReturnTo(active === "trader-profile" ? traderReturnTo : active);
+    setActive("trader-profile");
+    setSearchOpen(false);
+    setSearchQuery("");
+    setShowNotifications(false);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  const closeTraderProfile = () => {
+    setActive(traderReturnTo);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
 
   useEffect(() => {
     if (searchOpen) searchInputRef.current?.focus();
@@ -115,10 +142,14 @@ function App() {
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
         <header className={`topbar ${searchOpen ? "search-expanded" : ""}`}>
-          <div className={`nav-greeting ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
-            <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
-            <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
-          </div>
+          {active === "trader-profile" ? (
+            <button className="trader-profile-back" onClick={closeTraderProfile}><ArrowLeft size={18} /><span>Back</span></button>
+          ) : (
+            <div className={`nav-greeting ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
+              <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
+              <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
+            </div>
+          )}
           {active === "dapps" && (
             <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Discover category">
               <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
@@ -183,7 +214,7 @@ function App() {
                   <article className="strategy-card" key={strategy.name}>
                     <div className="strategy-card-head">
                       <div className={`strategy-coin ${strategy.tone}`}>{strategy.symbol}</div>
-                      <div className="strategy-identity"><strong>{strategy.name}</strong><span>{strategy.user}</span></div>
+                      <div className="strategy-identity"><strong>{strategy.name}</strong><button className="strategy-owner-link" onClick={() => openTrader(strategy.user)}>{strategy.user}</button></div>
                       <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={() => setNotice(`${strategy.name} details are coming soon`)}>•••</button>
                     </div>
                     <svg className="strategy-chart" viewBox="0 0 276 48" preserveAspectRatio="none" aria-label="Strategy performance chart">
@@ -217,7 +248,7 @@ function App() {
                       ["moontrade","856","+68.1%","63%","🥉"],
                       ["quantalab","432","+54.3%","58%",""],
                       ["solking","321","+48.7%","61%",""]
-                    ].map((trader,index) => <tr key={trader[0]}><td><span className="rank-cell">{index+1}</span></td><td><div className="trader-name"><span className={`trader-avatar trader-avatar-${index+1}`}>{["T","C","M","Q","S"][index]}</span><strong>{trader[0]}</strong><span className="verified-mark">✓</span></div></td><td>{trader[1]}</td><td className="positive">{trader[2]}</td><td>{trader[3]}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d="M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" fill="none" stroke="#20bd68" strokeWidth="1.8"/></svg></td><td><button className="table-follow" onClick={() => setNotice(`Following @${trader[0]} is a demo action`)}>Follow</button></td></tr>)}
+                    ].map((trader,index) => <tr key={trader[0]}><td><span className="rank-cell">{index+1}</span></td><td><button className="trader-name trader-name-button" onClick={() => openTrader(trader[0])}><span className={`trader-avatar trader-avatar-${index+1}`}>{["T","C","M","Q","S"][index]}</span><strong>{trader[0]}</strong><span className="verified-mark">✓</span></button></td><td>{trader[1]}</td><td className="positive">{trader[2]}</td><td>{trader[3]}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d="M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" fill="none" stroke="#20bd68" strokeWidth="1.8"/></svg></td><td><button className="table-follow" onClick={() => setNotice(`Following @${trader[0]} is a demo action`)}>Follow</button></td></tr>)}
                   </tbody>
                 </table>
               </div>
@@ -293,7 +324,7 @@ function App() {
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
-                    <div className="discover-card-main"><strong>{item.name}</strong><span>{item.user} · {item.type}</span><small>{item.risk}</small></div>
+                    <div className="discover-card-main"><strong>{item.name}</strong><button className="discover-owner-link" onClick={() => openTrader(item.user)}>{item.user} · {item.type}</button><small>{item.risk}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
                     <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>Follow</button>
                   </article>
@@ -304,15 +335,64 @@ function App() {
                   {name:"quantalab",followers:"432",returns:"+54.3%",win:"58%",age:35,trades:92,avatar:"Q",tone:"trader-avatar-4",verified:true},
                   {name:"solking",followers:"321",returns:"+48.7%",win:"61%",age:18,trades:45,avatar:"S",tone:"trader-avatar-5",verified:true}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : discoverCriteria.sort === "popular" ? parseFloat(b.followers) - parseFloat(a.followers) : 0).map((item) => (
-                  <article className="discover-list-card" key={item.name}>
+                  <article className="discover-list-card trader-discover-card" key={item.name} onClick={() => openTrader(item.name)} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") openTrader(item.name); }}>
                     <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
-                    <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader</small></div>
+                    <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader · {item.age} days active</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
-                    <button onClick={() => setNotice(`Following @${item.name} is a demo action`)}>Follow</button>
+                    <button onClick={(event) => { event.stopPropagation(); setNotice(`Following @${item.name} is a demo action`); }}>Follow</button>
                   </article>
                 ))}
               </div>
             </section>
+          </section>
+        )}
+
+
+        {active === "trader-profile" && (
+          <section className="page page-enter trader-profile-page">
+            <div className="trader-profile-hero">
+              <div className="trader-profile-cover"><span>BEANANCE TRADER</span><div className="trader-profile-cover-mark">B</div></div>
+              <div className="trader-profile-identity">
+                <div className={`trader-profile-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedTrader)+1}`}>{selectedTrader.charAt(0).toUpperCase()}</div>
+                <div className="trader-profile-name"><div><h1>@{selectedTrader}</h1><span className="verified-mark">✓</span></div><p>{traderProfiles[selectedTrader].name} · Verified trader</p></div>
+                <button className="trader-follow-button" onClick={() => setNotice(`Following @${selectedTrader} is a demo action`)}>Follow Trader</button>
+              </div>
+              <p className="trader-profile-bio">{traderProfiles[selectedTrader].bio}</p>
+              <div className="trader-profile-meta"><span><Users size={14}/>{traderProfiles[selectedTrader].followers} followers</span><span><CalendarDays size={14}/>Active for {traderProfiles[selectedTrader].age}</span></div>
+            </div>
+
+            <section className="trader-profile-section">
+              <div className="trader-profile-section-heading"><div><p className="eyebrow">PERFORMANCE</p><h2>Trader overview</h2></div><span className="trader-period-pill">Last 30 days</span></div>
+              <div className="trader-profile-stats">
+                <article><span>30D Return</span><strong className="positive">{traderProfiles[selectedTrader].returns}</strong><small>Overall performance</small></article>
+                <article><span>Win Rate</span><strong>{traderProfiles[selectedTrader].win}</strong><small>Winning trades</small></article>
+                <article><span>Total Trades</span><strong>{traderProfiles[selectedTrader].trades}</strong><small>Executed trades</small></article>
+                <article><span>Followers</span><strong>{traderProfiles[selectedTrader].followers}</strong><small>Community</small></article>
+              </div>
+              <div className="trader-performance-card">
+                <div><div><strong>Performance history</strong><span>Illustrative demo data</span></div><strong className="positive">{traderProfiles[selectedTrader].returns}</strong></div>
+                <svg viewBox="0 0 600 150" preserveAspectRatio="none" role="img" aria-label="Trader performance chart">
+                  <defs><linearGradient id="trader-performance-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".25"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
+                  <path d="M0 125 L35 112 L70 119 L105 92 L140 101 L175 78 L210 88 L245 66 L280 74 L315 53 L350 61 L385 38 L420 47 L455 29 L490 35 L525 17 L560 26 L600 8 L600 150 L0 150 Z" fill="url(#trader-performance-fill)"/>
+                  <path d="M0 125 L35 112 L70 119 L105 92 L140 101 L175 78 L210 88 L245 66 L280 74 L315 53 L350 61 L385 38 L420 47 L455 29 L490 35 L525 17 L560 26 L600 8" fill="none" stroke="#20bd68" strokeWidth="3" vectorEffect="non-scaling-stroke"/>
+                </svg>
+                <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
+              </div>
+            </section>
+
+            <section className="trader-profile-section">
+              <div className="trader-profile-section-heading"><div><p className="eyebrow">PORTFOLIO</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Strategi yang dibuat dan dikelola trader ini.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} strategies</span></div>
+              <div className="trader-owned-strategies">
+                {traderProfiles[selectedTrader].strategies.map((strategy) => (
+                  <article className="trader-owned-strategy" key={strategy.name}>
+                    <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
+                    <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
+                    <div className="trader-owned-strategy-stats"><strong className="positive">{strategy.returns}</strong><span>{strategy.win} win rate</span></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+            <p className="trader-profile-disclaimer">Performance and profile information shown here is sample data for the Beanance demo.</p>
           </section>
         )}
 
