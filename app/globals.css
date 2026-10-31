@@ -519,7 +519,32 @@ h2{font-size:19px;margin:0}
     box-shadow:0 2px 8px rgba(0,0,0,.1);
   }
   .mobile-tab-panel{display:none;animation:mobileTabIn .24s ease both}
-  .mobile-tab-panel.mobile-tab-active{display:flex}
+  /* [MODIFIED] Stack dashboard heading and table vertically so the full card uses the mobile width */
+  .mobile-tab-panel.mobile-tab-active{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    width:100%;
+    min-width:0;
+  }
+  .mobile-tab-panel .dashboard-section-heading{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    width:100%;
+    min-width:0;
+  }
+  .mobile-tab-panel .dashboard-section-heading>div,
+  .mobile-tab-panel .section-tools{
+    width:100%;
+    min-width:0;
+  }
+  .mobile-tab-panel .dashboard-table-wrap{
+    display:block;
+    width:100%;
+    min-width:0;
+    flex:none;
+  }
   @keyframes mobileTabIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
   .mobile-tab-panel .dashboard-section-heading{align-items:center;flex-wrap:nowrap}
   .mobile-tab-panel .dashboard-section-heading h2{font-size:17px}
