@@ -115,6 +115,47 @@ function App() {
           </div>
           <div className="top-actions">
             {active === "dashboard" && (
+              <div className="notification-wrap">
+                <button className="icon-button notification-button" aria-label="Notifications" aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
+                  <Bell size={19} />
+                  <i />
+                </button>
+                {showNotifications && (
+                  <div className="notification-popover">
+                    <div className="notification-heading"><strong>Notifications</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
+                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>Wallet connected</strong><p>Your demo wallet is ready to use.</p><small>Just now</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">↗</span><div><strong>Market update</strong><p>Bitcoin is up 2.45% in the demo market.</p><small>12 minutes ago</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">✦</span><div><strong>Welcome to Beanance</strong><p>Explore assets and discover Web3 apps.</p><small>Today</small></div></div>
+                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>Mark all as read</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {(active === "dapps" || active === "market") && (
+              <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
+                <Search size={18} />
+                <input
+                  ref={searchInputRef}
+                  aria-label={active === "dapps" ? "Search dApps" : "Search market assets"}
+                  placeholder={active === "dapps" ? "Search dApps..." : "Search assets..."}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
+                  tabIndex={searchOpen ? 0 : -1}
+                />
+                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label="Close search"><X size={17} /></button>}
+                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Open search" />}
+              </div>
+            )}
+            {active !== "profile" && (
+              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} onClick={toggleTheme}>
+                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+              </button>
+            )}
+          </div>
+        </header>
+
+        {active === "dashboard" && (
           <section className="page page-enter dashboard-page">
             <section className="dashboard-section">
               <div className="section-heading dashboard-section-heading">
