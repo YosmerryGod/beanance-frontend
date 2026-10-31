@@ -472,7 +472,7 @@ function App() {
 
         {active === "market" && (
           <section className="page page-enter simple-page market-page market-page-full">
-            <div className="market-table-wrap market-table-flat">
+            <div className="market-table-flat">
               <div className="market-table market-table-head">
                 <span className="market-star-column" aria-hidden="true">★</span>
                 <div className="market-heading-pair">
