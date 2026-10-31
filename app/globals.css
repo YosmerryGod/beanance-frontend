@@ -2250,3 +2250,32 @@ body{background:#090909;color:var(--text)}
   display:none!important;
   content:none!important;
 }
+
+
+/* [MODIFIED] Hide greeting text from the global navbar */
+.app-shell .topbar .nav-greeting.navbar-greeting-hidden{
+  display:none!important;
+}
+/* [MODIFIED] Increase Market column heading readability */
+.app-shell .market-page .market-heading-pair .market-sort,
+.app-shell .market-page .market-heading-values .market-sort{
+  font-size:14px!important;
+  font-weight:700!important;
+  gap:5px!important;
+}
+.app-shell .market-page .market-heading-pair .market-sort span,
+.app-shell .market-page .market-heading-values .market-sort span{
+  font-size:16px!important;
+  font-weight:700!important;
+}
+@media(max-width:600px){
+  .app-shell .market-page .market-heading-pair .market-sort,
+  .app-shell .market-page .market-heading-values .market-sort{
+    font-size:12px!important;
+    gap:3px!important;
+  }
+  .app-shell .market-page .market-heading-pair .market-sort span,
+  .app-shell .market-page .market-heading-values .market-sort span{
+    font-size:14px!important;
+  }
+}
