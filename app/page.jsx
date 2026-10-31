@@ -19,6 +19,7 @@ import {
   LayoutDashboard,
   Plus,
   Search,
+  Star,
   SlidersHorizontal,
   Settings,
   ShieldCheck,
@@ -79,6 +80,9 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
+  const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
+  const [marketSortDirection, setMarketSortDirection] = useState("desc"); // [ADDED] Market sort direction
+  const [pinnedMarketSymbols, setPinnedMarketSymbols] = useState([]); // [ADDED] Pinned market assets
   const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
   const [discoverTopTab, setDiscoverTopTab] = useState("strategies");
   const [discoverFilter, setDiscoverFilter] = useState("All");
@@ -467,12 +471,43 @@ function App() {
         )}
 
         {active === "market" && (
-          <section className="page page-enter simple-page">
-            <p className="eyebrow">LIVE OVERVIEW</p><h1>Market</h1>
-            <p className="muted">A quick look at the crypto market.</p>
-            <div className="market-summary"><span>Market sentiment</span><strong>Optimistic <b>↗</b></strong><small>Demo market data</small></div>
-            <div className="section-heading market-heading"><div><p className="eyebrow">WATCHLIST</p><h2>Top assets</h2></div><button className="text-link" onClick={() => setNotice("Full market is coming soon")}>See all <ChevronRight size={15} /></button></div>
-            <div className="asset-list">{marketAssets.filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+          <section className="page page-enter simple-page market-page">
+            <p className="eyebrow">BINANCE FUTURES</p><h1>Market</h1>
+            <p className="muted">USDT-M perpetual contracts overview.</p>
+            <div className="market-summary"><span>Market universe</span><strong>USDT-M Futures <b>↗</b></strong><small>Demo market data · Binance Futures integration pending</small></div>
+            <div className="section-heading market-heading"><div><p className="eyebrow">MARKET SCREENER</p><h2>All coins</h2></div><span className="market-count">{marketAssets.length} pairs</span></div>
+            <div className="market-table-wrap">
+              <div className="market-table market-table-head">
+                <span className="market-star-column" aria-hidden="true">★</span>
+                <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>Name <span>{marketSort === "name" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>Vol <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>Last price <span>{marketSort === "price" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>24h change <span>{marketSort === "change" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+              </div>
+              <div className="market-table-body">
+                {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
+                  const aPinned = pinnedMarketSymbols.includes(a.symbol);
+                  const bPinned = pinnedMarketSymbols.includes(b.symbol);
+                  if (aPinned !== bPinned) return aPinned ? -1 : 1;
+                  const values = {
+                    name: [a.name.toLowerCase(), b.name.toLowerCase()],
+                    volume: [Number(a.volume.replace(/[^0-9.]/g, "")) * (a.volume.includes("B") ? 1000 : a.volume.includes("M") ? 1 : 0.001), Number(b.volume.replace(/[^0-9.]/g, "")) * (b.volume.includes("B") ? 1000 : b.volume.includes("M") ? 1 : 0.001)],
+                    price: [Number(a.price.replace(/[^0-9.]/g, "")), Number(b.price.replace(/[^0-9.]/g, ""))],
+                    change: [Number(a.change.replace("%", "")), Number(b.change.replace("%", ""))]
+                  }[marketSort];
+                  const comparison = typeof values[0] === "string" ? values[0].localeCompare(values[1]) : values[0] - values[1];
+                  return comparison * (marketSortDirection === "asc" ? 1 : -1);
+                }).map((asset) => (
+                  <article className="market-table market-table-row" key={asset.symbol}>
+                    <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={() => setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol])}><Star size={16} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
+                    <div className="market-pair"><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div><strong>{asset.symbol}</strong><small>{asset.name}/USDT</small></div></div>
+                    <span className="market-volume">{asset.volume}</span>
+                    <strong className="market-last-price">{asset.price}</strong>
+                    <span className={asset.positive ? "market-change-pill positive" : "market-change-pill negative"}>{asset.change}</span>
+                  </article>
+                ))}
+              </div>
+            </div>
           </section>
         )}
 
