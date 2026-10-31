@@ -428,3 +428,135 @@ h2{font-size:19px;margin:0}
   .app-content{height:auto;min-height:100dvh;overflow:visible}
   .dashboard-page{height:auto;max-height:none;overflow:visible}
 }
+
+/* [ADDED] Mobile strategy podium and switchable dashboard data tabs */
+.mobile-dashboard-tabs{display:none}
+@media(max-width:760px){
+  .dashboard-page{gap:18px}
+  .dashboard-page>.dashboard-section:first-child{min-width:0}
+  .dashboard-page>.dashboard-section:first-child .dashboard-section-heading{margin-bottom:10px}
+  .strategy-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,1fr);
+    align-items:end;
+    gap:7px;
+    padding:12px 0 0;
+  }
+  .strategy-card{
+    position:relative;
+    min-width:0;
+    min-height:0;
+    height:158px;
+    padding:11px 7px 9px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    overflow:visible;
+    border-radius:13px;
+  }
+  .strategy-card::before{
+    position:absolute;
+    top:-13px;
+    left:50%;
+    transform:translateX(-50%);
+    width:25px;
+    height:25px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    border:2px solid var(--panel);
+    background:#aeb7c4;
+    color:#17202a;
+    font-size:11px;
+    font-weight:900;
+    content:"2";
+    z-index:2;
+  }
+  .strategy-card:nth-child(1){grid-column:1;grid-row:1;height:145px;transform:translateY(10px)}
+  .strategy-card:nth-child(2){grid-column:2;grid-row:1;height:168px;border-color:rgba(245,184,46,.48);box-shadow:0 9px 25px rgba(245,184,46,.11)}
+  .strategy-card:nth-child(2)::before{content:"1";background:linear-gradient(135deg,#ffe08a,#e6a72b);color:#332407;width:29px;height:29px}
+  .strategy-card:nth-child(3){grid-column:3;grid-row:1;height:138px;transform:translateY(17px)}
+  .strategy-card:nth-child(3)::before{content:"3";background:#c98552;color:#24170f}
+  .strategy-card-head{flex-direction:column;align-items:center;gap:5px;text-align:center}
+  .strategy-coin{width:31px;height:31px;font-size:17px}
+  .strategy-identity{width:100%;gap:2px}
+  .strategy-identity strong{font-size:9px;line-height:1.2;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .strategy-identity span{font-size:8px}
+  .strategy-more{display:none}
+  .strategy-chart{height:20px;margin:2px 0}
+  .strategy-metrics{gap:4px;text-align:center}
+  .strategy-metrics>div{gap:1px}
+  .strategy-metrics>div+div{padding-left:4px}
+  .strategy-metrics strong{font-size:12px}
+  .strategy-metrics span{font-size:7px}
+  .strategy-card-footer{justify-content:center;flex-wrap:wrap;gap:4px;margin-top:4px}
+  .strategy-tag,.risk-tag{display:none}
+  .strategy-card-footer button{width:100%;margin:0;padding:6px 4px;font-size:8px;border-radius:7px}
+  .mobile-dashboard-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px;
+    padding:4px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--panel-soft);
+    margin-top:2px;
+  }
+  .mobile-dashboard-tabs button{
+    min-height:38px;
+    padding:8px 6px;
+    border:0;
+    border-radius:9px;
+    background:transparent;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    transition:background .25s ease,color .25s ease,box-shadow .25s ease;
+  }
+  .mobile-dashboard-tabs button.selected{
+    background:var(--panel);
+    color:var(--text,#f4f5f7);
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+  }
+  .mobile-tab-panel{display:none;animation:mobileTabIn .24s ease both}
+  .mobile-tab-panel.mobile-tab-active{display:flex}
+  @keyframes mobileTabIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .mobile-tab-panel .dashboard-section-heading{align-items:center;flex-wrap:nowrap}
+  .mobile-tab-panel .dashboard-section-heading h2{font-size:17px}
+  .mobile-tab-panel .dashboard-section-heading .muted{font-size:10px}
+  .mobile-tab-panel .section-tools{width:auto;justify-content:flex-end;gap:6px}
+  .mobile-tab-panel .section-tools .text-link{display:none}
+  .mobile-tab-panel .period-tabs{gap:2px}
+  .mobile-tab-panel .period-tabs button{min-width:29px;padding:6px 7px;font-size:8px}
+  .dashboard-table-wrap{overflow-x:auto}
+  .dashboard-table{min-width:0;width:100%;table-layout:auto}
+  .dashboard-table th{padding:0 6px;font-size:8px}
+  .dashboard-table td{padding:5px 6px;font-size:9px}
+  .trader-table th:nth-child(3),.trader-table td:nth-child(3),
+  .trader-table th:nth-child(6),.trader-table td:nth-child(6){display:none}
+  .trader-table th:first-child,.trader-table td:first-child{width:22px}
+  .trader-name{gap:5px}
+  .trader-name strong{font-size:9px}
+  .trader-avatar{width:22px;height:22px}
+  .verified-mark{width:10px;height:10px;font-size:7px}
+  .table-follow{min-width:0;padding:6px 8px;font-size:8px}
+  .market-table th:nth-child(5),.market-table td:nth-child(5),
+  .market-table th:nth-child(6),.market-table td:nth-child(6),
+  .market-table th:nth-child(7),.market-table td:nth-child(7){display:none}
+  .market-pair{gap:5px}
+  .market-pair .asset-icon{width:24px;height:24px;font-size:13px}
+  .market-pair strong{font-size:9px}
+  .market-pair small{font-size:8px}
+}
+@media(max-width:380px){
+  .strategy-grid{gap:5px}
+  .strategy-card{padding-left:5px;padding-right:5px}
+  .strategy-identity strong{font-size:8px}
+  .strategy-metrics strong{font-size:11px}
+  .mobile-tab-panel .dashboard-section-heading h2{font-size:15px}
+  .mobile-tab-panel .period-tabs button{min-width:25px;padding:6px 5px}
+}
+@media(min-width:761px){
+  .mobile-dashboard-tabs{display:none}
+  .mobile-tab-panel{display:flex!important}
+}
