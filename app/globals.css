@@ -107,3 +107,50 @@ h2{font-size:19px;margin:0}
 .dapp-info strong{font-size:12px}.dapp-info span,.dapp-info small{font-size:10px;color:var(--muted)}.dapp-info small{white-space:normal;line-height:1.35}
 .dapp-connect{border:1px solid rgba(245,184,46,.25);background:rgba(245,184,46,.09);color:var(--gold);font-size:10px;font-weight:700;border-radius:9px;padding:8px 11px}
 .solana{background:#27263b;color:#b6a8ff}.xrp{background:#272d34;color:#e6e9ed}
+
+/* [ADDED] Greeting navbar and theme toggle */
+.nav-greeting{display:flex;flex-direction:column;gap:3px;min-width:0}
+.nav-greeting .eyebrow{margin:0;font-size:9px;letter-spacing:1.3px}
+.nav-greeting strong{font-family:Manrope,sans-serif;font-size:17px;letter-spacing:-.45px;color:#f4f5f7}
+.top-actions{gap:9px}
+.theme-toggle{color:var(--gold)}
+.dashboard-subtitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px}
+.dashboard-subtitle .status-pill{margin:0}
+
+/* [ADDED] Light theme colors */
+.app-shell.theme-light{--bg:#f4f6fa;--panel:#fff;--panel-soft:#edf0f5;--muted:#687386;--line:rgba(26,35,50,.11);color:#202938;background:#f4f6fa}
+.app-shell.theme-light .nav-greeting strong{color:#202938}
+.app-shell.theme-light .topbar{border-bottom-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .icon-button{background:#fff;color:#596579;border-color:rgba(26,35,50,.12)}
+.app-shell.theme-light .avatar-button{background:#f5b82e;color:#171717}
+.app-shell.theme-light .status-pill{background:#e9f6ef;color:#35795a;border-color:rgba(53,121,90,.15)}
+.app-shell.theme-light .balance-card{background:linear-gradient(118deg,#fff5dc 0%,#fff 55%,#edf1f7 100%);border-color:rgba(198,143,22,.25);color:#202938}
+.app-shell.theme-light .balance-label{color:#74694f}
+.app-shell.theme-light .visibility-button{color:#6f695b}
+.app-shell.theme-light .balance-change small,.app-shell.theme-light .wallet-address{color:#77766f}
+.app-shell.theme-light .balance-watermark{color:rgba(26,35,50,.035)}
+.app-shell.theme-light .wallet-address button{background:rgba(26,35,50,.08);color:#596579}
+.app-shell.theme-light .quick-actions button{color:#536074}
+.app-shell.theme-light .quick-actions button span{background:#fff;border-color:rgba(26,35,50,.1);box-shadow:0 4px 14px rgba(26,35,50,.05)}
+.app-shell.theme-light .asset-list,.app-shell.theme-light .settings-list,.app-shell.theme-light .dapp-list{background:#fff;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .asset-row,.app-shell.theme-light .dapp-row,.app-shell.theme-light .settings-list button{border-bottom-color:rgba(26,35,50,.09)}
+.app-shell.theme-light .asset-info strong,.app-shell.theme-light .asset-values strong,.app-shell.theme-light .dapp-info strong{color:#202938}
+.app-shell.theme-light .promo-card,.app-shell.theme-light .feature-tile,.app-shell.theme-light .profile-card{background:#fff;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .promo-card strong,.app-shell.theme-light .feature-tile strong,.app-shell.theme-light .profile-card strong{color:#202938}
+.app-shell.theme-light .promo-card p,.app-shell.theme-light .feature-tile p{color:#687386}
+.app-shell.theme-light .settings-list button span{color:#303b4c}
+.app-shell.theme-light .settings-list button{color:#687386}
+.app-shell.theme-light .search-field{background:#fff;border-color:rgba(26,35,50,.12);color:#687386}
+.app-shell.theme-light .market-summary{background:linear-gradient(120deg,rgba(59,184,132,.1),#fff 80%);border-color:rgba(59,184,132,.2)}
+.app-shell.theme-light .market-summary strong{color:#202938}
+.app-shell.theme-light .empty-state{border-color:rgba(26,35,50,.2);color:#687386}
+.app-shell.theme-light .empty-state strong{color:#303b4c}
+.app-shell.theme-light .bottom-nav{background:rgba(255,255,255,.94);border-color:rgba(26,35,50,.12);box-shadow:0 12px 40px rgba(30,42,60,.14)}
+.app-shell.theme-light .nav-item{color:#8791a0}
+.app-shell.theme-light .nav-item.active{color:#9a6b08;background:rgba(245,184,46,.15)}
+.app-shell.theme-light .create-sheet{background:#fff;border-color:rgba(26,35,50,.12)}
+.app-shell.theme-light .sheet-heading h2,.app-shell.theme-light .sheet-option strong{color:#202938}
+.app-shell.theme-light .sheet-option{border-bottom-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .sheet-option-icon{background:#fff5dc}
+.app-shell.theme-light .toast{background:#202938;color:#fff}
+@media(max-width:420px){.nav-greeting strong{font-size:16px}.dashboard-subtitle{align-items:flex-start;flex-direction:column;gap:8px}}
