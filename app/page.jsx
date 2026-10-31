@@ -364,37 +364,36 @@ function App() {
               <div className="trader-profile-meta"><span><Users size={14}/>{traderProfiles[selectedTrader].followers} followers</span><span><CalendarDays size={14}/>Active for {traderProfiles[selectedTrader].age}</span></div>
             </div>
 
-            <section className="trader-profile-section">
-              <div className="trader-profile-section-heading"><div><p className="eyebrow">PERFORMANCE</p><h2>Trader overview</h2></div><span className="trader-period-pill">Last 30 days</span></div>
-              <div className="trader-profile-stats">
-                <article><span>30D Return</span><strong className="positive">{traderProfiles[selectedTrader].returns}</strong><small>Overall performance</small></article>
-                <article><span>Win Rate</span><strong>{traderProfiles[selectedTrader].win}</strong><small>Winning trades</small></article>
-                <article><span>Total Trades</span><strong>{traderProfiles[selectedTrader].trades}</strong><small>Executed trades</small></article>
-                <article><span>Followers</span><strong>{traderProfiles[selectedTrader].followers}</strong><small>Community</small></article>
-              </div>
-              <div className="trader-performance-card">
-                <div><div><strong>Performance history</strong><span>Illustrative demo data</span></div><strong className="positive">{traderProfiles[selectedTrader].returns}</strong></div>
-                <svg viewBox="0 0 600 150" preserveAspectRatio="none" role="img" aria-label="Trader performance chart">
-                  <defs><linearGradient id="trader-performance-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".25"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
-                  <path d="M0 125 L35 112 L70 119 L105 92 L140 101 L175 78 L210 88 L245 66 L280 74 L315 53 L350 61 L385 38 L420 47 L455 29 L490 35 L525 17 L560 26 L600 8 L600 150 L0 150 Z" fill="url(#trader-performance-fill)"/>
-                  <path d="M0 125 L35 112 L70 119 L105 92 L140 101 L175 78 L210 88 L245 66 L280 74 L315 53 L350 61 L385 38 L420 47 L455 29 L490 35 L525 17 L560 26 L600 8" fill="none" stroke="#20bd68" strokeWidth="3" vectorEffect="non-scaling-stroke"/>
-                </svg>
-                <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
-              </div>
-            </section>
-
-            <section className="trader-profile-section">
-              <div className="trader-profile-section-heading"><div><p className="eyebrow">PORTFOLIO</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Strategi yang dibuat dan dikelola trader ini.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} strategies</span></div>
-              <div className="trader-owned-strategies">
-                {traderProfiles[selectedTrader].strategies.map((strategy) => (
-                  <article className="trader-owned-strategy" key={strategy.name}>
-                    <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
-                    <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
-                    <div className="trader-owned-strategy-stats"><strong className="positive">{strategy.returns}</strong><span>{strategy.win} win rate</span></div>
+            <section className="trader-profile-section trader-strategy-overview-section">
+              <div className="trader-profile-section-heading"><div><p className="eyebrow">STRATEGY PERFORMANCE</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Performa ditampilkan terpisah untuk setiap strategi.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} strategies</span></div>
+              <div className="trader-strategy-performance-list">
+                {traderProfiles[selectedTrader].strategies.map((strategy, index) => (
+                  <article className="trader-strategy-performance-card" key={strategy.name}>
+                    <div className="trader-strategy-performance-heading">
+                      <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
+                      <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
+                      <span className="trader-period-pill">30D</span>
+                    </div>
+                    <div className="trader-strategy-metrics">
+                      <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
+                      <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
+                      <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
+                      <div><span>Risk Level</span><strong>{strategy.risk.replace(" Risk","")}</strong></div>
+                    </div>
+                    <div className="trader-strategy-chart">
+                      <div><strong>Performance history</strong><span>Sample performance data</span></div>
+                      <svg viewBox="0 0 600 100" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
+                        <defs><linearGradient id={`strategy-profile-fill-${index}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".22"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
+                        <path d={index === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5 L600 100 L0 100 Z" : index === 2 ? "M0 80 L40 72 L80 77 L120 59 L160 66 L200 45 L240 55 L280 41 L320 48 L360 31 L400 40 L440 22 L480 30 L520 17 L560 23 L600 9 L600 100 L0 100 Z" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6 L600 100 L0 100 Z"} fill={`url(#strategy-profile-fill-${index})`}/>
+                        <path d={index === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5" : index === 2 ? "M0 80 L40 72 L80 77 L120 59 L160 66 L200 45 L240 55 L280 41 L320 48 L360 31 L400 40 L440 22 L480 30 L520 17 L560 23 L600 9" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
+                      </svg>
+                      <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
+                    </div>
                   </article>
                 ))}
               </div>
             </section>
+
             <p className="trader-profile-disclaimer">Performance and profile information shown here is sample data for the Beanance demo.</p>
           </section>
         )}
