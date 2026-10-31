@@ -1646,3 +1646,101 @@ body{background:#090909;color:var(--text)}
 .app-shell.theme-dark .sheet-heading h2{color:#f5f1e5}
 .app-shell.theme-dark .discover-filter-popover{background:#101010;border-color:rgba(255,255,255,.06);box-shadow:8px 8px 18px rgba(0,0,0,.8),-5px -5px 14px rgba(255,255,255,.018)}
 .app-shell.theme-dark .discover-filter-popover select{background:#181818;color:#f5f1e5;border-color:rgba(255,255,255,.07)}
+
+
+/* [MODIFIED] Light theme: keep the yellow neumorphic canvas, use white surfaces for cards */
+.app-shell.theme-light{
+  background:#efc400;
+}
+.app-shell.theme-light .icon-button,
+.app-shell.theme-light .header-search,
+.app-shell.theme-light .search-field,
+.app-shell.theme-light .asset-list,
+.app-shell.theme-light .dapp-list,
+.app-shell.theme-light .settings-list,
+.app-shell.theme-light .promo-card,
+.app-shell.theme-light .feature-tile,
+.app-shell.theme-light .profile-card,
+.app-shell.theme-light .strategy-card,
+.app-shell.theme-light .dashboard-table-wrap,
+.app-shell.theme-light .discover-podium-card,
+.app-shell.theme-light .discover-list-card,
+.app-shell.theme-light .trader-profile-hero,
+.app-shell.theme-light .trader-profile-section,
+.app-shell.theme-light .trader-profile-tabs,
+.app-shell.theme-light .trader-trade-card,
+.app-shell.theme-light .trader-strategy-performance-card,
+.app-shell.theme-light .market-summary{
+  background:#fffdf5;
+  color:#17150d;
+  border:1px solid rgba(91,68,0,.1);
+  box-shadow:7px 7px 15px rgba(111,82,0,.2),-7px -7px 15px rgba(255,239,135,.42);
+}
+.app-shell.theme-light .balance-card{
+  background:#fffdf5;
+  color:#17150d;
+  border:1px solid rgba(91,68,0,.1);
+  box-shadow:9px 9px 20px rgba(111,82,0,.22),-9px -9px 20px rgba(255,239,135,.45);
+}
+.app-shell.theme-light .quick-actions button span,
+.app-shell.theme-light .feature-symbol,
+.app-shell.theme-light .promo-icon,
+.app-shell.theme-light .sheet-option-icon{
+  background:#fffdf5;color:#9b7600;border-color:rgba(91,68,0,.1);
+  box-shadow:4px 4px 9px rgba(111,82,0,.14),-4px -4px 9px rgba(255,239,135,.36);
+}
+.app-shell.theme-light .market-summary{
+  background:linear-gradient(120deg,#ffffff,#fffdf5 80%);
+}
+.app-shell.theme-light .period-tabs,
+.app-shell.theme-light .mobile-dashboard-tabs,
+.app-shell.theme-light .discover-switch,
+.app-shell.theme-light .discover-filters,
+.app-shell.theme-light .trader-subtabs{
+  background:#e9bb00;
+  border-color:rgba(91,68,0,.12);
+}
+.app-shell.theme-light .period-tabs button.selected,
+.app-shell.theme-light .mobile-dashboard-tabs button.selected,
+.app-shell.theme-light .discover-switch button.selected,
+.app-shell.theme-light .discover-filters button.selected,
+.app-shell.theme-light .trader-subtabs button.selected{
+  color:#17150d;
+  background:#fffdf5;
+  box-shadow:4px 4px 8px rgba(111,82,0,.16),-4px -4px 8px rgba(255,239,135,.36);
+}
+.app-shell.theme-light .trader-strategy-performance-card,
+.app-shell.theme-light .trader-trade-card,
+.app-shell.theme-light .trader-strategy-metrics>div,
+.app-shell.theme-light .trader-strategy-chart{
+  background:#fffdf5;
+  border-color:rgba(91,68,0,.1);
+}
+.app-shell.theme-light .discover-filter-popover{
+  background:#fffdf5;
+  border-color:rgba(91,68,0,.12);
+  box-shadow:7px 7px 15px rgba(111,82,0,.2),-7px -7px 15px rgba(255,239,135,.42);
+}
+.app-shell.theme-light .discover-filter-popover select,
+.app-shell.theme-light .discover-filter-actions button{
+  background:#f5f1e4;
+  color:#17150d;
+  border-color:rgba(91,68,0,.12);
+}
+.app-shell.theme-light .discover-filter-actions button.apply{
+  background:#17150d;color:#f8d52d;border-color:#17150d;
+}
+.app-shell.theme-light .create-sheet{
+  background:#fffdf5;
+  border-color:rgba(91,68,0,.12);
+}
+.app-shell.theme-light .sheet-option{
+  background:#fffdf5;
+  border-color:rgba(91,68,0,.1);
+}
+.app-shell.theme-light .trader-profile-cover{
+  background:linear-gradient(135deg,#f9dc45,#e9bb00);
+}
+.app-shell.theme-light .trader-profile-inline-back{
+  background:rgba(255,253,245,.78);
+}
