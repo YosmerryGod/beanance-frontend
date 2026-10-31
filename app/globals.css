@@ -790,3 +790,26 @@ h2{font-size:19px;margin:0}
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
 }
+
+
+/* [MODIFIED] Use fixed positioning on mobile so the navbar stays visible in the actual page scroll context */
+@media(max-width:999px){
+  .app-content{padding-top:76px;}
+  .app-content>.topbar{
+    position:fixed;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:100;
+    width:min(calc(100% - 32px),760px);
+    height:76px;
+    background:var(--bg);
+    background:color-mix(in srgb,var(--bg) 92%,transparent);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+}
+@media(max-width:420px){
+  .app-content{padding-top:68px;}
+  .app-content>.topbar{height:68px;}
+}
