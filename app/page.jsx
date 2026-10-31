@@ -147,9 +147,9 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        <header className={`topbar ${searchOpen ? "search-expanded" : ""}`}>
+        <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""}`}>
           {active === "trader-profile" ? (
-            <button className="trader-profile-back" onClick={closeTraderProfile}><ArrowLeft size={18} /><span>Back</span></button>
+            <div className="trader-profile-header-placeholder" />
           ) : (
             <div className={`nav-greeting ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
               <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
@@ -356,6 +356,7 @@ function App() {
 
         {active === "trader-profile" && (
           <section className="page page-enter trader-profile-page">
+            <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={18} /><span>Back</span></button>
             <div className="trader-profile-hero">
               <div className="trader-profile-cover"><span>BEANANCE TRADER</span><div className="trader-profile-cover-mark">B</div></div>
               <div className="trader-profile-identity">
