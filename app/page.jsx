@@ -356,9 +356,11 @@ function App() {
 
         {active === "trader-profile" && (
           <section className="page page-enter trader-profile-page">
-            <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={18} /><span>Back</span></button>
             <div className="trader-profile-hero">
-              <div className="trader-profile-cover"><span>BEANANCE TRADER</span><div className="trader-profile-cover-mark">B</div></div>
+              <div className="trader-profile-cover">
+                <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={17} /><span>Back</span></button>
+                <span>BEANANCE TRADER</span><div className="trader-profile-cover-mark">B</div>
+              </div>
               <div className="trader-profile-identity">
                 <div className={`trader-profile-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedTrader)+1}`}>{selectedTrader.charAt(0).toUpperCase()}</div>
                 <div className="trader-profile-name"><div><h1>@{selectedTrader}</h1><span className="verified-mark">✓</span></div><p>{traderProfiles[selectedTrader].name} · Verified trader</p></div>
