@@ -1039,3 +1039,37 @@ h2{font-size:19px;margin:0}
   .trader-trade-data>div>strong{font-size:10px}
   .trader-trade-footer{padding-top:7px;font-size:7px}
 }
+
+
+/* [MODIFIED] Cleaner, denser strategy cards: keep the key metrics and remove visual clutter */
+.trader-strategy-performance-list{gap:8px}
+.trader-strategy-performance-card{padding:12px 14px;border-radius:11px;background:var(--panel)}
+.trader-strategy-performance-heading{gap:9px}
+.trader-strategy-performance-heading .trader-owned-strategy-icon{width:32px;height:32px;border-radius:9px}
+.trader-strategy-performance-heading .trader-owned-strategy-icon svg{width:15px;height:15px}
+.trader-strategy-performance-heading .trader-owned-strategy-main{gap:3px}
+.trader-strategy-performance-heading .trader-owned-strategy-main strong{font-size:11px}
+.trader-strategy-performance-heading .trader-owned-strategy-main span{font-size:8px}
+.trader-strategy-actions{gap:5px}
+.strategy-status-pill{padding:5px 7px;font-size:7px}
+.trader-copy-button{padding:6px 9px;font-size:9px}
+.trader-copy-button svg{width:11px;height:11px}
+.trader-strategy-metrics{gap:6px;margin-top:10px}
+.trader-strategy-metrics>div{gap:4px;padding:8px 9px;border:0;border-radius:8px;background:var(--panel-soft)}
+.trader-strategy-metrics>div>span{font-size:8px}
+.trader-strategy-metrics>div>strong{font-size:13px}
+.app-shell.theme-light .trader-strategy-performance-card{background:#fff;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .trader-strategy-metrics>div{background:#f4f6f8}
+@media(max-width:760px){
+  .trader-strategy-performance-list{gap:7px}
+  .trader-strategy-performance-card{padding:10px}
+  .trader-strategy-performance-heading{gap:7px}
+  .trader-strategy-performance-heading .trader-owned-strategy-icon{width:29px;height:29px}
+  .trader-strategy-performance-heading .trader-owned-strategy-main strong{font-size:10px}
+  .trader-strategy-performance-heading .trader-owned-strategy-main span{font-size:7px}
+  .trader-strategy-metrics{gap:5px;margin-top:8px}
+  .trader-strategy-metrics>div{padding:7px}
+  .trader-strategy-metrics>div>strong{font-size:12px}
+  .trader-strategy-actions{gap:4px}
+  .trader-copy-button{padding:6px 7px;font-size:8px}
+}
