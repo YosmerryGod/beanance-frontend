@@ -1004,3 +1004,11 @@ h2{font-size:19px;margin:0}
   .trader-copy-button{padding:7px 9px;font-size:9px}
   .trader-strategy-actions{gap:5px}
 }
+
+
+/* [MODIFIED] Hide the entire top navigation on trader profile; Back is inside the page */
+.trader-profile-topbar-hidden{display:none!important}
+.trader-profile-inline-back{width:max-content;margin:0 0 2px}
+@media(max-width:999px){
+  .app-shell:has(.trader-profile-page) .app-content{padding-top:0!important}
+}
