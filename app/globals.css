@@ -1073,3 +1073,23 @@ h2{font-size:19px;margin:0}
   .trader-strategy-actions{gap:4px}
   .trader-copy-button{padding:6px 7px;font-size:8px}
 }
+
+
+/* [MODIFIED] Align three strategy metrics in one row, followed by the performance chart */
+.trader-strategy-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.trader-strategy-metrics>div{min-width:0}
+.trader-strategy-name-line{display:flex;align-items:center;gap:7px;min-width:0}
+.trader-strategy-name-line>strong{min-width:0}
+.trader-strategy-risk-inline{flex:none;padding:3px 6px;border-radius:6px;background:rgba(128,138,150,.13);color:var(--muted);font-size:7px;font-weight:750;white-space:nowrap}
+.trader-strategy-risk-inline.low{background:rgba(32,189,104,.11);color:#20bd68}
+.trader-strategy-risk-inline.medium{background:rgba(240,185,11,.12);color:#c99b13}
+.trader-strategy-risk-inline.high{background:rgba(228,91,91,.12);color:#e45b5b}
+.trader-strategy-chart{margin-top:9px}
+@media(max-width:760px){
+  .trader-strategy-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .trader-strategy-metrics>div{padding:7px 6px}
+  .trader-strategy-metrics>div>span{font-size:7px}
+  .trader-strategy-metrics>div>strong{font-size:11px}
+  .trader-strategy-name-line{gap:5px;flex-wrap:wrap}
+  .trader-strategy-risk-inline{font-size:6px;padding:3px 5px}
+}
