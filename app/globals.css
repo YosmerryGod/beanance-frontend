@@ -748,3 +748,21 @@ h2{font-size:19px;margin:0}
 .topbar.search-expanded .top-actions{z-index:6}
 .topbar.search-expanded .discover-nav-tabs{pointer-events:none}
 .topbar.search-expanded .header-search.is-open{position:relative;z-index:7}
+
+
+/* [ADDED] Compact Discover filter icon and dropdown */
+.discover-filter-wrap{position:relative;flex:0 0 auto}
+.discover-filter-icon{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--muted);cursor:pointer;transition:all .2s ease}
+.discover-filter-icon:hover,.discover-filter-icon.selected{color:var(--text);border-color:var(--accent,#20bd68);background:var(--panel-soft)}
+.discover-filter-popover{position:absolute;z-index:30;right:0;top:calc(100% + 9px);width:min(310px,calc(100vw - 36px));padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel);box-shadow:0 18px 48px rgba(0,0,0,.28);display:flex;flex-direction:column;gap:11px}
+.discover-filter-popover-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:4px}
+.discover-filter-popover-head strong{font-size:13px}
+.discover-filter-popover-head button{display:grid;place-items:center;width:28px;height:28px;border:0;border-radius:8px;background:var(--panel-soft);color:var(--muted);cursor:pointer}
+.discover-filter-popover label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:10px;font-weight:650}
+.discover-filter-popover select{width:100%;height:37px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel-soft);color:var(--text);font:inherit;font-size:11px;outline:none}
+.discover-filter-actions{display:flex;gap:8px;padding-top:4px}
+.discover-filter-actions button{flex:1;height:36px;border:1px solid var(--line);border-radius:9px;background:var(--panel-soft);color:var(--text);font-size:11px;font-weight:700;cursor:pointer}
+.discover-filter-actions button.apply{border-color:#20bd68;background:#20bd68;color:#07130c}
+.app-shell.theme-light .discover-filter-popover{background:#fff;box-shadow:0 18px 48px rgba(20,30,45,.16)}
+.app-shell.theme-light .discover-filter-popover select,.app-shell.theme-light .discover-filter-popover-head button,.app-shell.theme-light .discover-filter-actions button{background:#f4f6f8;color:#202938;border-color:rgba(26,35,50,.12)}
+@media(max-width:760px){.discover-filter-icon{width:35px;height:35px}.discover-filter-popover{right:0;max-height:min(70vh,560px);overflow-y:auto}.discover-list-heading{flex-direction:row!important;align-items:center!important;justify-content:space-between}}
