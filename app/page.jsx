@@ -86,6 +86,9 @@ function App() {
   const [discoverCriteria, setDiscoverCriteria] = useState({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" });
   const [selectedTrader, setSelectedTrader] = useState("tradewiz");
   const [traderReturnTo, setTraderReturnTo] = useState("dashboard");
+  const [traderProfileTab, setTraderProfileTab] = useState("trades");
+  const [traderTradeFilter, setTraderTradeFilter] = useState("open");
+  const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -361,40 +364,94 @@ function App() {
                 <button className="trader-follow-button" onClick={() => setNotice(`Following @${selectedTrader} is a demo action`)}>Follow Trader</button>
               </div>
               <p className="trader-profile-bio">{traderProfiles[selectedTrader].bio}</p>
-              <div className="trader-profile-meta"><span><Users size={14}/>{traderProfiles[selectedTrader].followers} followers</span><span><CalendarDays size={14}/>Active for {traderProfiles[selectedTrader].age}</span></div>
+              <div className="trader-profile-meta">
+                <span><Users size={14}/>{traderProfiles[selectedTrader].followers} followers</span>
+                <span><CalendarDays size={14}/>Active for {traderProfiles[selectedTrader].age}</span>
+                <span><Activity size={14}/>{traderProfiles[selectedTrader].strategies.length} strategies</span>
+              </div>
             </div>
 
-            <section className="trader-profile-section trader-strategy-overview-section">
-              <div className="trader-profile-section-heading"><div><p className="eyebrow">STRATEGY PERFORMANCE</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Performa ditampilkan terpisah untuk setiap strategi.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} strategies</span></div>
-              <div className="trader-strategy-performance-list">
-                {traderProfiles[selectedTrader].strategies.map((strategy, index) => (
-                  <article className="trader-strategy-performance-card" key={strategy.name}>
-                    <div className="trader-strategy-performance-heading">
-                      <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
-                      <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
-                      <span className="trader-period-pill">30D</span>
-                    </div>
-                    <div className="trader-strategy-metrics">
-                      <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
-                      <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
-                      <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
-                      <div><span>Risk Level</span><strong>{strategy.risk.replace(" Risk","")}</strong></div>
-                    </div>
-                    <div className="trader-strategy-chart">
-                      <div><strong>Performance history</strong><span>Sample performance data</span></div>
-                      <svg viewBox="0 0 600 100" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
-                        <defs><linearGradient id={`strategy-profile-fill-${index}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".22"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
-                        <path d={index === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5 L600 100 L0 100 Z" : index === 2 ? "M0 80 L40 72 L80 77 L120 59 L160 66 L200 45 L240 55 L280 41 L320 48 L360 31 L400 40 L440 22 L480 30 L520 17 L560 23 L600 9 L600 100 L0 100 Z" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6 L600 100 L0 100 Z"} fill={`url(#strategy-profile-fill-${index})`}/>
-                        <path d={index === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5" : index === 2 ? "M0 80 L40 72 L80 77 L120 59 L160 66 L200 45 L240 55 L280 41 L320 48 L360 31 L400 40 L440 22 L480 30 L520 17 L560 23 L600 9" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
-                      </svg>
-                      <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
-                    </div>
-                  </article>
-                ))}
+            <div className="trader-profile-workspace">
+              <div className="trader-profile-tabs" role="tablist" aria-label="Trader activity">
+                <button role="tab" aria-selected={traderProfileTab === "trades"} className={traderProfileTab === "trades" ? "selected" : ""} onClick={() => setTraderProfileTab("trades")}>Trades <span>Activity</span></button>
+                <button role="tab" aria-selected={traderProfileTab === "strategies"} className={traderProfileTab === "strategies" ? "selected" : ""} onClick={() => setTraderProfileTab("strategies")}>Strategies <span>{traderProfiles[selectedTrader].strategies.length}</span></button>
               </div>
-            </section>
 
-            <p className="trader-profile-disclaimer">Performance and profile information shown here is sample data for the Beanance demo.</p>
+              {traderProfileTab === "trades" && (
+                <section className="trader-profile-section trader-activity-section">
+                  <div className="trader-profile-section-heading">
+                    <div><p className="eyebrow">TRADING ACTIVITY</p><h2>Trade history</h2><p className="muted">Pantau posisi aktif dan riwayat transaksi trader.</p></div>
+                    <span className="trader-strategy-count">Demo activity</span>
+                  </div>
+                  <div className="trader-subtabs" role="tablist" aria-label="Trade status">
+                    <button className={traderTradeFilter === "open" ? "selected" : ""} onClick={() => setTraderTradeFilter("open")}>Open positions <span>2</span></button>
+                    <button className={traderTradeFilter === "closed" ? "selected" : ""} onClick={() => setTraderTradeFilter("closed")}>Closed trades <span>4</span></button>
+                  </div>
+                  <div className="trader-trade-list">
+                    {(traderTradeFilter === "open" ? [
+                      {pair:"BTC / USDT",side:"LONG",entry:"$67,420.50",mark:"$68,215.80",size:"0.42 BTC",pnl:"+$333.97",change:"+1.18%",date:"Opened 2h ago",strategy:traderProfiles[selectedTrader].strategies[0].name},
+                      {pair:"ETH / USDT",side:"SHORT",entry:"$3,482.20",mark:"$3,451.60",size:"2.5 ETH",pnl:"+$76.50",change:"+0.88%",date:"Opened 5h ago",strategy:traderProfiles[selectedTrader].strategies[Math.min(1,traderProfiles[selectedTrader].strategies.length-1)].name}
+                    ] : [
+                      {pair:"SOL / USDT",side:"LONG",entry:"$148.20",mark:"$156.80",size:"18 SOL",pnl:"+$154.80",change:"+5.80%",date:"Closed Oct 30, 2026",strategy:traderProfiles[selectedTrader].strategies[0].name},
+                      {pair:"BNB / USDT",side:"LONG",entry:"$612.40",mark:"$628.10",size:"3 BNB",pnl:"+$47.10",change:"+2.56%",date:"Closed Oct 29, 2026",strategy:traderProfiles[selectedTrader].strategies[0].name},
+                      {pair:"BTC / USDT",side:"SHORT",entry:"$69,120.00",mark:"$68,420.00",size:"0.15 BTC",pnl:"+$105.00",change:"+1.01%",date:"Closed Oct 28, 2026",strategy:traderProfiles[selectedTrader].strategies[0].name},
+                      {pair:"ETH / USDT",side:"LONG",entry:"$3,610.00",mark:"$3,548.00",size:"1.2 ETH",pnl:"-$74.40",change:"-1.72%",date:"Closed Oct 27, 2026",strategy:traderProfiles[selectedTrader].strategies[0].name}
+                    ]).map((trade,index) => (
+                      <article className="trader-trade-card" key={`${trade.pair}-${trade.date}`}>
+                        <div className="trader-trade-top">
+                          <div className="trader-trade-pair"><span className={`trader-trade-coin trader-trade-coin-${trade.pair.startsWith("BTC") ? "btc" : trade.pair.startsWith("ETH") ? "eth" : trade.pair.startsWith("SOL") ? "sol" : "bnb"}`}>{trade.pair.startsWith("BTC") ? "₿" : trade.pair.startsWith("ETH") ? "Ξ" : trade.pair.startsWith("SOL") ? "◎" : "◆"}</span><div><strong>{trade.pair}</strong><small>{trade.strategy}</small></div></div>
+                          <div className="trader-trade-badges"><span className={`trade-side-badge ${trade.side.toLowerCase()}`}>{trade.side}</span><span className={`trade-status-badge ${traderTradeFilter}`}>{traderTradeFilter === "open" ? "OPEN" : "CLOSED"}</span></div>
+                        </div>
+                        <div className="trader-trade-data">
+                          <div><span>Entry price</span><strong>{trade.entry}</strong></div>
+                          <div><span>{traderTradeFilter === "open" ? "Mark price" : "Exit price"}</span><strong>{trade.mark}</strong></div>
+                          <div><span>Position size</span><strong>{trade.size}</strong></div>
+                          <div><span>{traderTradeFilter === "open" ? "Unrealized PnL" : "Realized PnL"}</span><strong className={trade.pnl.startsWith("-") ? "negative" : "positive"}>{trade.pnl}<small>{trade.change}</small></strong></div>
+                        </div>
+                        <div className="trader-trade-footer"><span>{trade.date}</span><span>{traderTradeFilter === "open" ? "Isolated · 5x" : "Trade completed"}</span></div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {traderProfileTab === "strategies" && (
+                <section className="trader-profile-section trader-strategy-overview-section">
+                  <div className="trader-profile-section-heading"><div><p className="eyebrow">STRATEGY PORTFOLIO</p><h2>Strategies by @{selectedTrader}</h2><p className="muted">Setiap strategi memiliki performa dan status tersendiri.</p></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
+                  <div className="trader-subtabs" role="tablist" aria-label="Strategy status">
+                    <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>Active <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
+                    <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.min(1,traderProfiles[selectedTrader].strategies.length)}</span></button>
+                  </div>
+                  <div className="trader-strategy-performance-list">
+                    {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
+                      <article className="trader-strategy-performance-card" key={strategy.name}>
+                        <div className="trader-strategy-performance-heading">
+                          <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
+                          <div className="trader-owned-strategy-main"><strong>{strategy.name}</strong><span>{strategy.type} · {strategy.risk}</span></div>
+                          <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
+                        </div>
+                        <div className="trader-strategy-metrics">
+                          <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
+                          <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
+                          <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
+                          <div><span>Risk Level</span><strong>{strategy.risk.replace(" Risk","")}</strong></div>
+                        </div>
+                        <div className="trader-strategy-chart">
+                          <div><strong>Performance history</strong><span>Sample performance data</span></div>
+                          <svg viewBox="0 0 600 100" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
+                            <defs><linearGradient id={`strategy-profile-fill-${selectedTrader}-${index}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".22"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
+                            <path d={index % 2 === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5 L600 100 L0 100 Z" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6 L600 100 L0 100 Z"} fill={`url(#strategy-profile-fill-${selectedTrader}-${index})`}/>
+                            <path d={index % 2 === 1 ? "M0 78 L40 66 L80 71 L120 48 L160 58 L200 37 L240 48 L280 29 L320 40 L360 21 L400 32 L440 15 L480 24 L520 11 L560 18 L600 5" : "M0 82 L40 70 L80 75 L120 52 L160 61 L200 39 L240 49 L280 30 L320 39 L360 23 L400 31 L440 18 L480 25 L520 12 L560 19 L600 6"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
+                          </svg>
+                          <div className="trader-chart-axis"><span>30 days ago</span><span>Today</span></div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+            <p className="trader-profile-disclaimer">Trade history and strategy performance shown here are sample data for the Beanance demo.</p>
           </section>
         )}
 
