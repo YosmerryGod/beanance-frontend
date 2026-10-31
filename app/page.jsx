@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -64,6 +64,7 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beanance-theme");
@@ -75,6 +76,10 @@ function App() {
   }, [theme]);
 
   const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
 
   const selectTab = (item) => {
     if (item.id === "create") {
@@ -128,6 +133,7 @@ function App() {
               <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
                 <Search size={18} />
                 <input
+                  ref={searchInputRef}
                   aria-label={active === "dapps" ? "Search dApps" : "Search market assets"}
                   placeholder={active === "dapps" ? "Search dApps..." : "Search assets..."}
                   value={searchQuery}
