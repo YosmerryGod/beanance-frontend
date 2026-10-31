@@ -1100,3 +1100,37 @@ h2{font-size:19px;margin:0}
 .trader-profile-cover>span{margin-left:auto;padding:8px 0}
 .trader-profile-inline-back{position:relative;z-index:2;height:32px;padding:0 9px;border-color:rgba(255,255,255,.2);background:rgba(10,15,20,.3);color:#fff;font-size:10px;backdrop-filter:blur(8px)}
 .trader-profile-inline-back:hover{background:rgba(10,15,20,.48)}
+
+/* [ADDED] Make every trader profile card fill the available content width */
+.trader-profile-page {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+.trader-profile-page > *,
+.trader-profile-hero,
+.trader-profile-workspace,
+.trader-profile-section,
+.trader-profile-tabs,
+.trader-trade-list,
+.trader-trade-card,
+.trader-strategy-performance-list,
+.trader-strategy-performance-card,
+.trader-empty-state {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.trader-profile-workspace,
+.trader-trade-list,
+.trader-strategy-performance-list {
+  align-self: stretch;
+}
+.trader-trade-card,
+.trader-strategy-performance-card {
+  align-self: stretch;
+}
+
