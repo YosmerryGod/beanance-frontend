@@ -237,6 +237,150 @@ Standar:
 - [ ] Tambahkan loading, empty, dan error state.
 - [ ] Pastikan tampilan tetap responsif untuk semua kondisi data.
 
+## Shared API Architecture — Dashboard + Discover
+
+Dashboard dan Discover wajib memakai sumber data, service, endpoint, dan model response yang sama. Jangan membuat endpoint `/discover/*` terpisah jika datanya sama dengan Dashboard. Perbedaan kebutuhan UI cukup diatur melalui query parameter.
+
+### 1. Endpoint REST Bersama
+
+| Method | Endpoint | Dipakai oleh | Fungsi |
+| --- | --- | --- | --- |
+| GET | `/api/v1/dashboard/strategies` | Dashboard + Discover | Daftar strategi, ranking, podium, pencarian, filter, dan pagination |
+| GET | `/api/v1/dashboard/traders` | Dashboard + Discover | Daftar trader, leaderboard, pencarian, filter, dan pagination |
+| GET | `/api/v1/dashboard/market` | Dashboard + Discover bila dibutuhkan | Market overview, kategori, dan favorit |
+| GET | `/api/v1/strategies/:strategyId` | Strategy detail + komponen terkait | Detail strategi dan metriknya |
+| GET | `/api/v1/traders/:username` | Trader profile + komponen terkait | Profil trader, statistik, dan ringkasan |
+| GET | `/api/v1/traders/:username/strategies` | Trader profile | Strategi milik trader tersebut |
+| GET | `/api/v1/traders/:username/trades` | Trader profile | Riwayat trade publik trader, sesuai kebijakan privasi |
+| PUT/DELETE | `/api/v1/strategies/:strategyId/follow` | Dashboard + Discover + detail | Follow/unfollow strategi (endpoint yang sudah didefinisikan di atas) |
+| PUT/DELETE | `/api/v1/traders/:traderId/follow` | Dashboard + Discover + profile | Follow/unfollow trader (endpoint yang sudah didefinisikan di atas) |
+| PUT/DELETE | `/api/v1/market/favorites/:symbol` | Dashboard + Discover | Favorite/unfavorite pair (endpoint yang sudah didefinisikan di atas) |
+
+### 2. Query Parameter untuk Dashboard dan Discover
+
+Strategi:
+
+    GET /api/v1/dashboard/strategies?surface=discover&page=1&limit=20&search=btc&sort=return_30d&min_win_rate=60&min_age_days=30&min_trades=50&min_return=20&risk_level=medium
+
+- `surface`: `dashboard` atau `discover`; hanya untuk kebutuhan default/presentasi, bukan sumber data berbeda.
+- `page`, `limit`: pagination; default page 1 dan limit 20. Dashboard dapat meminta `limit=3` untuk podium/top cards.
+- `search`: cari nama strategi, asset, username, atau display name trader.
+- `sort`: `popular`, `newest`, `return_7d`, `return_30d`, `win_rate`, `total_trades`.
+- `min_win_rate`, `min_age_days`, `min_trades`, `min_return`: filter minimum numerik.
+- `risk_level`: `low`, `medium`, `high`; nilai `all` atau parameter kosong berarti tanpa filter.
+- `period`: `7d`, `30d`, `90d`, `1y`; menentukan periode metrik return yang ditampilkan.
+
+Trader:
+
+    GET /api/v1/dashboard/traders?surface=discover&page=1&limit=20&search=trade&sort=popular&min_win_rate=60&min_age_days=30&min_trades=50&period=30d
+
+- Mendukung `surface`, `page`, `limit`, `search`, `sort`, `min_win_rate`, `min_age_days`, `min_trades`, dan `period`.
+- `sort`: `popular`, `newest`, `return`, `win_rate`, `followers`, `total_trades`.
+- Trader dan strategi harus memakai filter server-side agar hasil konsisten dan siap untuk data besar.
+
+Market:
+
+    GET /api/v1/dashboard/market?category=all&limit=20
+
+- `category`: `favorites`, `all`, `futures`, atau `crypto`.
+- `search`, `page`, `limit`, dan `sort` dapat ditambahkan jika UI market memerlukan pencarian/pagination.
+
+Response list bersama:
+
+    {
+      "success": true,
+      "data": [],
+      "meta": {
+        "page": 1,
+        "limit": 20,
+        "total": 125,
+        "has_more": true,
+        "sort": "popular",
+        "period": "30d"
+      }
+    }
+
+Catatan implementasi:
+- Dashboard dan Discover harus memanggil endpoint yang sama; jangan duplikasi controller atau query database.
+- `surface` boleh dihilangkan bila backend tidak membutuhkannya. Perbedaan jumlah item cukup memakai `limit`.
+- Ranking podium adalah hasil urutan dari endpoint yang sama dengan `limit=3`, bukan dataset terpisah.
+- Field response strategy/trader harus konsisten pada kedua halaman. `is_following` dihitung sesuai user login; untuk publik nilainya false.
+- Terapkan pagination dan filter di backend, bukan memfilter seluruh data di browser.
+- Detail profile dan strategy menggunakan ID/username stabil, bukan display name.
+
+### 3. WebSocket — Data Realtime
+
+Gunakan satu koneksi WebSocket untuk aplikasi. REST API tetap menjadi sumber initial snapshot; WebSocket hanya mengirim perubahan setelah snapshot diterima. Jangan membuat koneksi terpisah untuk Dashboard dan Discover.
+
+Endpoint yang disarankan:
+
+    wss://<api-domain>/api/v1/ws
+
+Autentikasi:
+
+    { "type": "auth", "token": "<access_token>" }
+
+Subscribe/unsubscribe:
+
+    { "type": "subscribe", "channels": ["market.ticker", "strategy.metrics", "trader.metrics"] }
+    { "type": "unsubscribe", "channels": ["market.ticker"] }
+
+Channel dan event:
+
+| Channel | Event | Payload minimum | Konsumen |
+| --- | --- | --- | --- |
+| `market.ticker` | `market.ticker.updated` | `symbol`, `price`, `change_24h_percent`, `volume_24h`, `updated_at` | Dashboard dan halaman market |
+| `market.candle` | `market.candle.updated` | `symbol`, `interval`, `open`, `high`, `low`, `close`, `volume`, `timestamp` | Chart market jika diperlukan |
+| `strategy.metrics` | `strategy.metrics.updated` | `strategy_id`, `return_percent`, `win_rate`, `total_trades`, `risk_level`, `updated_at` | Dashboard dan Discover |
+| `trader.metrics` | `trader.metrics.updated` | `trader_id`, `return_percent`, `win_rate`, `followers_count`, `total_trades`, `updated_at` | Dashboard, Discover, trader profile |
+| `strategy.status` | `strategy.status.updated` | `strategy_id`, `status`, `updated_at` | Dashboard dan Discover |
+
+Contoh event:
+
+    {
+      "type": "market.ticker.updated",
+      "channel": "market.ticker",
+      "data": {
+        "symbol": "BTCUSDT",
+        "price": 65120.4,
+        "change_24h_percent": 2.45,
+        "volume_24h": 28400000000,
+        "updated_at": "2026-10-31T12:00:00Z"
+      }
+    }
+
+Aturan WebSocket:
+- Client mengambil snapshot awal melalui REST, lalu subscribe channel yang dibutuhkan oleh halaman aktif.
+- Gunakan satu shared socket manager di frontend; komponen hanya subscribe/unsubscribe channel, bukan membuka koneksi baru.
+- Saat pindah Dashboard ke Discover, pertahankan koneksi dan ubah subscription sesuai kebutuhan.
+- Sertakan `event_id` atau sequence number bila backend membutuhkan deteksi event duplikat/urutan.
+- Kirim heartbeat `ping`/`pong`; client melakukan reconnect dengan exponential backoff.
+- Setelah reconnect, client fetch ulang snapshot REST sebelum menerapkan update realtime.
+- Batasi frekuensi update dan gunakan batching/throttling untuk market ticker agar UI tidak render berlebihan.
+- Jangan kirim data sensitif, private key, credential exchange, atau trade privat melalui channel publik.
+- Untuk data yang tidak perlu live (misalnya deskripsi, bio, metadata strategi), cukup gunakan REST.
+
+### 4. Saran Urutan Pengerjaan Backend
+
+1. Buat model dan service bersama untuk strategy, trader, market, follow, dan favorite.
+2. Implementasikan tiga list endpoint bersama: `/dashboard/strategies`, `/dashboard/traders`, dan `/dashboard/market` dengan search, filter, sort, serta pagination.
+3. Hubungkan Dashboard dan Discover ke endpoint yang sama; perbedaan UI hanya pada query dan jumlah data.
+4. Implementasikan endpoint detail strategy dan trader profile.
+5. Implementasikan follow/favorite dengan autentikasi dan relasi unik per user.
+6. Tambahkan WebSocket untuk ticker dan metrik yang benar-benar perlu realtime.
+7. Tambahkan cache, rate limit, validasi query, observability, dan test untuk REST maupun WebSocket.
+
+### 5. Checklist Integrasi Bersama
+
+- [ ] Dashboard dan Discover menggunakan endpoint strategy yang sama.
+- [ ] Dashboard dan Discover menggunakan endpoint trader yang sama.
+- [ ] Tidak ada endpoint/controller/query database Discover yang menduplikasi Dashboard.
+- [ ] Filter, search, sort, dan pagination dilakukan backend.
+- [ ] Podium Dashboard mengambil tiga item teratas dari endpoint bersama.
+- [ ] Status follow dan favorite konsisten di seluruh halaman.
+- [ ] Satu WebSocket manager dipakai lintas halaman.
+- [ ] REST snapshot dan WebSocket update tidak saling menimpa dengan data lebih lama.
+- [ ] Loading, empty, error, reconnect, dan stale-data state ditangani frontend.
 ## Development Notes
 
 - Angka demo di UI bukan data produksi.
