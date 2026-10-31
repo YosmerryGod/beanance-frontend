@@ -319,3 +319,112 @@ h2{font-size:19px;margin:0}
   .app-shell.theme-light .bottom-nav{background:rgba(255,255,255,.97);border-right-color:rgba(26,35,50,.1)}
   .app-shell.theme-light .nav-item.active{background:rgba(245,184,46,.14);color:#9a6b08}
 }
+
+/* [ADDED] 100dvh dashboard: fit desktop content into the visible viewport */
+@media(min-width:1000px){
+  html,body{height:100%;overflow:hidden}
+  .app-shell{
+    width:100%;
+    height:100dvh;
+    min-height:0;
+    max-height:100dvh;
+    overflow:hidden;
+    padding:0;
+    display:block;
+  }
+  .app-content{
+    height:100dvh;
+    min-height:0;
+    max-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .topbar{
+    height:clamp(56px,7.5dvh,68px);
+    min-height:clamp(56px,7.5dvh,68px);
+    flex:none;
+    padding-top:0;
+    padding-bottom:0;
+  }
+  .dashboard-page{
+    flex:1;
+    min-height:0;
+    height:calc(100dvh - clamp(56px,7.5dvh,68px) - 24px);
+    max-height:calc(100dvh - clamp(56px,7.5dvh,68px) - 24px);
+    padding-top:clamp(8px,1.4dvh,14px);
+    padding-bottom:clamp(8px,1.4dvh,14px);
+    display:grid;
+    grid-template-rows:minmax(0,1.05fr) minmax(0,1.25fr) minmax(0,1.25fr);
+    gap:clamp(8px,1.35dvh,14px);
+    overflow:hidden;
+  }
+  .dashboard-section{
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .dashboard-section-heading{
+    flex:none;
+    min-height:clamp(30px,4.2dvh,38px);
+    margin-bottom:clamp(5px,.8dvh,8px);
+    align-items:center;
+  }
+  .dashboard-section-heading h2{font-size:clamp(15px,1.7dvh,19px);margin-bottom:2px}
+  .dashboard-section-heading .muted{font-size:clamp(9px,1.15dvh,11px)}
+  .text-link{font-size:10px}
+  .strategy-grid{
+    flex:1;
+    min-height:0;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(8px,1vw,13px);
+  }
+  .strategy-card{
+    min-height:0;
+    padding:clamp(8px,1.15dvh,12px) clamp(10px,1vw,15px);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .strategy-card-head{gap:8px}
+  .strategy-coin{width:clamp(28px,4.2dvh,38px);height:clamp(28px,4.2dvh,38px);font-size:18px}
+  .strategy-identity strong{font-size:clamp(10px,1.35dvh,12px)}
+  .strategy-identity span{font-size:clamp(9px,1.1dvh,10px)}
+  .strategy-chart{height:clamp(24px,4.2dvh,39px);margin:3px 0}
+  .strategy-metrics strong{font-size:clamp(15px,2.1dvh,19px)}
+  .strategy-metrics span{font-size:clamp(8px,1.05dvh,10px)}
+  .strategy-card-footer{margin-top:4px;gap:5px}
+  .strategy-tag,.risk-tag{padding:4px 6px;font-size:clamp(8px,.95dvh,9px)}
+  .strategy-card-footer button{padding:6px 13px;font-size:9px}
+  .dashboard-table-wrap{flex:1;min-height:0;overflow:hidden}
+  .dashboard-table{height:100%;table-layout:auto}
+  .dashboard-table th{height:clamp(25px,3.6dvh,32px);padding:0 10px;font-size:clamp(8px,.95dvh,9px)}
+  .dashboard-table td{height:clamp(29px,4.3dvh,38px);padding:3px 10px;font-size:clamp(9px,1.15dvh,10px)}
+  .trader-name{gap:7px}
+  .trader-name strong{font-size:clamp(9px,1.15dvh,10px)}
+  .trader-avatar{width:clamp(20px,3dvh,26px);height:clamp(20px,3dvh,26px)}
+  .verified-mark{width:11px;height:11px;font-size:8px}
+  .table-sparkline{width:clamp(65px,8vw,105px);height:20px}
+  .table-follow{min-width:62px;padding:5px 10px;font-size:9px}
+  .market-pair{gap:7px}
+  .market-pair .asset-icon{width:clamp(22px,3.4dvh,29px);height:clamp(22px,3.4dvh,29px);font-size:15px}
+  .market-pair strong{font-size:clamp(9px,1.1dvh,10px)}
+  .market-pair small{font-size:8px}
+  .favorite-star{font-size:16px}
+}
+@media(min-width:1000px) and (max-height:760px){
+  .dashboard-page{grid-template-rows:minmax(0,.92fr) minmax(0,1.28fr) minmax(0,1.28fr)}
+  .dashboard-section-heading{min-height:27px}
+  .dashboard-section-heading h2{font-size:15px}
+  .dashboard-section-heading .muted{font-size:9px}
+  .strategy-card-footer .strategy-tag,.strategy-card-footer .risk-tag{font-size:8px;padding:3px 5px}
+  .dashboard-table th{height:23px}
+  .dashboard-table td{height:27px}
+}
+@media(max-width:999px){
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+  .app-shell{height:auto;min-height:100dvh;max-height:none;overflow:visible}
+  .app-content{height:auto;min-height:100dvh;overflow:visible}
+  .dashboard-page{height:auto;max-height:none;overflow:visible}
+}
