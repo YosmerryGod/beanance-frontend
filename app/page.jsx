@@ -68,7 +68,6 @@ function App() {
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
   const [discoverTopTab, setDiscoverTopTab] = useState("strategies");
-  const [discoverListTab, setDiscoverListTab] = useState("strategies");
   const [discoverFilter, setDiscoverFilter] = useState("All");
   const searchInputRef = useRef(null);
 
@@ -113,14 +112,14 @@ function App() {
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
         <header className={`topbar ${searchOpen ? "search-expanded" : ""}`}>
-          <div className="nav-greeting">
+          <div className={`nav-greeting ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
             <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
             <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
           </div>
           {active === "dapps" && (
             <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Discover category">
-              <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverListTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
-              <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
+              <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
+              <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverFilter("All");}}>Traders</button>
             </div>
           )}
           <div className="top-actions">
@@ -249,10 +248,6 @@ function App() {
             <section className="discover-top-section">
               <div className="discover-section-heading">
                 <div><h2>Top 3</h2><p className="muted">Peringkat terbaik komunitas</p></div>
-                <div className="discover-switch" role="tablist" aria-label="Top ranking">
-                  <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => setDiscoverTopTab("strategies")}>Strategies</button>
-                  <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => setDiscoverTopTab("traders")}>Traders</button>
-                </div>
               </div>
               <div className="discover-podium">
                 {(discoverTopTab === "strategies" ? [
@@ -279,19 +274,15 @@ function App() {
 
             <section className="discover-list-section">
               <div className="discover-section-heading discover-list-heading">
-                <div><h2>{discoverTopTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverListTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
-                <div className="discover-switch discover-list-switch" role="tablist" aria-label="Discover list">
-                  <button className={discoverListTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverListTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
-                  <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
-                </div>
+                <div><h2>{discoverTopTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverTopTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
               </div>
               <div className="discover-filters" aria-label="Filter discover results">
-                {(discoverListTab === "strategies" ? ["All","Trending","Low Risk","High Return"] : ["All","Verified","Most Followers","Top Return"]).map((filter) => (
+                {(discoverTopTab === "strategies" ? ["All","Trending","Low Risk","High Return"] : ["All","Verified","Most Followers","Top Return"]).map((filter) => (
                   <button key={filter} className={discoverFilter === filter ? "selected" : ""} onClick={() => setDiscoverFilter(filter)}>{filter}</button>
                 ))}
               </div>
               <div className="discover-card-list">
-                {discoverListTab === "strategies" ? [
+                {discoverTopTab === "strategies" ? [
                   {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",tone:"bitcoin",symbol:"₿",tag:"Trending"},
                   {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",tone:"ethereum",symbol:"◆",tag:"Low Risk"},
                   {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",tone:"solana",symbol:"◎",tag:"Trending"},
