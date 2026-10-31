@@ -28,7 +28,7 @@ import {
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "dapps", label: "dApps", icon: Grid2X2 },
+  { id: "dapps", label: "Discover", icon: Compass },
   { id: "create", label: "Create", icon: Plus, primary: true },
   { id: "market", label: "Market", icon: BarChart3 },
   { id: "profile", label: "Profile", icon: UserRound },
@@ -67,6 +67,9 @@ function App() {
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
+  const [discoverTopTab, setDiscoverTopTab] = useState("strategies");
+  const [discoverListTab, setDiscoverListTab] = useState("strategies");
+  const [discoverFilter, setDiscoverFilter] = useState("All");
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -230,12 +233,86 @@ function App() {
         )}
 
         {active === "dapps" && (
-          <section className="page page-enter simple-page">
-            <p className="eyebrow">DISCOVER WEB3</p><h1>Explore dApps</h1>
-            <p className="muted">Find decentralized apps across your favorite networks.</p>
-            <div className="search-field"><Search size={18} /><span>Search decentralized apps</span></div>
-            <div className="feature-tile"><div className="feature-symbol"><Compass /></div><div><strong>Discover something new</strong><p>Explore DeFi, games, NFT and more.</p></div><ChevronRight /></div>
-            <div className="dapp-list">{dapps.filter((dapp) => `${dapp.name} ${dapp.category} ${dapp.description}`.toLowerCase().includes(searchQuery.toLowerCase())).map((dapp) => <article className="dapp-row" key={dapp.name}><div className={`dapp-icon ${dapp.color}`}>{dapp.icon}</div><div className="dapp-info"><strong>{dapp.name}</strong><span>{dapp.category}</span><small>{dapp.description}</small></div><button className="dapp-connect" onClick={() => setNotice(`Connecting to ${dapp.name} is a demo action`)}>Open</button></article>)}</div>
+          <section className="page page-enter simple-page discover-page">
+            <div className="discover-intro">
+              <p className="eyebrow">BEANANCE COMMUNITY</p>
+              <h1>Discover</h1>
+              <p className="muted">Temukan strategi trading dan trader terbaik dari komunitas.</p>
+            </div>
+
+            <section className="discover-top-section">
+              <div className="discover-section-heading">
+                <div><h2>Top 3</h2><p className="muted">Peringkat terbaik komunitas</p></div>
+                <div className="discover-switch" role="tablist" aria-label="Top ranking">
+                  <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => setDiscoverTopTab("strategies")}>Strategies</button>
+                  <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => setDiscoverTopTab("traders")}>Traders</button>
+                </div>
+              </div>
+              <div className="discover-podium">
+                {(discoverTopTab === "strategies" ? [
+                  {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",avatar:"₿",tone:"bitcoin"},
+                  {rank:1,name:"Scalping AI v2",user:"@cryptofox",metric:"+89.2%",detail:"Total return",avatar:"◆",tone:"ethereum"},
+                  {rank:3,name:"ETH Breakout",user:"@moontrade",metric:"+68.1%",detail:"Total return",avatar:"◎",tone:"solana"}
+                ] : [
+                  {rank:2,name:"cryptofox",user:"1.2K followers",metric:"+89.2%",detail:"30D return",avatar:"C",tone:"trader-avatar-2"},
+                  {rank:1,name:"tradewiz",user:"342 followers",metric:"+124.5%",detail:"30D return",avatar:"T",tone:"trader-avatar-1"},
+                  {rank:3,name:"moontrade",user:"856 followers",metric:"+68.1%",detail:"30D return",avatar:"M",tone:"trader-avatar-3"}
+                ]).map((item) => (
+                  <article className={`discover-podium-card podium-rank-${item.rank}`} key={item.name}>
+                    <span className="podium-rank">{item.rank}</span>
+                    <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
+                    <strong>{item.name}</strong>
+                    <small>{item.user}</small>
+                    <b className="positive">{item.metric}</b>
+                    <span className="podium-detail">{item.detail}</span>
+                    <button onClick={() => setNotice(discoverTopTab === "strategies" ? `Strategy ${item.name} selected` : `Opening @${item.name} profile`)}>{discoverTopTab === "strategies" ? "View strategy" : "View profile"}</button>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="discover-list-section">
+              <div className="discover-section-heading discover-list-heading">
+                <div><h2>{discoverListTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverListTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
+                <div className="discover-switch discover-list-switch" role="tablist" aria-label="Discover list">
+                  <button className={discoverListTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverListTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
+                  <button className={discoverListTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverListTab("traders");setDiscoverFilter("All");}}>Traders</button>
+                </div>
+              </div>
+              <div className="discover-filters" aria-label="Filter discover results">
+                {(discoverListTab === "strategies" ? ["All","Trending","Low Risk","High Return"] : ["All","Verified","Most Followers","Top Return"]).map((filter) => (
+                  <button key={filter} className={discoverFilter === filter ? "selected" : ""} onClick={() => setDiscoverFilter(filter)}>{filter}</button>
+                ))}
+              </div>
+              <div className="discover-card-list">
+                {discoverListTab === "strategies" ? [
+                  {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",tone:"bitcoin",symbol:"₿",tag:"Trending"},
+                  {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",tone:"ethereum",symbol:"◆",tag:"Low Risk"},
+                  {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",tone:"solana",symbol:"◎",tag:"Trending"},
+                  {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",tone:"bnb",symbol:"◆",tag:"Low Risk"}
+                ].filter((item) => discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                  <article className="discover-list-card" key={item.name}>
+                    <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
+                    <div className="discover-card-main"><strong>{item.name}</strong><span>{item.user} · {item.type}</span><small>{item.risk}</small></div>
+                    <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
+                    <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>Follow</button>
+                  </article>
+                )) : [
+                  {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",avatar:"T",tone:"trader-avatar-1",verified:true},
+                  {name:"cryptofox",followers:"1.2K",returns:"+89.2%",win:"72%",avatar:"C",tone:"trader-avatar-2",verified:true},
+                  {name:"moontrade",followers:"856",returns:"+68.1%",win:"63%",avatar:"M",tone:"trader-avatar-3",verified:true},
+                  {name:"quantalab",followers:"432",returns:"+54.3%",win:"58%",avatar:"Q",tone:"trader-avatar-4",verified:true},
+                  {name:"solking",followers:"321",returns:"+48.7%",win:"61%",avatar:"S",tone:"trader-avatar-5",verified:true}
+                ].filter((item) => discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80)).map((item) => (
+                  <article className="discover-list-card" key={item.name}>
+                    <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
+                    <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader</small></div>
+                    <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
+                    <button onClick={() => setNotice(`Following @${item.name} is a demo action`)}>Follow</button>
+                  </article>
+                ))}
+              </div>
+            </section>
           </section>
         )}
 
