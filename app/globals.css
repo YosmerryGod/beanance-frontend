@@ -670,3 +670,72 @@ h2{font-size:19px;margin:0}
   .discover-list-card{gap:7px;padding:10px 7px}
   .discover-card-stats>strong{font-size:11px}
 }
+
+
+/* [ADDED] Center Discover category tabs in the navbar; search expands over the tab space */
+.discover-nav-tabs{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel-soft);
+  opacity:1;
+  max-width:42%;
+  transition:opacity .2s ease,transform .3s ease,max-width .3s ease;
+  z-index:2;
+}
+.discover-nav-tabs button{
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:var(--muted);
+  padding:8px 15px;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+  transition:background .2s ease,color .2s ease;
+}
+.discover-nav-tabs button.selected{
+  background:var(--panel);
+  color:var(--text,#f4f5f7);
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.topbar{position:relative}
+.top-actions{position:relative;z-index:3;display:flex;align-items:center;gap:9px;margin-left:auto}
+.header-search{order:1}
+.theme-toggle{order:2}
+.topbar.search-expanded .discover-nav-tabs{
+  opacity:0;
+  pointer-events:none;
+  transform:translate(-42%,-50%) scale(.96);
+  max-width:0;
+  overflow:hidden;
+}
+.topbar.search-expanded .header-search.is-open{
+  width:min(52vw,390px);
+  flex:0 1 390px;
+}
+.app-shell.theme-light .discover-nav-tabs{background:#eef1f5;border-color:rgba(26,35,50,.1)}
+.app-shell.theme-light .discover-nav-tabs button.selected{background:#fff;color:#202938}
+@media(max-width:760px){
+  .topbar{gap:5px}
+  .nav-greeting{min-width:0;max-width:34%;overflow:hidden}
+  .nav-greeting strong{font-size:12px;white-space:nowrap}
+  .discover-nav-tabs{max-width:44%;gap:1px;padding:3px}
+  .discover-nav-tabs button{padding:8px 9px;font-size:10px}
+  .top-actions{gap:6px}
+  .header-search.is-open{width:min(58vw,330px)}
+  .topbar.search-expanded .header-search.is-open{width:min(62vw,350px);flex:1}
+}
+@media(max-width:370px){
+  .nav-greeting{max-width:28%}
+  .nav-greeting strong{font-size:11px}
+  .discover-nav-tabs button{padding:7px 7px;font-size:9px}
+  .top-actions{gap:4px}
+}
