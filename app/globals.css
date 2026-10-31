@@ -297,3 +297,25 @@ h2{font-size:19px;margin:0}
   .period-tabs button{min-width:34px;font-size:9px;padding:7px 8px}
   .dashboard-table th,.dashboard-table td{padding-left:10px;padding-right:10px}
 }
+
+/* [ADDED] Desktop sidebar navigation matching the dashboard reference */
+.nav-item .nav-label{display:none}
+.nav-item.active .nav-label{display:inline}
+@media(min-width:1000px){
+  .app-shell{padding-bottom:35px}
+  .app-content{width:calc(100% - 270px);max-width:1320px;margin-left:246px;margin-right:24px}
+  .bottom-nav{top:0;bottom:0;left:0;transform:none;width:216px;height:100vh;padding:78px 14px 24px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:8px;border:0;border-right:1px solid var(--line);border-radius:0;background:rgba(18,23,31,.97);box-shadow:none;backdrop-filter:blur(20px)}
+  .nav-item,.nav-item.active{width:100%;height:48px;min-height:48px;flex:none;justify-content:flex-start;gap:13px;padding:0 14px;border-radius:11px}
+  .nav-item .nav-label{display:inline;font-size:13px;font-weight:600;animation:none}
+  .nav-item.active{background:rgba(245,184,46,.12);color:var(--gold)}
+  .nav-create{order:0;margin:0}
+  .nav-create .create-orb{width:27px;height:27px;border-radius:9px;box-shadow:none}
+  .nav-create .create-orb svg{width:18px;height:18px}
+  .nav-item:nth-child(5){margin-top:auto}
+  .dashboard-page{padding-top:24px}
+  .topbar{height:68px}
+}
+@media(min-width:1000px){
+  .app-shell.theme-light .bottom-nav{background:rgba(255,255,255,.97);border-right-color:rgba(26,35,50,.1)}
+  .app-shell.theme-light .nav-item.active{background:rgba(245,184,46,.14);color:#9a6b08}
+}
