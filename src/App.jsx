@@ -56,6 +56,7 @@ function App() {
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [notice, setNotice] = useState("");
+  const [marketTab, setMarketTab] = useState("market"); // [ADDED] Market page sub-navigation state
 
   const selectTab = (item) => {
     if (item.id === "create") {
@@ -75,6 +76,11 @@ function App() {
       window.setTimeout(() => setNotice(""), 2200);
     }
   };
+
+  // [ADDED] Rank assets by the absolute size of their 24-hour movement.
+  const topMovers = [...marketAssets].sort(
+    (a, b) => Math.abs(parseFloat(b.change)) - Math.abs(parseFloat(a.change))
+  );
 
   return (
     <main className="app-shell">
@@ -170,9 +176,73 @@ function App() {
           <section className="page page-enter simple-page">
             <p className="eyebrow">LIVE OVERVIEW</p><h1>Market</h1>
             <p className="muted">A quick look at the crypto market.</p>
-            <div className="market-summary"><span>Market sentiment</span><strong>Optimistic <b>↗</b></strong><small>Demo market data</small></div>
-            <div className="section-heading market-heading"><div><p className="eyebrow">WATCHLIST</p><h2>Top assets</h2></div><button className="text-link" onClick={() => setNotice("Full market is coming soon")}>See all <ChevronRight size={15} /></button></div>
-            <div className="asset-list">{marketAssets.map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+
+            {/* [ADDED] Market and Top Movers tabs, following the Discover segmented-tab pattern. */}
+            <div
+              role="tablist"
+              aria-label="Market sections"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 5,
+                padding: 5,
+                marginTop: 24,
+                marginBottom: 22,
+                borderRadius: 14,
+                border: "1px solid var(--line)",
+                background: "#151a22",
+              }}
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={marketTab === "market"}
+                onClick={() => setMarketTab("market")}
+                style={{
+                  minHeight: 42,
+                  border: 0,
+                  borderRadius: 10,
+                  background: marketTab === "market" ? "rgba(245,184,46,.14)" : "transparent",
+                  color: marketTab === "market" ? "var(--gold)" : "var(--muted)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  transition: "background .2s, color .2s",
+                }}
+              >
+                Market
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={marketTab === "top-movers"}
+                onClick={() => setMarketTab("top-movers")}
+                style={{
+                  minHeight: 42,
+                  border: 0,
+                  borderRadius: 10,
+                  background: marketTab === "top-movers" ? "rgba(245,184,46,.14)" : "transparent",
+                  color: marketTab === "top-movers" ? "var(--gold)" : "var(--muted)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  transition: "background .2s, color .2s",
+                }}
+              >
+                Top Movers
+              </button>
+            </div>
+
+            {marketTab === "market" ? (
+              <>
+                <div className="market-summary"><span>Market sentiment</span><strong>Optimistic <b>↗</b></strong><small>Demo market data</small></div>
+                <div className="section-heading market-heading"><div><p className="eyebrow">WATCHLIST</p><h2>Top assets</h2></div><button className="text-link" onClick={() => setNotice("Full market is coming soon")}>See all <ChevronRight size={15} /></button></div>
+                <div className="asset-list">{marketAssets.map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+              </>
+            ) : (
+              <>
+                <div className="section-heading market-heading"><div><p className="eyebrow">24H PERFORMANCE</p><h2>Top movers</h2></div><span className="muted">By price change</span></div>
+                <div className="asset-list">{topMovers.map((asset) => <article className="asset-row market-asset-row" key={asset.symbol}><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div className="asset-info"><strong>{asset.name}</strong><span>{asset.symbol} · Vol {asset.volume}</span></div><div className="asset-values"><strong>{asset.price}</strong><span className={asset.positive ? "positive" : "negative"}>{asset.change}</span></div></article>)}</div>
+              </>
+            )}
           </section>
         )}
 
