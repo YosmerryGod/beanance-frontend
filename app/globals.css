@@ -3679,3 +3679,46 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     box-shadow: 4px 4px 10px rgba(163,174,190,.35), -4px -4px 10px rgba(255,255,255,.9) !important;
   }
 }
+
+
+/* [MODIFIED] Portfolio history uses clean flat transaction rows, not individual cards. */
+.app-shell .portfolio-profile-page .portfolio-history-list {
+  display: grid !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.app-shell .portfolio-profile-page .portfolio-history-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 68px !important;
+  padding: 13px 2px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.app-shell .portfolio-profile-page .portfolio-history-item:last-child {
+  border-bottom: 0 !important;
+}
+.app-shell .portfolio-profile-page .portfolio-history-icon {
+  flex: 0 0 38px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: var(--panel-soft) !important;
+  box-shadow: none !important;
+}
+.app-shell.theme-light .portfolio-profile-page .portfolio-history-item {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.app-shell.theme-light .portfolio-profile-page .portfolio-history-icon {
+  background: #e5e9f0 !important;
+  box-shadow: none !important;
+}
