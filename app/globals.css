@@ -3471,3 +3471,8 @@ main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-card{min-height:
  main.app-shell .portfolio-wallet-modern .portfolio-wallet-actions button{min-height:62px!important}
  main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-heading{margin-top:21px!important}
 }
+
+
+/* [ADDED] Clearly labeled preview controls for the connected wallet layout. */
+main.app-shell .portfolio-wallet-preview-link{display:block!important;margin:16px auto 0!important;padding:7px 10px!important;border:0!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:11px!important;font-weight:650!important;text-decoration:underline!important;text-underline-offset:3px!important;cursor:pointer!important}
+main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1px solid var(--line)!important;border-radius:8px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:10px!important;font-weight:650!important;cursor:pointer!important}
