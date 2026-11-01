@@ -559,7 +559,7 @@ function CryptoIcon({ symbol, className = "" }) {
   const slug = cryptoIconSlugs[normalizedSymbol];
   return (
     <span className={`crypto-brand-icon ${className}`} data-symbol={normalizedSymbol} role="img" aria-label={normalizedSymbol || "Crypto asset"}>
-      {slug && <img src={`https://cdn.simpleicons.org/${slug}`} alt="" aria-hidden="true" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+      {slug && <img src={`https://cdn.simpleicons.org/${slug}`} alt="" aria-hidden="true" loading="lazy" decoding="async" onLoad={(event) => { const fallback = event.currentTarget.nextElementSibling; if (fallback) fallback.style.display = "none"; }} onError={(event) => { event.currentTarget.style.display = "none"; }} />}
       <span aria-hidden="true">{normalizedSymbol.slice(0, 1) || "?"}</span>
     </span>
   );
