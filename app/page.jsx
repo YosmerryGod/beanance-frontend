@@ -80,6 +80,7 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
+  const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
   const [marketSortDirection, setMarketSortDirection] = useState("desc"); // [ADDED] Market sort direction
   const [pinnedMarketSymbols, setPinnedMarketSymbols] = useState([]); // [ADDED] Pinned market assets
@@ -164,6 +165,12 @@ function App() {
             <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Discover category">
               <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
               <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverFilter("All");}}>Traders</button>
+            </div>
+          )}
+          {active === "market" && (
+            <div className={`discover-nav-tabs market-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Market sections">
+              <button type="button" role="tab" aria-selected={marketNavTab === "all-market"} className={marketNavTab === "all-market" ? "selected" : ""} onClick={() => setMarketNavTab("all-market")}>All Market</button>
+              <button type="button" role="tab" aria-selected={marketNavTab === "top-movers"} className={marketNavTab === "top-movers" ? "selected" : ""} onClick={() => setMarketNavTab("top-movers")}>Top Movers</button>
             </div>
           )}
           <div className="top-actions">
@@ -486,6 +493,8 @@ function App() {
               </div>
               <div className="market-table-body">
                 {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
+                  // [ADDED] Top Movers ranks the largest absolute 24-hour changes first.
+                  if (marketNavTab === "top-movers") return Math.abs(Number(b.change.replace("%", ""))) - Math.abs(Number(a.change.replace("%", "")));
                   const aPinned = pinnedMarketSymbols.includes(a.symbol);
                   const bPinned = pinnedMarketSymbols.includes(b.symbol);
                   if (aPinned !== bPinned) return aPinned ? -1 : 1;
