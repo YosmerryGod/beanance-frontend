@@ -576,6 +576,7 @@ function App() {
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
   const [portfolioTab, setPortfolioTab] = useState("strategy"); // [MODIFIED] Default to the Strategy overview
   const [strategyFilter, setStrategyFilter] = useState("all"); // [ADDED] Filter strategies inside the Strategy tab
+  const [historyFilter, setHistoryFilter] = useState("not-running"); // [ADDED] Filter portfolio strategy and wallet activity history
   const [portfolioStrategyStatus, setPortfolioStrategyStatus] = useState("active"); // [ADDED] Active/inactive strategy filter
   const searchInputRef = useRef(null);
 
@@ -1200,16 +1201,52 @@ function App() {
               )}
 
               {portfolioTab === "history" && (
-                <section className="portfolio-strategy-list-section portfolio-tab-panel">
-                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("ACCOUNT ACTIVITY")}</p><h2>{t("Transaction History")}</h2><p>{t("A record of your recent portfolio activity.")}</p></div><span className="portfolio-period-chip">{t("DEMO DATA")}</span></div>
-                  <div className="portfolio-transaction-list">
-                    <article><span className="transaction-in"><ArrowDownLeft size={17}/></span><span><strong>{t("Bought")} BTC</strong><small>Oct 31, 2026 · 14:32</small></span><strong>+0.012 BTC</strong></article>
-                    <article><span className="transaction-out"><ArrowUpRight size={17}/></span><span><strong>{t("Sold")} ETH</strong><small>Oct 30, 2026 · 09:18</small></span><strong>-0.25 ETH</strong></article>
-                    <article><span className="transaction-in"><ArrowDownLeft size={17}/></span><span><strong>{t("Received")} BNB</strong><small>Oct 29, 2026 · 18:06</small></span><strong>+0.80 BNB</strong></article>
+                <section className="portfolio-strategy-list-section portfolio-tab-panel portfolio-history-panel">
+                  <div className="portfolio-history-tabs" role="tablist" aria-label={t("History filters")}>
+                    <button type="button" role="tab" aria-selected={historyFilter === "not-running"} className={historyFilter === "not-running" ? "selected" : ""} onClick={() => setHistoryFilter("not-running")}>{t("Not Running")} <span>2</span></button>
+                    <button type="button" role="tab" aria-selected={historyFilter === "running"} className={historyFilter === "running" ? "selected" : ""} onClick={() => setHistoryFilter("running")}>{t("Running")} <span>2</span></button>
+                    <button type="button" role="tab" aria-selected={historyFilter === "closed"} className={historyFilter === "closed" ? "selected" : ""} onClick={() => setHistoryFilter("closed")}>{t("Closed")} <span>3</span></button>
+                    <button type="button" role="tab" aria-selected={historyFilter === "wallet"} className={historyFilter === "wallet" ? "selected" : ""} onClick={() => setHistoryFilter("wallet")}>{t("Wallet")} <span>3</span></button>
                   </div>
+                  {historyFilter === "wallet" ? (
+                    <div className="portfolio-history-list">
+                      {[
+                        {type:"Swap",asset:"BNB → BEAN",amount:"0.15 BNB",date:"Nov 01, 2026 · 18:42",status:"Completed",icon:"swap"},
+                        {type:"Deposit",asset:"BNB",amount:"+0.80 BNB",date:"Oct 30, 2026 · 12:16",status:"Completed",icon:"deposit"},
+                        {type:"Withdraw",asset:"BEAN",amount:"-250 BEAN",date:"Oct 28, 2026 · 09:35",status:"Completed",icon:"withdraw"}
+                      ].map((item,index) => (
+                        <article className="portfolio-history-item" key={item.type + item.date}>
+                          <span className={"portfolio-history-icon " + item.icon}>{item.icon === "swap" ? <Activity size={17}/> : item.icon === "deposit" ? <ArrowDownLeft size={17}/> : <ArrowUpRight size={17}/>}</span>
+                          <span className="portfolio-history-main"><strong>{t(item.type)} · {item.asset}</strong><small>{item.date}</small></span>
+                          <span className="portfolio-history-value"><strong>{item.amount}</strong><small className="completed">{t(item.status)}</small></span>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="portfolio-history-list">
+                      {(
+                        historyFilter === "not-running" ? [
+                          {name:"Grid BNB",pair:"BNBUSDT",date:"Created Nov 01, 2026",status:"Not Running",detail:"Ready to start"},
+                          {name:"ETH Swing",pair:"ETHUSDT",date:"Created Oct 29, 2026",status:"Not Running",detail:"Waiting to start"}
+                        ] : historyFilter === "running" ? [
+                          {name:"Scalping BNB",pair:"BNBUSDT",date:"Started Oct 30, 2026",status:"Running",detail:"+8.42%"},
+                          {name:"BTC Trend",pair:"BTCUSDT",date:"Started Oct 27, 2026",status:"Running",detail:"+4.18%"}
+                        ] : [
+                          {name:"ETH Momentum",pair:"ETHUSDT",date:"Closed Oct 25, 2026",status:"Closed",detail:"+12.50%"},
+                          {name:"BNB Breakout",pair:"BNBUSDT",date:"Closed Oct 20, 2026",status:"Closed",detail:"+6.21%"},
+                          {name:"BTC Scalper",pair:"BTCUSDT",date:"Closed Oct 18, 2026",status:"Closed",detail:"-1.80%"}
+                        ]
+                      ).map((item) => (
+                        <article className="portfolio-history-item portfolio-strategy-history-item" key={item.name}>
+                          <span className={"portfolio-history-icon " + historyFilter}><Activity size={17}/></span>
+                          <span className="portfolio-history-main"><strong>{item.name}</strong><small>{item.pair} · {item.date}</small></span>
+                          <span className="portfolio-history-value"><strong className={item.detail.startsWith("+") ? "positive" : ""}>{item.detail}</strong><small className={"history-status " + historyFilter}>{t(item.status)}</small></span>
+                        </article>
+                      ))}
+                    </div>
+                  )}
                 </section>
-              )}
-            </div>
+              )}            </div>
           </section>
         )}
 
