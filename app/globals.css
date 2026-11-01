@@ -2581,3 +2581,89 @@ body{background:#090909;color:var(--text)}
 .app-shell.theme-light .sidebar-backdrop{background:rgba(22,30,42,.32);}
 .app-shell.theme-light .app-sidebar{background:#fff;box-shadow:18px 0 55px rgba(30,42,60,.16);}
 @media(max-width:760px){.app-shell .sidebar-trigger{width:36px;height:36px;margin-left:0;}.app-shell .app-sidebar{width:min(300px,86vw);}}
+
+
+/* [ADDED] Account-first Beanance sidebar layout and five-language picker. */
+.app-shell .sidebar-account{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin-top:18px;
+  padding:14px 10px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--panel-soft);
+  color:var(--text);
+  text-align:left;
+}
+.app-shell .sidebar-avatar{
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  flex:none;
+  border-radius:50%;
+  background:linear-gradient(145deg,#f8d76a,#c58a16);
+  color:#27221a;
+  font-size:18px;
+  font-weight:800;
+}
+.app-shell .sidebar-account-copy{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.app-shell .sidebar-account-copy strong{font-size:14px;font-weight:750}
+.app-shell .sidebar-account-copy small{color:var(--muted);font-size:10px}
+.app-shell .sidebar-section-label{margin:23px 0 9px 5px;font-size:9px;letter-spacing:1.2px}
+.app-shell .sidebar-navigation{display:flex;flex-direction:column;gap:3px}
+.app-shell .sidebar-nav-item{
+  min-height:46px;
+  gap:12px;
+  padding:0 10px;
+  border-radius:11px;
+  color:var(--text);
+  font-size:12px;
+}
+.app-shell .sidebar-nav-item>span:nth-of-type(1){flex:1;text-align:left}
+.app-shell .sidebar-item-chevron{margin-left:auto;color:var(--muted)}
+.app-shell .sidebar-current-language{margin-left:auto;color:var(--muted);font-size:10px;white-space:nowrap}
+.app-shell .sidebar-chevron-open{margin-left:auto;color:var(--gold);transform:rotate(90deg)}
+.app-shell .sidebar-language-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin:2px 0 7px 30px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg);
+  animation:fadeIn .18s ease both;
+}
+.app-shell .sidebar-language-list button{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  width:100%;
+  padding:0 8px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--text);
+  text-align:left;
+  font-size:11px;
+}
+.app-shell .sidebar-language-list button.selected{
+  background:rgba(245,184,46,.12);
+  color:var(--gold);
+}
+.app-shell .sidebar-language-list button small{
+  margin-left:auto;
+  color:var(--muted);
+  font-size:9px;
+}
+.app-shell .sidebar-language-check{font-weight:800}
+.app-shell .sidebar-footer{margin-top:auto}
+.app-shell .sidebar-nav-item:active,.app-shell .sidebar-language-list button:active{transform:scale(.985)}
+@media(max-height:760px){
+  .app-shell .app-sidebar{overflow-y:auto;overscroll-behavior:contain}
+  .app-shell .sidebar-footer{margin-top:24px}
+}
