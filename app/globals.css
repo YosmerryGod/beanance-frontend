@@ -3268,3 +3268,16 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-strategy-page .portfolio-performance-panel,.app-shell .portfolio-strategy-page .portfolio-strategy-list-section,.app-shell .portfolio-strategy-page .portfolio-wallet-panel{padding:13px!important;border-radius:15px!important}
  .app-shell .portfolio-strategy-page .portfolio-content-heading h2{font-size:17px!important}
 }
+
+
+/* [ADDED] Three-section Portfolio navigation and nested strategy filters. */
+.app-shell .portfolio-strategy-filters{display:flex!important;align-items:center!important;gap:6px!important;margin:0 0 15px!important;padding:4px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:var(--panel-soft)!important}
+.app-shell .portfolio-strategy-filters button{flex:1!important;min-width:0!important;min-height:35px!important;padding:7px 10px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:11px!important;font-weight:700!important;white-space:nowrap!important}
+.app-shell .portfolio-strategy-filters button.selected{background:var(--panel)!important;color:var(--gold)!important;box-shadow:0 1px 4px rgba(0,0,0,.18)!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button{flex:1 1 0!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected{flex:1.45 1 0!important}
+@media(max-width:700px){
+ .app-shell .portfolio-strategy-filters{gap:4px!important;margin-bottom:12px!important}
+ .app-shell .portfolio-strategy-filters button{min-height:33px!important;padding:6px 5px!important;font-size:10px!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected{flex:1.5 1 0!important}
+}
