@@ -1,0 +1,16 @@
+{
+  "name": "Beanance",
+  "short_name": "Beanance",
+  "description": "Beanance — your crypto dashboard.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0c0f14",
+  "theme_color": "#0c0f14",
+  "icons": [
+    { "src": "/icons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
