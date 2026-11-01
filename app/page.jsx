@@ -395,7 +395,7 @@ Object.assign(appTranslations.id, {
   "Return (30D)":"Return (30 Hari)","Wallet address copied":"Alamat wallet disalin","Wallet settings are coming soon":"Pengaturan wallet segera hadir",
   "Semua":"Semua","Kenaikan":"Kenaikan","Penurunan":"Penurunan","Pullback":"Pullback","Rally":"Rally","High Baru":"High Baru","Low Baru":"Low Baru",
   "Pasangan":"Pasangan","Perubahan / Status":"Perubahan / Status","Perp":"Perpetual","Belum ada pergerakan untuk kategori ini.":"Belum ada pergerakan untuk kategori ini.",
-  "{t("Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.")}":"Contoh sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.",
+  "Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.":"Contoh sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.",
   "Pilih strategi sesuai gaya trading kamu.":"Pilih strategi sesuai gaya trading kamu.","Kenali trader dan performa mereka.":"Kenali trader dan performa mereka."
 });
 Object.assign(appTranslations.zh, {
