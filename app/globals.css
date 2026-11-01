@@ -3876,3 +3876,16 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   }
   .app-shell .top-mover-asset>strong{font-size:14px!important}
 }
+
+
+/* [MODIFIED] Enlarge the BNB symbol inside its existing Top Movers logo circle. */
+.app-shell .top-mover-asset>.coin-logo[data-symbol="BNB"]{
+  padding:0!important;
+  background:#181a20!important;
+}
+.app-shell .top-mover-asset>.coin-logo[data-symbol="BNB"]>svg{
+  width:100%!important;
+  height:100%!important;
+  transform:scale(1.75)!important;
+  transform-origin:center!important;
+}
