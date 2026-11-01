@@ -2525,3 +2525,36 @@ body{background:#090909;color:var(--text)}
   .app-shell .top-mover-movement>span{font-size:11px}
   .app-shell .market-nav-tabs button{padding-left:9px;padding-right:9px;font-size:10px}
 }
+
+
+/* [MODIFIED] Animate Market navbar tabs out while the search field expands. */
+.topbar .market-nav-tabs{
+  opacity:1;
+  max-width:420px;
+  overflow:hidden;
+  transform:translateX(0);
+  transition:opacity .24s ease,transform .34s cubic-bezier(.2,.8,.2,1),max-width .38s cubic-bezier(.2,.8,.2,1),margin .38s ease;
+}
+.topbar.search-expanded .market-nav-tabs{
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(-24px);
+  max-width:0;
+  margin:0;
+  overflow:hidden;
+}
+.topbar.search-expanded .header-search.is-open{
+  width:min(52vw,390px);
+  flex:1 1 auto;
+  min-width:0;
+}
+@media(max-width:760px){
+  .topbar.search-expanded .header-search.is-open{
+    width:auto;
+    flex:1 1 0;
+    min-width:0;
+  }
+  .topbar.search-expanded .market-nav-tabs{
+    max-width:0;
+  }
+}
