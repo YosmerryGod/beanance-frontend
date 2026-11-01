@@ -3827,3 +3827,52 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     font-size:8px!important;
   }
 }
+
+
+/* [FIXED] Top Movers coin logos use a fixed compact size instead of expanding to the row width. */
+.app-shell .top-mover-asset{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-width:0!important;
+  width:max-content!important;
+  max-width:100%!important;
+}
+.app-shell .top-mover-asset>.coin-logo{
+  display:inline-grid!important;
+  flex:0 0 38px!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  overflow:hidden!important;
+  border-radius:50%!important;
+}
+.app-shell .top-mover-asset>.coin-logo>svg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+}
+.app-shell .top-mover-asset>strong{
+  display:block!important;
+  min-width:0!important;
+  color:var(--text)!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  white-space:nowrap!important;
+}
+.app-shell .top-mover-pair{min-width:0!important}
+@media(max-width:600px){
+  .app-shell .top-mover-asset{gap:9px!important}
+  .app-shell .top-mover-asset>.coin-logo{
+    flex-basis:34px!important;
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    min-height:34px!important;
+  }
+  .app-shell .top-mover-asset>strong{font-size:14px!important}
+}
