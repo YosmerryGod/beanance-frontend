@@ -3340,3 +3340,10 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-owned-strategy-card .trader-strategy-chart{margin-top:13px!important;padding:10px!important}
  .app-shell .portfolio-owned-strategy-card .trader-strategy-chart>svg{height:88px!important}
 }
+
+
+/* [MODIFIED] Keep All, My Strategy, Following and Inactive in one aligned row. */
+.app-shell .portfolio-strategy-all-filters{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:5px!important;width:100%!important;overflow-x:auto!important;scrollbar-width:none!important}
+.app-shell .portfolio-strategy-all-filters::-webkit-scrollbar{display:none!important}
+.app-shell .portfolio-strategy-all-filters button{flex:1 0 auto!important;white-space:nowrap!important;min-width:max-content!important}
+.app-shell .portfolio-strategy-all-filters button span{display:inline-flex!important;align-items:center!important;justify-content:center!important;margin-left:4px!important;padding:2px 6px!important;border-radius:6px!important;background:rgba(128,138,150,.14)!important;font-size:9px!important}
