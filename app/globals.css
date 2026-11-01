@@ -3237,3 +3237,34 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-strategy-row>.portfolio-positive{font-size:11px!important}
  .app-shell .portfolio-row-spark{display:none!important}
 }
+
+
+/* [MODIFIED] Integrate portfolio tabs into the profile card as one continuous surface. */
+.app-shell .portfolio-strategy-page{gap:16px!important}
+.app-shell .portfolio-strategy-page .portfolio-profile-hero{padding:0!important;margin:0!important;overflow:hidden!important;border:1px solid var(--line)!important;border-radius:22px!important;background:var(--panel)!important;box-shadow:0 12px 34px rgba(0,0,0,.16)!important}
+.app-shell .portfolio-strategy-page .portfolio-profile-cover{border-radius:0!important}
+.app-shell .portfolio-strategy-page .portfolio-profile-meta{padding-bottom:18px!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs{display:flex!important;align-items:stretch!important;gap:0!important;width:100%!important;margin:0!important;padding:7px 9px!important;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;background:rgba(255,255,255,.018)!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button{position:relative!important;display:flex!important;flex:1 1 0!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-width:0!important;min-height:54px!important;margin:0!important;padding:9px 7px!important;border:0!important;border-radius:12px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:12px!important;font-weight:650!important;box-shadow:none!important;white-space:nowrap!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected{flex:1.65 1 0!important;background:rgba(245,184,46,.12)!important;color:var(--gold)!important;box-shadow:inset 0 0 0 1px rgba(245,184,46,.2)!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button svg{width:19px!important;height:19px!important;flex:0 0 auto!important}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button span{overflow:hidden!important;font-size:11px!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.app-shell .portfolio-strategy-page .portfolio-strategy-content{gap:14px!important}
+.app-shell .portfolio-strategy-page .portfolio-performance-panel,.app-shell .portfolio-strategy-page .portfolio-strategy-list-section,.app-shell .portfolio-strategy-page .portfolio-wallet-panel{border-radius:17px!important;box-shadow:none!important}
+.app-shell .portfolio-strategy-page .portfolio-content-heading{margin-bottom:14px!important}
+.app-shell .portfolio-strategy-page .portfolio-content-heading h2{font-size:20px!important;letter-spacing:-.035em!important}
+.app-shell .portfolio-strategy-page .portfolio-pnl-card{box-shadow:none!important}
+.app-shell .portfolio-strategy-page .portfolio-metric-grid>div{min-width:0!important}
+.app-shell .portfolio-strategy-page .portfolio-strategy-row{box-shadow:none!important}
+@media(max-width:700px){
+ .app-shell .portfolio-strategy-page{gap:12px!important}
+ .app-shell .portfolio-strategy-page .portfolio-profile-hero{border-radius:18px!important}
+ .app-shell .portfolio-strategy-page .portfolio-profile-meta{padding-bottom:13px!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs{gap:2px!important;padding:6px 5px!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs button{flex:1 1 0!important;min-height:47px!important;gap:4px!important;padding:7px 2px!important;border-radius:10px!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected{flex:1.8 1 0!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs button svg{width:17px!important;height:17px!important}
+ .app-shell .portfolio-strategy-page .portfolio-icon-tabs button span{font-size:9px!important;letter-spacing:-.02em!important}
+ .app-shell .portfolio-strategy-page .portfolio-performance-panel,.app-shell .portfolio-strategy-page .portfolio-strategy-list-section,.app-shell .portfolio-strategy-page .portfolio-wallet-panel{padding:13px!important;border-radius:15px!important}
+ .app-shell .portfolio-strategy-page .portfolio-content-heading h2{font-size:17px!important}
+}
