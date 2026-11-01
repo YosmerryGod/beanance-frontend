@@ -882,7 +882,7 @@ function App() {
                 ]).map((item) => (
                   <article className={`discover-podium-card podium-rank-${item.rank}`} key={item.name}>
                     <span className="podium-rank">{item.rank}</span>
-                    <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
+                    <div className={`discover-avatar ${item.tone}`}>{item.tone.startsWith("trader-avatar") ? item.avatar : <CryptoIcon symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : "SOL"} />}</div>
                     <strong>{item.name}</strong>
                     <small>{item.user}</small>
                     <b className="positive">{item.metric}</b>
@@ -932,7 +932,7 @@ function App() {
                   {name:"solking",followers:"321",returns:"+48.7%",win:"61%",age:18,trades:45,avatar:"S",tone:"trader-avatar-5",verified:true}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : discoverCriteria.sort === "popular" ? parseFloat(b.followers) - parseFloat(a.followers) : 0).map((item) => (
                   <article className="discover-list-card trader-discover-card" key={item.name} onClick={() => openTrader(item.name)} role="button" tabIndex={0} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) openTrader(item.name); }}>
-                    <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
+                    <div className={`discover-avatar ${item.tone}`}>{item.tone.startsWith("trader-avatar") ? item.avatar : <CryptoIcon symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : "SOL"} />}</div>
                     <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} {t("followers")}</span><small>{t("Consistent trader")} · {item.age} {t("days active")}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
                     <button onClick={(event) => { event.stopPropagation(); setNotice(`Following @${item.name} is a demo action`); }}>{t("Follow")}</button>
@@ -992,7 +992,7 @@ function App() {
                     ]).map((trade,index) => (
                       <article className="trader-trade-card" key={`${trade.pair}-${trade.date}`}>
                         <div className="trader-trade-top">
-                          <div className="trader-trade-pair"><span className={`trader-trade-coin trader-trade-coin-${trade.pair.startsWith("BTC") ? "btc" : trade.pair.startsWith("ETH") ? "eth" : trade.pair.startsWith("SOL") ? "sol" : "bnb"}`}>{trade.pair.startsWith("BTC") ? "₿" : trade.pair.startsWith("ETH") ? "Ξ" : trade.pair.startsWith("SOL") ? "◎" : "◆"}</span><div><strong>{trade.pair}</strong><small>{trade.strategy}</small></div></div>
+                          <div className="trader-trade-pair"><span className={`trader-trade-coin trader-trade-coin-${trade.pair.startsWith("BTC") ? "btc" : trade.pair.startsWith("ETH") ? "eth" : trade.pair.startsWith("SOL") ? "sol" : "bnb"}`}><CryptoIcon symbol={trade.pair.split(" ")[0]} /></span><div><strong>{trade.pair}</strong><small>{trade.strategy}</small></div></div>
                           <div className="trader-trade-badges"><span className={`trade-side-badge ${trade.side.toLowerCase()}`}>{trade.side}</span><span className={`trade-status-badge ${traderTradeFilter}`}>{traderTradeFilter === "open" ? t("OPEN") : t("CLOSED")}</span></div>
                         </div>
                         <div className="trader-trade-data">
@@ -1021,7 +1021,7 @@ function App() {
                     ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
-                          <div className="trader-owned-strategy-icon"><Activity size={18}/></div>
+                          <div className="trader-owned-strategy-icon"><CryptoIcon symbol={strategy.name.startsWith("BTC") ? "BTC" : strategy.name.startsWith("ETH") ? "ETH" : strategy.name.startsWith("SOL") ? "SOL" : "BNB"} /></div>
                           <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={`trader-strategy-risk-inline ${strategy.risk.toLowerCase().replace(" risk","")}`}>{t(strategy.risk)}</span></div><span>{t(strategy.type)}</span></div>
                           <div className="trader-strategy-actions">
                             <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
