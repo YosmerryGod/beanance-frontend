@@ -1105,7 +1105,7 @@ function App() {
               <div className="trader-profile-meta portfolio-profile-meta">
                 <span><Wallet size={14}/>{t("Portfolio value")} <strong>$12,248.20</strong></span>
                 <span><Activity size={14}/>{t("24h PnL")} <strong className="portfolio-positive">+$284.60</strong></span>
-                <span><Layers size={14}/>{assets.length} {t("assets")}</span>
+                <span><BarChart3 size={14}/>{assets.length} {t("assets")}</span>
               </div>
             </section>
 
