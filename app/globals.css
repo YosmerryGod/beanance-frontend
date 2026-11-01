@@ -2532,13 +2532,13 @@ body{background:#090909;color:var(--text)}
   opacity:1;
   max-width:420px;
   overflow:hidden;
-  transform:translateX(0);
+  transform:translate(-50%,-50%);
   transition:opacity .24s ease,transform .34s cubic-bezier(.2,.8,.2,1),max-width .38s cubic-bezier(.2,.8,.2,1),margin .38s ease;
 }
 .topbar.search-expanded .market-nav-tabs{
   opacity:0;
   pointer-events:none;
-  transform:translateX(-24px);
+  transform:translate(calc(-50% - 24px),-50%);
   max-width:0;
   margin:0;
   overflow:hidden;
