@@ -552,6 +552,7 @@ function App() {
   const [profilePhoto, setProfilePhoto] = useState(""); // [ADDED] User-selected profile photo
   const [binanceConnected, setBinanceConnected] = useState(false); // [ADDED] Reflects a verified Binance connection when integration is available
   const [web3Connected, setWeb3Connected] = useState(false); // [ADDED] Reflects a verified Web3 wallet connection when integration is available
+  const [walletPreviewMode, setWalletPreviewMode] = useState(false); // [ADDED] Lets users preview the connected wallet layout without claiming a real connection
   const profilePhotoInputRef = useRef(null); // [ADDED] Hidden profile photo picker
   const [language, setLanguage] = useState("en"); // [MODIFIED] App language, English by default
   const [languageReady, setLanguageReady] = useState(false); // [ADDED] Wait for saved language before persisting
@@ -1166,7 +1167,7 @@ function App() {
 
               {portfolioTab === "wallet" && (
                 <section className="portfolio-wallet-panel portfolio-tab-panel portfolio-wallet-modern">
-                  {!web3Connected ? (
+                  {!web3Connected && !walletPreviewMode ? (
                     <div className="portfolio-wallet-onboarding">
                       <div className="portfolio-wallet-onboarding-icon"><Wallet size={25}/></div>
                       <div className="portfolio-wallet-onboarding-actions">
@@ -1174,11 +1175,12 @@ function App() {
                         <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
                         <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}><ArrowDownLeft size={16}/>{t("Import wallet")}</button>
                       </div>
+                      <button type="button" className="portfolio-wallet-preview-link" onClick={() => setWalletPreviewMode(true)}>{t("Preview connected wallet")}</button>
                     </div>
                   ) : (
                     <>
                       <div className="portfolio-wallet-balance-card">
-                        <div className="portfolio-wallet-balance-top"><span>{t("Wallet balance")}</span><span className="portfolio-wallet-connected-label"><CheckCircle2 size={13}/>{t("Connected")}</span></div>
+                        <div className="portfolio-wallet-balance-top"><span>{t("Wallet balance")}</span>{walletPreviewMode ? <button type="button" className="portfolio-wallet-preview-exit" onClick={() => setWalletPreviewMode(false)}>{t("Exit preview")}</button> : <span className="portfolio-wallet-connected-label"><CheckCircle2 size={13}/>{t("Connected")}</span>}</div>
                         <strong>$2,480.65</strong>
                         <small className="portfolio-wallet-address">0x71C7...8976F <button type="button" onClick={() => setNotice("Wallet address copied")}><Copy size={13}/></button></small>
                         <div className="portfolio-wallet-actions">
