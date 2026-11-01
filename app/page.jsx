@@ -169,6 +169,11 @@ function App() {
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
         <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""}`}>
+          {active !== "trader-profile" && (
+            <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
+              <Menu size={20} />
+            </button>
+          )}
           {active === "trader-profile" ? (
             <div className="trader-profile-header-placeholder" />
           ) : (
@@ -229,11 +234,6 @@ function App() {
               </button>
             )}
           </div>
-          {active !== "trader-profile" && (
-            <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
-              <Menu size={20} />
-            </button>
-          )}
         </header>
 
         {active === "dashboard" && (
