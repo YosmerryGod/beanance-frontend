@@ -53,6 +53,307 @@ const sidebarTranslations = {
   vi: { account: "TÀI KHOẢN", preferences: "TÙY CHỈNH", support: "HỖ TRỢ", profile: "Hồ sơ", language: "Ngôn ngữ", security: "Bảo mật", notifications: "Thông báo", appearance: "Giao diện", help: "Trung tâm trợ giúp", about: "Về Beanance", menu: "DANH MỤC", community: "CỘNG ĐỒNG BEANANCE", footer: "Khám phá thị trường và chiến lược giao dịch" },
 };
 
+const appTranslations = {
+  "en": {},
+  "id": {
+    "Dashboard": "Beranda",
+    "Discover": "Jelajahi",
+    "Create": "Buat",
+    "Market": "Pasar",
+    "Profile": "Profil",
+    "Strategies": "Strategi",
+    "Traders": "Trader",
+    "All Market": "Semua Pasar",
+    "Top Movers": "Pergerakan Teratas",
+    "Notifications": "Notifikasi",
+    "Wallet connected": "Dompet terhubung",
+    "Your demo wallet is ready to use.": "Dompet demo kamu siap digunakan.",
+    "Just now": "Baru saja",
+    "Market update": "Pembaruan pasar",
+    "Bitcoin is up 2.45% in the demo market.": "Bitcoin naik 2,45% di pasar demo.",
+    "Welcome to Beanance": "Selamat datang di Beanance",
+    "Explore assets and discover Web3 apps.": "Jelajahi aset dan aplikasi Web3.",
+    "12 minutes ago": "12 menit lalu",
+    "Today": "Hari ini",
+    "Mark all as read": "Tandai semua sudah dibaca",
+    "Top Strategies": "Strategi Teratas",
+    "Best performing strategies from our community": "Strategi dengan performa terbaik dari komunitas kami",
+    "See All": "Lihat Semua",
+    "Total Return": "Total Return",
+    "Win Rate": "Tingkat Kemenangan",
+    "Follow": "Ikuti",
+    "Top Traders": "Trader Teratas",
+    "Most consistent and successful traders": "Trader paling konsisten dan sukses",
+    "Trader": "Trader",
+    "Followers": "Pengikut",
+    "Return": "Return",
+    "Equity Curve": "Kurva Ekuitas",
+    "Action": "Aksi",
+    "Market Overview": "Ringkasan Pasar",
+    "Top futures pairs by volume": "Pasangan futures berdasarkan volume",
+    "Pair": "Pasangan",
+    "Price": "Harga",
+    "24h Change": "Perubahan 24 Jam",
+    "24h Volume": "Volume 24 Jam",
+    "Chart": "Grafik",
+    "Explore Strategies": "Jelajahi Strategi",
+    "Explore Traders": "Jelajahi Trader",
+    "Pilih strategi sesuai gaya trading kamu.": "Pilih strategi sesuai gaya trading kamu.",
+    "Kenali trader dan performa mereka.": "Kenali trader dan performa mereka.",
+    "View strategy": "Lihat strategi",
+    "View profile": "Lihat profil",
+    "Filter": "Filter",
+    "Minimum win rate": "Minimal tingkat kemenangan",
+    "Any win rate": "Semua tingkat kemenangan",
+    "Above 50%": "Di atas 50%",
+    "Above 60%": "Di atas 60%",
+    "Above 70%": "Di atas 70%",
+    "Above 80%": "Di atas 80%",
+    "Trader age": "Usia trader",
+    "Any age": "Semua usia",
+    "30+ days": "30+ hari",
+    "90+ days": "90+ hari",
+    "6+ months": "6+ bulan",
+    "1+ year": "1+ tahun",
+    "Minimum total trades": "Minimal total transaksi",
+    "Any trades": "Semua transaksi",
+    "50+ trades": "50+ transaksi",
+    "100+ trades": "100+ transaksi",
+    "500+ trades": "500+ transaksi",
+    "1,000+ trades": "1.000+ transaksi",
+    "Minimum return": "Minimal return",
+    "Any return": "Semua return",
+    "Above 20%": "Di atas 20%",
+    "Above 100%": "Di atas 100%",
+    "Risk level": "Tingkat risiko",
+    "All risk levels": "Semua tingkat risiko",
+    "Low risk": "Risiko rendah",
+    "Medium risk": "Risiko sedang",
+    "High risk": "Risiko tinggi",
+    "Sort by": "Urutkan",
+    "Most popular": "Terpopuler",
+    "Newest": "Terbaru",
+    "Highest win rate": "Tingkat kemenangan tertinggi",
+    "Highest return": "Return tertinggi",
+    "Reset": "Atur ulang",
+    "Apply filters": "Terapkan filter",
+    "Back": "Kembali",
+    "BEANANCE TRADER": "TRADER BEANANCE",
+    "Follow Trader": "Ikuti Trader",
+    "Activity": "Aktivitas",
+    "Trade history": "Riwayat trading",
+    "Demo activity": "Aktivitas demo",
+    "Open positions": "Posisi terbuka",
+    "Closed trades": "Transaksi ditutup",
+    "Entry price": "Harga masuk",
+    "Position size": "Ukuran posisi",
+    "Active": "Aktif",
+    "Inactive": "Tidak aktif",
+    "No inactive strategies": "Tidak ada strategi nonaktif",
+    "Copy": "Salin",
+    "30D Return": "Return 30 Hari",
+    "Total Trades": "Total Transaksi",
+    "Pasangan": "Pasangan",
+    "Perubahan / Status": "Perubahan / Status",
+    "Perp": "Perpetual",
+    "Belum ada pergerakan untuk kategori ini.": "Belum ada pergerakan untuk kategori ini.",
+    "YOUR ACCOUNT": "AKUN KAMU",
+    "Hey, Ezy": "Hai, Ezy",
+    "Welcome back, Ezy": "Selamat datang kembali, Ezy",
+    "Name": "Nama",
+    "Vol": "Volume",
+    "Last price": "Harga terakhir",
+    "24h change": "Perubahan 24 jam",
+    "Semua": "Semua",
+    "Kenaikan": "Kenaikan",
+    "Penurunan": "Penurunan",
+    "Pullback": "Pullback",
+    "Rally": "Rally",
+    "High Baru": "High Baru",
+    "Low Baru": "Low Baru",
+    "Wallet management": "Pengelolaan dompet",
+    "Security & privacy": "Keamanan & privasi",
+    "Preferences": "Preferensi",
+    "Help center": "Pusat bantuan",
+    "QUICK ACTION": "AKSI CEPAT",
+    "What would you like to do?": "Apa yang ingin kamu lakukan?",
+    "Swap tokens": "Tukar token",
+    "Exchange one asset for another": "Tukar satu aset dengan aset lainnya",
+    "Buy crypto": "Beli kripto",
+    "Add crypto to your wallet": "Tambahkan kripto ke dompet",
+    "Connect dApp": "Hubungkan dApp",
+    "Explore decentralized apps": "Jelajahi aplikasi terdesentralisasi",
+    "Search strategies or traders...": "Cari strategi atau trader...",
+    "Search assets...": "Cari aset...",
+    {t("Search strategies and traders")}: "Cari strategi dan trader",
+    {t("Search market assets")}: "Cari aset pasar",
+    "GOOD EVENING": "SELAMAT SORE",
+    {t("Switch to light mode")}: "Ubah ke mode terang",
+    {t("Switch to dark mode")}: "Ubah ke mode gelap",
+    "All": "Semua",
+    "Favorites": "Favorit",
+    "Futures": "Futures",
+    "Crypto": "Kripto",
+    "Verified": "Terverifikasi",
+    "Most Followers": "Pengikut terbanyak",
+    "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Riwayat trading dan performa strategi di sini merupakan data contoh Beanance demo.",
+    "Trader ini belum memiliki strategi yang dinonaktifkan.": "Trader ini belum memiliki strategi yang dinonaktifkan."
+  },
+  "zh": {
+    "Dashboard": "首页",
+    "Discover": "发现",
+    "Create": "创建",
+    "Market": "市场",
+    "Profile": "个人资料",
+    "Strategies": "策略",
+    "Traders": "交易员",
+    "All Market": "全部市场",
+    "Top Movers": "涨幅榜",
+    "Notifications": "通知",
+    "Top Strategies": "热门策略",
+    "See All": "查看全部",
+    "Total Return": "总回报",
+    "Win Rate": "胜率",
+    "Follow": "关注",
+    "Top Traders": "热门交易员",
+    "Market Overview": "市场概览",
+    "Pair": "交易对",
+    "Price": "价格",
+    "24h Change": "24小时涨跌",
+    "24h Volume": "24小时成交量",
+    "Explore Strategies": "探索策略",
+    "Explore Traders": "探索交易员",
+    "Back": "返回",
+    "Trade history": "交易记录",
+    "Open positions": "未平仓位",
+    "Closed trades": "已平仓交易",
+    "Entry price": "入场价格",
+    "Position size": "仓位大小",
+    "Name": "名称",
+    "Vol": "成交量",
+    "Last price": "最新价格",
+    "Search assets...": "搜索资产...",
+    "Search strategies or traders...": "搜索策略或交易员...",
+    "Wallet management": "钱包管理",
+    "Security & privacy": "安全与隐私",
+    "Preferences": "偏好设置",
+    "Help center": "帮助中心",
+    "QUICK ACTION": "快捷操作",
+    "What would you like to do?": "你想做什么？",
+    "Swap tokens": "兑换代币",
+    "Buy crypto": "购买加密货币",
+    "Connect dApp": "连接 dApp",
+    "All": "全部",
+    "Favorites": "收藏",
+    "Futures": "合约",
+    "Crypto": "加密货币",
+    "Reset": "重置",
+    "Apply filters": "应用筛选"
+  },
+  "ja": {
+    "Dashboard": "ホーム",
+    "Discover": "見つける",
+    "Create": "作成",
+    "Market": "市場",
+    "Profile": "プロフィール",
+    "Strategies": "戦略",
+    "Traders": "トレーダー",
+    "All Market": "すべての市場",
+    "Top Movers": "値上がりランキング",
+    "Notifications": "通知",
+    "Top Strategies": "人気の戦略",
+    "See All": "すべて表示",
+    "Total Return": "総リターン",
+    "Win Rate": "勝率",
+    "Follow": "フォロー",
+    "Top Traders": "トップトレーダー",
+    "Market Overview": "市場概要",
+    "Pair": "取引ペア",
+    "Price": "価格",
+    "24h Change": "24時間変動",
+    "24h Volume": "24時間取引量",
+    "Explore Strategies": "戦略を探す",
+    "Explore Traders": "トレーダーを探す",
+    "Back": "戻る",
+    "Trade history": "取引履歴",
+    "Open positions": "保有ポジション",
+    "Closed trades": "決済済み取引",
+    "Entry price": "エントリー価格",
+    "Position size": "ポジションサイズ",
+    "Name": "名前",
+    "Vol": "出来高",
+    "Last price": "現在価格",
+    "Search assets...": "資産を検索...",
+    "Search strategies or traders...": "戦略やトレーダーを検索...",
+    "Wallet management": "ウォレット管理",
+    "Security & privacy": "セキュリティとプライバシー",
+    "Preferences": "設定",
+    "Help center": "ヘルプセンター",
+    "QUICK ACTION": "クイック操作",
+    "What would you like to do?": "何をしますか？",
+    "Swap tokens": "トークン交換",
+    "Buy crypto": "暗号資産を購入",
+    "Connect dApp": "dAppに接続",
+    "All": "すべて",
+    "Favorites": "お気に入り",
+    "Futures": "先物",
+    "Crypto": "暗号資産",
+    "Reset": "リセット",
+    "Apply filters": "フィルターを適用"
+  },
+  "vi": {
+    "Dashboard": "Trang chủ",
+    "Discover": "Khám phá",
+    "Create": "Tạo",
+    "Market": "Thị trường",
+    "Profile": "Hồ sơ",
+    "Strategies": "Chiến lược",
+    "Traders": "Nhà giao dịch",
+    "All Market": "Tất cả thị trường",
+    "Top Movers": "Biến động mạnh",
+    "Notifications": "Thông báo",
+    "Top Strategies": "Chiến lược hàng đầu",
+    "See All": "Xem tất cả",
+    "Total Return": "Tổng lợi nhuận",
+    "Win Rate": "Tỷ lệ thắng",
+    "Follow": "Theo dõi",
+    "Top Traders": "Nhà giao dịch hàng đầu",
+    "Market Overview": "Tổng quan thị trường",
+    "Pair": "Cặp giao dịch",
+    "Price": "Giá",
+    "24h Change": "Biến động 24h",
+    "24h Volume": "Khối lượng 24h",
+    "Explore Strategies": "Khám phá chiến lược",
+    "Explore Traders": "Khám phá nhà giao dịch",
+    "Back": "Quay lại",
+    "Trade history": "Lịch sử giao dịch",
+    "Open positions": "Vị thế đang mở",
+    "Closed trades": "Giao dịch đã đóng",
+    "Entry price": "Giá vào lệnh",
+    "Position size": "Kích thước vị thế",
+    "Name": "Tên",
+    "Vol": "Khối lượng",
+    "Last price": "Giá gần nhất",
+    "Search assets...": "Tìm tài sản...",
+    "Search strategies or traders...": "Tìm chiến lược hoặc nhà giao dịch...",
+    "Wallet management": "Quản lý ví",
+    "Security & privacy": "Bảo mật & quyền riêng tư",
+    "Preferences": "Tùy chọn",
+    "Help center": "Trung tâm trợ giúp",
+    "QUICK ACTION": "THAO TÁC NHANH",
+    "What would you like to do?": "Bạn muốn làm gì?",
+    "Swap tokens": "Hoán đổi token",
+    "Buy crypto": "Mua tiền mã hóa",
+    "Connect dApp": "Kết nối dApp",
+    "All": "Tất cả",
+    "Favorites": "Yêu thích",
+    "Futures": "Hợp đồng tương lai",
+    "Crypto": "Tiền mã hóa",
+    "Reset": "Đặt lại",
+    "Apply filters": "Áp dụng bộ lọc"
+  }
+};
+
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "dapps", label: "Discover", icon: Compass },
@@ -152,6 +453,7 @@ function App() {
     window.localStorage.setItem("beanance-language", language);
   }, [language]);
 
+  const t = (value) => appTranslations[language]?.[value] || appTranslations.en?.[value] || value;
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
   const selectedLanguage = supportedLanguages.find((item) => item.code === language) || supportedLanguages[0];
 
@@ -219,15 +521,15 @@ function App() {
             </div>
           )}
           {active === "dapps" && (
-            <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Discover category">
-              <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverFilter("All");}}>Strategies</button>
-              <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverFilter("All");}}>Traders</button>
+            <div className={`discover-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label={t("Discover category")}>
+              <button className={discoverTopTab === "strategies" ? "selected" : ""} onClick={() => {setDiscoverTopTab("strategies");setDiscoverFilter("All");}}>{t("Strategies")}</button>
+              <button className={discoverTopTab === "traders" ? "selected" : ""} onClick={() => {setDiscoverTopTab("traders");setDiscoverFilter("All");}}>{t("Traders")}</button>
             </div>
           )}
           {active === "market" && (
-            <div className={`discover-nav-tabs market-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label="Market sections">
-              <button type="button" role="tab" aria-selected={marketNavTab === "all-market"} className={marketNavTab === "all-market" ? "selected" : ""} onClick={() => setMarketNavTab("all-market")}>All Market</button>
-              <button type="button" role="tab" aria-selected={marketNavTab === "top-movers"} className={marketNavTab === "top-movers" ? "selected" : ""} onClick={() => setMarketNavTab("top-movers")}>Top Movers</button>
+            <div className={`discover-nav-tabs market-nav-tabs ${searchOpen ? "is-hidden" : ""}`} role="tablist" aria-label={t("Market sections")}>
+              <button type="button" role="tab" aria-selected={marketNavTab === "all-market"} className={marketNavTab === "all-market" ? "selected" : ""} onClick={() => setMarketNavTab("all-market")}>{t("All Market")}</button>
+              <button type="button" role="tab" aria-selected={marketNavTab === "top-movers"} className={marketNavTab === "top-movers" ? "selected" : ""} onClick={() => setMarketNavTab("top-movers")}>{t("Top Movers")}</button>
             </div>
           )}
           <div className="top-actions">
@@ -239,11 +541,11 @@ function App() {
                 </button>
                 {showNotifications && (
                   <div className="notification-popover">
-                    <div className="notification-heading"><strong>Notifications</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
-                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>Wallet connected</strong><p>Your demo wallet is ready to use.</p><small>Just now</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol">↗</span><div><strong>Market update</strong><p>Bitcoin is up 2.45% in the demo market.</p><small>12 minutes ago</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol">✦</span><div><strong>Welcome to Beanance</strong><p>Explore assets and discover Web3 apps.</p><small>Today</small></div></div>
-                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>Mark all as read</button>
+                    <div className="notification-heading"><strong>{t("Notifications")}</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
+                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>{t("Wallet connected")}</strong><p>{t("Your demo wallet is ready to use.")}</p><small>{t("Just now")}</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">↗</span><div><strong>{t("Market update")}</strong><p>{t("Bitcoin is up 2.45% in the demo market.")}</p><small>{t("12 minutes ago")}</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol">✦</span><div><strong>{t("Welcome to Beanance")}</strong><p>{t("Explore assets and discover Web3 apps.")}</p><small>{t("Today")}</small></div></div>
+                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>{t("Mark all as read")}</button>
                   </div>
                 )}
               </div>
@@ -253,7 +555,7 @@ function App() {
                 <Search size={18} />
                 <input
                   ref={searchInputRef}
-                  aria-label={active === "dapps" ? "Search strategies and traders" : "Search market assets"}
+                  aria-label={active === "dapps" ? {t("Search strategies and traders")} : {t("Search market assets")}}
                   placeholder={active === "dapps" ? "Search strategies or traders..." : "Search assets..."}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
@@ -265,7 +567,7 @@ function App() {
               </div>
             )}
             {active !== "profile" && (
-              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} onClick={toggleTheme}>
+              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? {t("Switch to light mode")} : {t("Switch to dark mode")}} onClick={toggleTheme}>
                 {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
               </button>
             )}
@@ -276,8 +578,8 @@ function App() {
           <section className="page page-enter dashboard-page">
             <section className="dashboard-section">
               <div className="section-heading dashboard-section-heading">
-                <div><h2>Top Strategies</h2><p className="muted">Best performing strategies from our community</p></div>
-                <button className="text-link" onClick={() => selectTab({ id: "dapps" })}>See All <ChevronRight size={15} /></button>
+                <div><h2>{t("Top Strategies")}</h2><p className="muted">{t("Best performing strategies from our community")}</p></div>
+                <button className="text-link" onClick={() => selectTab({ id: "dapps" })}>{t("See All")} <ChevronRight size={15} /></button>
               </div>
               <div className="strategy-grid">
                 {[
@@ -296,25 +598,25 @@ function App() {
                       <path d={`${strategy.chart} L274 48 L2 48 Z`} fill={`url(#strategy-fill-${strategy.name.replaceAll(" ","-")})`}/>
                       <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
                     </svg>
-                    <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>Total Return</span></div><div><strong>{strategy.win}</strong><span>Win Rate</span></div></div>
-                    <div className="strategy-card-footer"><span className="strategy-tag">{strategy.type}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{strategy.risk}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>Follow</button></div>
+                    <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
+                    <div className="strategy-card-footer"><span className="strategy-tag">{strategy.type}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{strategy.risk}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>{t("Follow")}</button></div>
                   </article>
                 ))}
               </div>
             </section>
 
-            <div className="mobile-dashboard-tabs" role="tablist" aria-label="Dashboard data">
-              <button role="tab" aria-selected={mobileDashboardTab === "traders"} className={mobileDashboardTab === "traders" ? "selected" : ""} onClick={() => setMobileDashboardTab("traders")}>Top Traders</button>
-              <button role="tab" aria-selected={mobileDashboardTab === "market"} className={mobileDashboardTab === "market" ? "selected" : ""} onClick={() => setMobileDashboardTab("market")}>Market Overview</button>
+            <div className="mobile-dashboard-tabs" role="tablist" aria-label={t("Dashboard data")}>
+              <button role="tab" aria-selected={mobileDashboardTab === "traders"} className={mobileDashboardTab === "traders" ? "selected" : ""} onClick={() => setMobileDashboardTab("traders")}>{t("Top Traders")}</button>
+              <button role="tab" aria-selected={mobileDashboardTab === "market"} className={mobileDashboardTab === "market" ? "selected" : ""} onClick={() => setMobileDashboardTab("market")}>{t("Market Overview")}</button>
             </div>
             <section className={`dashboard-section mobile-tab-panel mobile-traders-panel ${mobileDashboardTab === "traders" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading traders-heading">
-                <div><h2>Top Traders</h2><p className="muted">Most consistent and successful traders</p></div>
+                <div><h2>{t("Top Traders")}</h2><p className="muted">{t("Most consistent and successful traders")}</p></div>
                 <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => {setDiscoverTopTab("traders");selectTab({ id: "dapps" });}}>See All <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table trader-table">
-                  <thead><tr><th>#</th><th>Trader</th><th>Followers</th><th>Return ({traderPeriod === "All" ? "30D" : traderPeriod})</th><th>Win Rate</th><th>Equity Curve</th><th>Action</th></tr></thead>
+                  <thead><tr><th>#</th><th>{t("Trader")}</th><th>{t("Followers")}</th><th>Return ({traderPeriod === "All" ? "30D" : traderPeriod})</th><th>{t("Win Rate")}</th><th>{t("Equity Curve")}</th><th>{t("Action")}</th></tr></thead>
                   <tbody>
                     {[
                       ["tradewiz","342","+124.5%","68%","🥇"],
@@ -322,7 +624,7 @@ function App() {
                       ["moontrade","856","+68.1%","63%","🥉"],
                       ["quantalab","432","+54.3%","58%",""],
                       ["solking","321","+48.7%","61%",""]
-                    ].map((trader,index) => <tr key={trader[0]}><td><span className="rank-cell">{index+1}</span></td><td><button className="trader-name trader-name-button" onClick={() => openTrader(trader[0])}><span className={`trader-avatar trader-avatar-${index+1}`}>{["T","C","M","Q","S"][index]}</span><strong>{trader[0]}</strong><span className="verified-mark">✓</span></button></td><td>{trader[1]}</td><td className="positive">{trader[2]}</td><td>{trader[3]}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d="M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" fill="none" stroke="#20bd68" strokeWidth="1.8"/></svg></td><td><button className="table-follow" onClick={() => setNotice(`Following @${trader[0]} is a demo action`)}>Follow</button></td></tr>)}
+                    ].map((trader,index) => <tr key={trader[0]}><td><span className="rank-cell">{index+1}</span></td><td><button className="trader-name trader-name-button" onClick={() => openTrader(trader[0])}><span className={`trader-avatar trader-avatar-${index+1}`}>{["T","C","M","Q","S"][index]}</span><strong>{trader[0]}</strong><span className="verified-mark">✓</span></button></td><td>{trader[1]}</td><td className="positive">{trader[2]}</td><td>{trader[3]}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d="M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" fill="none" stroke="#20bd68" strokeWidth="1.8"/></svg></td><td><button className="table-follow" onClick={() => setNotice(`Following @${trader[0]} is a demo action`)}>{t("Follow")}</button></td></tr>)}
                   </tbody>
                 </table>
               </div>
@@ -330,12 +632,12 @@ function App() {
 
             <section className={`dashboard-section market-overview-section mobile-tab-panel mobile-market-panel ${mobileDashboardTab === "market" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading">
-                <div><h2>Market Overview</h2><p className="muted">Top futures pairs by volume</p></div>
+                <div><h2>{t("Market Overview")}</h2><p className="muted">{t("Top futures pairs by volume")}</p></div>
                 <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>See All <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table market-table">
-                  <thead><tr><th>#</th><th>Pair</th><th>Price</th><th>24h Change</th><th>24h Volume</th><th>Chart</th><th>★</th></tr></thead>
+                  <thead><tr><th>#</th><th>{t("Pair")}</th><th>{t("Price")}</th><th>{t("24h Change")}</th><th>{t("24h Volume")}</th><th>{t("Chart")}</th><th>★</th></tr></thead>
                   <tbody>
                     {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol}><td>{index+1}</td><td><div className="market-pair"><span className={`asset-icon ${asset.tone}`}>{asset.icon}</span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={() => setNotice(`${asset.symbol} favorites are demo only`)}>☆</button></td></tr>)}
                   </tbody>
@@ -379,12 +681,12 @@ function App() {
                   {showDiscoverFilter && (
                     <div className="discover-filter-popover">
                       <div className="discover-filter-popover-head"><strong>Filter {discoverTopTab === "strategies" ? "strategies" : "traders"}</strong><button aria-label="Close filters" onClick={() => setShowDiscoverFilter(false)}><X size={16} /></button></div>
-                      <label>Minimum win rate<select value={discoverCriteria.minWinRate} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minWinRate: event.target.value }))}><option value="0">Any win rate</option><option value="50">Above 50%</option><option value="60">Above 60%</option><option value="70">Above 70%</option><option value="80">Above 80%</option></select></label>
-                      <label>Trader age<select value={discoverCriteria.minAge} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minAge: event.target.value }))}><option value="0">Any age</option><option value="30">30+ days</option><option value="90">90+ days</option><option value="180">6+ months</option><option value="365">1+ year</option></select></label>
-                      <label>Minimum total trades<select value={discoverCriteria.minTrades} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minTrades: event.target.value }))}><option value="0">Any trades</option><option value="50">50+ trades</option><option value="100">100+ trades</option><option value="500">500+ trades</option><option value="1000">1,000+ trades</option></select></label>
-                      {discoverTopTab === "strategies" && <><label>Minimum return<select value={discoverCriteria.minReturn} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minReturn: event.target.value }))}><option value="0">Any return</option><option value="20">Above 20%</option><option value="50">Above 50%</option><option value="80">Above 80%</option><option value="100">Above 100%</option></select></label><label>Risk level<select value={discoverCriteria.risk} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, risk: event.target.value }))}><option value="All">All risk levels</option><option value="Low Risk">Low risk</option><option value="Medium Risk">Medium risk</option><option value="High Risk">High risk</option></select></label></>}
-                      <label>Sort by<select value={discoverCriteria.sort} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, sort: event.target.value }))}><option value="popular">Most popular</option><option value="newest">Newest</option><option value="win">Highest win rate</option><option value="return">Highest return</option></select></label>
-                      <div className="discover-filter-actions"><button onClick={() => { setDiscoverCriteria({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" }); setDiscoverFilter("All"); }}>Reset</button><button className="apply" onClick={() => setShowDiscoverFilter(false)}>Apply filters</button></div>
+                      <label>{t("Minimum win rate")}<select value={discoverCriteria.minWinRate} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minWinRate: event.target.value }))}><option value="0">{t("Any win rate")}</option><option value="50">{t("Above 50%")}</option><option value="60">{t("Above 60%")}</option><option value="70">{t("Above 70%")}</option><option value="80">{t("Above 80%")}</option></select></label>
+                      <label>{t("Trader age")}<select value={discoverCriteria.minAge} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minAge: event.target.value }))}><option value="0">{t("Any age")}</option><option value="30">{t("30+ days")}</option><option value="90">{t("90+ days")}</option><option value="180">{t("6+ months")}</option><option value="365">{t("1+ year")}</option></select></label>
+                      <label>{t("Minimum total trades")}<select value={discoverCriteria.minTrades} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minTrades: event.target.value }))}><option value="0">{t("Any trades")}</option><option value="50">{t("50+ trades")}</option><option value="100">{t("100+ trades")}</option><option value="500">{t("500+ trades")}</option><option value="1000">{t("1,000+ trades")}</option></select></label>
+                      {discoverTopTab === "strategies" && <><label>{t("Minimum return")}<select value={discoverCriteria.minReturn} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, minReturn: event.target.value }))}><option value="0">{t("Any return")}</option><option value="20">{t("Above 20%")}</option><option value="50">{t("Above 50%")}</option><option value="80">{t("Above 80%")}</option><option value="100">{t("Above 100%")}</option></select></label><label>{t("Risk level")}<select value={discoverCriteria.risk} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, risk: event.target.value }))}><option value="All">{t("All risk levels")}</option><option value="Low Risk">{t("Low risk")}</option><option value="Medium Risk">{t("Medium risk")}</option><option value="High Risk">{t("High risk")}</option></select></label></>}
+                      <label>{t("Sort by")}<select value={discoverCriteria.sort} onChange={(event) => setDiscoverCriteria((value) => ({ ...value, sort: event.target.value }))}><option value="popular">{t("Most popular")}</option><option value="newest">{t("Newest")}</option><option value="win">{t("Highest win rate")}</option><option value="return">{t("Highest return")}</option></select></label>
+                      <div className="discover-filter-actions"><button onClick={() => { setDiscoverCriteria({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" }); setDiscoverFilter("All"); }}>{t("Reset")}</button><button className="apply" onClick={() => setShowDiscoverFilter(false)}>{t("Apply filters")}</button></div>
                     </div>
                   )}
                 </div>
@@ -400,7 +702,7 @@ function App() {
                     <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
                     <div className="discover-card-main"><strong>{item.name}</strong><button className="discover-owner-link" onClick={() => openTrader(item.user)}>{item.user} · {item.type}</button><small>{item.risk}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
-                    <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>Follow</button>
+                    <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>{t("Follow")}</button>
                   </article>
                 )) : [
                   {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",age:240,trades:680,avatar:"T",tone:"trader-avatar-1",verified:true},
@@ -413,7 +715,7 @@ function App() {
                     <div className={`discover-avatar ${item.tone}`}>{item.avatar}</div>
                     <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} followers</span><small>Consistent trader · {item.age} days active</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} win rate</span></div>
-                    <button onClick={(event) => { event.stopPropagation(); setNotice(`Following @${item.name} is a demo action`); }}>Follow</button>
+                    <button onClick={(event) => { event.stopPropagation(); setNotice(`Following @${item.name} is a demo action`); }}>{t("Follow")}</button>
                   </article>
                 ))}
               </div>
@@ -426,13 +728,13 @@ function App() {
           <section className="page page-enter trader-profile-page">
             <div className="trader-profile-hero">
               <div className="trader-profile-cover">
-                <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={17} /><span>Back</span></button>
-                <span>BEANANCE TRADER</span><div className="trader-profile-cover-mark">B</div>
+                <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={17} /><span>{t("Back")}</span></button>
+                <span>{t("BEANANCE TRADER")}</span><div className="trader-profile-cover-mark">B</div>
               </div>
               <div className="trader-profile-identity">
                 <div className={`trader-profile-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedTrader)+1}`}>{selectedTrader.charAt(0).toUpperCase()}</div>
                 <div className="trader-profile-name"><div><h1>@{selectedTrader}</h1><span className="verified-mark">✓</span></div><p>{traderProfiles[selectedTrader].name} · Verified trader</p></div>
-                <button className="trader-follow-button" onClick={() => setNotice(`Following @${selectedTrader} is a demo action`)}>Follow Trader</button>
+                <button className="trader-follow-button" onClick={() => setNotice(`Following @${selectedTrader} is a demo action`)}>{t("Follow Trader")}</button>
               </div>
               <p className="trader-profile-bio">{traderProfiles[selectedTrader].bio}</p>
               <div className="trader-profile-meta">
@@ -443,18 +745,18 @@ function App() {
             </div>
 
             <div className="trader-profile-workspace">
-              <div className="trader-profile-tabs" role="tablist" aria-label="Trader activity">
-                <button role="tab" aria-selected={traderProfileTab === "trades"} className={traderProfileTab === "trades" ? "selected" : ""} onClick={() => setTraderProfileTab("trades")}>Trades <span>Activity</span></button>
+              <div className="trader-profile-tabs" role="tablist" aria-label={t("Trader activity")}>
+                <button role="tab" aria-selected={traderProfileTab === "trades"} className={traderProfileTab === "trades" ? "selected" : ""} onClick={() => setTraderProfileTab("trades")}>Trades <span>{t("Activity")}</span></button>
                 <button role="tab" aria-selected={traderProfileTab === "strategies"} className={traderProfileTab === "strategies" ? "selected" : ""} onClick={() => setTraderProfileTab("strategies")}>Strategies <span>{traderProfiles[selectedTrader].strategies.length}</span></button>
               </div>
 
               {traderProfileTab === "trades" && (
                 <section className="trader-profile-section trader-activity-section">
                   <div className="trader-profile-section-heading">
-                    <div><h2>Trade history</h2></div>
-                    <span className="trader-strategy-count">Demo activity</span>
+                    <div><h2>{t("Trade history")}</h2></div>
+                    <span className="trader-strategy-count">{t("Demo activity")}</span>
                   </div>
-                  <div className="trader-subtabs" role="tablist" aria-label="Trade status">
+                  <div className="trader-subtabs" role="tablist" aria-label={t("Trade status")}>
                     <button className={traderTradeFilter === "open" ? "selected" : ""} onClick={() => setTraderTradeFilter("open")}>Open positions <span>2</span></button>
                     <button className={traderTradeFilter === "closed" ? "selected" : ""} onClick={() => setTraderTradeFilter("closed")}>Closed trades <span>4</span></button>
                   </div>
@@ -474,9 +776,9 @@ function App() {
                           <div className="trader-trade-badges"><span className={`trade-side-badge ${trade.side.toLowerCase()}`}>{trade.side}</span><span className={`trade-status-badge ${traderTradeFilter}`}>{traderTradeFilter === "open" ? "OPEN" : "CLOSED"}</span></div>
                         </div>
                         <div className="trader-trade-data">
-                          <div><span>Entry price</span><strong>{trade.entry}</strong></div>
+                          <div><span>{t("Entry price")}</span><strong>{trade.entry}</strong></div>
                           <div><span>{traderTradeFilter === "open" ? "Mark price" : "Exit price"}</span><strong>{trade.mark}</strong></div>
-                          <div><span>Position size</span><strong>{trade.size}</strong></div>
+                          <div><span>{t("Position size")}</span><strong>{trade.size}</strong></div>
                           <div><span>{traderTradeFilter === "open" ? "Unrealized PnL" : "Realized PnL"}</span><strong className={trade.pnl.startsWith("-") ? "negative" : "positive"}>{trade.pnl}<small>{trade.change}</small></strong></div>
                         </div>
                         <div className="trader-trade-footer"><span>{trade.date}</span><span>{traderTradeFilter === "open" ? "Isolated · 5x" : "Trade completed"}</span></div>
@@ -489,13 +791,13 @@ function App() {
               {traderProfileTab === "strategies" && (
                 <section className="trader-profile-section trader-strategy-overview-section">
                   <div className="trader-profile-section-heading"><div><h2>Strategies by @{selectedTrader}</h2></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
-                  <div className="trader-subtabs" role="tablist" aria-label="Strategy status">
+                  <div className="trader-subtabs" role="tablist" aria-label={t("Strategy status")}>
                     <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>Active <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
                     <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.max(0,traderProfiles[selectedTrader].strategies.length-Math.max(1,traderProfiles[selectedTrader].strategies.length-1))}</span></button>
                   </div>
                   <div className="trader-strategy-performance-list">
                     {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).length === 0 ? (
-                      <div className="trader-empty-state"><Activity size={20}/><strong>No inactive strategies</strong><span>Trader ini belum memiliki strategi yang dinonaktifkan.</span></div>
+                      <div className="trader-empty-state"><Activity size={20}/><strong>{t("No inactive strategies")}</strong><span>Trader ini belum memiliki strategi yang dinonaktifkan.</span></div>
                     ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
@@ -507,9 +809,9 @@ function App() {
                           </div>
                         </div>
                         <div className="trader-strategy-metrics">
-                          <div><span>30D Return</span><strong className="positive">{strategy.returns}</strong></div>
-                          <div><span>Win Rate</span><strong>{strategy.win}</strong></div>
-                          <div><span>Total Trades</span><strong>{strategy.trades}</strong></div>
+                          <div><span>{t("30D Return")}</span><strong className="positive">{strategy.returns}</strong></div>
+                          <div><span>{t("Win Rate")}</span><strong>{strategy.win}</strong></div>
+                          <div><span>{t("Total Trades")}</span><strong>{strategy.trades}</strong></div>
                         </div>
                         <div className="trader-strategy-chart trader-strategy-chart-compact">
                           <svg viewBox="0 0 600 90" preserveAspectRatio="none" role="img" aria-label={`${strategy.name} performance chart`}>
@@ -522,7 +824,7 @@ function App() {
                             <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6 L600 90 L0 90 Z" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5 L600 90 L0 90 Z"} fill={`url(#strategy-chart-fill-${selectedTrader}-${index})`}/>
                             <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
                           </svg>
-                          <div className="trader-chart-axis"><span>30D ago</span><span>Today</span></div>
+                          <div className="trader-chart-axis"><span>30D ago</span><span>{t("Today")}</span></div>
                         </div>
                       </article>
                     ))}
@@ -540,10 +842,10 @@ function App() {
               <div className="market-table-flat">
                 <div className="market-table market-table-head">
                   <span className="market-star-column" aria-hidden="true">★</span>
-                  <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>Name <span>{marketSort === "name" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>Vol <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>Last price <span>{marketSort === "price" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>24h change <span>{marketSort === "change" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                  <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>{t("Name")} <span>{marketSort === "name" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                  <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>{t("Vol")} <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                  <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>{t("Last price")} <span>{marketSort === "price" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                  <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>{t("24h change")} <span>{marketSort === "change" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
                 </div>
                 <div className="market-table-body">
                   {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
@@ -576,16 +878,16 @@ function App() {
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{category}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>Pasangan</span><span>Perubahan / Status</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
                 <div className="top-movers-list">
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
-                      <div className="top-mover-pair"><strong>{event.symbol}USDT</strong><span className="perp-tag">Perp</span><small>{event.time} · {event.timeframe} lalu</small></div>
+                      <div className="top-mover-pair"><strong>{event.symbol}USDT</strong><span className="perp-tag">{t("Perp")}</span><small>{event.time} · {event.timeframe} lalu</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{event.status}</span></div>
                     </article>
                   ))}
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
-                    <div className="top-movers-empty">Belum ada pergerakan untuk kategori ini.</div>
+                    <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
                   )}
                 </div>
                 <p className="top-movers-disclaimer">Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.</p>
@@ -596,24 +898,24 @@ function App() {
 
         {active === "profile" && (
           <section className="page page-enter simple-page">
-            <p className="eyebrow">YOUR ACCOUNT</p><h1>Profile</h1>
+            <p className="eyebrow">{t("YOUR ACCOUNT")}</p><h1>Profile</h1>
             <div className="profile-card"><div className="profile-avatar">E</div><div><strong>Ezy</strong><span>0x71C7...976F</span></div><button onClick={copyAddress}><Copy size={16} /></button></div>
             <div className="settings-list">
-              <button onClick={() => setNotice("Wallet settings are coming soon")}><Wallet /><span>Wallet management</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Security settings are coming soon")}><ShieldCheck /><span>Security & privacy</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Preferences are coming soon")}><Settings /><span>Preferences</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Help center is coming soon")}><CircleHelp /><span>Help center</span><ChevronRight /></button>
+              <button onClick={() => setNotice("Wallet settings are coming soon")}><Wallet /><span>{t("Wallet management")}</span><ChevronRight /></button>
+              <button onClick={() => setNotice("Security settings are coming soon")}><ShieldCheck /><span>{t("Security & privacy")}</span><ChevronRight /></button>
+              <button onClick={() => setNotice("Preferences are coming soon")}><Settings /><span>{t("Preferences")}</span><ChevronRight /></button>
+              <button onClick={() => setNotice("Help center is coming soon")}><CircleHelp /><span>{t("Help center")}</span><ChevronRight /></button>
             </div>
           </section>
         )}
       </div>
 
-      <nav className={`bottom-nav ${active === "trader-profile" ? "bottom-nav-hidden" : ""}`} aria-label="Main navigation">
+      <nav className={`bottom-nav ${active === "trader-profile" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
           if (item.primary) {
-            return <button className="nav-item nav-create" key={item.id} onClick={() => selectTab(item)} aria-label="Create"><span className="create-orb"><Icon size={24} strokeWidth={2.4} /></span><span className="nav-label">Create</span></button>;
+            return <button className="nav-item nav-create" key={item.id} onClick={() => selectTab(item)} aria-label="Create"><span className="create-orb"><Icon size={24} strokeWidth={2.4} /></span><span className="nav-label">{t("Create")}</span></button>;
           }
           return (
             <button className={`nav-item ${isActive ? "active" : ""}`} key={item.id} onClick={() => selectTab(item)} aria-label={item.label} aria-current={isActive ? "page" : undefined}>
@@ -626,7 +928,7 @@ function App() {
 
       {sidebarOpen && (
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}>
-          <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label="Main menu" onClick={(event) => event.stopPropagation()}>
+          <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label={t("Main menu")} onClick={(event) => event.stopPropagation()}>
             <div className="sidebar-heading">
               <div className="sidebar-brand"><span className="brand-mark"><span /></span><strong>beanance</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
@@ -687,10 +989,10 @@ function App() {
         <div className="modal-backdrop" onClick={() => setShowCreate(false)}>
           <section className="create-sheet" onClick={(event) => event.stopPropagation()}>
             <div className="sheet-handle" />
-            <div className="sheet-heading"><div><p className="eyebrow">QUICK ACTION</p><h2>What would you like to do?</h2></div><button className="icon-button" onClick={() => setShowCreate(false)} aria-label="Close"><X size={20} /></button></div>
-            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Swap flow is coming soon"); }}><span className="sheet-option-icon"><ArrowUpRight /></span><span><strong>Swap tokens</strong><small>Exchange one asset for another</small></span><ChevronRight /></button>
-            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Buy crypto flow is coming soon"); }}><span className="sheet-option-icon"><Plus /></span><span><strong>Buy crypto</strong><small>Add crypto to your wallet</small></span><ChevronRight /></button>
-            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Connect dApp flow is coming soon"); }}><span className="sheet-option-icon"><Compass /></span><span><strong>Connect dApp</strong><small>Explore decentralized apps</small></span><ChevronRight /></button>
+            <div className="sheet-heading"><div><p className="eyebrow">{t("QUICK ACTION")}</p><h2>{t("What would you like to do?")}</h2></div><button className="icon-button" onClick={() => setShowCreate(false)} aria-label="Close"><X size={20} /></button></div>
+            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Swap flow is coming soon"); }}><span className="sheet-option-icon"><ArrowUpRight /></span><span><strong>{t("Swap tokens")}</strong><small>{t("Exchange one asset for another")}</small></span><ChevronRight /></button>
+            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Buy crypto flow is coming soon"); }}><span className="sheet-option-icon"><Plus /></span><span><strong>{t("Buy crypto")}</strong><small>{t("Add crypto to your wallet")}</small></span><ChevronRight /></button>
+            <button className="sheet-option" onClick={() => { setShowCreate(false); setNotice("Connect dApp flow is coming soon"); }}><span className="sheet-option-icon"><Compass /></span><span><strong>{t("Connect dApp")}</strong><small>{t("Explore decentralized apps")}</small></span><ChevronRight /></button>
           </section>
         </div>
       )}
