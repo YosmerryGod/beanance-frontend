@@ -536,6 +536,30 @@ const topMoverEvents = [
   { symbol: "XRP", name: "XRP", change: "-3.24%", timeframe: "2 jam", time: "14:00:18", status: "Pullback", category: "Pullback", positive: false },
 ];
 
+
+/* [ADDED] Reusable cryptocurrency brand marks powered by Simple Icons CDN. */
+const cryptoIconSlugs = {
+  BTC: "bitcoin", XBT: "bitcoin", ETH: "ethereum", BNB: "binance",
+  SOL: "solana", XRP: "xrp", USDT: "tether", USDC: "circle",
+  DOGE: "dogecoin", ADA: "cardano", AVAX: "avalanche", DOT: "polkadot",
+  LINK: "chainlink", LTC: "litecoin", TRX: "tron", XLM: "stellar",
+  UNI: "uniswap", MATIC: "polygon", POL: "polygon", TON: "ton",
+  SUI: "sui", APT: "aptos", ATOM: "cosmos", NEAR: "near",
+  ARB: "arbitrum", OP: "optimism", SHIB: "shibainu", PEPE: "pepe",
+  FIL: "filecoin", ICP: " 인터넷computer", RENDER: "render"
+};
+
+function CryptoIcon({ symbol, className = "" }) {
+  const normalizedSymbol = String(symbol || "").toUpperCase().replace(/USDT$/, "").replace(/USD$/, "");
+  const slug = cryptoIconSlugs[normalizedSymbol];
+  return (
+    <span className={`crypto-brand-icon ${className}`} data-symbol={normalizedSymbol}>
+      {slug && <img src={`https://cdn.simpleicons.org/${slug}`} alt={normalizedSymbol} loading="lazy" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+      <span>{normalizedSymbol.slice(0, 1) || "?"}</span>
+    </span>
+  );
+}
+
 function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
@@ -785,7 +809,7 @@ function App() {
                 ].map((strategy) => (
                   <article className="strategy-card" key={strategy.name}>
                     <div className="strategy-card-head">
-                      <div className={`strategy-coin ${strategy.tone}`}>{strategy.symbol}</div>
+                      <div className={`strategy-coin ${strategy.tone}`}><CryptoIcon symbol={strategy.tone === "bitcoin" ? "BTC" : strategy.tone === "ethereum" ? "ETH" : "SOL"} /></div>
                       <div className="strategy-identity"><strong>{strategy.name}</strong><button className="strategy-owner-link" onClick={() => openTrader(strategy.user)}>{strategy.user}</button></div>
                       <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={() => setNotice(`${strategy.name} details are coming soon`)}>•••</button>
                     </div>
@@ -835,7 +859,7 @@ function App() {
                 <table className="dashboard-table market-table">
                   <thead><tr><th>#</th><th>{t("Pair")}</th><th>{t("Price")}</th><th>{t("24h Change")}</th><th>{t("24h Volume")}</th><th>{t("Chart")}</th><th>★</th></tr></thead>
                   <tbody>
-                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol}><td>{index+1}</td><td><div className="market-pair"><span className={`asset-icon ${asset.tone}`}>{asset.icon}</span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={() => setNotice(`${asset.symbol} favorites are demo only`)}>☆</button></td></tr>)}
+                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol}><td>{index+1}</td><td><div className="market-pair"><span className={`asset-icon ${asset.tone}`}><CryptoIcon symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={() => setNotice(`${asset.symbol} favorites are demo only`)}>☆</button></td></tr>)}
                   </tbody>
                 </table>
               </div>
@@ -895,7 +919,7 @@ function App() {
                   {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"◆",tag:"Low Risk"}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
-                    <div className={`discover-avatar ${item.tone}`}>{item.symbol}</div>
+                    <div className={`discover-avatar ${item.tone}`}><CryptoIcon symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : item.tone === "solana" ? "SOL" : item.tone === "bnb" ? "BNB" : item.symbol} /></div>
                     <div className="discover-card-main"><strong>{item.name}</strong><button className="discover-owner-link" onClick={() => openTrader(item.user)}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
                     <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>{t("Follow")}</button>
@@ -1059,7 +1083,7 @@ function App() {
                   }).map((asset) => (
                     <article className="market-table market-table-row" key={asset.symbol}>
                       <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={() => setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol])}><Star size={18} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
-                      <div className="market-pair"><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
+                      <div className="market-pair"><div className={`asset-icon ${asset.tone}`}><CryptoIcon symbol={asset.symbol} /></div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
                       <div className="market-volume-cell">{asset.volume}</div>
                       <div className="market-price-cell">{asset.price}</div>
                       <div className={asset.positive ? "market-change-cell positive" : "market-change-cell negative"}>{asset.change}</div>
@@ -1078,7 +1102,7 @@ function App() {
                 <div className="top-movers-list">
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
-                      <div className="top-mover-pair"><strong>{event.symbol}USDT</strong><span className="perp-tag">{t("Perp")}</span><small>{event.time} · {event.timeframe} lalu</small></div>
+                      <div className="top-mover-pair"><div className="top-mover-asset"><CryptoIcon symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><span className="perp-tag">{t("Perp")}</span><small>{event.time} · {event.timeframe} lalu</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{t(event.status)}</span></div>
                     </article>
                   ))}
@@ -1146,7 +1170,7 @@ function App() {
                       ].filter((s) => strategyFilter === "inactive" ? s.status === "inactive" : (strategyFilter === "all" || s.owner === strategyFilter)).map((strategy,index) => (
                         <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name}>
                           <div className="trader-strategy-performance-heading">
-                            <div className="trader-owned-strategy-icon"><Activity size={20}/></div>
+                            <div className="trader-owned-strategy-icon"><CryptoIcon symbol={strategy.pair} /></div>
                             <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={"trader-strategy-risk-inline " + strategy.risk.toLowerCase().replace(" risk","")}>{t(strategy.risk)}</span></div><span>{t(strategy.type)} · {strategy.pair} · {strategy.timeframe}</span></div>
                             <div className="trader-strategy-actions"><span className={"strategy-status-pill " + strategy.status}>{t(strategy.status === "active" ? "Active" : "Inactive")}</span>{strategy.status === "active" && <button type="button" className="trader-copy-button" onClick={() => setNotice("Copy trading for " + strategy.name + " is coming soon")}><Copy size={14}/> {t("Copy")}</button>}</div>
                           </div>
@@ -1192,8 +1216,8 @@ function App() {
                       </div>
                       <div className="portfolio-wallet-token-heading"><h3>{t("Assets")}</h3><button type="button" onClick={() => setNotice("Add token is coming soon")}><Plus size={16}/>{t("Add Token")}</button></div>
                       <div className="portfolio-wallet-token-list">
-                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bnb">B</span><span className="portfolio-wallet-token-info"><strong>BNB</strong><small>BNB Chain</small></span><span className="portfolio-wallet-token-value"><strong>4.25 BNB</strong><small>$2,465.00</small></span></article>
-                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean">B</span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>Beanance Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
+                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bnb"><CryptoIcon symbol="BNB" /></span><span className="portfolio-wallet-token-info"><strong>BNB</strong><small>BNB Chain</small></span><span className="portfolio-wallet-token-value"><strong>4.25 BNB</strong><small>$2,465.00</small></span></article>
+                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean"><CryptoIcon symbol="BEAN" /></span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>Beanance Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
                       </div>
                     </>
                   )}
@@ -1238,7 +1262,7 @@ function App() {
                         ]
                       ).map((item) => (
                         <article className="portfolio-history-item portfolio-strategy-history-item" key={item.name}>
-                          <span className={"portfolio-history-icon " + historyFilter}><Activity size={17}/></span>
+                          <span className={"portfolio-history-icon " + historyFilter}><CryptoIcon symbol={item.name} /></span>
                           <span className="portfolio-history-main"><strong>{item.name}</strong><small>{item.pair} · {item.date}</small></span>
                           <span className="portfolio-history-value"><strong className={item.detail.startsWith("+") ? "positive" : ""}>{item.detail}</strong><small className={"history-status " + historyFilter}>{t(item.status)}</small></span>
                         </article>
