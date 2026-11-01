@@ -3281,3 +3281,14 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-strategy-filters button{min-height:33px!important;padding:6px 5px!important;font-size:10px!important}
  .app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected{flex:1.5 1 0!important}
 }
+
+
+/* [ADDED] Compact timeframe selector for the Portfolio performance chart. */
+.app-shell .portfolio-timeframe-tabs{display:flex!important;align-items:center!important;gap:5px!important;width:100%!important;margin:0 0 16px!important;padding:4px!important;overflow-x:auto!important;border:1px solid var(--line)!important;border-radius:12px!important;background:var(--panel-soft)!important;scrollbar-width:none!important}
+.app-shell .portfolio-timeframe-tabs::-webkit-scrollbar{display:none!important}
+.app-shell .portfolio-timeframe-tabs button{flex:1 0 auto!important;min-width:0!important;min-height:34px!important;padding:7px 12px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:11px!important;font-weight:700!important;cursor:pointer!important}
+.app-shell .portfolio-timeframe-tabs button.selected{background:var(--panel)!important;color:var(--gold)!important;box-shadow:0 1px 4px rgba(0,0,0,.18)!important}
+@media(max-width:700px){
+ .app-shell .portfolio-timeframe-tabs{gap:3px!important;margin-bottom:12px!important}
+ .app-shell .portfolio-timeframe-tabs button{min-height:32px!important;padding:6px 9px!important;font-size:10px!important}
+}
