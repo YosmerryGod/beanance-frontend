@@ -3723,19 +3723,7 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   box-shadow: none !important;
 }
 
-/* [ADDED] Simple Icons crypto logos used consistently across Beanance pages. */
-.app-shell .coin-logo{position:relative;display:inline-grid;place-items:center;flex:0 0 100%;width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;color:currentColor;font-size:inherit;font-weight:800;line-height:1}
-.app-shell .coin-logo>img{position:absolute;inset:0;width:100%;height:100%;padding:19%;box-sizing:border-box;object-fit:contain;filter:var(--crypto-icon-filter,none)}
-.app-shell .coin-logo>span{display:grid;place-items:center;width:100%;height:100%;font-size:.72em}
-.app-shell .strategy-coin .coin-logo{width:100%;height:100%}
-.app-shell .asset-icon .coin-logo{width:100%;height:100%}
-.app-shell .discover-avatar .coin-logo{width:100%;height:100%}
-.app-shell .top-mover-asset{display:flex;align-items:center;gap:9px}
-.app-shell .top-mover-asset .coin-logo{width:30px;height:30px;flex:0 0 30px;border-radius:50%;background:var(--panel-soft)}
-.app-shell .trader-owned-strategy-icon .coin-logo{width:100%;height:100%}
-.app-shell .portfolio-wallet-token-logo .coin-logo{width:100%;height:100%;font-size:17px}
-.app-shell .portfolio-history-icon .coin-logo{width:100%;height:100%;font-size:17px}
-.app-shell.theme-light .coin-logo>img{filter:none}
+
 
 
 /* [ADDED] Consistent Lucide icon stroke treatment. */
