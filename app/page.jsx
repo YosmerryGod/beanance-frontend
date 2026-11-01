@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import i18n from "i18next";
+import { initReactI18next, useTranslation } from "react-i18next";
 import {
   ArrowDownLeft,
   ArrowLeft,
@@ -423,6 +425,19 @@ Object.assign(appTranslations.vi, {
   "YOUR ACCOUNT":"TÀI KHOẢN CỦA BẠN","Hey, Ezy":"Xin chào, Ezy","Welcome back, Ezy":"Chào mừng trở lại, Ezy","Wallet management":"Quản lý ví","Security & privacy":"Bảo mật & quyền riêng tư","Preferences":"Tùy chọn","Help center":"Trung tâm trợ giúp","QUICK ACTION":"THAO TÁC NHANH","What would you like to do?":"Bạn muốn làm gì?","Swap tokens":"Hoán đổi token","Exchange one asset for another":"Đổi tài sản này sang tài sản khác","Buy crypto":"Mua tiền mã hóa","Add crypto to your wallet":"Thêm tiền mã hóa vào ví","Connect dApp":"Kết nối dApp","Explore decentralized apps":"Khám phá ứng dụng phi tập trung","Search strategies or traders...":"Tìm chiến lược hoặc nhà giao dịch...","Search assets...":"Tìm tài sản...","Favorites":"Yêu thích","Futures":"Hợp đồng tương lai","Crypto":"Tiền mã hóa","Verified":"Đã xác minh","Most Followers":"Nhiều người theo dõi nhất","Mark price":"Giá đánh dấu","Exit price":"Giá thoát","Unrealized PnL":"PnL chưa thực hiện","Realized PnL":"PnL đã thực hiện","Strategies by":"Chiến lược của","Verified trader":"Nhà giao dịch đã xác minh","Active for":"Hoạt động trong","followers":"người theo dõi","days active":"ngày hoạt động","win rate":"tỷ lệ thắng","Return (30D)":"Lợi nhuận 30 ngày","Total return":"Tổng lợi nhuận","Trend Following":"Theo xu hướng","Scalping":"Lướt sóng","Breakout":"Đột phá","Medium Risk":"Rủi ro trung bình","Low Risk":"Rủi ro thấp","High Risk":"Rủi ro cao","Trending":"Xu hướng","All":"Tất cả","1M":"1 tháng","3M":"3 tháng","6M":"6 tháng","1Y":"1 năm"
 });
 
+// [ADDED] Initialize one shared i18next instance from the existing five-language catalog.
+if (!i18n.isInitialized) {
+  i18n.use(initReactI18next).init({
+    resources: Object.fromEntries(
+      Object.entries(appTranslations).map(([code, translation]) => [code, { translation }])
+    ),
+    lng: "en",
+    fallbackLng: "en",
+    interpolation: { escapeValue: false },
+    initImmediate: false,
+  });
+}
+
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "dapps", label: "Discover", icon: Compass },
@@ -474,6 +489,7 @@ const topMoverEvents = [
 ];
 
 function App() {
+  const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -524,9 +540,10 @@ function App() {
     if (!languageReady) return;
     window.localStorage.setItem("beanance-language", language);
     document.documentElement.lang = language;
+    translator.changeLanguage(language); // [ADDED] Update the shared translation engine across all rendered pages.
   }, [language, languageReady]);
 
-  const t = (value) => appTranslations[language]?.[value] || appTranslations.en?.[value] || value;
+  const t = (value) => translate(value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
   const selectedLanguage = supportedLanguages.find((item) => item.code === language) || supportedLanguages[0];
 
