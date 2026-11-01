@@ -3439,3 +3439,35 @@ main.app-shell .portfolio-wallet-modern .portfolio-wallet-or small{font-size:10p
  main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action,
  main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{min-height:44px!important;padding:0 6px!important;font-size:11px!important}
 }
+
+
+/* [ADDED] Final professional Web3 wallet layout for disconnected and connected states. */
+main.app-shell .portfolio-wallet-modern{display:block!important;min-height:0!important;padding:18px!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:0!important;width:100%!important;max-width:390px!important;padding:18px 4px 22px!important;margin:0 auto!important;text-align:center!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding-icon{display:grid!important;place-items:center!important;width:58px!important;height:58px!important;margin:0 0 22px!important;border:1px solid rgba(218,174,39,.25)!important;border-radius:18px!important;background:rgba(218,174,39,.1)!important;color:var(--gold)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding-actions{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;width:100%!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action,
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:9px!important;width:100%!important;min-height:52px!important;padding:0 16px!important;border-radius:13px!important;font-family:inherit!important;font-size:14px!important;font-weight:750!important;line-height:1!important;white-space:nowrap!important;appearance:none!important;-webkit-appearance:none!important;box-shadow:none!important;cursor:pointer!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action{border:1px solid #e5bd42!important;background:#e5bd42!important;color:#171717!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{border:1px solid var(--line)!important;background:transparent!important;color:var(--text)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or{display:flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;width:100%!important;margin:15px 0!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or span{display:block!important;height:1px!important;flex:1!important;background:var(--line)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or small{color:var(--muted)!important;font-size:11px!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:24px 0 12px!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-heading h3{margin:0!important;color:var(--text)!important;font-size:16px!important;font-weight:750!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-heading>button{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-height:34px!important;padding:0 10px!important;border:1px solid var(--line)!important;border-radius:10px!important;background:var(--panel-soft)!important;color:var(--text)!important;font-family:inherit!important;font-size:11px!important;font-weight:700!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-balance-card{padding:20px!important;border:1px solid var(--line)!important;border-radius:18px!important;background:var(--panel-soft)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-balance-card>strong{font-size:clamp(30px,7vw,38px)!important;letter-spacing:-.045em!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-actions button{min-height:68px!important;border-radius:13px!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-card{min-height:70px!important;padding:13px!important;border-radius:14px!important}
+@media(max-width:700px){
+ main.app-shell .portfolio-wallet-modern{padding:14px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding{max-width:100%!important;padding:18px 2px 20px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding-icon{width:54px!important;height:54px!important;margin-bottom:20px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action,
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{min-height:49px!important;font-size:13px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-balance-card{padding:16px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-actions{gap:7px!important;margin-top:20px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-actions button{min-height:62px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-heading{margin-top:21px!important}
+}
