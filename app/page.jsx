@@ -17,6 +17,9 @@ import {
   EyeOff,
   Grid2X2,
   LayoutDashboard,
+  Languages, // [ADDED] Language settings icon
+  Palette, // [ADDED] Appearance settings icon
+  Info, // [ADDED] About Beanance icon
   Menu, // [ADDED] Sidebar menu icon
   Plus,
   Search,
@@ -32,6 +35,23 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
+
+
+const supportedLanguages = [
+  { code: "en", label: "English", native: "English", flag: "🇬🇧" },
+  { code: "zh", label: "Chinese", native: "简体中文", flag: "🇨🇳" },
+  { code: "id", label: "Indonesian", native: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "ja", label: "Japanese", native: "日本語", flag: "🇯🇵" },
+  { code: "vi", label: "Vietnamese", native: "Tiếng Việt", flag: "🇻🇳" },
+];
+
+const sidebarTranslations = {
+  en: { account: "ACCOUNT", preferences: "PREFERENCES", support: "SUPPORT", profile: "Profile", language: "Language", security: "Security", notifications: "Notifications", appearance: "Appearance", help: "Help Center", about: "About Beanance", menu: "MENU", community: "BEANANCE COMMUNITY", footer: "Explore markets and trading strategies" },
+  zh: { account: "账户", preferences: "偏好设置", support: "支持", profile: "个人资料", language: "语言", security: "安全", notifications: "通知", appearance: "外观", help: "帮助中心", about: "关于 Beanance", menu: "菜单", community: "BEANANCE 社区", footer: "探索市场和交易策略" },
+  id: { account: "AKUN", preferences: "PREFERENSI", support: "BANTUAN", profile: "Profil", language: "Bahasa", security: "Keamanan", notifications: "Notifikasi", appearance: "Tampilan", help: "Pusat Bantuan", about: "Tentang Beanance", menu: "MENU", community: "KOMUNITAS BEANANCE", footer: "Jelajahi market dan strategi trading" },
+  ja: { account: "アカウント", preferences: "設定", support: "サポート", profile: "プロフィール", language: "言語", security: "セキュリティ", notifications: "通知", appearance: "外観", help: "ヘルプセンター", about: "Beananceについて", menu: "メニュー", community: "BEANANCE コミュニティ", footer: "市場と取引戦略をチェック" },
+  vi: { account: "TÀI KHOẢN", preferences: "TÙY CHỈNH", support: "HỖ TRỢ", profile: "Hồ sơ", language: "Ngôn ngữ", security: "Bảo mật", notifications: "Thông báo", appearance: "Giao diện", help: "Trung tâm trợ giúp", about: "Về Beanance", menu: "DANH MỤC", community: "CỘNG ĐỒNG BEANANCE", footer: "Khám phá thị trường và chiến lược giao dịch" },
+};
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -93,6 +113,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // [ADDED] Global navigation drawer
+  const [language, setLanguage] = useState("en"); // [ADDED] App language, English by default
+  const [languageOpen, setLanguageOpen] = useState(false); // [ADDED] Language picker visibility
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
@@ -120,6 +142,20 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem("beanance-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const savedLanguage = window.localStorage.getItem("beanance-language");
+    if (supportedLanguages.some((item) => item.code === savedLanguage)) setLanguage(savedLanguage);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("beanance-language", language);
+  }, [language]);
+
+  const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
+  const selectedLanguage = supportedLanguages.find((item) => item.code === language) || supportedLanguages[0];
+
+
 
   const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
 
@@ -582,7 +618,7 @@ function App() {
           return (
             <button className={`nav-item ${isActive ? "active" : ""}`} key={item.id} onClick={() => selectTab(item)} aria-label={item.label} aria-current={isActive ? "page" : undefined}>
               <Icon size={21} strokeWidth={isActive ? 2.3 : 1.8} />
-              <span className="nav-label">{item.label}</span>
+              <span className="nav-label">{({ dashboard: language === "id" ? "Beranda" : language === "zh" ? "首页" : language === "ja" ? "ホーム" : language === "vi" ? "Trang chủ" : "Dashboard", dapps: language === "id" ? "Discover" : language === "zh" ? "发现" : language === "ja" ? "発見" : language === "vi" ? "Khám phá" : "Discover", create: language === "id" ? "Buat" : language === "zh" ? "创建" : language === "ja" ? "作成" : language === "vi" ? "Tạo" : "Create", market: language === "id" ? "Market" : language === "zh" ? "市场" : language === "ja" ? "市場" : language === "vi" ? "Thị trường" : "Market", profile: language === "id" ? "Profil" : language === "zh" ? "个人资料" : language === "ja" ? "プロフィール" : language === "vi" ? "Hồ sơ" : "Profile" })[item.id]}</span>
             </button>
           );
         })}
@@ -595,23 +631,53 @@ function App() {
               <div className="sidebar-brand"><span className="brand-mark"><span /></span><strong>beanance</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
-            <p className="eyebrow sidebar-section-label">MENU</p>
-            <nav className="sidebar-navigation" aria-label="Sidebar navigation">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                const selected = active === item.id;
-                return (
-                  <button key={item.id} type="button" className={`sidebar-nav-item ${selected ? "active" : ""} ${item.primary ? "sidebar-create-item" : ""}`} onClick={() => {setSidebarOpen(false);selectTab(item);}}>
-                    <Icon size={19} />
-                    <span>{item.label}</span>
-                    {selected && <span className="sidebar-active-dot" />}
-                  </button>
-                );
-              })}
+            <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
+              <span className="sidebar-avatar">E</span>
+              <span className="sidebar-account-copy"><strong>Ezy</strong><small>Beanance Account</small></span>
+              <ChevronRight size={18} />
+            </button>
+            <p className="eyebrow sidebar-section-label">{sidebarText.account}</p>
+            <nav className="sidebar-navigation" aria-label="Account settings">
+              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
+                <UserRound size={19} /><span>{sidebarText.profile}</span><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
+              <button type="button" className="sidebar-nav-item" aria-expanded={languageOpen} onClick={() => setLanguageOpen((open) => !open)}>
+                <Languages size={19} /><span>{sidebarText.language}</span><small className="sidebar-current-language">{selectedLanguage.native}</small><ChevronRight className={languageOpen ? "sidebar-chevron-open" : "sidebar-item-chevron"} size={17} />
+              </button>
+              {languageOpen && (
+                <div className="sidebar-language-list">
+                  {supportedLanguages.map((item) => (
+                    <button key={item.code} type="button" className={language === item.code ? "selected" : ""} onClick={() => {setLanguage(item.code);setLanguageOpen(false);}}>
+                      <span>{item.flag}</span><span>{item.label}</span><small>{item.native}</small>{language === item.code && <span className="sidebar-language-check">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Security settings are coming soon");}}>
+                <ShieldCheck size={19} /><span>{sidebarText.security}</span><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
+            </nav>
+            <p className="eyebrow sidebar-section-label">{sidebarText.preferences}</p>
+            <nav className="sidebar-navigation" aria-label="Preferences">
+              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Notification settings are coming soon");}}>
+                <Bell size={19} /><span>{sidebarText.notifications}</span><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
+              <button type="button" className="sidebar-nav-item" onClick={toggleTheme}>
+                <Palette size={19} /><span>{sidebarText.appearance}</span><small className="sidebar-current-language">{theme === "dark" ? "Dark" : "Light"}</small><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
+            </nav>
+            <p className="eyebrow sidebar-section-label">{sidebarText.support}</p>
+            <nav className="sidebar-navigation" aria-label="Support">
+              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Help center is coming soon");}}>
+                <CircleHelp size={19} /><span>{sidebarText.help}</span><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
+              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Beanance · Community trading platform");}}>
+                <Info size={19} /><span>{sidebarText.about}</span><ChevronRight className="sidebar-item-chevron" size={17} />
+              </button>
             </nav>
             <div className="sidebar-footer">
-              <span>BEANANCE COMMUNITY</span>
-              <small>Explore markets and trading strategies</small>
+              <span>{sidebarText.community}</span>
+              <small>{sidebarText.footer}</small>
             </div>
           </aside>
         </div>
