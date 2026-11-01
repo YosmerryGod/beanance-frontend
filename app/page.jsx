@@ -1111,15 +1111,15 @@ function App() {
                 <span><Users size={14}/><strong>56</strong> {t("Following")}</span>
                 <span><Layers size={14}/><strong>12</strong> {t("Strategies")}</span>
               </div>
-            </section>
-
-            <div className="portfolio-icon-tabs" role="tablist" aria-label={t("Portfolio sections")}>
+              {/* [MODIFIED] Portfolio tabs are integrated into the profile card footer. */}
+              <div className="portfolio-icon-tabs" role="tablist" aria-label={t("Portfolio sections")}>
               <button type="button" role="tab" aria-selected={portfolioTab === "all"} className={portfolioTab === "all" ? "selected" : ""} onClick={() => setPortfolioTab("all")} aria-label={t("All Strategy")} title={t("All Strategy")}><Layers size={21}/>{portfolioTab === "all" && <span>{t("All Strategy")}</span>}</button>
               <button type="button" role="tab" aria-selected={portfolioTab === "created"} className={portfolioTab === "created" ? "selected" : ""} onClick={() => setPortfolioTab("created")} aria-label={t("Created Strategy")} title={t("Created Strategy")}><TrendingUp size={21}/>{portfolioTab === "created" && <span>{t("Created Strategy")}</span>}</button>
               <button type="button" role="tab" aria-selected={portfolioTab === "following"} className={portfolioTab === "following" ? "selected" : ""} onClick={() => setPortfolioTab("following")} aria-label={t("Following Strategy")} title={t("Following Strategy")}><Users size={21}/>{portfolioTab === "following" && <span>{t("Following Strategy")}</span>}</button>
               <button type="button" role="tab" aria-selected={portfolioTab === "wallet"} className={portfolioTab === "wallet" ? "selected" : ""} onClick={() => setPortfolioTab("wallet")} aria-label={t("Web3 Wallet")} title={t("Web3 Wallet")}><Wallet size={21}/>{portfolioTab === "wallet" && <span>{t("Web3 Wallet")}</span>}</button>
               <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")} aria-label={t("Transaction History")} title={t("Transaction History")}><Clock3 size={21}/>{portfolioTab === "history" && <span>{t("Transaction History")}</span>}</button>
-            </div>
+              </div>
+            </section>
 
             <div className="portfolio-strategy-content">
               {portfolioTab === "all" && (
