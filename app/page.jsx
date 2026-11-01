@@ -496,19 +496,6 @@ const navigation = [
   { id: "profile", label: "Portfolio", icon: Wallet }, // [MODIFIED] Rename the bottom navigation destination label and icon.
 ];
 
-const assets = [
-  { symbol: "BTC", name: "Bitcoin", amount: "0.08421 BTC", value: "$5,482.20", change: "+2.45%", positive: true, icon: "BTC", tone: "bitcoin" },
-  { symbol: "ETH", name: "Ethereum", amount: "1.2840 ETH", value: "$3,820.40", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum" },
-  { symbol: "BNB", name: "BNB", amount: "4.520 BNB", value: "$2,945.60", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb" },
-];
-
-const dapps = [
-  { name: "PancakeSwap", category: "DeFi · Exchange", description: "Swap tokens and provide liquidity.", icon: "pancake", color: "dapp-yellow", users: "2.4M" },
-  { name: "Venus", category: "DeFi · Lending", description: "Supply and borrow digital assets.", icon: "venus", color: "dapp-purple", users: "840K" },
-  { name: "OpenSea", category: "NFT · Marketplace", description: "Discover digital collectibles.", icon: "opensea", color: "dapp-blue", users: "1.2M" },
-  { name: "Galxe", category: "Web3 · Community", description: "Explore quests and Web3 campaigns.", icon: "galxe", color: "dapp-pink", users: "960K" },
-];
-
 const traderProfiles = {
   tradewiz: { name: "TradeWiz", bio: "Trend trader focused on disciplined entries, market structure, and consistent risk management.", followers: "342", returns: "+124.5%", win: "68%", trades: "680", age: "240 days", strategies: [{ name: "BTC Trend Master", type: "Trend Following", risk: "Medium Risk", returns: "+124.5%", win: "68%", trades: "680" }, { name: "BTC Momentum", type: "Momentum", risk: "Medium Risk", returns: "+42.8%", win: "65%", trades: "214" }, { name: "Market Structure Pro", type: "Swing Trading", risk: "Low Risk", returns: "+28.4%", win: "71%", trades: "96" }] },
   cryptofox: { name: "CryptoFox", bio: "Systematic scalper looking for high-probability setups across major crypto pairs.", followers: "1.2K", returns: "+89.2%", win: "72%", trades: "1,240", age: "120 days", strategies: [{ name: "Scalping AI v2", type: "Scalping", risk: "Low Risk", returns: "+89.2%", win: "72%", trades: "1,240" }, { name: "ETH Quick Moves", type: "Scalping", risk: "Medium Risk", returns: "+36.7%", win: "69%", trades: "328" }] },
@@ -522,7 +509,7 @@ const marketAssets = [
   { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum", volume: "$14.2B" },
   { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb", volume: "$1.8B" },
   { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "SOL", tone: "solana", volume: "$3.9B" },
-  { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, icon: "X", tone: "xrp", volume: "$1.1B" },
+  { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, tone: "xrp", volume: "$1.1B" },
 ];
 
 // [ADDED] Short-term market movement examples for the Top Movers interface.
