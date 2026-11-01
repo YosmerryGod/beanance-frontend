@@ -1146,14 +1146,12 @@ function App() {
                   {/* [MODIFIED] Strategy cards mirror the trader profile performance layout. */}
                   <section className="portfolio-strategy-list-section portfolio-owned-strategies-section">
                     <div className="portfolio-content-heading portfolio-strategy-heading"><span className="portfolio-period-chip">5 {t("Strategies")}</span></div>
-                    <div className="portfolio-strategy-filters" role="tablist" aria-label={t("Filter strategies")}>
+                    {/* [MODIFIED] Keep all strategy filters on one horizontal tab row. */}
+                    <div className="portfolio-strategy-filters portfolio-strategy-all-filters" role="tablist" aria-label={t("Filter strategies")}>
                       <button type="button" role="tab" aria-selected={strategyFilter === "all"} className={strategyFilter === "all" ? "selected" : ""} onClick={() => setStrategyFilter("all")}>{t("All")}</button>
                       <button type="button" role="tab" aria-selected={strategyFilter === "mine"} className={strategyFilter === "mine" ? "selected" : ""} onClick={() => setStrategyFilter("mine")}>{t("My Strategy")}</button>
                       <button type="button" role="tab" aria-selected={strategyFilter === "following"} className={strategyFilter === "following" ? "selected" : ""} onClick={() => setStrategyFilter("following")}>{t("Following")}</button>
-                    </div>
-                    <div className="portfolio-strategy-status-tabs" role="tablist" aria-label={t("Strategy status")}>
-                      <button type="button" role="tab" aria-selected={portfolioStrategyStatus === "active"} className={portfolioStrategyStatus === "active" ? "selected" : ""} onClick={() => setPortfolioStrategyStatus("active")}>{t("Active")} <span>4</span></button>
-                      <button type="button" role="tab" aria-selected={portfolioStrategyStatus === "inactive"} className={portfolioStrategyStatus === "inactive" ? "selected" : ""} onClick={() => setPortfolioStrategyStatus("inactive")}>{t("Inactive")} <span>1</span></button>
+                      <button type="button" role="tab" aria-selected={strategyFilter === "inactive"} className={strategyFilter === "inactive" ? "selected" : ""} onClick={() => setStrategyFilter("inactive")}>{t("Inactive")} <span>1</span></button>
                     </div>
                     <div className="trader-strategy-performance-list portfolio-owned-strategy-list">
                       {[
@@ -1162,7 +1160,7 @@ function App() {
                         {name:"ETH Momentum",pair:"ETHUSDT",type:"Momentum",timeframe:"1h",returns:"+7.21%",win:"65%",trades:"186",risk:"Medium Risk",owner:"mine",status:"active",chart:0},
                         {name:"BTC Trend Master",pair:"BTCUSDT",type:"Trend Following",timeframe:"1h",returns:"+24.80%",win:"71%",trades:"680",risk:"Medium Risk",owner:"following",status:"active",chart:1},
                         {name:"ETH Quick Moves",pair:"ETHUSDT",type:"Momentum",timeframe:"15m",returns:"-2.40%",win:"48%",trades:"92",risk:"High Risk",owner:"following",status:"inactive",chart:0}
-                      ].filter((s) => (strategyFilter === "all" || s.owner === strategyFilter) && s.status === portfolioStrategyStatus).map((strategy,index) => (
+                      ].filter((s) => strategyFilter === "inactive" ? s.status === "inactive" : (strategyFilter === "all" || s.owner === strategyFilter)).map((strategy,index) => (
                         <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name}>
                           <div className="trader-strategy-performance-heading">
                             <div className="trader-owned-strategy-icon"><Activity size={20}/></div>
