@@ -1182,7 +1182,6 @@ function App() {
                   </div>
                 </section>
               )}
-              <p className="portfolio-disclaimer">{t("Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.")}</p>
             </div>
           </section>
         )}
