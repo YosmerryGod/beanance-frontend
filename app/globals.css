@@ -3396,3 +3396,24 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-wallet-actions button{min-height:62px!important;font-size:10px!important}
  .app-shell .portfolio-wallet-token-card{padding:12px!important}
 }
+
+
+/* [ADDED] Final wallet layout polish: compact actions, no onboarding subtitles. */
+main.app-shell .portfolio-wallet-modern{padding:20px!important;background:var(--panel)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding{width:100%!important;max-width:360px!important;box-sizing:border-box!important;align-items:stretch!important;padding:22px 4px 18px!important;margin:0 auto!important;text-align:left!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding-icon{width:54px!important;height:54px!important;margin:0 auto 22px!important;border-radius:17px!important;background:rgba(218,174,39,.13)!important;color:#b28a17!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action,
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{width:100%!important;min-height:48px!important;box-sizing:border-box!important;padding:0 16px!important;border-radius:12px!important;font-family:inherit!important;font-size:14px!important;font-weight:700!important;line-height:1!important;appearance:none!important;-webkit-appearance:none!important;box-shadow:none!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-primary-action{border:1px solid #e5bd42!important;background:#e5bd42!important;color:#171717!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-secondary-action{border:1px solid var(--line,#ded6c0)!important;background:transparent!important;color:var(--text,#211f1a)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or{margin:15px 0!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or span{height:1px!important;background:var(--line,#ded6c0)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-or small{font-size:11px!important;color:var(--muted,#8b8577)!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-security-note{display:none!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-balance-card{border-radius:17px!important}
+main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-card{min-height:66px!important;box-sizing:border-box!important}
+@media(max-width:700px){
+ main.app-shell .portfolio-wallet-modern{padding:14px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding{max-width:100%!important;padding:18px 2px 14px!important}
+ main.app-shell .portfolio-wallet-modern .portfolio-wallet-onboarding-icon{margin-bottom:20px!important}
+}
