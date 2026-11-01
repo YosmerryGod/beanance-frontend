@@ -37,6 +37,10 @@ import {
   Wallet,
   X,
   BarChart3,
+  Layers, // [ADDED] Portfolio strategy tab icon
+  TrendingUp, // [ADDED] Portfolio performance icon
+  Clock3, // [ADDED] Portfolio transaction history icon
+  Target, // [ADDED] Portfolio win-rate metric icon
   Bitcoin,
   Moon,
   Sun,
@@ -569,7 +573,7 @@ function App() {
   const [traderProfileTab, setTraderProfileTab] = useState("trades");
   const [traderTradeFilter, setTraderTradeFilter] = useState("open");
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
-  const [portfolioTab, setPortfolioTab] = useState("overview"); // [ADDED] Portfolio sections
+  const [portfolioTab, setPortfolioTab] = useState("all"); // [MODIFIED] Portfolio strategy, wallet, and transaction tabs
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -694,7 +698,7 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        {active !== "edit-profile" && <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""}`}>
+        {active !== "edit-profile" && <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
           {active !== "trader-profile" && (
             <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
               <Menu size={20} />
@@ -1085,10 +1089,10 @@ function App() {
         )}
 
         {active === "profile" && (
-          <section className="page page-enter trader-profile-page portfolio-profile-page">
+          <section className="page page-enter trader-profile-page portfolio-profile-page portfolio-strategy-page">
             <section className="trader-profile-hero portfolio-profile-hero">
               <div className="trader-profile-cover portfolio-profile-cover">
-                <span>{t("BEANANCE PORTFOLIO")}</span>
+                <span>{t("BEANANCE TRADER")}</span>
                 <div className="trader-profile-cover-mark">B</div>
               </div>
               <div className="trader-profile-identity portfolio-profile-identity">
@@ -1096,106 +1100,87 @@ function App() {
                   {profilePhoto ? <img src={profilePhoto} alt={t("Profile photo")} /> : (profileName.trim()[0] || "E").toUpperCase()}
                 </div>
                 <div className="trader-profile-name portfolio-profile-name">
-                  <div><h1>{profileName || "Ezy"}</h1><span className="portfolio-account-badge">{t("MY PORTFOLIO")}</span></div>
-                  <p>{profileEmail || t("Personal trading portfolio")}</p>
+                  <div><h1>{profileName || "Ezy"}</h1><span className="portfolio-account-badge">{t("Trader")}</span></div>
+                  <p>@{(profileName || "ezy").toLowerCase().replace(/\s+/g, "")}</p>
                 </div>
                 <button type="button" className="trader-follow-button portfolio-edit-button" onClick={() => setActive("edit-profile")}>{t("Edit profile")}</button>
               </div>
-              <p className="trader-profile-bio portfolio-profile-bio">{t("Your assets, trading positions and portfolio performance in one place.")}</p>
+              <p className="trader-profile-bio portfolio-profile-bio">{t("Builder · Trader · DeFi & Bot Strategy")}</p>
               <div className="trader-profile-meta portfolio-profile-meta">
-                <span><Wallet size={14}/>{t("Portfolio value")} <strong>$12,248.20</strong></span>
-                <span><Activity size={14}/>{t("24h PnL")} <strong className="portfolio-positive">+$284.60</strong></span>
-                <span><BarChart3 size={14}/>{assets.length} {t("assets")}</span>
+                <span><Users size={14}/><strong>128</strong> {t("Followers")}</span>
+                <span><Users size={14}/><strong>56</strong> {t("Following")}</span>
+                <span><Layers size={14}/><strong>12</strong> {t("Strategies")}</span>
               </div>
             </section>
 
-            <div className="trader-profile-workspace portfolio-profile-workspace">
-              <div className="trader-profile-tabs portfolio-profile-tabs" role="tablist" aria-label={t("Portfolio sections")}>
-                <button type="button" role="tab" aria-selected={portfolioTab === "overview"} className={portfolioTab === "overview" ? "selected" : ""} onClick={() => setPortfolioTab("overview")}>{t("Overview")}</button>
-                <button type="button" role="tab" aria-selected={portfolioTab === "assets"} className={portfolioTab === "assets" ? "selected" : ""} onClick={() => setPortfolioTab("assets")}>{t("Assets")} <span>{assets.length}</span></button>
-                <button type="button" role="tab" aria-selected={portfolioTab === "positions"} className={portfolioTab === "positions" ? "selected" : ""} onClick={() => setPortfolioTab("positions")}>{t("Positions")} <span>2</span></button>
-                <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")}>{t("History")}</button>
-              </div>
+            <div className="portfolio-icon-tabs" role="tablist" aria-label={t("Portfolio sections")}>
+              <button type="button" role="tab" aria-selected={portfolioTab === "all"} className={portfolioTab === "all" ? "selected" : ""} onClick={() => setPortfolioTab("all")} aria-label={t("All Strategy")} title={t("All Strategy")}><Layers size={21}/>{portfolioTab === "all" && <span>{t("All Strategy")}</span>}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "created"} className={portfolioTab === "created" ? "selected" : ""} onClick={() => setPortfolioTab("created")} aria-label={t("Created Strategy")} title={t("Created Strategy")}><TrendingUp size={21}/>{portfolioTab === "created" && <span>{t("Created Strategy")}</span>}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "following"} className={portfolioTab === "following" ? "selected" : ""} onClick={() => setPortfolioTab("following")} aria-label={t("Following Strategy")} title={t("Following Strategy")}><Users size={21}/>{portfolioTab === "following" && <span>{t("Following Strategy")}</span>}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "wallet"} className={portfolioTab === "wallet" ? "selected" : ""} onClick={() => setPortfolioTab("wallet")} aria-label={t("Web3 Wallet")} title={t("Web3 Wallet")}><Wallet size={21}/>{portfolioTab === "wallet" && <span>{t("Web3 Wallet")}</span>}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")} aria-label={t("Transaction History")} title={t("Transaction History")}><Clock3 size={21}/>{portfolioTab === "history" && <span>{t("Transaction History")}</span>}</button>
+            </div>
 
-              {portfolioTab === "overview" && (
+            <div className="portfolio-strategy-content">
+              {portfolioTab === "all" && (
                 <>
-                  <section className="trader-profile-section trader-activity-section portfolio-panel">
-                    <div className="trader-profile-section-heading">
-                      <div><p className="eyebrow">{t("PORTFOLIO OVERVIEW")}</p><h2>{t("Total portfolio value")}</h2></div>
-                      <span className="trader-strategy-count">{t("DEMO DATA")}</span>
-                    </div>
-                    <div className="portfolio-overview-value">
-                      <strong>$12,248.20</strong>
-                      <span className="portfolio-positive"><ArrowUpRight size={16}/> +$284.60 (2.38%)</span>
-                      <small>{t("Past 24 hours")}</small>
-                    </div>
-                    <div className="portfolio-chart">
-                      <svg viewBox="0 0 640 150" preserveAspectRatio="none" role="img" aria-label={t("Portfolio value trend")}>
-                        <defs><linearGradient id="portfolio-chart-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#e9bd27" stopOpacity=".28"/><stop offset="100%" stopColor="#e9bd27" stopOpacity="0"/></linearGradient></defs>
-                        <path d="M0 120 L35 108 L70 113 L105 89 L140 98 L175 74 L210 82 L245 62 L280 70 L315 51 L350 65 L385 37 L420 49 L455 30 L490 43 L525 20 L560 31 L600 12 L640 18 L640 150 L0 150 Z" fill="url(#portfolio-chart-fill)"/>
-                        <path d="M0 120 L35 108 L70 113 L105 89 L140 98 L175 74 L210 82 L245 62 L280 70 L315 51 L350 65 L385 37 L420 49 L455 30 L490 43 L525 20 L560 31 L600 12 L640 18" fill="none" stroke="#e9bd27" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <div className="portfolio-chart-range"><span>1D</span><span>1W</span><span>1M</span><span>3M</span><span>1Y</span><span>ALL</span></div>
-                    <div className="portfolio-summary-stats">
-                      <div><span>{t("Total assets")}</span><strong>$12,248.20</strong></div>
-                      <div><span>{t("24h PnL")}</span><strong className="portfolio-positive">+$284.60</strong></div>
+                  <section className="portfolio-performance-panel">
+                    <div className="portfolio-content-heading"><div><p className="eyebrow">{t("PORTFOLIO PERFORMANCE")}</p><h2>{t("All Strategy")}</h2><p>{t("Performance summary across your strategies.")}</p></div><span className="portfolio-period-chip">{t("7 Days")}</span></div>
+                    <div className="portfolio-pnl-card"><div><span>{t("Total PnL")}</span><strong>+12.48%</strong><small>+1,248.32 USDT</small></div><div className="portfolio-mini-chart"><svg viewBox="0 0 500 100" preserveAspectRatio="none" role="img" aria-label={t("Strategy performance chart")}><path d="M0 82 L35 74 L70 78 L105 54 L140 61 L175 42 L210 56 L245 31 L280 44 L315 25 L350 37 L385 15 L420 27 L455 8 L500 15" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></div></div>
+                    <div className="portfolio-metric-grid">
+                      <div><span><Target size={15}/>{t("Win Rate")}</span><strong>72.4%</strong><small className="portfolio-positive">+4.8%</small></div>
+                      <div><span><Activity size={15}/>{t("Total Trades")}</span><strong>346</strong><small className="portfolio-positive">+28</small></div>
+                      <div><span><Users size={15}/>{t("AUM")}</span><strong>24,560 USDT</strong><small className="portfolio-positive">+8.2%</small></div>
                     </div>
                   </section>
-                  <section className="trader-profile-section trader-activity-section portfolio-panel">
-                    <div className="trader-profile-section-heading"><div><h2>{t("Your assets")}</h2><p className="muted">{t("Spot asset allocation")}</p></div><span className="trader-strategy-count">{assets.length} {t("assets")}</span></div>
-                    <div className="portfolio-asset-list">
-                      {assets.map((asset) => (
-                        <article className="portfolio-asset-row" key={asset.symbol}>
-                          <span className={`portfolio-asset-icon ${asset.tone}`}>{asset.icon}</span>
-                          <span className="portfolio-asset-name"><strong>{asset.name}</strong><small>{asset.amount}</small></span>
-                          <span className="portfolio-asset-value"><strong>{asset.value}</strong><small className={asset.positive ? "portfolio-positive" : "portfolio-negative"}>{asset.change}</small></span>
-                        </article>
+                  <section className="portfolio-strategy-list-section">
+                    <div className="portfolio-content-heading"><div><h2>{t("Your strategies")} (12)</h2><p>{t("Strategies you own and follow.")}</p></div><button type="button" onClick={() => setPortfolioTab("created")}>{t("See all")} <ChevronRight size={16}/></button></div>
+                    <div className="portfolio-strategy-list">
+                      {[{name:"Scalping BNB",pair:"BNBUSDT",type:"Futures",timeframe:"5m",returns:"+18.32%",badge:"Personal",tone:"bnb"},{name:"Trend Catcher",pair:"BTCUSDT",type:"Futures",timeframe:"15m",returns:"+9.74%",badge:"Public",tone:"trend"}].map((strategy) => (
+                        <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>{strategy.tone === "bnb" ? "∞" : "↗"}</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>{strategy.type} · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
                       ))}
-                    </div>
-                  </section>
-                  <section className="trader-profile-section trader-activity-section portfolio-panel">
-                    <div className="trader-profile-section-heading"><div><h2>{t("Open positions")}</h2><p className="muted">{t("Your active trading positions")}</p></div><span className="trader-strategy-count">2 {t("open")}</span></div>
-                    <div className="portfolio-position-list">
-                      <article className="portfolio-position-row"><div><strong>BTC / USDT</strong><span className="portfolio-side-long">LONG</span></div><small>{t("Entry")} $67,420.50 · {t("Mark")} $68,215.80</small><strong className="portfolio-positive">+$333.97 <small>+1.18%</small></strong></article>
-                      <article className="portfolio-position-row"><div><strong>ETH / USDT</strong><span className="portfolio-side-short">SHORT</span></div><small>{t("Entry")} $3,482.20 · {t("Mark")} $3,451.60</small><strong className="portfolio-positive">+$76.50 <small>+0.88%</small></strong></article>
                     </div>
                   </section>
                 </>
               )}
 
-              {portfolioTab === "assets" && (
-                <section className="trader-profile-section trader-activity-section portfolio-panel">
-                  <div className="trader-profile-section-heading"><div><h2>{t("Your assets")}</h2><p className="muted">{t("Spot asset allocation")}</p></div><span className="trader-strategy-count">{assets.length} {t("assets")}</span></div>
-                  <div className="portfolio-asset-list">
-                    {assets.map((asset) => (
-                      <article className="portfolio-asset-row" key={asset.symbol}>
-                        <span className={`portfolio-asset-icon ${asset.tone}`}>{asset.icon}</span>
-                        <span className="portfolio-asset-name"><strong>{asset.name}</strong><small>{asset.amount}</small></span>
-                        <span className="portfolio-asset-value"><strong>{asset.value}</strong><small className={asset.positive ? "portfolio-positive" : "portfolio-negative"}>{asset.change}</small></span>
-                      </article>
+              {portfolioTab === "created" && (
+                <section className="portfolio-strategy-list-section portfolio-tab-panel">
+                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("YOUR WORK")}</p><h2>{t("Created Strategy")}</h2><p>{t("Strategies published or managed by you.")}</p></div><span className="portfolio-period-chip">12 {t("Strategies")}</span></div>
+                  <div className="portfolio-strategy-list">
+                    {[{name:"Scalping BNB",pair:"BNBUSDT",timeframe:"5m",returns:"+18.32%",badge:"Personal",tone:"bnb"},{name:"Trend Catcher",pair:"BTCUSDT",timeframe:"15m",returns:"+9.74%",badge:"Public",tone:"trend"},{name:"ETH Momentum",pair:"ETHUSDT",timeframe:"1h",returns:"+7.21%",badge:"Public",tone:"eth"}].map((strategy) => (
+                      <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>{strategy.tone === "bnb" ? "∞" : "↗"}</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>Futures · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
                     ))}
                   </div>
                 </section>
               )}
 
-              {portfolioTab === "positions" && (
-                <section className="trader-profile-section trader-activity-section portfolio-panel">
-                  <div className="trader-profile-section-heading"><div><h2>{t("Open positions")}</h2><p className="muted">{t("Your active trading positions")}</p></div><span className="trader-strategy-count">2 {t("open")}</span></div>
-                  <div className="portfolio-position-list">
-                    <article className="portfolio-position-row"><div><strong>BTC / USDT</strong><span className="portfolio-side-long">LONG</span></div><small>{t("Entry")} $67,420.50 · {t("Mark")} $68,215.80</small><strong className="portfolio-positive">+$333.97 <small>+1.18%</small></strong></article>
-                    <article className="portfolio-position-row"><div><strong>ETH / USDT</strong><span className="portfolio-side-short">SHORT</span></div><small>{t("Entry")} $3,482.20 · {t("Mark")} $3,451.60</small><strong className="portfolio-positive">+$76.50 <small>+0.88%</small></strong></article>
+              {portfolioTab === "following" && (
+                <section className="portfolio-strategy-list-section portfolio-tab-panel">
+                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("YOUR NETWORK")}</p><h2>{t("Following Strategy")}</h2><p>{t("Strategies you follow from the community.")}</p></div><span className="portfolio-period-chip">8 {t("Following")}</span></div>
+                  <div className="portfolio-strategy-list">
+                    {[{name:"BTC Trend Master",pair:"BTCUSDT",timeframe:"1h",returns:"+24.80%",badge:"TradeWiz",tone:"btc"},{name:"ETH Quick Moves",pair:"ETHUSDT",timeframe:"15m",returns:"+11.42%",badge:"CryptoFox",tone:"eth"}].map((strategy) => (
+                      <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>↗</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>Futures · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
+                    ))}
                   </div>
                 </section>
               )}
 
+              {portfolioTab === "wallet" && (
+                <section className="portfolio-wallet-panel portfolio-tab-panel">
+                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("WEB3 ASSETS")}</p><h2>{t("Web3 Wallet")}</h2><p>{t("Manage your connected wallet and assets.")}</p></div><span className={web3Connected ? "portfolio-wallet-status connected" : "portfolio-wallet-status"}>{web3Connected ? t("Connected") : t("Not connected")}</span></div>
+                  <div className="portfolio-wallet-card"><span className="portfolio-wallet-icon"><Wallet size={24}/></span><div><strong>{web3Connected ? "0x71C7...8976F" : t("No wallet connected")}</strong><small>{web3Connected ? "BNB Smart Chain" : t("Connect a Web3 wallet to see your assets.")}</small></div><button type="button" onClick={() => setNotice(web3Connected ? "Wallet connection settings are not available yet" : "Wallet connector will be available soon")}>{web3Connected ? t("Manage") : t("Connect")}</button></div>
+                  <div className="portfolio-wallet-empty"><Wallet size={28}/><strong>{t("Your Web3 assets will appear here")}</strong><span>{t("Connect a wallet to view tokens and balances.")}</span></div>
+                </section>
+              )}
+
               {portfolioTab === "history" && (
-                <section className="trader-profile-section trader-activity-section portfolio-panel">
-                  <div className="trader-profile-section-heading"><div><h2>{t("Recent activity")}</h2><p className="muted">{t("Your latest portfolio transactions")}</p></div><span className="trader-strategy-count">{t("DEMO DATA")}</span></div>
-                  <div className="portfolio-history-list">
-                    <article><span className="portfolio-history-icon"><ArrowDownLeft size={17}/></span><span><strong>{t("Bought")} BTC</strong><small>Oct 31, 2026 · 14:32</small></span><strong>+0.012 BTC</strong></article>
-                    <article><span className="portfolio-history-icon"><ArrowUpRight size={17}/></span><span><strong>{t("Sold")} ETH</strong><small>Oct 30, 2026 · 09:18</small></span><strong>-0.25 ETH</strong></article>
-                    <article><span className="portfolio-history-icon"><ArrowDownLeft size={17}/></span><span><strong>{t("Received")} BNB</strong><small>Oct 29, 2026 · 18:06</small></span><strong>+0.80 BNB</strong></article>
+                <section className="portfolio-strategy-list-section portfolio-tab-panel">
+                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("ACCOUNT ACTIVITY")}</p><h2>{t("Transaction History")}</h2><p>{t("A record of your recent portfolio activity.")}</p></div><span className="portfolio-period-chip">{t("DEMO DATA")}</span></div>
+                  <div className="portfolio-transaction-list">
+                    <article><span className="transaction-in"><ArrowDownLeft size={17}/></span><span><strong>{t("Bought")} BTC</strong><small>Oct 31, 2026 · 14:32</small></span><strong>+0.012 BTC</strong></article>
+                    <article><span className="transaction-out"><ArrowUpRight size={17}/></span><span><strong>{t("Sold")} ETH</strong><small>Oct 30, 2026 · 09:18</small></span><strong>-0.25 ETH</strong></article>
+                    <article><span className="transaction-in"><ArrowDownLeft size={17}/></span><span><strong>{t("Received")} BNB</strong><small>Oct 29, 2026 · 18:06</small></span><strong>+0.80 BNB</strong></article>
                   </div>
                 </section>
               )}
