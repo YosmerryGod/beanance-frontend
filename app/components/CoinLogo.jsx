@@ -11,7 +11,7 @@ function normalizeSymbol(value) {
     .replace(/(USDT|USDC|BUSD|USDP|FDUSD|USD|PERP)$/i, "");
 }
 
-export default function CoinLogo({ symbol, size = 32, className = "" }) {
+export default function CoinLogo({ symbol, size, className = "" }) {
   const normalizedSymbol = normalizeSymbol(symbol);
   const fallback = (
     <span className="coin-logo-fallback" aria-hidden="true">
@@ -23,7 +23,7 @@ export default function CoinLogo({ symbol, size = 32, className = "" }) {
     return (
       <span
         className={`coin-logo ${className}`}
-        style={{ width: size, height: size }}
+        style={size ? { width: size, height: size } : undefined}
         role="img"
         aria-label="Unknown coin"
       >
@@ -42,7 +42,7 @@ export default function CoinLogo({ symbol, size = 32, className = "" }) {
     >
       <TokenIcon
         symbol={normalizedSymbol}
-        size={size}
+        size={size || "100%"}
         variant="branded"
         fallback={fallback}
       />
