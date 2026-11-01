@@ -575,6 +575,7 @@ function App() {
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
   const [portfolioTab, setPortfolioTab] = useState("strategy"); // [MODIFIED] Default to the Strategy overview
   const [strategyFilter, setStrategyFilter] = useState("all"); // [ADDED] Filter strategies inside the Strategy tab
+  const [portfolioPeriod, setPortfolioPeriod] = useState("7D"); // [ADDED] Select the performance chart timeframe
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -1125,8 +1126,11 @@ function App() {
                 <>
                   {/* [MODIFIED] Performance overview stays visible above the strategy collection. */}
                   <section className="portfolio-performance-panel">
-                    <div className="portfolio-content-heading portfolio-performance-heading">
-                      <span className="portfolio-period-chip">{t("7 Days")}</span>
+                    {/* [ADDED] Performance timeframe selector. */}
+                    <div className="portfolio-timeframe-tabs" role="tablist" aria-label={t("Performance timeframe")}>
+                      {["1D", "7D", "1M", "3M", "6M", "1Y", "ALL"].map((period) => (
+                        <button type="button" role="tab" aria-selected={portfolioPeriod === period} className={portfolioPeriod === period ? "selected" : ""} key={period} onClick={() => setPortfolioPeriod(period)}>{period}</button>
+                      ))}
                     </div>
                     <div className="portfolio-pnl-card">
                       <div><span>{t("Total PnL")}</span><strong>+12.48%</strong><small>+1,248.32 USDT</small></div>
