@@ -3519,3 +3519,163 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
  .app-shell .portfolio-history-icon-tabs{max-width:280px!important}
  .app-shell .portfolio-history-icon-tabs button{min-height:42px!important}
 }
+
+
+/* [ADDED] Unified soft-neumorphic styling for the complete Portfolio workspace. */
+.app-shell .portfolio-strategy-page,
+.app-shell .portfolio-profile-page {
+  --portfolio-raised-shadow: 7px 7px 16px rgba(0,0,0,.20), -6px -6px 15px rgba(255,255,255,.035);
+  --portfolio-inset-shadow: inset 3px 3px 7px rgba(0,0,0,.18), inset -3px -3px 7px rgba(255,255,255,.025);
+}
+.app-shell .portfolio-strategy-page .portfolio-profile-hero,
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs,
+.app-shell .portfolio-strategy-page .portfolio-performance-panel,
+.app-shell .portfolio-strategy-page .portfolio-strategy-list-section,
+.app-shell .portfolio-strategy-page .portfolio-wallet-panel,
+.app-shell .portfolio-profile-page .portfolio-profile-hero,
+.app-shell .portfolio-profile-page .portfolio-panel,
+.app-shell .portfolio-profile-page .portfolio-content-section,
+.app-shell .portfolio-profile-page .portfolio-wallet-modern,
+.app-shell .portfolio-profile-page .portfolio-history-panel {
+  border: 1px solid var(--border-color, var(--line)) !important;
+  box-shadow: var(--portfolio-raised-shadow) !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-strategy-row,
+.app-shell .portfolio-strategy-page .portfolio-wallet-card,
+.app-shell .portfolio-strategy-page .portfolio-transaction-item,
+.app-shell .portfolio-profile-page .portfolio-strategy-row,
+.app-shell .portfolio-profile-page .portfolio-summary-stats>div,
+.app-shell .portfolio-profile-page .portfolio-position-row,
+.app-shell .portfolio-profile-page .portfolio-wallet-balance-card,
+.app-shell .portfolio-profile-page .portfolio-wallet-token-card,
+.app-shell .portfolio-profile-page .portfolio-history-icon,
+.app-shell .portfolio-profile-page .portfolio-history-item {
+  border: 1px solid var(--border-color, var(--line)) !important;
+  box-shadow: 4px 4px 10px rgba(0,0,0,.14), -4px -4px 10px rgba(255,255,255,.025) !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs {
+  background: var(--surface-1, var(--panel)) !important;
+  border-radius: 20px !important;
+  padding: 8px !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button,
+.app-shell .portfolio-profile-page .portfolio-profile-tabs button,
+.app-shell .portfolio-profile-page .portfolio-history-icon-tabs button {
+  transition: box-shadow .2s ease, background .2s ease, color .2s ease, transform .2s ease !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-icon-tabs button.selected,
+.app-shell .portfolio-profile-page .portfolio-profile-tabs button.selected,
+.app-shell .portfolio-profile-page .portfolio-history-icon-tabs button.selected {
+  background: var(--surface-2, var(--panel-soft)) !important;
+  border: 1px solid rgba(234,190,39,.22) !important;
+  box-shadow: var(--portfolio-inset-shadow), 0 0 0 1px rgba(234,190,39,.08) !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-strategy-row,
+.app-shell .portfolio-strategy-page .portfolio-wallet-card {
+  background: var(--surface-2, var(--panel-soft)) !important;
+  border-radius: 16px !important;
+}
+.app-shell .portfolio-strategy-page .portfolio-strategy-symbol,
+.app-shell .portfolio-strategy-page .portfolio-wallet-icon,
+.app-shell .portfolio-profile-page .portfolio-wallet-token-logo,
+.app-shell .portfolio-profile-page .portfolio-history-icon {
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,.13), inset -2px -2px 5px rgba(255,255,255,.035) !important;
+}
+.app-shell .portfolio-profile-page .portfolio-profile-tabs,
+.app-shell .portfolio-profile-page .portfolio-history-icon-tabs {
+  border: 1px solid var(--border-color, var(--line)) !important;
+  border-radius: 15px !important;
+  background: var(--surface-1, var(--panel)) !important;
+  box-shadow: var(--portfolio-inset-shadow) !important;
+}
+.app-shell .portfolio-profile-page .portfolio-profile-tabs button.selected,
+.app-shell .portfolio-profile-page .portfolio-history-icon-tabs button.selected {
+  border-radius: 11px !important;
+  background: var(--surface-2, var(--panel-soft)) !important;
+  box-shadow: 3px 3px 7px rgba(0,0,0,.16), -3px -3px 7px rgba(255,255,255,.035) !important;
+}
+.app-shell .portfolio-profile-page .portfolio-summary-stats>div,
+.app-shell .portfolio-profile-page .portfolio-position-row,
+.app-shell .portfolio-profile-page .portfolio-wallet-balance-card,
+.app-shell .portfolio-profile-page .portfolio-wallet-token-card {
+  background: var(--surface-2, var(--panel-soft)) !important;
+  border-radius: 14px !important;
+}
+.app-shell .portfolio-profile-page .portfolio-history-icon-tabs button:not(.selected),
+.app-shell .portfolio-profile-page .portfolio-profile-tabs button:not(.selected) {
+  background: transparent !important;
+}
+.app-shell .portfolio-profile-page .portfolio-wallet-actions button,
+.app-shell .portfolio-profile-page .portfolio-wallet-primary-action,
+.app-shell .portfolio-profile-page .portfolio-wallet-secondary-action,
+.app-shell .portfolio-profile-page .portfolio-wallet-token-heading>button,
+.app-shell .portfolio-profile-page .portfolio-edit-button,
+.app-shell .portfolio-profile-page .portfolio-preview-button {
+  box-shadow: 4px 4px 9px rgba(0,0,0,.16), -3px -3px 8px rgba(255,255,255,.035) !important;
+  transition: transform .18s ease, box-shadow .18s ease !important;
+}
+.app-shell .portfolio-profile-page .portfolio-wallet-actions button:active,
+.app-shell .portfolio-profile-page .portfolio-wallet-primary-action:active,
+.app-shell .portfolio-profile-page .portfolio-wallet-secondary-action:active,
+.app-shell .portfolio-profile-page .portfolio-wallet-token-heading>button:active {
+  transform: translateY(1px) !important;
+  box-shadow: var(--portfolio-inset-shadow) !important;
+}
+.app-shell.theme-light .portfolio-strategy-page,
+.app-shell.theme-light .portfolio-profile-page {
+  --portfolio-raised-shadow: 7px 7px 16px rgba(163,174,190,.42), -7px -7px 16px rgba(255,255,255,.92);
+  --portfolio-inset-shadow: inset 3px 3px 7px rgba(163,174,190,.30), inset -3px -3px 7px rgba(255,255,255,.92);
+}
+.app-shell.theme-light .portfolio-strategy-page .portfolio-profile-hero,
+.app-shell.theme-light .portfolio-strategy-page .portfolio-icon-tabs,
+.app-shell.theme-light .portfolio-strategy-page .portfolio-performance-panel,
+.app-shell.theme-light .portfolio-strategy-page .portfolio-strategy-list-section,
+.app-shell.theme-light .portfolio-strategy-page .portfolio-wallet-panel,
+.app-shell.theme-light .portfolio-profile-page .portfolio-profile-hero,
+.app-shell.theme-light .portfolio-profile-page .portfolio-panel,
+.app-shell.theme-light .portfolio-profile-page .portfolio-content-section,
+.app-shell.theme-light .portfolio-profile-page .portfolio-wallet-modern,
+.app-shell.theme-light .portfolio-profile-page .portfolio-history-panel {
+  background: #edf0f5 !important;
+  border-color: rgba(255,255,255,.85) !important;
+}
+.app-shell.theme-light .portfolio-strategy-page .portfolio-strategy-row,
+.app-shell.theme-light .portfolio-strategy-page .portfolio-wallet-card,
+.app-shell.theme-light .portfolio-profile-page .portfolio-summary-stats>div,
+.app-shell.theme-light .portfolio-profile-page .portfolio-position-row,
+.app-shell.theme-light .portfolio-profile-page .portfolio-wallet-balance-card,
+.app-shell.theme-light .portfolio-profile-page .portfolio-wallet-token-card {
+  background: #edf0f5 !important;
+  border-color: rgba(255,255,255,.8) !important;
+}
+.app-shell.theme-light .portfolio-profile-page .portfolio-profile-tabs,
+.app-shell.theme-light .portfolio-profile-page .portfolio-history-icon-tabs {
+  background: #edf0f5 !important;
+  border-color: rgba(255,255,255,.85) !important;
+}
+@media (max-width: 700px) {
+  .app-shell .portfolio-strategy-page .portfolio-profile-hero,
+  .app-shell .portfolio-strategy-page .portfolio-icon-tabs,
+  .app-shell .portfolio-strategy-page .portfolio-performance-panel,
+  .app-shell .portfolio-strategy-page .portfolio-strategy-list-section,
+  .app-shell .portfolio-strategy-page .portfolio-wallet-panel,
+  .app-shell .portfolio-profile-page .portfolio-profile-hero,
+  .app-shell .portfolio-profile-page .portfolio-panel,
+  .app-shell .portfolio-profile-page .portfolio-content-section,
+  .app-shell .portfolio-profile-page .portfolio-wallet-modern,
+  .app-shell .portfolio-profile-page .portfolio-history-panel {
+    box-shadow: 4px 4px 10px rgba(0,0,0,.16), -4px -4px 10px rgba(255,255,255,.025) !important;
+  }
+  .app-shell.theme-light .portfolio-strategy-page .portfolio-profile-hero,
+  .app-shell.theme-light .portfolio-strategy-page .portfolio-icon-tabs,
+  .app-shell.theme-light .portfolio-strategy-page .portfolio-performance-panel,
+  .app-shell.theme-light .portfolio-strategy-page .portfolio-strategy-list-section,
+  .app-shell.theme-light .portfolio-strategy-page .portfolio-wallet-panel,
+  .app-shell.theme-light .portfolio-profile-page .portfolio-profile-hero,
+  .app-shell.theme-light .portfolio-profile-page .portfolio-panel,
+  .app-shell.theme-light .portfolio-profile-page .portfolio-content-section,
+  .app-shell.theme-light .portfolio-profile-page .portfolio-wallet-modern,
+  .app-shell.theme-light .portfolio-profile-page .portfolio-history-panel {
+    box-shadow: 4px 4px 10px rgba(163,174,190,.35), -4px -4px 10px rgba(255,255,255,.9) !important;
+  }
+}
