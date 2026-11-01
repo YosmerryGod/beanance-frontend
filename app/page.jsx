@@ -576,7 +576,6 @@ function App() {
   const [portfolioTab, setPortfolioTab] = useState("strategy"); // [MODIFIED] Default to the Strategy overview
   const [strategyFilter, setStrategyFilter] = useState("all"); // [ADDED] Filter strategies inside the Strategy tab
   const [portfolioStrategyStatus, setPortfolioStrategyStatus] = useState("active"); // [ADDED] Active/inactive strategy filter
-  const [portfolioPeriod, setPortfolioPeriod] = useState("7D"); // [ADDED] Select the performance chart timeframe
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -1125,24 +1124,6 @@ function App() {
             <div className="portfolio-strategy-content">
               {portfolioTab === "strategy" && (
                 <>
-                  {/* [MODIFIED] Performance overview stays visible above the strategy collection. */}
-                  <section className="portfolio-performance-panel">
-                    {/* [ADDED] Performance timeframe selector. */}
-                    <div className="portfolio-timeframe-tabs" role="tablist" aria-label={t("Performance timeframe")}>
-                      {["1D", "7D", "1M", "3M", "6M", "1Y", "ALL"].map((period) => (
-                        <button type="button" role="tab" aria-selected={portfolioPeriod === period} className={portfolioPeriod === period ? "selected" : ""} key={period} onClick={() => setPortfolioPeriod(period)}>{period}</button>
-                      ))}
-                    </div>
-                    <div className="portfolio-pnl-card">
-                      <div><span>{t("Total PnL")}</span><strong>+12.48%</strong><small>+1,248.32 USDT</small></div>
-                      <div className="portfolio-mini-chart"><svg viewBox="0 0 500 100" preserveAspectRatio="none" role="img" aria-label={t("Strategy performance chart")}><path d="M0 82 L35 74 L70 78 L105 54 L140 61 L175 42 L210 56 L245 31 L280 44 L315 25 L350 37 L385 15 L420 27 L455 8 L500 15" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
-                    </div>
-                    <div className="portfolio-metric-grid">
-                      <div><span><Target size={15}/>{t("Win Rate")}</span><strong>72.4%</strong><small className="portfolio-positive">+4.8%</small></div>
-                      <div><span><Activity size={15}/>{t("Total Trades")}</span><strong>346</strong><small className="portfolio-positive">+28</small></div>
-                      <div><span><Users size={15}/>{t("AUM")}</span><strong>24,560 USDT</strong><small className="portfolio-positive">+8.2%</small></div>
-                    </div>
-                  </section>
                   {/* [MODIFIED] Strategy cards mirror the trader profile performance layout. */}
                   <section className="portfolio-strategy-list-section portfolio-owned-strategies-section">
                     <div className="portfolio-content-heading portfolio-strategy-heading"><span className="portfolio-period-chip">5 {t("Strategies")}</span></div>
