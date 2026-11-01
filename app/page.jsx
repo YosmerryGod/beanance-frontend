@@ -451,6 +451,23 @@ Object.assign(appTranslations.vi, {
   "YOUR ACCOUNT":"TÀI KHOẢN CỦA BẠN","Hey, Ezy":"Xin chào, Ezy","Welcome back, Ezy":"Chào mừng trở lại, Ezy","Wallet management":"Quản lý ví","Security & privacy":"Bảo mật & quyền riêng tư","Preferences":"Tùy chọn","Help center":"Trung tâm trợ giúp","QUICK ACTION":"THAO TÁC NHANH","What would you like to do?":"Bạn muốn làm gì?","Swap tokens":"Hoán đổi token","Exchange one asset for another":"Đổi tài sản này sang tài sản khác","Buy crypto":"Mua tiền mã hóa","Add crypto to your wallet":"Thêm tiền mã hóa vào ví","Connect dApp":"Kết nối dApp","Explore decentralized apps":"Khám phá ứng dụng phi tập trung","Search strategies or traders...":"Tìm chiến lược hoặc nhà giao dịch...","Search assets...":"Tìm tài sản...","Favorites":"Yêu thích","Futures":"Hợp đồng tương lai","Crypto":"Tiền mã hóa","Verified":"Đã xác minh","Most Followers":"Nhiều người theo dõi nhất","Mark price":"Giá đánh dấu","Exit price":"Giá thoát","Unrealized PnL":"PnL chưa thực hiện","Realized PnL":"PnL đã thực hiện","Strategies by":"Chiến lược của","Verified trader":"Nhà giao dịch đã xác minh","Active for":"Hoạt động trong","followers":"người theo dõi","days active":"ngày hoạt động","win rate":"tỷ lệ thắng","Return (30D)":"Lợi nhuận 30 ngày","Total return":"Tổng lợi nhuận","Trend Following":"Theo xu hướng","Scalping":"Lướt sóng","Breakout":"Đột phá","Medium Risk":"Rủi ro trung bình","Low Risk":"Rủi ro thấp","High Risk":"Rủi ro cao","Trending":"Xu hướng","All":"Tất cả","1M":"1 tháng","3M":"3 tháng","6M":"6 tháng","1Y":"1 năm"
 });
 
+/* [MODIFIED] Complete English translations used by the Top Movers page. */
+Object.assign(appTranslations.en, {
+  "Pasangan":"Pair",
+  "Perubahan / Status":"Change / Status",
+  "Semua":"All",
+  "Kenaikan":"Gainers",
+  "Penurunan":"Losers",
+  "Pullback":"Pullback",
+  "Rally":"Rally",
+  "High Baru":"New High",
+  "Low Baru":"New Low",
+  "Belum ada pergerakan untuk kategori ini.":"No market movements in this category yet.",
+  "ago":"ago",
+  "Rally":"Rally",
+  "Pullback":"Pullback"
+});
+
 // [ADDED] Translate the Portfolio navigation label in all five supported languages.
 Object.assign(appTranslations.en, { "Portfolio": "Portfolio" });
 Object.assign(appTranslations.id, { "Portfolio": "Portofolio" });
@@ -1070,7 +1087,7 @@ function App() {
                 <div className="top-movers-list">
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
-                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><span className="perp-tag">{t("Perp")}</span><small>{event.time} · {event.timeframe} lalu</small></div>
+                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {event.timeframe} {t("ago")}</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{t(event.status)}</span></div>
                     </article>
                   ))}
