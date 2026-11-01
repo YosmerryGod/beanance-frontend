@@ -2561,7 +2561,7 @@ body{background:#090909;color:var(--text)}
 
 
 /* [ADDED] Global sidebar navigation drawer and navbar trigger. */
-.app-shell .sidebar-trigger{order:3;flex:none;width:39px;height:39px;margin-left:2px;}
+.app-shell .sidebar-trigger{order:-1;flex:none;width:39px;height:39px;margin-left:0;margin-right:4px;}
 .app-shell .sidebar-backdrop{position:fixed;inset:0;z-index:120;display:flex;justify-content:flex-end;background:rgba(0,0,0,.58);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:fadeIn .18s ease both;}
 .app-shell .app-sidebar{display:flex;flex-direction:column;width:min(310px,84vw);height:100%;padding:calc(18px + env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));border-left:1px solid var(--line);background:var(--panel);box-shadow:-18px 0 55px rgba(0,0,0,.3);animation:sidebarSlideIn .26s cubic-bezier(.2,.8,.2,1) both;}
 @keyframes sidebarSlideIn{from{transform:translateX(35px);opacity:.7}to{transform:translateX(0);opacity:1}}
