@@ -1125,8 +1125,7 @@ function App() {
                 <>
                   {/* [MODIFIED] Performance overview stays visible above the strategy collection. */}
                   <section className="portfolio-performance-panel">
-                    <div className="portfolio-content-heading">
-                      <div><p className="eyebrow">{t("PORTFOLIO PERFORMANCE")}</p><h2>{t("Performance Overview")}</h2><p>{t("Your trading performance across all strategies.")}</p></div>
+                    <div className="portfolio-content-heading portfolio-performance-heading">
                       <span className="portfolio-period-chip">{t("7 Days")}</span>
                     </div>
                     <div className="portfolio-pnl-card">
@@ -1141,8 +1140,7 @@ function App() {
                   </section>
                   {/* [ADDED] My and Following filters are nested inside Strategy. */}
                   <section className="portfolio-strategy-list-section">
-                    <div className="portfolio-content-heading">
-                      <div><p className="eyebrow">{t("STRATEGY COLLECTION")}</p><h2>{t("Strategies")}</h2><p>{t("Explore strategies you created and follow.")}</p></div>
+                    <div className="portfolio-content-heading portfolio-strategy-heading">
                       <span className="portfolio-period-chip">12 {t("Strategies")}</span>
                     </div>
                     <div className="portfolio-strategy-filters" role="tablist" aria-label={t("Filter strategies")}>
