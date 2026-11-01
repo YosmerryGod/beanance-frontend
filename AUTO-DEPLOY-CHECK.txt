@@ -1,0 +1,3 @@
+Beanance VPS auto-deploy verification
+Created by ChatGPT on 2026-11-02.
+If this file appears in the repository root, the GitHub file creation succeeded.
