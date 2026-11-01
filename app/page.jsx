@@ -19,9 +19,6 @@ import {
   CircleHelp,
   Compass,
   Copy,
-  Eye,
-  EyeOff,
-  Grid2X2,
   LayoutDashboard,
   Languages, // [ADDED] Language settings icon
   Palette, // [ADDED] Appearance settings icon
@@ -31,7 +28,6 @@ import {
   Search,
   Star,
   SlidersHorizontal,
-  Settings,
   ShieldCheck,
   UserRound,
   Wallet,
@@ -43,15 +39,12 @@ import {
   Target, // [ADDED] Portfolio win-rate metric icon
   Moon,
   Sun,
-  Cake,
-  Coins,
-  Waves,
   Sparkles,
-  Medal,
   BadgeCheck,
   ArrowUp,
   ArrowDown,
   ArrowUpDown,
+  Check,
 } from "lucide-react";
 import CoinLogo from "./components/CoinLogo";
 
@@ -504,9 +497,9 @@ const navigation = [
 ];
 
 const assets = [
-  { symbol: "BTC", name: "Bitcoin", amount: "0.08421 BTC", value: "$5,482.20", change: "+2.45%", positive: true, icon: "₿", tone: "bitcoin" },
-  { symbol: "ETH", name: "Ethereum", amount: "1.2840 ETH", value: "$3,820.40", change: "+1.82%", positive: true, icon: "Ξ", tone: "ethereum" },
-  { symbol: "BNB", name: "BNB", amount: "4.520 BNB", value: "$2,945.60", change: "-0.64%", positive: false, icon: "◆", tone: "bnb" },
+  { symbol: "BTC", name: "Bitcoin", amount: "0.08421 BTC", value: "$5,482.20", change: "+2.45%", positive: true, icon: "BTC", tone: "bitcoin" },
+  { symbol: "ETH", name: "Ethereum", amount: "1.2840 ETH", value: "$3,820.40", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum" },
+  { symbol: "BNB", name: "BNB", amount: "4.520 BNB", value: "$2,945.60", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb" },
 ];
 
 const dapps = [
@@ -525,10 +518,10 @@ const traderProfiles = {
 };
 
 const marketAssets = [
-  { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "₿", tone: "bitcoin", volume: "$28.4B" },
-  { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "Ξ", tone: "ethereum", volume: "$14.2B" },
-  { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "◆", tone: "bnb", volume: "$1.8B" },
-  { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "◎", tone: "solana", volume: "$3.9B" },
+  { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "BTC", tone: "bitcoin", volume: "$28.4B" },
+  { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum", volume: "$14.2B" },
+  { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb", volume: "$1.8B" },
+  { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "SOL", tone: "solana", volume: "$3.9B" },
   { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, icon: "X", tone: "xrp", volume: "$1.1B" },
 ];
 
@@ -791,9 +784,9 @@ function App() {
               </div>
               <div className="strategy-grid">
                 {[
-                  {name:"BTC Trend Master",user:"@tradewiz",symbol:"₿",tone:"bitcoin",returns:"+124.5%",win:"68%",type:"Trend Following",risk:"Medium Risk",riskTone:"medium",chart:"M2 40 L18 31 L34 35 L50 23 L66 29 L82 19 L98 27 L114 17 L130 23 L146 12 L162 18 L178 9 L194 16 L210 5 L226 12 L242 3 L258 10 L274 0"},
-                  {name:"Scalping AI v2",user:"@cryptofox",symbol:"◆",tone:"ethereum",returns:"+89.2%",win:"72%",type:"Scalping",risk:"Low Risk",riskTone:"low",chart:"M2 42 L18 35 L34 38 L50 28 L66 31 L82 20 L98 26 L114 18 L130 22 L146 13 L162 18 L178 8 L194 13 L210 5 L226 10 L242 2 L258 7 L274 -1"},
-                  {name:"ETH Breakout",user:"@moontrade",symbol:"◎",tone:"solana",returns:"+68.1%",win:"63%",type:"Breakout",risk:"Medium Risk",riskTone:"medium",chart:"M2 43 L18 35 L34 39 L50 29 L66 34 L82 24 L98 29 L114 19 L130 24 L146 14 L162 20 L178 10 L194 15 L210 7 L226 12 L242 3 L258 8 L274 -2"}
+                  {name:"BTC Trend Master",user:"@tradewiz",symbol:"BTC",tone:"bitcoin",returns:"+124.5%",win:"68%",type:"Trend Following",risk:"Medium Risk",riskTone:"medium",chart:"M2 40 L18 31 L34 35 L50 23 L66 29 L82 19 L98 27 L114 17 L130 23 L146 12 L162 18 L178 9 L194 16 L210 5 L226 12 L242 3 L258 10 L274 0"},
+                  {name:"Scalping AI v2",user:"@cryptofox",symbol:"ETH",tone:"ethereum",returns:"+89.2%",win:"72%",type:"Scalping",risk:"Low Risk",riskTone:"low",chart:"M2 42 L18 35 L34 38 L50 28 L66 31 L82 20 L98 26 L114 18 L130 22 L146 13 L162 18 L178 8 L194 13 L210 5 L226 10 L242 2 L258 7 L274 -1"},
+                  {name:"ETH Breakout",user:"@moontrade",symbol:"SOL",tone:"solana",returns:"+68.1%",win:"63%",type:"Breakout",risk:"Medium Risk",riskTone:"medium",chart:"M2 43 L18 35 L34 39 L50 29 L66 34 L82 24 L98 29 L114 19 L130 24 L146 14 L162 20 L178 10 L194 15 L210 7 L226 12 L242 3 L258 8 L274 -2"}
                 ].map((strategy) => (
                   <article className="strategy-card" key={strategy.name}>
                     <div className="strategy-card-head">
@@ -860,9 +853,9 @@ function App() {
             <section className="discover-top-section">
               <div className="discover-podium">
                 {(discoverTopTab === "strategies" ? [
-                  {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",avatar:"₿",tone:"bitcoin"},
-                  {rank:1,name:"Scalping AI v2",user:"@cryptofox",metric:"+89.2%",detail:"Total return",avatar:"◆",tone:"ethereum"},
-                  {rank:3,name:"ETH Breakout",user:"@moontrade",metric:"+68.1%",detail:"Total return",avatar:"◎",tone:"solana"}
+                  {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",avatar:"BTC",tone:"bitcoin"},
+                  {rank:1,name:"Scalping AI v2",user:"@cryptofox",metric:"+89.2%",detail:"Total return",avatar:"ETH",tone:"ethereum"},
+                  {rank:3,name:"ETH Breakout",user:"@moontrade",metric:"+68.1%",detail:"Total return",avatar:"SOL",tone:"solana"}
                 ] : [
                   {rank:2,name:"cryptofox",user:"1.2K followers",metric:"+89.2%",detail:"30D return",avatar:"C",tone:"trader-avatar-2"},
                   {rank:1,name:"tradewiz",user:"342 followers",metric:"+124.5%",detail:"30D return",avatar:"T",tone:"trader-avatar-1"},
@@ -901,10 +894,10 @@ function App() {
               </div>
               <div className="discover-card-list">
                 {discoverTopTab === "strategies" ? [
-                  {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",age:240,trades:680,tone:"bitcoin",symbol:"₿",tag:"Trending"},
-                  {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",age:120,trades:1240,tone:"ethereum",symbol:"◆",tag:"Low Risk"},
-                  {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",age:75,trades:310,tone:"solana",symbol:"◎",tag:"Trending"},
-                  {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"◆",tag:"Low Risk"}
+                  {name:"BTC Trend Master",user:"@tradewiz",type:"Trend Following",risk:"Medium Risk",returns:"+124.5%",win:"68%",age:240,trades:680,tone:"bitcoin",symbol:"BTC",tag:"Trending"},
+                  {name:"Scalping AI v2",user:"@cryptofox",type:"Scalping",risk:"Low Risk",returns:"+89.2%",win:"72%",age:120,trades:1240,tone:"ethereum",symbol:"ETH",tag:"Low Risk"},
+                  {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",age:75,trades:310,tone:"solana",symbol:"SOL",tag:"Trending"},
+                  {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"ETH",tag:"Low Risk"}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}><CoinLogo symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : item.tone === "solana" ? "SOL" : item.tone === "bnb" ? "BNB" : item.symbol} /></div>
@@ -921,7 +914,7 @@ function App() {
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverFilter === "All" || discoverFilter === "Verified" || (discoverFilter === "Most Followers" ? parseFloat(item.followers) >= 800 : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : discoverCriteria.sort === "popular" ? parseFloat(b.followers) - parseFloat(a.followers) : 0).map((item) => (
                   <article className="discover-list-card trader-discover-card" key={item.name} onClick={() => openTrader(item.name)} role="button" tabIndex={0} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) openTrader(item.name); }}>
                     <div className={`discover-avatar ${item.tone}`}>{item.tone.startsWith("trader-avatar") ? item.avatar : <CoinLogo symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : "SOL"} />}</div>
-                    <div className="discover-card-main"><strong>{item.name} <span className="verified-mark">✓</span></strong><span>{item.followers} {t("followers")}</span><small>{t("Consistent trader")} · {item.age} {t("days active")}</small></div>
+                    <div className="discover-card-main"><strong>{item.name} <BadgeCheck className="verified-mark" size={15} strokeWidth={1.75} aria-label="Verified" /></strong><span>{item.followers} {t("followers")}</span><small>{t("Consistent trader")} · {item.age} {t("days active")}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
                     <button onClick={(event) => { event.stopPropagation(); setNotice(`Following @${item.name} is a demo action`); }}>{t("Follow")}</button>
                   </article>
@@ -941,7 +934,7 @@ function App() {
               </div>
               <div className="trader-profile-identity">
                 <div className={`trader-profile-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedTrader)+1}`}>{selectedTrader.charAt(0).toUpperCase()}</div>
-                <div className="trader-profile-name"><div><h1>@{selectedTrader}</h1><span className="verified-mark">✓</span></div><p>{traderProfiles[selectedTrader].name} · Verified trader</p></div>
+                <div className="trader-profile-name"><div><h1>@{selectedTrader}</h1><BadgeCheck className="verified-mark" size={15} strokeWidth={1.75} aria-label="Verified" /></div><p>{traderProfiles[selectedTrader].name} · Verified trader</p></div>
                 <button className="trader-follow-button" onClick={() => setNotice(`Following @${selectedTrader} is a demo action`)}>{t("Follow Trader")}</button>
               </div>
               <p className="trader-profile-bio">{traderProfiles[selectedTrader].bio}</p>
@@ -1050,10 +1043,10 @@ function App() {
               <div className="market-table-flat">
                 <div className="market-table market-table-head">
                   <span className="market-star-column" aria-hidden="true"><Star size={15} strokeWidth={1.75} /></span>
-                  <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>{t("Name")} <span>{marketSort === "name" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>{t("Vol")} <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>{t("Last price")} <span>{marketSort === "price" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                  <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>{t("24h change")} <span>{marketSort === "change" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
+                  <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>{t("Name")} <span>{marketSort === "name" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
+                  <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>{t("Vol")} <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
+                  <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>{t("Last price")} <span>{marketSort === "price" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
+                  <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>{t("24h change")} <span>{marketSort === "change" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
                 </div>
                 <div className="market-table-body">
                   {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
@@ -1338,7 +1331,7 @@ function App() {
                 <div className="sidebar-language-list">
                   {supportedLanguages.map((item) => (
                     <button key={item.code} type="button" className={language === item.code ? "selected" : ""} onClick={() => {setLanguage(item.code);setLanguageOpen(false);}}>
-                      <span>{item.flag}</span><span>{item.label}</span><small>{item.native}</small>{language === item.code && <span className="sidebar-language-check">✓</span>}
+                      <span>{item.flag}</span><span>{item.label}</span><small>{item.native}</small>{language === item.code && <Check size={13} strokeWidth={1.75} aria-label="Selected" />}
                     </button>
                   ))}
                 </div>
