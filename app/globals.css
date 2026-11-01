@@ -2829,3 +2829,50 @@ body{background:#090909;color:var(--text)}
     margin-left:25px!important;
   }
 }
+
+
+/* [ADDED] Sidebar account identity and connection indicators. */
+.app-shell .sidebar-account{align-items:flex-start;padding:13px 11px;}
+.app-shell .sidebar-avatar{overflow:hidden;}
+.app-shell .sidebar-avatar img{width:100%;height:100%;object-fit:cover;}
+.app-shell .sidebar-account-copy{gap:4px;padding-top:2px;}
+.app-shell .sidebar-account-copy>small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.app-shell .sidebar-account-connections{display:flex;flex-wrap:wrap;gap:10px;margin-top:5px;}
+.app-shell .sidebar-account-connections>span{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:9px;font-weight:650;}
+.app-shell .sidebar-account-connections>span.is-connected{color:#27bd78;}
+
+/* [ADDED] Profile settings form and exchange / Web3 connection status. */
+.app-shell .profile-settings-page{max-width:760px;margin-right:auto;margin-left:auto;}
+.app-shell .profile-settings-card,
+.app-shell .profile-settings-connections{margin-top:22px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--panel);}
+.app-shell .profile-photo-editor{display:flex;align-items:center;gap:17px;padding-bottom:22px;border-bottom:1px solid var(--line);}
+.app-shell .profile-photo-preview{display:grid;place-items:center;width:76px;height:76px;flex:none;overflow:hidden;border-radius:50%;background:linear-gradient(145deg,#f8d76a,#c58a16);color:#27221a;font-size:30px;font-weight:800;}
+.app-shell .profile-photo-preview img{width:100%;height:100%;object-fit:cover;}
+.app-shell .profile-photo-actions{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
+.app-shell .profile-photo-actions>strong{font-size:14px;}
+.app-shell .profile-photo-actions>small{color:var(--muted);font-size:11px;}
+.app-shell .profile-photo-button{display:inline-flex;align-items:center;gap:7px;margin-top:5px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel-soft);color:var(--text);font-size:11px;font-weight:700;}
+.app-shell .profile-photo-input{display:none;}
+.app-shell .profile-field{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
+.app-shell .profile-field>span{font-size:12px;font-weight:700;}
+.app-shell .profile-field input,
+.app-shell .profile-readonly-field{width:100%;min-height:44px;padding:0 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel-soft);color:var(--text);font:inherit;font-size:13px;outline:none;}
+.app-shell .profile-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(220,177,54,.12);}
+.app-shell .profile-readonly-field{display:flex;align-items:center;color:var(--muted);}
+.app-shell .profile-save-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:43px;margin-top:22px;padding:0 17px;border:0;border-radius:10px;background:var(--gold);color:#17130a;font-size:12px;font-weight:800;}
+.app-shell .profile-connections-heading h2{margin:0;font-size:16px;}
+.app-shell .profile-connections-heading p{margin:6px 0 15px;color:var(--muted);font-size:11px;line-height:1.5;}
+.app-shell .profile-connection-row{display:flex;align-items:center;gap:12px;min-height:62px;border-top:1px solid var(--line);}
+.app-shell .profile-connection-icon{display:grid;place-items:center;width:37px;height:37px;flex:none;border-radius:11px;background:var(--panel-soft);color:var(--text);font-size:17px;font-weight:850;}
+.app-shell .binance-connection-icon{background:rgba(240,185,11,.13);color:#e6ad08;}
+.app-shell .profile-connection-copy{display:flex;flex:1;flex-direction:column;gap:4px;}
+.app-shell .profile-connection-copy strong{font-size:12px;}
+.app-shell .profile-connection-copy small{color:var(--muted);font-size:10px;}
+.app-shell .profile-connection-check{color:#27bd78;}
+.app-shell .profile-connection-off{color:var(--muted);}
+.app-shell.theme-light .profile-settings-card,
+.app-shell.theme-light .profile-settings-connections{background:#fff;}
+@media(max-width:600px){
+  .app-shell .profile-settings-card,.app-shell .profile-settings-connections{padding:17px;border-radius:15px;}
+  .app-shell .profile-photo-preview{width:66px;height:66px;}
+}
