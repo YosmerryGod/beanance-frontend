@@ -1165,10 +1165,36 @@ function App() {
               )}
 
               {portfolioTab === "wallet" && (
-                <section className="portfolio-wallet-panel portfolio-tab-panel">
-                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("WEB3 ASSETS")}</p><h2>{t("Web3 Wallet")}</h2><p>{t("Manage your connected wallet and assets.")}</p></div><span className={web3Connected ? "portfolio-wallet-status connected" : "portfolio-wallet-status"}>{web3Connected ? t("Connected") : t("Not connected")}</span></div>
-                  <div className="portfolio-wallet-card"><span className="portfolio-wallet-icon"><Wallet size={24}/></span><div><strong>{web3Connected ? "0x71C7...8976F" : t("No wallet connected")}</strong><small>{web3Connected ? "BNB Smart Chain" : t("Connect a Web3 wallet to see your assets.")}</small></div><button type="button" onClick={() => setNotice(web3Connected ? "Wallet connection settings are not available yet" : "Wallet connector will be available soon")}>{web3Connected ? t("Manage") : t("Connect")}</button></div>
-                  <div className="portfolio-wallet-empty"><Wallet size={28}/><strong>{t("Your Web3 assets will appear here")}</strong><span>{t("Connect a wallet to view tokens and balances.")}</span></div>
+                <section className="portfolio-wallet-panel portfolio-tab-panel portfolio-wallet-modern">
+                  {!web3Connected ? (
+                    <div className="portfolio-wallet-onboarding">
+                      <div className="portfolio-wallet-onboarding-icon"><Wallet size={30}/></div>
+                      <h2>{t("Your Web3 wallet")}</h2>
+                      <p>{t("Create a new wallet or import an existing one to manage your digital assets.")}</p>
+                      <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}>{t("Create wallet")}</button>
+                      <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
+                      <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}>{t("Import wallet")}</button>
+                      <small className="portfolio-wallet-security-note"><ShieldCheck size={14}/>{t("Your keys stay under your control")}</small>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="portfolio-wallet-balance-card">
+                        <div className="portfolio-wallet-balance-top"><span>{t("Wallet balance")}</span><span className="portfolio-wallet-connected-label"><CheckCircle2 size={13}/>{t("Connected")}</span></div>
+                        <strong>$2,480.65</strong>
+                        <small className="portfolio-wallet-address">0x71C7...8976F <button type="button" onClick={() => setNotice("Wallet address copied")}><Copy size={13}/></button></small>
+                        <div className="portfolio-wallet-actions">
+                          <button type="button" onClick={() => setNotice("Deposit is coming soon")}><ArrowDownLeft size={17}/><span>{t("Deposit")}</span></button>
+                          <button type="button" onClick={() => setNotice("Withdraw is coming soon")}><ArrowUpRight size={17}/><span>{t("Withdraw")}</span></button>
+                          <button type="button" onClick={() => setNotice("Swap is coming soon")}><Activity size={17}/><span>{t("Swap")}</span></button>
+                        </div>
+                      </div>
+                      <div className="portfolio-wallet-token-heading"><div><h3>{t("Your tokens")}</h3><p>{t("Assets held in your wallet")}</p></div><button type="button" onClick={() => setNotice("Add token is coming soon")}><Plus size={16}/>{t("Add token")}</button></div>
+                      <div className="portfolio-wallet-token-list">
+                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bnb">B</span><span className="portfolio-wallet-token-info"><strong>BNB</strong><small>BNB Chain</small></span><span className="portfolio-wallet-token-value"><strong>4.25 BNB</strong><small>$2,465.00</small></span></article>
+                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean">B</span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>Beanance Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
+                      </div>
+                    </>
+                  )}
                 </section>
               )}
 
