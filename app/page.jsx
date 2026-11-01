@@ -17,6 +17,7 @@ import {
   EyeOff,
   Grid2X2,
   LayoutDashboard,
+  Menu, // [ADDED] Sidebar menu icon
   Plus,
   Search,
   Star,
@@ -91,6 +92,7 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // [ADDED] Global navigation drawer
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
@@ -227,6 +229,11 @@ function App() {
               </button>
             )}
           </div>
+          {active !== "trader-profile" && (
+            <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
+              <Menu size={20} />
+            </button>
+          )}
         </header>
 
         {active === "dashboard" && (
@@ -234,7 +241,7 @@ function App() {
             <section className="dashboard-section">
               <div className="section-heading dashboard-section-heading">
                 <div><h2>Top Strategies</h2><p className="muted">Best performing strategies from our community</p></div>
-                <button className="text-link" onClick={() => setNotice("All strategies are coming soon")}>See All <ChevronRight size={15} /></button>
+                <button className="text-link" onClick={() => selectTab({ id: "dapps" })}>See All <ChevronRight size={15} /></button>
               </div>
               <div className="strategy-grid">
                 {[
@@ -267,7 +274,7 @@ function App() {
             <section className={`dashboard-section mobile-tab-panel mobile-traders-panel ${mobileDashboardTab === "traders" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading traders-heading">
                 <div><h2>Top Traders</h2><p className="muted">Most consistent and successful traders</p></div>
-                <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => setNotice("All traders are coming soon")}>See All <ChevronRight size={15} /></button></div>
+                <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => {setDiscoverTopTab("traders");selectTab({ id: "dapps" });}}>See All <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table trader-table">
@@ -580,6 +587,35 @@ function App() {
           );
         })}
       </nav>
+
+      {sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}>
+          <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label="Main menu" onClick={(event) => event.stopPropagation()}>
+            <div className="sidebar-heading">
+              <div className="sidebar-brand"><span className="brand-mark"><span /></span><strong>beanance</strong></div>
+              <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
+            </div>
+            <p className="eyebrow sidebar-section-label">MENU</p>
+            <nav className="sidebar-navigation" aria-label="Sidebar navigation">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const selected = active === item.id;
+                return (
+                  <button key={item.id} type="button" className={`sidebar-nav-item ${selected ? "active" : ""} ${item.primary ? "sidebar-create-item" : ""}`} onClick={() => {setSidebarOpen(false);selectTab(item);}}>
+                    <Icon size={19} />
+                    <span>{item.label}</span>
+                    {selected && <span className="sidebar-active-dot" />}
+                  </button>
+                );
+              })}
+            </nav>
+            <div className="sidebar-footer">
+              <span>BEANANCE COMMUNITY</span>
+              <small>Explore markets and trading strategies</small>
+            </div>
+          </aside>
+        </div>
+      )}
 
       {showCreate && (
         <div className="modal-backdrop" onClick={() => setShowCreate(false)}>
