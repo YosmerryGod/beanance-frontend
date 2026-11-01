@@ -1202,11 +1202,11 @@ function App() {
 
               {portfolioTab === "history" && (
                 <section className="portfolio-strategy-list-section portfolio-tab-panel portfolio-history-panel">
-                  <div className="portfolio-history-tabs" role="tablist" aria-label={t("History filters")}>
-                    <button type="button" role="tab" aria-selected={historyFilter === "not-running"} className={historyFilter === "not-running" ? "selected" : ""} onClick={() => setHistoryFilter("not-running")}>{t("Not Running")} <span>2</span></button>
-                    <button type="button" role="tab" aria-selected={historyFilter === "running"} className={historyFilter === "running" ? "selected" : ""} onClick={() => setHistoryFilter("running")}>{t("Running")} <span>2</span></button>
-                    <button type="button" role="tab" aria-selected={historyFilter === "closed"} className={historyFilter === "closed" ? "selected" : ""} onClick={() => setHistoryFilter("closed")}>{t("Closed")} <span>3</span></button>
-                    <button type="button" role="tab" aria-selected={historyFilter === "wallet"} className={historyFilter === "wallet" ? "selected" : ""} onClick={() => setHistoryFilter("wallet")}>{t("Wallet")} <span>3</span></button>
+                  <div className="portfolio-history-tabs portfolio-history-icon-tabs" role="tablist" aria-label={t("History filters")}>
+                    <button type="button" role="tab" aria-label={t("Pending orders")} title={t("Pending orders")} aria-selected={historyFilter === "not-running"} className={historyFilter === "not-running" ? "selected" : ""} onClick={() => setHistoryFilter("not-running")}><Clock3 size={18}/><span>2</span></button>
+                    <button type="button" role="tab" aria-label={t("Open positions")} title={t("Open positions")} aria-selected={historyFilter === "running"} className={historyFilter === "running" ? "selected" : ""} onClick={() => setHistoryFilter("running")}><Activity size={18}/><span>2</span></button>
+                    <button type="button" role="tab" aria-label={t("Closed positions")} title={t("Closed positions")} aria-selected={historyFilter === "closed"} className={historyFilter === "closed" ? "selected" : ""} onClick={() => setHistoryFilter("closed")}><CheckCircle2 size={18}/><span>3</span></button>
+                    <button type="button" role="tab" aria-label={t("Wallet transactions")} title={t("Wallet transactions")} aria-selected={historyFilter === "wallet"} className={historyFilter === "wallet" ? "selected" : ""} onClick={() => setHistoryFilter("wallet")}><Wallet size={18}/><span>3</span></button>
                   </div>
                   {historyFilter === "wallet" ? (
                     <div className="portfolio-history-list">
@@ -1226,15 +1226,15 @@ function App() {
                     <div className="portfolio-history-list">
                       {(
                         historyFilter === "not-running" ? [
-                          {name:"Grid BNB",pair:"BNBUSDT",date:"Created Nov 01, 2026",status:"Not Running",detail:"Ready to start"},
-                          {name:"ETH Swing",pair:"ETHUSDT",date:"Created Oct 29, 2026",status:"Not Running",detail:"Waiting to start"}
+                          {name:"BTC Limit Order",pair:"BTCUSDT",date:"Limit · $67,500 · Nov 01, 2026",status:"Pending",detail:"Waiting for fill"},
+                          {name:"BNB Limit Order",pair:"BNBUSDT",date:"Limit · $590 · Oct 29, 2026",status:"Pending",detail:"Waiting for fill"}
                         ] : historyFilter === "running" ? [
-                          {name:"Scalping BNB",pair:"BNBUSDT",date:"Started Oct 30, 2026",status:"Running",detail:"+8.42%"},
-                          {name:"BTC Trend",pair:"BTCUSDT",date:"Started Oct 27, 2026",status:"Running",detail:"+4.18%"}
+                          {name:"BTCUSDT",pair:"Long · 10x",date:"Entry $67,250 · Mark $68,120",status:"Open Position",detail:"+$87.00"},
+                          {name:"ETHUSDT",pair:"Short · 5x",date:"Entry $3,420 · Mark $3,390",status:"Open Position",detail:"+$42.50"}
                         ] : [
-                          {name:"ETH Momentum",pair:"ETHUSDT",date:"Closed Oct 25, 2026",status:"Closed",detail:"+12.50%"},
-                          {name:"BNB Breakout",pair:"BNBUSDT",date:"Closed Oct 20, 2026",status:"Closed",detail:"+6.21%"},
-                          {name:"BTC Scalper",pair:"BTCUSDT",date:"Closed Oct 18, 2026",status:"Closed",detail:"-1.80%"}
+                          {name:"BTCUSDT",pair:"Long · 10x",date:"Closed Nov 01, 2026",status:"Closed",detail:"+$124.50"},
+                          {name:"ETHUSDT",pair:"Short · 5x",date:"Closed Oct 30, 2026",status:"Closed",detail:"+$68.20"},
+                          {name:"BNBUSDT",pair:"Long · 3x",date:"Closed Oct 28, 2026",status:"Closed",detail:"-$18.40"}
                         ]
                       ).map((item) => (
                         <article className="portfolio-history-item portfolio-strategy-history-item" key={item.name}>
