@@ -3738,3 +3738,92 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .coin-logo[data-symbol="BNB"]{background:#181a20!important;padding:12%!important;border:1px solid rgba(255,255,255,.12)!important}
 .app-shell .coin-logo[data-symbol="BNB"]>svg{width:100%!important;height:100%!important}
 .app-shell.theme-light .coin-logo[data-symbol="BNB"]{background:#181a20!important}
+
+
+/* [FIXED] Dashboard Market Overview mobile table keeps headers and asset values aligned. */
+@media(max-width:600px){
+  .app-shell .dashboard-page .market-overview-section .dashboard-table-wrap{
+    overflow-x:hidden!important;
+    border-radius:16px!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    table-layout:fixed!important;
+    white-space:nowrap!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table thead,
+  .app-shell .dashboard-page .market-overview-section .market-table tbody{
+    display:block!important;
+    width:100%!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table thead tr,
+  .app-shell .dashboard-page .market-overview-section .market-table tbody tr{
+    display:grid!important;
+    grid-template-columns:22px minmax(0,1.25fr) minmax(65px,.85fr) minmax(72px,.9fr)!important;
+    align-items:center!important;
+    column-gap:5px!important;
+    width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    padding:0 9px!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table thead tr{
+    min-height:36px!important;
+    background:var(--panel-soft)!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table tbody tr{
+    min-height:58px!important;
+    border-bottom:1px solid var(--line)!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table th,
+  .app-shell .dashboard-page .market-overview-section .market-table td{
+    display:block!important;
+    min-width:0!important;
+    height:auto!important;
+    padding:5px 0!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    font-size:9px!important;
+    white-space:nowrap!important;
+    box-sizing:border-box!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table th:nth-child(n+5),
+  .app-shell .dashboard-page .market-overview-section .market-table td:nth-child(n+5){
+    display:none!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table th:nth-child(3),
+  .app-shell .dashboard-page .market-overview-section .market-table th:nth-child(4){
+    text-align:right!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table td:nth-child(3),
+  .app-shell .dashboard-page .market-overview-section .market-table td:nth-child(4){
+    text-align:right!important;
+    font-size:10px!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table .market-pair{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    min-width:0!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table .asset-icon{
+    width:27px!important;
+    height:27px!important;
+    flex:0 0 27px!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table .market-pair>div{
+    min-width:0!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table .market-pair strong{
+    display:block!important;
+    font-size:10px!important;
+    line-height:1.2!important;
+  }
+  .app-shell .dashboard-page .market-overview-section .market-table .market-pair small{
+    display:block!important;
+    margin-top:3px!important;
+    font-size:8px!important;
+  }
+}
