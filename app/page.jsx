@@ -1140,49 +1140,10 @@ function App() {
                     <div className="portfolio-metric-grid">
                       <div><span><Target size={15}/>{t("Win Rate")}</span><strong>72.4%</strong><small className="portfolio-positive">+4.8%</small></div>
                       <div><span><Activity size={15}/>{t("Total Trades")}</span><strong>346</strong><small className="portfolio-positive">+28</small></div>
-                      <div><span><Users size={15}/>{t("AUM")}</span><strong>24,560                   {/* [MODIFIED] Portfolio strategies use detailed trader-style performance cards. */}
-                  <section className="portfolio-strategy-list-section portfolio-owned-strategies-section">
-                    <div className="portfolio-content-heading portfolio-strategy-heading"><span className="portfolio-period-chip">5 {t("Strategies")}</span></div>
-                    <div className="portfolio-strategy-filters" role="tablist" aria-label={t("Filter strategies")}>
-                      <button type="button" role="tab" aria-selected={strategyFilter === "all"} className={strategyFilter === "all" ? "selected" : ""} onClick={() => setStrategyFilter("all")}>{t("All")}</button>
-                      <button type="button" role="tab" aria-selected={strategyFilter === "mine"} className={strategyFilter === "mine" ? "selected" : ""} onClick={() => setStrategyFilter("mine")}>{t("My Strategy")}</button>
-                      <button type="button" role="tab" aria-selected={strategyFilter === "following"} className={strategyFilter === "following" ? "selected" : ""} onClick={() => setStrategyFilter("following")}>{t("Following")}</button>
-                    </div>
-                    <div className="portfolio-strategy-status-tabs" role="tablist" aria-label={t("Strategy status")}>
-                      <button type="button" role="tab" aria-selected={portfolioStrategyStatus === "active"} className={portfolioStrategyStatus === "active" ? "selected" : ""} onClick={() => setPortfolioStrategyStatus("active")}>{t("Active")} <span>4</span></button>
-                      <button type="button" role="tab" aria-selected={portfolioStrategyStatus === "inactive"} className={portfolioStrategyStatus === "inactive" ? "selected" : ""} onClick={() => setPortfolioStrategyStatus("inactive")}>{t("Inactive")} <span>1</span></button>
-                    </div>
-                    <div className="trader-strategy-performance-list portfolio-owned-strategy-list">
-                      {[
-                        {name:"Scalping BNB",pair:"BNBUSDT",type:"Scalping",timeframe:"5m",returns:"+18.32%",win:"74%",trades:"428",risk:"Medium Risk",badge:"Personal",owner:"mine",status:"active",chart:0},
-                        {name:"Trend Catcher",pair:"BTCUSDT",type:"Trend Following",timeframe:"15m",returns:"+9.74%",win:"68%",trades:"215",risk:"Low Risk",badge:"Public",owner:"mine",status:"active",chart:1},
-                        {name:"ETH Momentum",pair:"ETHUSDT",type:"Momentum",timeframe:"1h",returns:"+7.21%",win:"65%",trades:"186",risk:"Medium Risk",badge:"Public",owner:"mine",status:"active",chart:0},
-                        {name:"BTC Trend Master",pair:"BTCUSDT",type:"Trend Following",timeframe:"1h",returns:"+24.80%",win:"71%",trades:"680",risk:"Medium Risk",badge:"TradeWiz",owner:"following",status:"active",chart:1},
-                        {name:"ETH Quick Moves",pair:"ETHUSDT",type:"Momentum",timeframe:"15m",returns:"-2.40%",win:"48%",trades:"92",risk:"High Risk",badge:"CryptoFox",owner:"following",status:"inactive",chart:0}
-                      ].filter((s) => (strategyFilter === "all" || s.owner === strategyFilter) && s.status === portfolioStrategyStatus).map((strategy,index) => (
-                        <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name}>
-                          <div className="trader-strategy-performance-heading">
-                            <div className="trader-owned-strategy-icon"><Activity size={20}/></div>
-                            <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={"trader-strategy-risk-inline " + strategy.risk.toLowerCase().replace(" risk","")}>{t(strategy.risk)}</span></div><span>{t(strategy.type)} · {strategy.pair} · {strategy.timeframe}</span></div>
-                            <div className="trader-strategy-actions"><span className={"strategy-status-pill " + strategy.status}>{t(strategy.status === "active" ? "Active" : "Inactive")}</span>{strategy.status === "active" && <button type="button" className="trader-copy-button" onClick={() => setNotice("Copy trading for " + strategy.name + " is coming soon")}><Copy size={14}/> {t("Copy")}</button>}</div>
-                          </div>
-                          <div className="trader-strategy-metrics"><div><span>{t("30D Return")}</span><strong className={strategy.returns.startsWith("-") ? "negative" : "positive"}>{strategy.returns}</strong></div><div><span>{t("Win Rate")}</span><strong>{strategy.win}</strong></div><div><span>{t("Total Trades")}</span><strong>{strategy.trades}</strong></div></div>
-                          <div className="trader-strategy-chart trader-strategy-chart-compact">
-                            <svg viewBox="0 0 600 90" preserveAspectRatio="none" role="img" aria-label={strategy.name + " performance chart"}>
-                              <defs><linearGradient id={"portfolio-strategy-fill-" + index} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor={strategy.status === "active" ? "#20bd68" : "#e45b5b"} stopOpacity=".2"/><stop offset="100%" stopColor={strategy.status === "active" ? "#20bd68" : "#e45b5b"} stopOpacity="0"/></linearGradient></defs>
-                              <path d={strategy.chart === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6 L600 90 L0 90 Z" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5 L600 90 L0 90 Z"} fill={"url(#portfolio-strategy-fill-" + index + ")"} />
-                              <path d={strategy.chart === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5"} fill="none" stroke={strategy.status === "active" ? "#20bd68" : "#e45b5b"} strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
-                            </svg>
-                            <div className="trader-chart-axis"><span>{t("30D ago")}</span><span>{t("Today")}</span></div>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  </section>}/></span>
-                        </article>
-                      ))}
+                      <div><span><Users size={15}/>{t("AUM")}</span><strong>24,560 USDT</strong><small className="portfolio-positive">+8.2%</small></div>
                     </div>
                   </section>
+
                 </>
               )}
 
