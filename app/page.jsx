@@ -69,6 +69,19 @@ const marketAssets = [
   { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, icon: "X", tone: "xrp", volume: "$1.1B" },
 ];
 
+// [ADDED] Short-term market movement examples for the Top Movers interface.
+const topMoverEvents = [
+  { symbol: "SOL", name: "Solana", change: "+3.82%", timeframe: "5 mnt", time: "14:05:50", status: "Rally", category: "Rally", positive: true },
+  { symbol: "BTC", name: "Bitcoin", change: "+1.46%", timeframe: "15 mnt", time: "14:05:42", status: "Kenaikan tajam", category: "Kenaikan", positive: true },
+  { symbol: "XRP", name: "XRP", change: "-2.65%", timeframe: "5 mnt", time: "14:05:31", status: "Penurunan tajam", category: "Penurunan", positive: false },
+  { symbol: "ETH", name: "Ethereum", change: "+2.14%", timeframe: "1 jam", time: "14:04:58", status: "High baru 24 jam", category: "High Baru", positive: true },
+  { symbol: "BNB", name: "BNB", change: "-1.92%", timeframe: "15 mnt", time: "14:04:20", status: "Pullback", category: "Pullback", positive: false },
+  { symbol: "SOL", name: "Solana", change: "+5.28%", timeframe: "2 jam", time: "14:03:46", status: "High baru 7 hari", category: "High Baru", positive: true },
+  { symbol: "BTC", name: "Bitcoin", change: "-1.18%", timeframe: "1 jam", time: "14:02:15", status: "Low baru 24 jam", category: "Low Baru", positive: false },
+  { symbol: "ETH", name: "Ethereum", change: "+1.72%", timeframe: "30 mnt", time: "14:01:40", status: "Kenaikan tajam", category: "Kenaikan", positive: true },
+  { symbol: "XRP", name: "XRP", change: "-3.24%", timeframe: "2 jam", time: "14:00:18", status: "Pullback", category: "Pullback", positive: false },
+];
+
 function App() {
   const [active, setActive] = useState("dashboard");
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -81,6 +94,7 @@ function App() {
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
+  const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
   const [marketSortDirection, setMarketSortDirection] = useState("desc"); // [ADDED] Market sort direction
   const [pinnedMarketSymbols, setPinnedMarketSymbols] = useState([]); // [ADDED] Pinned market assets
@@ -479,42 +493,61 @@ function App() {
 
         {active === "market" && (
           <section className="page page-enter simple-page market-page market-page-full">
-            <div className="market-table-flat">
-              <div className="market-table market-table-head">
-                <span className="market-star-column" aria-hidden="true">★</span>
-                <div className="market-heading-pair">
+            {marketNavTab === "all-market" ? (
+              <div className="market-table-flat">
+                <div className="market-table market-table-head">
+                  <span className="market-star-column" aria-hidden="true">★</span>
                   <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>Name <span>{marketSort === "name" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
                   <button className={marketSort === "volume" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("volume");setMarketSortDirection((direction) => marketSort === "volume" && direction === "desc" ? "asc" : "desc");}}>Vol <span>{marketSort === "volume" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
-                </div>
-                <div className="market-heading-values">
                   <button className={marketSort === "price" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("price");setMarketSortDirection((direction) => marketSort === "price" && direction === "desc" ? "asc" : "desc");}}>Last price <span>{marketSort === "price" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
                   <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>24h change <span>{marketSort === "change" ? (marketSortDirection === "asc" ? "↑" : "↓") : "↕"}</span></button>
                 </div>
+                <div className="market-table-body">
+                  {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
+                    const aPinned = pinnedMarketSymbols.includes(a.symbol);
+                    const bPinned = pinnedMarketSymbols.includes(b.symbol);
+                    if (aPinned !== bPinned) return aPinned ? -1 : 1;
+                    const values = {
+                      name: [a.name.toLowerCase(), b.name.toLowerCase()],
+                      volume: [Number(a.volume.replace(/[^0-9.]/g, "")) * (a.volume.includes("B") ? 1000 : a.volume.includes("M") ? 1 : 0.001), Number(b.volume.replace(/[^0-9.]/g, "")) * (b.volume.includes("B") ? 1000 : b.volume.includes("M") ? 1 : 0.001)],
+                      price: [Number(a.price.replace(/[^0-9.]/g, "")), Number(b.price.replace(/[^0-9.]/g, ""))],
+                      change: [Number(a.change.replace("%", "")), Number(b.change.replace("%", ""))]
+                    }[marketSort];
+                    const comparison = typeof values[0] === "string" ? values[0].localeCompare(values[1]) : values[0] - values[1];
+                    return comparison * (marketSortDirection === "asc" ? 1 : -1);
+                  }).map((asset) => (
+                    <article className="market-table market-table-row" key={asset.symbol}>
+                      <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={() => setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol])}><Star size={18} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
+                      <div className="market-pair"><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
+                      <div className="market-volume-cell">{asset.volume}</div>
+                      <div className="market-price-cell">{asset.price}</div>
+                      <div className={asset.positive ? "market-change-cell positive" : "market-change-cell negative"}>{asset.change}</div>
+                    </article>
+                  ))}
+                </div>
               </div>
-              <div className="market-table-body">
-                {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
-                  // [ADDED] Top Movers ranks the largest absolute 24-hour changes first.
-                  if (marketNavTab === "top-movers") return Math.abs(Number(b.change.replace("%", ""))) - Math.abs(Number(a.change.replace("%", "")));
-                  const aPinned = pinnedMarketSymbols.includes(a.symbol);
-                  const bPinned = pinnedMarketSymbols.includes(b.symbol);
-                  if (aPinned !== bPinned) return aPinned ? -1 : 1;
-                  const values = {
-                    name: [a.name.toLowerCase(), b.name.toLowerCase()],
-                    volume: [Number(a.volume.replace(/[^0-9.]/g, "")) * (a.volume.includes("B") ? 1000 : a.volume.includes("M") ? 1 : 0.001), Number(b.volume.replace(/[^0-9.]/g, "")) * (b.volume.includes("B") ? 1000 : b.volume.includes("M") ? 1 : 0.001)],
-                    price: [Number(a.price.replace(/[^0-9.]/g, "")), Number(b.price.replace(/[^0-9.]/g, ""))],
-                    change: [Number(a.change.replace("%", "")), Number(b.change.replace("%", ""))]
-                  }[marketSort];
-                  const comparison = typeof values[0] === "string" ? values[0].localeCompare(values[1]) : values[0] - values[1];
-                  return comparison * (marketSortDirection === "asc" ? 1 : -1);
-                }).map((asset) => (
-                  <article className="market-table market-table-row" key={asset.symbol}>
-                    <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={() => setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol])}><Star size={19} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
-                    <div className="market-pair"><div className={`asset-icon ${asset.tone}`}>{asset.icon}</div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span></strong><small>{asset.name} <span className="market-volume-inline">· {asset.volume}</span></small></div></div>
-                    <div className="market-price-block"><strong className="market-last-price">{asset.price}</strong><span className={asset.positive ? "market-change-pill positive" : "market-change-pill negative"}>{asset.change}</span></div>
-                  </article>
-                ))}
-              </div>
-            </div>
+            ) : (
+              <section className="top-movers-page">
+                <div className="top-movers-categories" role="tablist" aria-label="Kategori pergerakan harga">
+                  {["Semua", "Kenaikan", "Penurunan", "Pullback", "Rally", "High Baru", "Low Baru"].map((category) => (
+                    <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{category}</button>
+                  ))}
+                </div>
+                <div className="top-movers-list-head"><span>Pasangan</span><span>Perubahan / Status</span></div>
+                <div className="top-movers-list">
+                  {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
+                    <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
+                      <div className="top-mover-pair"><strong>{event.symbol}USDT</strong><span className="perp-tag">Perp</span><small>{event.time} · {event.timeframe} lalu</small></div>
+                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{event.status}</span></div>
+                    </article>
+                  ))}
+                  {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                    <div className="top-movers-empty">Belum ada pergerakan untuk kategori ini.</div>
+                  )}
+                </div>
+                <p className="top-movers-disclaimer">Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.</p>
+              </section>
+            )}
           </section>
         )}
 
