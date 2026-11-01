@@ -607,6 +607,14 @@ function App() {
   }, [searchOpen]);
 
   const selectTab = (item) => {
+    if (item.id === "edit-profile") {
+      setActive("edit-profile");
+      setSearchOpen(false);
+      setSearchQuery("");
+      setShowNotifications(false);
+      setSidebarOpen(false);
+      return;
+    }
     if (item.id === "create") {
       setShowCreate(true);
       return;
@@ -661,7 +669,7 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""}`}>
+        {active !== "edit-profile" && <header className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""}`}>
           {active !== "trader-profile" && (
             <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
               <Menu size={20} />
@@ -727,7 +735,7 @@ function App() {
               </button>
             )}
           </div>
-        </header>
+        </header>}
 
         {active === "dashboard" && (
           <section className="page page-enter dashboard-page">
@@ -1052,31 +1060,14 @@ function App() {
         )}
 
         {active === "profile" && (
-          <section className="page page-enter simple-page profile-settings-page">
+          <section className="page page-enter simple-page account-overview-page">
             <p className="eyebrow">{t("YOUR ACCOUNT")}</p>
-            <h1>{t("Profile settings")}</h1>
-            <form className="profile-settings-card" onSubmit={saveProfile}>
-              <div className="profile-photo-editor">
-                <div className="profile-photo-preview">
-                  {profilePhoto ? <img src={profilePhoto} alt="Profile preview" /> : <span>{(profileName.trim()[0] || "E").toUpperCase()}</span>}
-                </div>
-                <div className="profile-photo-actions">
-                  <strong>{t("Profile photo")}</strong>
-                  <small>{t("JPG, PNG or WEBP · Max 5 MB")}</small>
-                  <button type="button" className="profile-photo-button" onClick={() => profilePhotoInputRef.current?.click()}><Camera size={16} /> {t("Change photo")}</button>
-                  <input ref={profilePhotoInputRef} className="profile-photo-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleProfilePhotoChange} />
-                </div>
-              </div>
-              <label className="profile-field">
-                <span>{t("Username")}</span>
-                <input type="text" value={profileName} maxLength={30} onChange={(event) => setProfileName(event.target.value)} placeholder={t("Enter username")} />
-              </label>
-              <div className="profile-field">
-                <span>{t("Email address")}</span>
-                <div className="profile-readonly-field">{profileEmail || t("Email not added")}</div>
-              </div>
-              <button type="submit" className="profile-save-button"><Save size={17} /> {t("Save changes")}</button>
-            </form>
+            <h1>{t("Profile")}</h1>
+            <button type="button" className="account-overview-card" onClick={() => setActive("edit-profile")}>
+              <span className="account-overview-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
+              <span><strong>{profileName}</strong><small>{profileEmail || t("Email not added")}</small></span>
+              <span className="account-overview-edit">{t("Edit profile")} <ChevronRight size={16} /></span>
+            </button>
             <div className="profile-settings-connections">
               <div className="profile-connections-heading"><h2>{t("Connected accounts")}</h2><p>{t("Connection status is shown only after a verified connection.")}</p></div>
               <div className="profile-connection-row">
@@ -1098,9 +1089,37 @@ function App() {
             </div>
           </section>
         )}
+
+        {active === "edit-profile" && (
+          <section className="page page-enter simple-page edit-profile-page">
+            <div className="edit-profile-heading">
+              <button type="button" className="edit-profile-back" onClick={() => setActive("profile")} aria-label={t("Back to profile")}><ArrowLeft size={19} /></button>
+              <div><p className="eyebrow">{t("ACCOUNT")}</p><h1>{t("Edit profile")}</h1></div>
+            </div>
+            <form className="edit-profile-form" onSubmit={saveProfile}>
+              <div className="edit-profile-photo-section">
+                <div className="edit-profile-photo">
+                  {profilePhoto ? <img src={profilePhoto} alt="Profile preview" /> : <span>{(profileName.trim()[0] || "E").toUpperCase()}</span>}
+                </div>
+                <div className="edit-profile-photo-copy">
+                  <strong>{t("Profile photo")}</strong>
+                  <small>{t("JPG, PNG or WEBP · Max 5 MB")}</small>
+                  <button type="button" className="edit-profile-photo-button" onClick={() => profilePhotoInputRef.current?.click()}><Camera size={16} /> {t("Change photo")}</button>
+                  <input ref={profilePhotoInputRef} className="profile-photo-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleProfilePhotoChange} />
+                </div>
+              </div>
+              <label className="edit-profile-field">
+                <span>{t("Username")}</span>
+                <input type="text" value={profileName} maxLength={30} onChange={(event) => setProfileName(event.target.value)} placeholder={t("Enter username")} autoComplete="nickname" />
+              </label>
+              <button type="submit" className="edit-profile-save"><Save size={17} /> {t("Save changes")}</button>
+            </form>
+          </section>
+        )}
+
       </div>
 
-      <nav className={`bottom-nav ${active === "trader-profile" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
+      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
@@ -1123,7 +1142,7 @@ function App() {
               <div className="sidebar-brand"><span className="brand-mark"><span /></span><strong>beanance</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
-            <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
+            <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "edit-profile" });}}>
               <span className="sidebar-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
               <span className="sidebar-account-copy">
                 <strong>{profileName}</strong>
