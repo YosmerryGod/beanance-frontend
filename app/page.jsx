@@ -516,8 +516,8 @@ function App() {
             <div className="trader-profile-header-placeholder" />
           ) : (
             <div className={`nav-greeting navbar-greeting-hidden ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
-              <p className="eyebrow">{active === "profile" ? "YOUR ACCOUNT" : "GOOD EVENING"}</p>
-              <strong>{active === "profile" ? "Hey, Ezy" : "Welcome back, Ezy"}</strong>
+              <p className="eyebrow">{active === "profile" ? t("YOUR ACCOUNT") : t("GOOD EVENING")}</p>
+              <strong>{active === "profile" ? t("Hey, Ezy") : t("Welcome back, Ezy")}</strong>
             </div>
           )}
           {active === "dapps" && (
@@ -556,7 +556,7 @@ function App() {
                 <input
                   ref={searchInputRef}
                   aria-label={active === "dapps" ? {t("Search strategies and traders")} : {t("Search market assets")}}
-                  placeholder={active === "dapps" ? "Search strategies or traders..." : "Search assets..."}
+                  placeholder={active === "dapps" ? t("Search strategies or traders...") : t("Search assets...")}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                   onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
@@ -612,7 +612,7 @@ function App() {
             <section className={`dashboard-section mobile-tab-panel mobile-traders-panel ${mobileDashboardTab === "traders" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading traders-heading">
                 <div><h2>{t("Top Traders")}</h2><p className="muted">{t("Most consistent and successful traders")}</p></div>
-                <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => {setDiscoverTopTab("traders");selectTab({ id: "dapps" });}}>See All <ChevronRight size={15} /></button></div>
+                <div className="section-tools"><div className="period-tabs">{["All","1M","3M","6M","1Y"].map((period) => <button className={traderPeriod === period ? "selected" : ""} key={period} onClick={() => setTraderPeriod(period)}>{period}</button>)}</div><button className="text-link" onClick={() => {setDiscoverTopTab("traders");selectTab({ id: "dapps" });}}>{t("See All")} <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table trader-table">
@@ -633,7 +633,7 @@ function App() {
             <section className={`dashboard-section market-overview-section mobile-tab-panel mobile-market-panel ${mobileDashboardTab === "market" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading">
                 <div><h2>{t("Market Overview")}</h2><p className="muted">{t("Top futures pairs by volume")}</p></div>
-                <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>See All <ChevronRight size={15} /></button></div>
+                <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>{t("See All")} <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table market-table">
@@ -675,7 +675,7 @@ function App() {
 
             <section className="discover-list-section">
               <div className="discover-section-heading discover-list-heading">
-                <div><h2>{discoverTopTab === "strategies" ? "Explore Strategies" : "Explore Traders"}</h2><p className="muted">{discoverTopTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
+                <div><h2>{discoverTopTab === "strategies" ? t("Explore Strategies") : t("Explore Traders")}</h2><p className="muted">{discoverTopTab === "strategies" ? "Pilih strategi sesuai gaya trading kamu." : "Kenali trader dan performa mereka."}</p></div>
                 <div className="discover-filter-wrap">
                   <button className={`discover-filter-icon ${showDiscoverFilter ? "selected" : ""}`} aria-label="Open filters" aria-expanded={showDiscoverFilter} onClick={() => setShowDiscoverFilter((value) => !value)}><SlidersHorizontal size={17} /></button>
                   {showDiscoverFilter && (
@@ -757,8 +757,8 @@ function App() {
                     <span className="trader-strategy-count">{t("Demo activity")}</span>
                   </div>
                   <div className="trader-subtabs" role="tablist" aria-label={t("Trade status")}>
-                    <button className={traderTradeFilter === "open" ? "selected" : ""} onClick={() => setTraderTradeFilter("open")}>Open positions <span>2</span></button>
-                    <button className={traderTradeFilter === "closed" ? "selected" : ""} onClick={() => setTraderTradeFilter("closed")}>Closed trades <span>4</span></button>
+                    <button className={traderTradeFilter === "open" ? "selected" : ""} onClick={() => setTraderTradeFilter("open")}>{t("Open positions")} <span>2</span></button>
+                    <button className={traderTradeFilter === "closed" ? "selected" : ""} onClick={() => setTraderTradeFilter("closed")}>{t("Closed trades")} <span>4</span></button>
                   </div>
                   <div className="trader-trade-list">
                     {(traderTradeFilter === "open" ? [
@@ -875,7 +875,7 @@ function App() {
               <section className="top-movers-page">
                 <div className="top-movers-categories" role="tablist" aria-label="Kategori pergerakan harga">
                   {["Semua", "Kenaikan", "Penurunan", "Pullback", "Rally", "High Baru", "Low Baru"].map((category) => (
-                    <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{category}</button>
+                    <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
                 <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
@@ -883,7 +883,7 @@ function App() {
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
                       <div className="top-mover-pair"><strong>{event.symbol}USDT</strong><span className="perp-tag">{t("Perp")}</span><small>{event.time} · {event.timeframe} lalu</small></div>
-                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{event.status}</span></div>
+                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{t(event.status)}</span></div>
                     </article>
                   ))}
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
@@ -898,7 +898,7 @@ function App() {
 
         {active === "profile" && (
           <section className="page page-enter simple-page">
-            <p className="eyebrow">{t("YOUR ACCOUNT")}</p><h1>Profile</h1>
+            <p className="eyebrow">{t("YOUR ACCOUNT")}</p><h1>{t("Profile")}</h1>
             <div className="profile-card"><div className="profile-avatar">E</div><div><strong>Ezy</strong><span>0x71C7...976F</span></div><button onClick={copyAddress}><Copy size={16} /></button></div>
             <div className="settings-list">
               <button onClick={() => setNotice("Wallet settings are coming soon")}><Wallet /><span>{t("Wallet management")}</span><ChevronRight /></button>
@@ -920,7 +920,7 @@ function App() {
           return (
             <button className={`nav-item ${isActive ? "active" : ""}`} key={item.id} onClick={() => selectTab(item)} aria-label={item.label} aria-current={isActive ? "page" : undefined}>
               <Icon size={21} strokeWidth={isActive ? 2.3 : 1.8} />
-              <span className="nav-label">{({ dashboard: language === "id" ? "Beranda" : language === "zh" ? "首页" : language === "ja" ? "ホーム" : language === "vi" ? "Trang chủ" : "Dashboard", dapps: language === "id" ? "Discover" : language === "zh" ? "发现" : language === "ja" ? "発見" : language === "vi" ? "Khám phá" : "Discover", create: language === "id" ? "Buat" : language === "zh" ? "创建" : language === "ja" ? "作成" : language === "vi" ? "Tạo" : "Create", market: language === "id" ? "Market" : language === "zh" ? "市场" : language === "ja" ? "市場" : language === "vi" ? "Thị trường" : "Market", profile: language === "id" ? "Profil" : language === "zh" ? "个人资料" : language === "ja" ? "プロフィール" : language === "vi" ? "Hồ sơ" : "Profile" })[item.id]}</span>
+              <span className="nav-label">{t(item.label)}</span>
             </button>
           );
         })}
