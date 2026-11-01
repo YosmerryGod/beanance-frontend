@@ -9,6 +9,10 @@ import {
   ArrowUpRight,
   Users,
   CalendarDays,
+  Camera, // [ADDED] Profile photo upload
+  CheckCircle2, // [ADDED] Connected account indicator
+  Circle, // [ADDED] Disconnected account indicator
+  Save, // [ADDED] Save profile changes
   Activity,
   Bell,
   ChevronRight,
@@ -377,6 +381,22 @@ Object.assign(appTranslations.ja, {
   "Trade history and strategy performance shown here are sample data for the Beanance demo.": "ここに表示される取引履歴と戦略実績はBeananceのデモデータです。",
   "Profile": "プロフィール", "Beanance Account": "Beananceアカウント", "Security": "セキュリティ", "Language": "言語"
 });
+Object.assign(appTranslations.en, {
+  "Profile settings":"Profile settings","Profile photo":"Profile photo","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG or WEBP · Max 5 MB","Change photo":"Change photo","Username":"Username","Enter username":"Enter username","Email address":"Email address","Email not added":"Email not added","Save changes":"Save changes","Connected accounts":"Connected accounts","Connection status is shown only after a verified connection.":"Connection status is shown only after a verified connection.","Connected":"Connected","Not connected":"Not connected"
+});
+Object.assign(appTranslations.id, {
+  "Profile settings":"Pengaturan profil","Profile photo":"Foto profil","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG atau WEBP · Maks. 5 MB","Change photo":"Ganti foto","Username":"Username","Enter username":"Masukkan username","Email address":"Alamat email","Email not added":"Email belum ditambahkan","Save changes":"Simpan perubahan","Connected accounts":"Akun terhubung","Connection status is shown only after a verified connection.":"Status hanya ditampilkan setelah koneksi terverifikasi.","Connected":"Terhubung","Not connected":"Belum terhubung"
+});
+Object.assign(appTranslations.zh, {
+  "Profile settings":"个人资料设置","Profile photo":"头像","JPG, PNG or WEBP · Max 5 MB":"JPG、PNG 或 WEBP · 最大 5 MB","Change photo":"更换照片","Username":"用户名","Enter username":"输入用户名","Email address":"电子邮件","Email not added":"尚未添加邮箱","Save changes":"保存更改","Connected accounts":"已连接账户","Connection status is shown only after a verified connection.":"仅显示已验证的连接状态。","Connected":"已连接","Not connected":"未连接"
+});
+Object.assign(appTranslations.ja, {
+  "Profile settings":"プロフィール設定","Profile photo":"プロフィール写真","JPG, PNG or WEBP · Max 5 MB":"JPG、PNG、WEBP · 最大5MB","Change photo":"写真を変更","Username":"ユーザー名","Enter username":"ユーザー名を入力","Email address":"メールアドレス","Email not added":"メール未登録","Save changes":"変更を保存","Connected accounts":"接続済みアカウント","Connection status is shown only after a verified connection.":"確認済みの接続のみ表示されます。","Connected":"接続済み","Not connected":"未接続"
+});
+Object.assign(appTranslations.vi, {
+  "Profile settings":"Cài đặt hồ sơ","Profile photo":"Ảnh hồ sơ","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG hoặc WEBP · Tối đa 5 MB","Change photo":"Đổi ảnh","Username":"Tên người dùng","Enter username":"Nhập tên người dùng","Email address":"Địa chỉ email","Email not added":"Chưa thêm email","Save changes":"Lưu thay đổi","Connected accounts":"Tài khoản đã kết nối","Connection status is shown only after a verified connection.":"Chỉ hiển thị trạng thái sau khi xác minh kết nối.","Connected":"Đã kết nối","Not connected":"Chưa kết nối"
+});
+
 Object.assign(appTranslations.vi, {
   "Trades": "Giao dịch", "Active": "Đang hoạt động", "Inactive": "Không hoạt động", "30D ago": "30 ngày trước",
   "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Lịch sử giao dịch và hiệu suất chiến lược ở đây là dữ liệu mẫu của Beanance.",
@@ -499,6 +519,12 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // [ADDED] Global navigation drawer
+  const [profileName, setProfileName] = useState("Ezy"); // [ADDED] Editable Beanance username
+  const [profileEmail, setProfileEmail] = useState(""); // [ADDED] Email is shown only when available
+  const [profilePhoto, setProfilePhoto] = useState(""); // [ADDED] User-selected profile photo
+  const [binanceConnected, setBinanceConnected] = useState(false); // [ADDED] Reflects a verified Binance connection when integration is available
+  const [web3Connected, setWeb3Connected] = useState(false); // [ADDED] Reflects a verified Web3 wallet connection when integration is available
+  const profilePhotoInputRef = useRef(null); // [ADDED] Hidden profile photo picker
   const [language, setLanguage] = useState("en"); // [MODIFIED] App language, English by default
   const [languageReady, setLanguageReady] = useState(false); // [ADDED] Wait for saved language before persisting
   const [languageOpen, setLanguageOpen] = useState(false); // [ADDED] Language picker visibility
@@ -520,6 +546,15 @@ function App() {
   const [traderTradeFilter, setTraderTradeFilter] = useState("open");
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const savedProfileName = window.localStorage.getItem("beanance-profile-name");
+    const savedProfileEmail = window.localStorage.getItem("beanance-profile-email");
+    const savedProfilePhoto = window.localStorage.getItem("beanance-profile-photo");
+    if (savedProfileName) setProfileName(savedProfileName);
+    if (savedProfileEmail) setProfileEmail(savedProfileEmail);
+    if (savedProfilePhoto) setProfilePhoto(savedProfilePhoto);
+  }, []);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beanance-theme");
@@ -580,6 +615,36 @@ function App() {
     setSearchOpen(false);
     setSearchQuery("");
     setShowNotifications(false);
+  };
+
+  const handleProfilePhotoChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setNotice("Please choose an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setNotice("Profile photo must be 5 MB or smaller");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setProfilePhoto(String(reader.result || ""));
+    reader.readAsDataURL(file);
+  };
+
+  const saveProfile = (event) => {
+    event.preventDefault();
+    const cleanName = profileName.trim();
+    if (!cleanName) {
+      setNotice("Username cannot be empty");
+      return;
+    }
+    window.localStorage.setItem("beanance-profile-name", cleanName);
+    window.localStorage.setItem("beanance-profile-photo", profilePhoto);
+    setProfileName(cleanName);
+    setNotice("Profile updated on this device");
+    window.setTimeout(() => setNotice(""), 2200);
   };
 
   const copyAddress = async () => {
@@ -987,9 +1052,44 @@ function App() {
         )}
 
         {active === "profile" && (
-          <section className="page page-enter simple-page">
-            <p className="eyebrow">{t("YOUR ACCOUNT")}</p><h1>{t("Profile")}</h1>
-            <div className="profile-card"><div className="profile-avatar">E</div><div><strong>Ezy</strong><span>0x71C7...976F</span></div><button onClick={copyAddress}><Copy size={16} /></button></div>
+          <section className="page page-enter simple-page profile-settings-page">
+            <p className="eyebrow">{t("YOUR ACCOUNT")}</p>
+            <h1>{t("Profile settings")}</h1>
+            <form className="profile-settings-card" onSubmit={saveProfile}>
+              <div className="profile-photo-editor">
+                <div className="profile-photo-preview">
+                  {profilePhoto ? <img src={profilePhoto} alt="Profile preview" /> : <span>{(profileName.trim()[0] || "E").toUpperCase()}</span>}
+                </div>
+                <div className="profile-photo-actions">
+                  <strong>{t("Profile photo")}</strong>
+                  <small>{t("JPG, PNG or WEBP · Max 5 MB")}</small>
+                  <button type="button" className="profile-photo-button" onClick={() => profilePhotoInputRef.current?.click()}><Camera size={16} /> {t("Change photo")}</button>
+                  <input ref={profilePhotoInputRef} className="profile-photo-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleProfilePhotoChange} />
+                </div>
+              </div>
+              <label className="profile-field">
+                <span>{t("Username")}</span>
+                <input type="text" value={profileName} maxLength={30} onChange={(event) => setProfileName(event.target.value)} placeholder={t("Enter username")} />
+              </label>
+              <div className="profile-field">
+                <span>{t("Email address")}</span>
+                <div className="profile-readonly-field">{profileEmail || t("Email not added")}</div>
+              </div>
+              <button type="submit" className="profile-save-button"><Save size={17} /> {t("Save changes")}</button>
+            </form>
+            <div className="profile-settings-connections">
+              <div className="profile-connections-heading"><h2>{t("Connected accounts")}</h2><p>{t("Connection status is shown only after a verified connection.")}</p></div>
+              <div className="profile-connection-row">
+                <span className="profile-connection-icon binance-connection-icon">B</span>
+                <span className="profile-connection-copy"><strong>Binance Exchange</strong><small>{binanceConnected ? t("Connected") : t("Not connected")}</small></span>
+                {binanceConnected ? <CheckCircle2 className="profile-connection-check" size={20} /> : <Circle className="profile-connection-off" size={19} />}
+              </div>
+              <div className="profile-connection-row">
+                <span className="profile-connection-icon"><Wallet size={19} /></span>
+                <span className="profile-connection-copy"><strong>Web3 Wallet</strong><small>{web3Connected ? t("Connected") : t("Not connected")}</small></span>
+                {web3Connected ? <CheckCircle2 className="profile-connection-check" size={20} /> : <Circle className="profile-connection-off" size={19} />}
+              </div>
+            </div>
             <div className="settings-list">
               <button onClick={() => setNotice("Wallet settings are coming soon")}><Wallet /><span>{t("Wallet management")}</span><ChevronRight /></button>
               <button onClick={() => setNotice("Security settings are coming soon")}><ShieldCheck /><span>{t("Security & privacy")}</span><ChevronRight /></button>
@@ -1024,8 +1124,15 @@ function App() {
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
             <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
-              <span className="sidebar-avatar">E</span>
-              <span className="sidebar-account-copy"><strong>Ezy</strong><small>{t("Beanance Account")}</small></span>
+              <span className="sidebar-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
+              <span className="sidebar-account-copy">
+                <strong>{profileName}</strong>
+                <small>{profileEmail || t("Email not added")}</small>
+                <span className="sidebar-account-connections">
+                  <span className={binanceConnected ? "is-connected" : ""}>{binanceConnected ? <CheckCircle2 size={12} /> : <Circle size={12} />} Binance</span>
+                  <span className={web3Connected ? "is-connected" : ""}>{web3Connected ? <CheckCircle2 size={12} /> : <Circle size={12} />} Web3</span>
+                </span>
+              </span>
               <ChevronRight size={18} />
             </button>
             <p className="eyebrow sidebar-section-label">{sidebarText.account}</p>
