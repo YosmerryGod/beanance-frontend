@@ -2912,3 +2912,69 @@ body{background:#090909;color:var(--text)}
   .app-shell .edit-profile-photo{width:86px;height:86px;font-size:34px;}
   .app-shell .edit-profile-photo-section{gap:15px;}
 }
+
+
+/* [ADDED] Portfolio dashboard styled consistently with Beanance trading profile pages. */
+.app-shell .portfolio-page{width:min(100%,980px);margin:0 auto;padding-bottom:28px;}
+.app-shell .portfolio-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 18px;}
+.app-shell .portfolio-heading .eyebrow{margin:0 0 5px;}
+.app-shell .portfolio-heading h1{margin:0;font-size:clamp(25px,4vw,34px);letter-spacing:-1px;}
+.app-shell .portfolio-demo-label{padding:6px 9px;border:1px solid rgba(226,183,45,.24);border-radius:8px;background:rgba(226,183,45,.08);color:var(--gold);font-size:9px;font-weight:800;letter-spacing:.7px;}
+.app-shell .portfolio-value-card{position:relative;overflow:hidden;padding:21px 21px 13px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,var(--panel),var(--panel-soft));}
+.app-shell .portfolio-value-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px;}
+.app-shell .portfolio-value-live{display:flex;align-items:center;gap:6px;font-size:10px;}
+.app-shell .portfolio-value-live i{width:6px;height:6px;border-radius:50%;background:#28c783;}
+.app-shell .portfolio-total-value{display:block;margin-top:12px;font-size:clamp(29px,6vw,39px);font-weight:800;letter-spacing:-1.4px;font-variant-numeric:tabular-nums;}
+.app-shell .portfolio-pnl-row{display:flex;align-items:center;gap:10px;margin-top:7px;}
+.app-shell .portfolio-pnl-positive,.app-shell .portfolio-positive{display:inline-flex;align-items:center;color:#28c783;font-weight:750;}
+.app-shell .portfolio-pnl-row{font-size:12px;}
+.app-shell .portfolio-pnl-row small{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-chart{height:132px;margin:16px -3px 0;}
+.app-shell .portfolio-chart svg{width:100%;height:100%;overflow:visible;}
+.app-shell .portfolio-chart-range{display:flex;justify-content:space-between;padding-top:9px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;font-weight:700;}
+.app-shell .portfolio-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:13px 0 20px;}
+.app-shell .portfolio-stat-grid article{display:flex;flex-direction:column;gap:7px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel);}
+.app-shell .portfolio-stat-grid article>span{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-stat-grid article>strong{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
+.app-shell .portfolio-stat-grid article>small{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-tabs{display:flex;gap:4px;overflow-x:auto;margin:0 0 17px;padding:5px;border:1px solid var(--line);border-radius:12px;background:var(--panel);scrollbar-width:none;}
+.app-shell .portfolio-tabs::-webkit-scrollbar{display:none;}
+.app-shell .portfolio-tabs button{flex:1;min-width:max-content;min-height:37px;padding:0 14px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;}
+.app-shell .portfolio-tabs button.selected{background:var(--panel-soft);color:var(--gold);}
+.app-shell .portfolio-content-section{margin-top:15px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);}
+.app-shell .portfolio-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;}
+.app-shell .portfolio-section-title h2{margin:0;font-size:15px;}
+.app-shell .portfolio-section-title p{margin:5px 0 0;color:var(--muted);font-size:10px;}
+.app-shell .portfolio-section-title>span{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-asset-row{display:flex;align-items:center;gap:11px;min-height:65px;border-top:1px solid var(--line);}
+.app-shell .portfolio-asset-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:50%;background:var(--panel-soft);font-size:18px;font-weight:800;}
+.app-shell .portfolio-asset-icon.bitcoin{color:#f4a900;}
+.app-shell .portfolio-asset-icon.ethereum{color:#8c9eff;}
+.app-shell .portfolio-asset-icon.bnb{color:#e8b923;}
+.app-shell .portfolio-asset-name,.app-shell .portfolio-asset-value{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.app-shell .portfolio-asset-name{flex:1;}
+.app-shell .portfolio-asset-name strong,.app-shell .portfolio-asset-value strong{font-size:12px;}
+.app-shell .portfolio-asset-name small,.app-shell .portfolio-asset-value small{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-asset-value{align-items:flex-end;text-align:right;}
+.app-shell .portfolio-negative{color:#ef6464;}
+.app-shell .portfolio-position-row{display:flex;flex-direction:column;gap:8px;padding:13px 0;border-top:1px solid var(--line);}
+.app-shell .portfolio-position-row>div{display:flex;align-items:center;gap:9px;}
+.app-shell .portfolio-position-row>div>strong{font-size:12px;}
+.app-shell .portfolio-position-row>small{color:var(--muted);font-size:10px;}
+.app-shell .portfolio-position-row>strong{font-size:12px;}
+.app-shell .portfolio-position-row>strong small{margin-left:5px;font-size:10px;}
+.app-shell .portfolio-side-long,.app-shell .portfolio-side-short{padding:3px 6px;border-radius:5px;font-size:8px;font-weight:800;}
+.app-shell .portfolio-side-long{background:rgba(40,199,131,.12);color:#28c783;}
+.app-shell .portfolio-side-short{background:rgba(239,100,100,.12);color:#ef6464;}
+.app-shell .portfolio-history-list article{display:flex;align-items:center;gap:11px;min-height:61px;border-top:1px solid var(--line);}
+.app-shell .portfolio-history-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--panel-soft);color:var(--gold);}
+.app-shell .portfolio-history-list article>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px;min-width:0;}
+.app-shell .portfolio-history-list article>span:nth-child(2) strong,.app-shell .portfolio-history-list article>strong{font-size:11px;}
+.app-shell .portfolio-history-list article>span:nth-child(2) small{color:var(--muted);font-size:9px;}
+.app-shell .portfolio-disclaimer{margin:14px 3px;color:var(--muted);font-size:9px;line-height:1.5;}
+@media(max-width:600px){
+ .app-shell .portfolio-value-card{padding:18px 16px 12px;border-radius:16px;}
+ .app-shell .portfolio-chart{height:112px;}
+ .app-shell .portfolio-content-section{padding:15px;}
+ .app-shell .portfolio-tabs button{padding:0 11px;font-size:10px;}
+}
