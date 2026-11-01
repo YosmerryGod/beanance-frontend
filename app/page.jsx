@@ -1183,6 +1183,7 @@ function App() {
                     </div>
                   </section>
                 </>
+              )}
 
               {portfolioTab === "wallet" && (
                 <section className="portfolio-wallet-panel portfolio-tab-panel">
