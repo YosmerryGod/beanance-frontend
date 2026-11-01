@@ -3507,3 +3507,15 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
  .app-shell .portfolio-history-main strong,.app-shell .portfolio-history-value strong{font-size:11px!important}
  .app-shell .portfolio-history-main small,.app-shell .portfolio-history-value small{font-size:9px!important}
 }
+
+
+/* [MODIFIED] History navigation uses compact icon-only tabs with count badges. */
+.app-shell .portfolio-history-icon-tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important;max-width:320px!important;margin-left:auto!important;margin-right:auto!important}
+.app-shell .portfolio-history-icon-tabs button{position:relative!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:44px!important;font-size:0!important}
+.app-shell .portfolio-history-icon-tabs button svg{width:18px!important;height:18px!important;flex:0 0 auto!important}
+.app-shell .portfolio-history-icon-tabs button span{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:15px!important;height:15px!important;padding:0 4px!important;border-radius:8px!important;background:var(--panel-soft)!important;color:var(--muted)!important;font-size:9px!important;line-height:1!important}
+.app-shell .portfolio-history-icon-tabs button.selected span{background:rgba(218,174,39,.16)!important;color:var(--gold)!important}
+@media(max-width:700px){
+ .app-shell .portfolio-history-icon-tabs{max-width:280px!important}
+ .app-shell .portfolio-history-icon-tabs button{min-height:42px!important}
+}
