@@ -452,6 +452,23 @@ Object.assign(appTranslations.zh, { "Portfolio": "投资组合" });
 Object.assign(appTranslations.ja, { "Portfolio": "ポートフォリオ" });
 Object.assign(appTranslations.vi, { "Portfolio": "Danh mục đầu tư" });
 
+// [ADDED] Portfolio dashboard translations for all supported languages.
+Object.assign(appTranslations.en, {
+  "YOUR PORTFOLIO":"YOUR PORTFOLIO","Portfolio overview":"Portfolio overview","DEMO DATA":"DEMO DATA","Total portfolio value":"Total portfolio value","Past 24 hours":"Past 24 hours","Illustrative portfolio performance chart":"Illustrative portfolio performance chart","Portfolio value trend":"Portfolio value trend","Total assets":"Total assets","24h PnL":"24h PnL","Portfolio sections":"Portfolio sections","Overview":"Overview","Assets":"Assets","Positions":"Positions","History":"History","Your assets":"Your assets","Spot asset allocation":"Spot asset allocation","Open positions":"Open positions","Your active trading positions":"Your active trading positions","open":"open","Entry":"Entry","Mark":"Mark","Recent activity":"Recent activity","Your latest portfolio transactions":"Your latest portfolio transactions","Bought":"Bought","Sold":"Sold","Received":"Received","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances."
+});
+Object.assign(appTranslations.id, {
+  "YOUR PORTFOLIO":"PORTOFOLIO ANDA","Portfolio overview":"Ringkasan portofolio","DEMO DATA":"DATA DEMO","Total portfolio value":"Total nilai portofolio","Past 24 hours":"24 jam terakhir","Illustrative portfolio performance chart":"Grafik performa portofolio ilustrasi","Portfolio value trend":"Tren nilai portofolio","Total assets":"Total aset","24h PnL":"PnL 24 jam","Portfolio sections":"Bagian portofolio","Overview":"Ringkasan","Assets":"Aset","Positions":"Posisi","History":"Riwayat","Your assets":"Aset Anda","Spot asset allocation":"Alokasi aset spot","Open positions":"Posisi terbuka","Your active trading positions":"Posisi trading aktif Anda","open":"terbuka","Entry":"Entry","Mark":"Harga mark","Recent activity":"Aktivitas terbaru","Your latest portfolio transactions":"Transaksi portofolio terbaru","Bought":"Beli","Sold":"Jual","Received":"Diterima","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Angka dan aktivitas portofolio ini merupakan data demo. Hubungkan exchange atau wallet untuk menampilkan saldo asli Anda."
+});
+Object.assign(appTranslations.zh, {
+  "YOUR PORTFOLIO":"你的投资组合","Portfolio overview":"投资组合概览","DEMO DATA":"演示数据","Total portfolio value":"投资组合总价值","Past 24 hours":"过去24小时","Illustrative portfolio performance chart":"投资组合表现示意图","Portfolio value trend":"投资组合价值趋势","Total assets":"总资产","24h PnL":"24小时盈亏","Portfolio sections":"投资组合栏目","Overview":"概览","Assets":"资产","Positions":"持仓","History":"历史记录","Your assets":"你的资产","Spot asset allocation":"现货资产配置","Open positions":"未平仓头寸","Your active trading positions":"当前交易头寸","open":"未平仓","Entry":"入场价","Mark":"标记价格","Recent activity":"最近活动","Your latest portfolio transactions":"最新投资组合交易","Bought":"买入","Sold":"卖出","Received":"收到","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"投资组合数据为示例数据。连接交易所或钱包以显示真实余额。"
+});
+Object.assign(appTranslations.ja, {
+  "YOUR PORTFOLIO":"ポートフォリオ","Portfolio overview":"ポートフォリオ概要","DEMO DATA":"デモデータ","Total portfolio value":"ポートフォリオ総額","Past 24 hours":"過去24時間","Illustrative portfolio performance chart":"ポートフォリオ推移のサンプルチャート","Portfolio value trend":"ポートフォリオ価値の推移","Total assets":"総資産","24h PnL":"24時間損益","Portfolio sections":"ポートフォリオ項目","Overview":"概要","Assets":"資産","Positions":"ポジション","History":"履歴","Your assets":"保有資産","Spot asset allocation":"現物資産の配分","Open positions":"保有中のポジション","Your active trading positions":"現在の取引ポジション","open":"保有中","Entry":"エントリー","Mark":"マーク価格","Recent activity":"最近のアクティビティ","Your latest portfolio transactions":"最新のポートフォリオ取引","Bought":"購入","Sold":"売却","Received":"受取","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"ポートフォリオの数値と履歴はデモデータです。実際の残高を表示するには取引所またはウォレットを接続してください。"
+});
+Object.assign(appTranslations.vi, {
+  "YOUR PORTFOLIO":"DANH MỤC ĐẦU TƯ","Portfolio overview":"Tổng quan danh mục","DEMO DATA":"DỮ LIỆU DEMO","Total portfolio value":"Tổng giá trị danh mục","Past 24 hours":"24 giờ qua","Illustrative portfolio performance chart":"Biểu đồ hiệu suất danh mục minh họa","Portfolio value trend":"Xu hướng giá trị danh mục","Total assets":"Tổng tài sản","24h PnL":"PnL 24 giờ","Portfolio sections":"Mục danh mục","Overview":"Tổng quan","Assets":"Tài sản","Positions":"Vị thế","History":"Lịch sử","Your assets":"Tài sản của bạn","Spot asset allocation":"Phân bổ tài sản spot","Open positions":"Vị thế đang mở","Your active trading positions":"Các vị thế giao dịch đang hoạt động","open":"đang mở","Entry":"Giá vào","Mark":"Giá đánh dấu","Recent activity":"Hoạt động gần đây","Your latest portfolio transactions":"Giao dịch danh mục gần đây","Bought":"Đã mua","Sold":"Đã bán","Received":"Đã nhận","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Số liệu và hoạt động danh mục là dữ liệu demo. Kết nối sàn giao dịch hoặc ví để hiển thị số dư thực."
+});
+
 // [ADDED] Initialize one shared i18next instance from the existing five-language catalog.
 if (!i18n.isInitialized) {
   i18n.use(initReactI18next).init({
@@ -552,6 +569,7 @@ function App() {
   const [traderProfileTab, setTraderProfileTab] = useState("trades");
   const [traderTradeFilter, setTraderTradeFilter] = useState("open");
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
+  const [portfolioTab, setPortfolioTab] = useState("overview"); // [ADDED] Portfolio sections
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -686,8 +704,8 @@ function App() {
             <div className="trader-profile-header-placeholder" />
           ) : (
             <div className={`nav-greeting navbar-greeting-hidden ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
-              <p className="eyebrow">{active === "profile" ? t("YOUR ACCOUNT") : t("GOOD EVENING")}</p>
-              <strong>{active === "profile" ? t("Hey, Ezy") : t("Welcome back, Ezy")}</strong>
+              <p className="eyebrow">{active === "profile" ? t("YOUR PORTFOLIO") : t("GOOD EVENING")}</p>
+              <strong>{active === "profile" ? t("Portfolio overview") : t("Welcome back, Ezy")}</strong>
             </div>
           )}
           {active === "dapps" && (
@@ -1067,33 +1085,68 @@ function App() {
         )}
 
         {active === "profile" && (
-          <section className="page page-enter simple-page account-overview-page">
-            <p className="eyebrow">{t("YOUR ACCOUNT")}</p>
-            <h1>{t("Profile")}</h1>
-            <button type="button" className="account-overview-card" onClick={() => setActive("edit-profile")}>
-              <span className="account-overview-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
-              <span><strong>{profileName}</strong><small>{profileEmail || t("Email not added")}</small></span>
-              <span className="account-overview-edit">{t("Edit profile")} <ChevronRight size={16} /></span>
-            </button>
-            <div className="profile-settings-connections">
-              <div className="profile-connections-heading"><h2>{t("Connected accounts")}</h2><p>{t("Connection status is shown only after a verified connection.")}</p></div>
-              <div className="profile-connection-row">
-                <span className="profile-connection-icon binance-connection-icon">B</span>
-                <span className="profile-connection-copy"><strong>Binance Exchange</strong><small>{binanceConnected ? t("Connected") : t("Not connected")}</small></span>
-                {binanceConnected ? <CheckCircle2 className="profile-connection-check" size={20} /> : <Circle className="profile-connection-off" size={19} />}
-              </div>
-              <div className="profile-connection-row">
-                <span className="profile-connection-icon"><Wallet size={19} /></span>
-                <span className="profile-connection-copy"><strong>Web3 Wallet</strong><small>{web3Connected ? t("Connected") : t("Not connected")}</small></span>
-                {web3Connected ? <CheckCircle2 className="profile-connection-check" size={20} /> : <Circle className="profile-connection-off" size={19} />}
-              </div>
+          <section className="page page-enter portfolio-page">
+            <div className="portfolio-heading">
+              <div><p className="eyebrow">{t("YOUR PORTFOLIO")}</p><h1>{t("Portfolio")}</h1></div>
+              <span className="portfolio-demo-label">{t("DEMO DATA")}</span>
             </div>
-            <div className="settings-list">
-              <button onClick={() => setNotice("Wallet settings are coming soon")}><Wallet /><span>{t("Wallet management")}</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Security settings are coming soon")}><ShieldCheck /><span>{t("Security & privacy")}</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Preferences are coming soon")}><Settings /><span>{t("Preferences")}</span><ChevronRight /></button>
-              <button onClick={() => setNotice("Help center is coming soon")}><CircleHelp /><span>{t("Help center")}</span><ChevronRight /></button>
+            <section className="portfolio-value-card">
+              <div className="portfolio-value-top"><span>{t("Total portfolio value")}</span><span className="portfolio-value-live"><i /> {t("Overview")}</span></div>
+              <strong className="portfolio-total-value">$12,248.20</strong>
+              <div className="portfolio-pnl-row"><span className="portfolio-pnl-positive"><ArrowUpRight size={16} /> +$284.60 (2.38%)</span><small>{t("Past 24 hours")}</small></div>
+              <div className="portfolio-chart" aria-label={t("Illustrative portfolio performance chart")}>
+                <svg viewBox="0 0 640 150" preserveAspectRatio="none" role="img" aria-label={t("Portfolio value trend")}>
+                  <defs><linearGradient id="portfolio-chart-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#e9bd27" stopOpacity=".28"/><stop offset="100%" stopColor="#e9bd27" stopOpacity="0"/></linearGradient></defs>
+                  <path d="M0 120 L35 108 L70 113 L105 89 L140 98 L175 74 L210 82 L245 62 L280 70 L315 51 L350 65 L385 37 L420 49 L455 30 L490 43 L525 20 L560 31 L600 12 L640 18 L640 150 L0 150 Z" fill="url(#portfolio-chart-fill)"/>
+                  <path d="M0 120 L35 108 L70 113 L105 89 L140 98 L175 74 L210 82 L245 62 L280 70 L315 51 L350 65 L385 37 L420 49 L455 30 L490 43 L525 20 L560 31 L600 12 L640 18" fill="none" stroke="#e9bd27" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="portfolio-chart-range"><span>1D</span><span>1W</span><span>1M</span><span>3M</span><span>1Y</span><span>ALL</span></div>
+            </section>
+            <div className="portfolio-stat-grid">
+              <article><span>{t("Total assets")}</span><strong>$12,248.20</strong><small>3 {t("assets")}</small></article>
+              <article><span>{t("24h PnL")}</span><strong className="portfolio-positive">+$284.60</strong><small>+2.38%</small></article>
             </div>
+            <div className="portfolio-tabs" role="tablist" aria-label={t("Portfolio sections")}>
+              <button type="button" role="tab" aria-selected={portfolioTab === "overview"} className={portfolioTab === "overview" ? "selected" : ""} onClick={() => setPortfolioTab("overview")}>{t("Overview")}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "assets"} className={portfolioTab === "assets" ? "selected" : ""} onClick={() => setPortfolioTab("assets")}>{t("Assets")}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "positions"} className={portfolioTab === "positions" ? "selected" : ""} onClick={() => setPortfolioTab("positions")}>{t("Positions")}</button>
+              <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")}>{t("History")}</button>
+            </div>
+            {(portfolioTab === "overview" || portfolioTab === "assets") && (
+              <section className="portfolio-content-section">
+                <div className="portfolio-section-title"><div><h2>{t("Your assets")}</h2><p>{t("Spot asset allocation")}</p></div><span>{assets.length} {t("assets")}</span></div>
+                <div className="portfolio-asset-list">
+                  {assets.map((asset) => (
+                    <article className="portfolio-asset-row" key={asset.symbol}>
+                      <span className={`portfolio-asset-icon ${asset.tone}`}>{asset.icon}</span>
+                      <span className="portfolio-asset-name"><strong>{asset.name}</strong><small>{asset.amount}</small></span>
+                      <span className="portfolio-asset-value"><strong>{asset.value}</strong><small className={asset.positive ? "portfolio-positive" : "portfolio-negative"}>{asset.change}</small></span>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+            {(portfolioTab === "overview" || portfolioTab === "positions") && (
+              <section className="portfolio-content-section">
+                <div className="portfolio-section-title"><div><h2>{t("Open positions")}</h2><p>{t("Your active trading positions")}</p></div><span>2 {t("open")}</span></div>
+                <div className="portfolio-position-list">
+                  <article className="portfolio-position-row"><div><strong>BTC / USDT</strong><span className="portfolio-side-long">LONG</span></div><small>{t("Entry")} $67,420.50 · {t("Mark")} $68,215.80</small><strong className="portfolio-positive">+$333.97 <small>+1.18%</small></strong></article>
+                  <article className="portfolio-position-row"><div><strong>ETH / USDT</strong><span className="portfolio-side-short">SHORT</span></div><small>{t("Entry")} $3,482.20 · {t("Mark")} $3,451.60</small><strong className="portfolio-positive">+$76.50 <small>+0.88%</small></strong></article>
+                </div>
+              </section>
+            )}
+            {portfolioTab === "history" && (
+              <section className="portfolio-content-section">
+                <div className="portfolio-section-title"><div><h2>{t("Recent activity")}</h2><p>{t("Your latest portfolio transactions")}</p></div></div>
+                <div className="portfolio-history-list">
+                  <article><span className="portfolio-history-icon"><ArrowDownLeft size={17}/></span><span><strong>{t("Bought")} BTC</strong><small>Oct 31, 2026 · 14:32</small></span><strong>+0.012 BTC</strong></article>
+                  <article><span className="portfolio-history-icon"><ArrowUpRight size={17}/></span><span><strong>{t("Sold")} ETH</strong><small>Oct 30, 2026 · 09:18</small></span><strong>-0.25 ETH</strong></article>
+                  <article><span className="portfolio-history-icon"><ArrowDownLeft size={17}/></span><span><strong>{t("Received")} BNB</strong><small>Oct 29, 2026 · 18:06</small></span><strong>+0.80 BNB</strong></article>
+                </div>
+              </section>
+            )}
+            <p className="portfolio-disclaimer">{t("Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.")}</p>
           </section>
         )}
 
