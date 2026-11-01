@@ -537,25 +537,30 @@ const topMoverEvents = [
 ];
 
 
-/* [ADDED] Reusable cryptocurrency brand marks powered by Simple Icons CDN. */
+/* [MODIFIED] Reusable SVG cryptocurrency logos powered by Simple Icons CDN. */
 const cryptoIconSlugs = {
   BTC: "bitcoin", XBT: "bitcoin", ETH: "ethereum", BNB: "binance",
-  SOL: "solana", XRP: "xrp", USDT: "tether", USDC: "circle",
+  SOL: "solana", XRP: "xrp", USDT: "tether", USDC: "usd-coin",
   DOGE: "dogecoin", ADA: "cardano", AVAX: "avalanche", DOT: "polkadot",
   LINK: "chainlink", LTC: "litecoin", TRX: "tron", XLM: "stellar",
   UNI: "uniswap", MATIC: "polygon", POL: "polygon", TON: "ton",
   SUI: "sui", APT: "aptos", ATOM: "cosmos", NEAR: "near",
   ARB: "arbitrum", OP: "optimism", SHIB: "shibainu", PEPE: "pepe",
-  FIL: "filecoin", ICP: " 인터넷computer", RENDER: "render"
+  FIL: "filecoin", ICP: "internetcomputer", RENDER: "render",
+  BCH: "bitcoincash", ETC: "ethereumclassic", XMR: "monero",
+  CRO: "crypto-dot-com", ALGO: "algorand", VET: "vechain",
+  FTM: "fantom", INJ: "injective", SEI: "sei", TIA: "celestia",
+  JUP: "jupiter", WIF: "dogwifhat", BONK: "bonk", AAVE: "aave",
+  MKR: "makerdao", CRV: "curve", COMP: "compound", SNX: "synthetix"
 };
 
 function CryptoIcon({ symbol, className = "" }) {
   const normalizedSymbol = String(symbol || "").toUpperCase().replace(/USDT$/, "").replace(/USD$/, "");
   const slug = cryptoIconSlugs[normalizedSymbol];
   return (
-    <span className={`crypto-brand-icon ${className}`} data-symbol={normalizedSymbol}>
-      {slug && <img src={`https://cdn.simpleicons.org/${slug}`} alt={normalizedSymbol} loading="lazy" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
-      <span>{normalizedSymbol.slice(0, 1) || "?"}</span>
+    <span className={`crypto-brand-icon ${className}`} data-symbol={normalizedSymbol} role="img" aria-label={normalizedSymbol || "Crypto asset"}>
+      {slug && <img src={`https://cdn.simpleicons.org/${slug}`} alt="" aria-hidden="true" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+      <span aria-hidden="true">{normalizedSymbol.slice(0, 1) || "?"}</span>
     </span>
   );
 }
