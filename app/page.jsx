@@ -185,11 +185,11 @@ const appTranslations = {
     "Explore decentralized apps": "Jelajahi aplikasi terdesentralisasi",
     "Search strategies or traders...": "Cari strategi atau trader...",
     "Search assets...": "Cari aset...",
-    {t("Search strategies and traders")}: "Cari strategi dan trader",
-    {t("Search market assets")}: "Cari aset pasar",
+    "Search strategies and traders": "Cari strategi dan trader",
+    "Search market assets": "Cari aset pasar",
     "GOOD EVENING": "SELAMAT SORE",
-    {t("Switch to light mode")}: "Ubah ke mode terang",
-    {t("Switch to dark mode")}: "Ubah ke mode gelap",
+    "Switch to light mode": "Ubah ke mode terang",
+    "Switch to dark mode": "Ubah ke mode gelap",
     "All": "Semua",
     "Favorites": "Favorit",
     "Futures": "Futures",
@@ -441,7 +441,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // [ADDED] Global navigation drawer
-  const [language, setLanguage] = useState("en"); // [ADDED] App language, English by default
+  const [language, setLanguage] = useState("en"); // [MODIFIED] App language, English by default
+  const [languageReady, setLanguageReady] = useState(false); // [ADDED] Wait for saved language before persisting
   const [languageOpen, setLanguageOpen] = useState(false); // [ADDED] Language picker visibility
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
@@ -474,11 +475,14 @@ function App() {
   useEffect(() => {
     const savedLanguage = window.localStorage.getItem("beanance-language");
     if (supportedLanguages.some((item) => item.code === savedLanguage)) setLanguage(savedLanguage);
+    setLanguageReady(true);
   }, []);
 
   useEffect(() => {
+    if (!languageReady) return;
     window.localStorage.setItem("beanance-language", language);
-  }, [language]);
+    document.documentElement.lang = language;
+  }, [language, languageReady]);
 
   const t = (value) => appTranslations[language]?.[value] || appTranslations.en?.[value] || value;
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
