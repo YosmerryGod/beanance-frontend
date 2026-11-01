@@ -3476,3 +3476,34 @@ main.app-shell .portfolio-wallet-modern .portfolio-wallet-token-card{min-height:
 /* [ADDED] Clearly labeled preview controls for the connected wallet layout. */
 main.app-shell .portfolio-wallet-preview-link{display:block!important;margin:16px auto 0!important;padding:7px 10px!important;border:0!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:11px!important;font-weight:650!important;text-decoration:underline!important;text-underline-offset:3px!important;cursor:pointer!important}
 main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1px solid var(--line)!important;border-radius:8px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:10px!important;font-weight:650!important;cursor:pointer!important}
+
+
+/* [ADDED] Portfolio history filters and activity rows. */
+.app-shell .portfolio-history-tabs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin:0 0 16px!important;padding:4px!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel-soft)!important}
+.app-shell .portfolio-history-tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-width:0!important;min-height:48px!important;padding:6px 3px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:var(--muted)!important;font-family:inherit!important;font-size:10px!important;font-weight:700!important;white-space:nowrap!important;cursor:pointer!important}
+.app-shell .portfolio-history-tabs button span{font-size:9px!important;font-weight:650!important;opacity:.72!important}
+.app-shell .portfolio-history-tabs button.selected{background:var(--panel)!important;color:var(--gold)!important;box-shadow:0 1px 4px rgba(0,0,0,.12)!important}
+.app-shell .portfolio-history-list{display:grid!important;gap:0!important}
+.app-shell .portfolio-history-item{display:flex!important;align-items:center!important;gap:11px!important;min-width:0!important;padding:14px 2px!important;border-bottom:1px solid var(--line)!important}
+.app-shell .portfolio-history-item:last-child{border-bottom:0!important}
+.app-shell .portfolio-history-icon{display:grid!important;place-items:center!important;flex:0 0 40px!important;width:40px!important;height:40px!important;border-radius:13px!important;background:var(--panel-soft)!important;color:var(--gold)!important}
+.app-shell .portfolio-history-icon.running,.app-shell .portfolio-history-icon.deposit{background:rgba(40,190,112,.1)!important;color:#28bd78!important}
+.app-shell .portfolio-history-icon.closed,.app-shell .portfolio-history-icon.withdraw{background:rgba(130,140,155,.12)!important;color:var(--muted)!important}
+.app-shell .portfolio-history-icon.wallet,.app-shell .portfolio-history-icon.swap{background:rgba(218,174,39,.12)!important;color:var(--gold)!important}
+.app-shell .portfolio-history-main,.app-shell .portfolio-history-value{display:grid!important;gap:5px!important;min-width:0!important}
+.app-shell .portfolio-history-main{flex:1!important}
+.app-shell .portfolio-history-main strong,.app-shell .portfolio-history-value strong{overflow:hidden!important;color:var(--text)!important;font-size:12px!important;font-weight:750!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.app-shell .portfolio-history-main small,.app-shell .portfolio-history-value small{color:var(--muted)!important;font-size:10px!important}
+.app-shell .portfolio-history-value{align-items:flex-end!important;text-align:right!important}
+.app-shell .portfolio-history-value strong.positive{color:var(--green)!important}
+.app-shell .portfolio-history-value small.completed,.app-shell .portfolio-history-value small.running{color:var(--green)!important}
+.app-shell .portfolio-history-value small.not-running{color:var(--gold)!important}
+.app-shell .portfolio-history-value small.closed{color:var(--muted)!important}
+@media(max-width:700px){
+ .app-shell .portfolio-history-tabs{gap:3px!important}
+ .app-shell .portfolio-history-tabs button{min-height:45px!important;font-size:9px!important}
+ .app-shell .portfolio-history-item{gap:9px!important;padding:12px 0!important}
+ .app-shell .portfolio-history-icon{flex-basis:36px!important;width:36px!important;height:36px!important;border-radius:11px!important}
+ .app-shell .portfolio-history-main strong,.app-shell .portfolio-history-value strong{font-size:11px!important}
+ .app-shell .portfolio-history-main small,.app-shell .portfolio-history-value small{font-size:9px!important}
+}
