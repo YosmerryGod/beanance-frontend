@@ -19,6 +19,21 @@ export default function CoinLogo({ symbol, size, className = "" }) {
     </span>
   );
 
+  // [ADDED] Use the official Beanance token mark for the BEAN asset.
+  if (normalizedSymbol === "BEAN") {
+    return (
+      <span
+        className={`coin-logo ${className}`}
+        style={size ? { width: size, height: size } : undefined}
+        role="img"
+        aria-label="BEAN"
+        data-symbol="BEAN"
+      >
+        <img src="/icons/bean.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+      </span>
+    );
+  }
+
   if (!normalizedSymbol) {
     return (
       <span
