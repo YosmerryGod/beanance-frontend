@@ -2978,3 +2978,71 @@ body{background:#090909;color:var(--text)}
  .app-shell .portfolio-content-section{padding:15px;}
  .app-shell .portfolio-tabs button{padding:0 11px;font-size:10px;}
 }
+
+
+/* [ADDED] Portfolio profile layout follows the trader profile visual system. */
+.app-shell .portfolio-profile-page{gap:17px;padding-top:18px;padding-bottom:30px}
+.app-shell .portfolio-profile-hero{box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.app-shell .portfolio-profile-cover{background:radial-gradient(circle at 82% 10%,rgba(245,196,0,.2),transparent 36%),linear-gradient(115deg,#211e12,#11110d 58%,#26200c)}
+.app-shell .portfolio-profile-cover>span{font-size:10px;letter-spacing:2.2px}
+.app-shell .portfolio-profile-cover .trader-profile-cover-mark{color:rgba(245,196,0,.09)}
+.app-shell .portfolio-profile-identity{align-items:center}
+.app-shell .portfolio-profile-avatar{overflow:hidden}
+.app-shell .portfolio-profile-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.app-shell .portfolio-profile-name{padding-top:27px}
+.app-shell .portfolio-profile-name h1{font-size:20px}
+.app-shell .portfolio-profile-name p{font-size:10px}
+.app-shell .portfolio-account-badge{padding:3px 6px;border-radius:6px;background:rgba(245,196,0,.12);color:var(--gold);font-size:8px;font-weight:850;letter-spacing:.5px;white-space:nowrap}
+.app-shell .portfolio-edit-button{margin-top:25px;background:var(--gold);color:#191508}
+.app-shell .portfolio-profile-bio{margin-top:16px;margin-bottom:12px}
+.app-shell .portfolio-profile-meta{gap:14px}
+.app-shell .portfolio-profile-meta strong{color:var(--text);font-weight:800}
+.app-shell .portfolio-profile-meta .portfolio-positive{color:#28c783}
+.app-shell .portfolio-profile-workspace{gap:0}
+.app-shell .portfolio-profile-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:0}
+.app-shell .portfolio-profile-tabs button{min-width:0;padding:9px 7px;white-space:nowrap}
+.app-shell .portfolio-profile-tabs button span{padding:3px 6px}
+.app-shell .portfolio-panel{margin-top:17px}
+.app-shell .portfolio-overview-value{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px}
+.app-shell .portfolio-overview-value>strong{font-family:Manrope,sans-serif;font-size:clamp(27px,6vw,36px);font-weight:850;letter-spacing:-1.2px;font-variant-numeric:tabular-nums}
+.app-shell .portfolio-overview-value>span{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800}
+.app-shell .portfolio-overview-value>small{color:var(--muted);font-size:10px}
+.app-shell .portfolio-profile-page .portfolio-chart{height:125px;margin:12px 0 0}
+.app-shell .portfolio-profile-page .portfolio-chart svg{display:block;width:100%;height:100%}
+.app-shell .portfolio-profile-page .portfolio-chart-range{margin-top:0}
+.app-shell .portfolio-summary-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+.app-shell .portfolio-summary-stats>div{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--panel-soft)}
+.app-shell .portfolio-summary-stats span{color:var(--muted);font-size:9px}
+.app-shell .portfolio-summary-stats strong{font-size:14px;font-weight:850;font-variant-numeric:tabular-nums}
+.app-shell .portfolio-asset-list{display:flex;flex-direction:column}
+.app-shell .portfolio-asset-row{min-height:67px;gap:11px}
+.app-shell .portfolio-asset-name strong,.app-shell .portfolio-asset-value strong{font-size:12px}
+.app-shell .portfolio-asset-name small,.app-shell .portfolio-asset-value small{font-size:10px}
+.app-shell .portfolio-position-list{display:flex;flex-direction:column;gap:8px}
+.app-shell .portfolio-position-row{padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--panel-soft)}
+.app-shell .portfolio-position-row>div>strong{font-size:12px}
+.app-shell .portfolio-position-row>small{font-size:10px}
+.app-shell .portfolio-history-list article{min-height:64px}
+.app-shell .portfolio-disclaimer{margin:13px 3px 0;font-size:9px;line-height:1.5}
+.app-shell.theme-light .portfolio-profile-cover{background:radial-gradient(circle at 82% 10%,rgba(220,169,0,.2),transparent 36%),linear-gradient(115deg,#fff0bd,#fff8e4 58%,#f2e4b5)}
+.app-shell.theme-light .portfolio-profile-cover .trader-profile-cover-mark{color:rgba(150,112,15,.1)}
+.app-shell.theme-light .portfolio-position-row,.app-shell.theme-light .portfolio-summary-stats>div{background:#fafbfd}
+@media(max-width:760px){
+  .app-shell .portfolio-profile-page{gap:17px;padding-top:18px}
+  .app-shell .portfolio-profile-cover{height:105px;padding:14px}
+  .app-shell .portfolio-profile-identity{gap:9px;padding:0 13px;margin-top:-27px}
+  .app-shell .portfolio-profile-avatar{width:58px;height:58px;font-size:23px}
+  .app-shell .portfolio-profile-name{padding-top:25px}
+  .app-shell .portfolio-profile-name h1{font-size:17px}
+  .app-shell .portfolio-profile-name p{font-size:9px}
+  .app-shell .portfolio-edit-button{margin-top:24px;padding:8px 10px;font-size:9px}
+  .app-shell .portfolio-profile-bio{margin:14px 13px 11px;font-size:11px}
+  .app-shell .portfolio-profile-meta{gap:10px;padding:0 13px 15px;font-size:9px}
+  .app-shell .portfolio-profile-tabs{gap:5px;padding:6px}
+  .app-shell .portfolio-profile-tabs button{min-height:40px;padding:8px 3px;font-size:9px}
+  .app-shell .portfolio-profile-tabs button span{font-size:8px}
+  .app-shell .portfolio-panel{margin-top:13px}
+  .app-shell .portfolio-overview-value>strong{font-size:28px}
+  .app-shell .portfolio-profile-page .portfolio-chart{height:105px}
+  .app-shell .portfolio-summary-stats>div{padding:10px}
+}
