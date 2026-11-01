@@ -1322,7 +1322,7 @@ function App() {
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}>
           <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label={t("Main menu")} onClick={(event) => event.stopPropagation()}>
             <div className="sidebar-heading">
-              <div className="sidebar-brand"><span className="brand-mark"><span /></span><strong>beanance</strong></div>
+              <div className="sidebar-brand">{/* [MODIFIED] Use the official Beanance logo asset. */}<img className="sidebar-brand-logo" src="/icons/logo.png" alt="Beanance" /><strong>beanance</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
             <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "edit-profile" });}}>
