@@ -35,7 +35,7 @@ export default function CoinLogo({ symbol, size, className = "" }) {
   return (
     <span
       className={`coin-logo ${className}`}
-      style={{ width: size, height: size }}
+      style={size ? { width: size, height: size } : undefined}
       role="img"
       aria-label={normalizedSymbol}
       data-symbol={normalizedSymbol}
