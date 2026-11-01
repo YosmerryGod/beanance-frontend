@@ -608,7 +608,7 @@ function App() {
           <div className="top-actions">
             {active === "dashboard" && (
               <div className="notification-wrap">
-                <button className="icon-button notification-button" aria-label="Notifications" aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
+                <button className="icon-button notification-button" aria-label={t("Notifications")} aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
                   <Bell size={19} />
                   <i />
                 </button>
@@ -635,8 +635,8 @@ function App() {
                   onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
                   tabIndex={searchOpen ? 0 : -1}
                 />
-                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label="Close search"><X size={17} /></button>}
-                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Open search" />}
+                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label={t("Close search")}><X size={17} /></button>}
+                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label={t("Open search")} />}
               </div>
             )}
             {active !== "profile" && (
@@ -672,7 +672,7 @@ function App() {
                       <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
                     </svg>
                     <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
-                    <div className="strategy-card-footer"><span className="strategy-tag">{strategy.type}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>{t("Follow")}</button></div>
+                    <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>{t("Follow")}</button></div>
                   </article>
                 ))}
               </div>
@@ -750,7 +750,7 @@ function App() {
               <div className="discover-section-heading discover-list-heading">
                 <div><h2>{discoverTopTab === "strategies" ? t("Explore Strategies") : t("Explore Traders")}</h2><p className="muted">{discoverTopTab === "strategies" ? t("Pilih strategi sesuai gaya trading kamu.") : t("Kenali trader dan performa mereka.")}</p></div>
                 <div className="discover-filter-wrap">
-                  <button className={`discover-filter-icon ${showDiscoverFilter ? "selected" : ""}`} aria-label="Open filters" aria-expanded={showDiscoverFilter} onClick={() => setShowDiscoverFilter((value) => !value)}><SlidersHorizontal size={17} /></button>
+                  <button className={`discover-filter-icon ${showDiscoverFilter ? "selected" : ""}`} aria-label={t("Open filters")} aria-expanded={showDiscoverFilter} onClick={() => setShowDiscoverFilter((value) => !value)}><SlidersHorizontal size={17} /></button>
                   {showDiscoverFilter && (
                     <div className="discover-filter-popover">
                       <div className="discover-filter-popover-head"><strong>{t("Filter")} {discoverTopTab === "strategies" ? t("Strategies") : t("Traders")}</strong><button aria-label="Close filters" onClick={() => setShowDiscoverFilter(false)}><X size={16} /></button></div>
