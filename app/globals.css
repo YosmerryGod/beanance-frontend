@@ -3046,3 +3046,107 @@ body{background:#090909;color:var(--text)}
   .app-shell .portfolio-profile-page .portfolio-chart{height:105px}
   .app-shell .portfolio-summary-stats>div{padding:10px}
 }
+
+
+/* [ADDED] Portfolio trader-style strategy navigation and content layout */
+.app-shell .portfolio-topbar-hidden{display:none!important}
+.app-shell .portfolio-strategy-page{padding-top:18px}
+.app-shell .portfolio-strategy-page .portfolio-profile-hero{margin-bottom:20px}
+.app-shell .portfolio-strategy-page .portfolio-profile-cover{min-height:150px}
+.app-shell .portfolio-strategy-page .portfolio-profile-identity{align-items:center}
+.app-shell .portfolio-strategy-page .portfolio-profile-meta{display:flex;gap:28px;flex-wrap:wrap}
+.app-shell .portfolio-strategy-page .portfolio-profile-meta span{display:flex;align-items:center;gap:7px}
+.app-shell .portfolio-icon-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;padding:7px;margin:0 0 22px;border:1px solid var(--border-color);border-radius:22px;background:var(--surface-1)}
+.app-shell .portfolio-icon-tabs button{display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:66px;padding:12px 10px;border:0;border-radius:17px;background:transparent;color:var(--text-muted);font:inherit;font-weight:600;cursor:pointer;transition:background .2s ease,color .2s ease,box-shadow .2s ease}
+.app-shell .portfolio-icon-tabs button.selected{justify-content:center;background:linear-gradient(145deg,rgba(234,190,39,.22),rgba(234,190,39,.07));color:#efc52f;box-shadow:inset 0 0 0 1px rgba(234,190,39,.25)}
+.app-shell .portfolio-icon-tabs button span{font-size:13px;white-space:nowrap}
+.app-shell .portfolio-strategy-content{display:grid;gap:18px;padding-bottom:22px}
+.app-shell .portfolio-performance-panel,.app-shell .portfolio-strategy-list-section,.app-shell .portfolio-wallet-panel{padding:24px;border:1px solid var(--border-color);border-radius:22px;background:var(--surface-1)}
+.app-shell .portfolio-content-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.app-shell .portfolio-content-heading h2{margin:0;font-size:23px;font-weight:750;letter-spacing:-.04em}
+.app-shell .portfolio-content-heading p:not(.eyebrow){margin:5px 0 0;color:var(--text-muted);font-size:13px}
+.app-shell .portfolio-content-heading .eyebrow{margin:0 0 5px;color:#d9ad22;font-size:10px;font-weight:800;letter-spacing:.13em}
+.app-shell .portfolio-period-chip{padding:9px 13px;border:1px solid var(--border-color);border-radius:12px;color:var(--text-muted);font-size:12px;white-space:nowrap}
+.app-shell .portfolio-pnl-card{display:flex;align-items:center;justify-content:space-between;gap:22px;min-height:150px;padding:22px 25px;border:1px solid rgba(40,190,112,.2);border-radius:18px;background:linear-gradient(110deg,rgba(24,128,75,.19),rgba(16,95,57,.07))}
+.app-shell .portfolio-pnl-card>div:first-child{display:grid;gap:5px;flex:0 0 auto}
+.app-shell .portfolio-pnl-card span{color:var(--text-muted);font-size:14px}
+.app-shell .portfolio-pnl-card strong{color:#28d987;font-size:42px;line-height:1.1;letter-spacing:-.05em}
+.app-shell .portfolio-pnl-card small{color:#28d987;font-size:14px}
+.app-shell .portfolio-mini-chart{width:54%;height:95px;color:#28d987}
+.app-shell .portfolio-mini-chart svg{width:100%;height:100%;overflow:visible}
+.app-shell .portfolio-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.app-shell .portfolio-metric-grid>div{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:center;padding:16px;border:1px solid var(--border-color);border-radius:15px;background:var(--surface-2)}
+.app-shell .portfolio-metric-grid span{display:flex;align-items:center;gap:7px;color:var(--text-muted);font-size:12px}
+.app-shell .portfolio-metric-grid strong{grid-column:1;font-size:19px}
+.app-shell .portfolio-metric-grid small{grid-column:2;grid-row:2;color:#28d987;font-size:11px}
+.app-shell .portfolio-strategy-list-section .portfolio-content-heading{margin-bottom:15px}
+.app-shell .portfolio-strategy-list-section .portfolio-content-heading button{display:flex;align-items:center;gap:5px;border:0;background:none;color:#eac02d;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.app-shell .portfolio-strategy-list{display:grid;gap:9px}
+.app-shell .portfolio-strategy-row{display:flex;align-items:center;gap:15px;min-width:0;padding:13px 15px;border:1px solid var(--border-color);border-radius:15px;background:var(--surface-2)}
+.app-shell .portfolio-strategy-symbol{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:13px;background:rgba(234,190,39,.13);color:#efc52f;font-size:27px;font-weight:700}
+.app-shell .portfolio-strategy-symbol.trend{background:rgba(139,92,246,.15);color:#b78cff}
+.app-shell .portfolio-strategy-symbol.eth{background:rgba(99,102,241,.15);color:#9ba5ff}
+.app-shell .portfolio-strategy-symbol.btc{background:rgba(234,145,39,.15);color:#f3a642}
+.app-shell .portfolio-strategy-copy{display:grid;gap:5px;flex:1;min-width:0}
+.app-shell .portfolio-strategy-copy>strong{display:flex;align-items:center;gap:9px;min-width:0;font-size:14px}
+.app-shell .portfolio-strategy-copy>strong small{padding:3px 8px;border:1px solid var(--border-color);border-radius:20px;color:var(--text-muted);font-size:10px;font-weight:500}
+.app-shell .portfolio-strategy-copy>span{overflow:hidden;color:var(--text-muted);font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.app-shell .portfolio-strategy-row>.portfolio-positive{font-size:17px;white-space:nowrap}
+.app-shell .portfolio-row-spark{display:grid;place-items:center;width:42px;color:#28d987}
+.app-shell .portfolio-tab-panel{min-height:280px}
+.app-shell .portfolio-wallet-status{padding:7px 10px;border-radius:20px;background:rgba(234,190,39,.1);color:#eac02d;font-size:11px}
+.app-shell .portfolio-wallet-status.connected{background:rgba(40,190,112,.12);color:#28d987}
+.app-shell .portfolio-wallet-card{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid var(--border-color);border-radius:16px;background:var(--surface-2)}
+.app-shell .portfolio-wallet-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:rgba(234,190,39,.12);color:#eac02d}
+.app-shell .portfolio-wallet-card>div{display:grid;gap:5px;flex:1;min-width:0}
+.app-shell .portfolio-wallet-card>div strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-shell .portfolio-wallet-card>div small{color:var(--text-muted);font-size:12px}
+.app-shell .portfolio-wallet-card button{padding:9px 15px;border:1px solid rgba(234,190,39,.35);border-radius:11px;background:rgba(234,190,39,.1);color:#eac02d;font:inherit;font-size:12px;font-weight:650;cursor:pointer}
+.app-shell .portfolio-wallet-empty{display:grid;justify-items:center;gap:9px;padding:48px 15px 28px;color:var(--text-muted);text-align:center}
+.app-shell .portfolio-wallet-empty svg{color:#d8b52c}
+.app-shell .portfolio-wallet-empty strong{color:var(--text-primary)}
+.app-shell .portfolio-wallet-empty span{font-size:12px}
+.app-shell .portfolio-transaction-list{display:grid}
+.app-shell .portfolio-transaction-list article{display:flex;align-items:center;gap:13px;padding:15px 0;border-bottom:1px solid var(--border-color)}
+.app-shell .portfolio-transaction-list article:last-child{border-bottom:0}
+.app-shell .portfolio-transaction-list article>span:nth-child(2){display:grid;gap:5px;flex:1}
+.app-shell .portfolio-transaction-list article small{color:var(--text-muted);font-size:11px}
+.app-shell .portfolio-transaction-list article>strong{font-size:13px}
+.app-shell .portfolio-transaction-list .transaction-in,.app-shell .portfolio-transaction-list .transaction-out{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(40,190,112,.12);color:#28d987}
+.app-shell .portfolio-transaction-list .transaction-out{background:rgba(239,90,90,.12);color:#ef7777}
+@media(max-width:700px){
+  .app-shell .portfolio-strategy-page{padding:10px 12px 105px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-cover{min-height:112px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-identity{gap:11px;align-items:flex-end}
+  .app-shell .portfolio-strategy-page .portfolio-profile-avatar{width:66px;height:66px;flex:0 0 66px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-name h1{font-size:20px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-name p{font-size:11px}
+  .app-shell .portfolio-strategy-page .portfolio-edit-button{padding:8px 10px;font-size:11px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-bio{font-size:12px}
+  .app-shell .portfolio-strategy-page .portfolio-profile-meta{gap:12px;padding:0 10px 14px;font-size:10px}
+  .app-shell .portfolio-icon-tabs{gap:4px;padding:5px;margin-bottom:14px;border-radius:17px}
+  .app-shell .portfolio-icon-tabs button{min-height:52px;padding:8px 4px;border-radius:12px}
+  .app-shell .portfolio-icon-tabs button svg{width:19px;height:19px;flex:0 0 auto}
+  .app-shell .portfolio-icon-tabs button span{font-size:10px;white-space:normal;text-align:center;line-height:1.15}
+  .app-shell .portfolio-performance-panel,.app-shell .portfolio-strategy-list-section,.app-shell .portfolio-wallet-panel{padding:15px;border-radius:17px}
+  .app-shell .portfolio-content-heading h2{font-size:18px}
+  .app-shell .portfolio-pnl-card{min-height:115px;padding:15px;gap:8px}
+  .app-shell .portfolio-pnl-card strong{font-size:29px}
+  .app-shell .portfolio-pnl-card small{font-size:11px}
+  .app-shell .portfolio-mini-chart{width:42%;height:70px}
+  .app-shell .portfolio-metric-grid{gap:6px}
+  .app-shell .portfolio-metric-grid>div{padding:10px 8px;gap:6px}
+  .app-shell .portfolio-metric-grid span{font-size:9px;gap:4px}
+  .app-shell .portfolio-metric-grid span svg{width:12px;height:12px}
+  .app-shell .portfolio-metric-grid strong{font-size:13px}
+  .app-shell .portfolio-metric-grid small{font-size:9px}
+  .app-shell .portfolio-strategy-row{gap:9px;padding:10px}
+  .app-shell .portfolio-strategy-symbol{width:38px;height:38px;flex-basis:38px;font-size:21px}
+  .app-shell .portfolio-strategy-copy>strong{font-size:12px;gap:5px}
+  .app-shell .portfolio-strategy-copy>strong small{font-size:8px;padding:2px 5px}
+  .app-shell .portfolio-strategy-copy>span{font-size:10px}
+  .app-shell .portfolio-strategy-row>.portfolio-positive{font-size:12px}
+  .app-shell .portfolio-row-spark{display:none}
+  .app-shell .portfolio-wallet-card{gap:9px;padding:12px}
+  .app-shell .portfolio-wallet-card button{padding:8px 10px;font-size:10px}
+}
