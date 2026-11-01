@@ -1172,8 +1172,7 @@ function App() {
                       <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}>{t("Create wallet")}</button>
                       <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
                       <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}>{t("Import wallet")}</button>
-                      <small className="portfolio-wallet-security-note"><ShieldCheck size={14}/>{t("Your keys stay under your control")}</small>
-                    </div>
+                                          </div>
                   ) : (
                     <>
                       <div className="portfolio-wallet-balance-card">
