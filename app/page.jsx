@@ -1101,8 +1101,8 @@ function App() {
                 <div className="top-movers-list">
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
-                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {t(event.timeframe)} {t("ago")}</small></div>
-                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{t(event.status)}</span></div>
+                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {language === "en" ? ({ "5 mnt": "5 min", "15 mnt": "15 min", "30 mnt": "30 min", "1 jam": "1 hr", "2 jam": "2 hr" }[event.timeframe] || event.timeframe) : `${t(event.timeframe)} ${t("ago")}`}</small></div>
+                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Kenaikan tajam": "Sharp increase", "Penurunan tajam": "Sharp decline", "High baru 24 jam": "24h high", "High baru 7 hari": "7-day high", "Low baru 24 jam": "24h low" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
                   ))}
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
