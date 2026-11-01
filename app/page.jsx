@@ -574,6 +574,7 @@ function App() {
   const [traderTradeFilter, setTraderTradeFilter] = useState("open");
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
   const [portfolioTab, setPortfolioTab] = useState("all"); // [MODIFIED] Portfolio strategy, wallet, and transaction tabs
+  const [strategyFilter, setStrategyFilter] = useState("all"); // [ADDED] Filter strategies inside the Strategy tab
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -1113,57 +1114,60 @@ function App() {
               </div>
               {/* [MODIFIED] Portfolio tabs are integrated into the profile card footer. */}
               <div className="portfolio-icon-tabs" role="tablist" aria-label={t("Portfolio sections")}>
-              <button type="button" role="tab" aria-selected={portfolioTab === "all"} className={portfolioTab === "all" ? "selected" : ""} onClick={() => setPortfolioTab("all")} aria-label={t("All Strategy")} title={t("All Strategy")}><Layers size={21}/>{portfolioTab === "all" && <span>{t("All Strategy")}</span>}</button>
-              <button type="button" role="tab" aria-selected={portfolioTab === "created"} className={portfolioTab === "created" ? "selected" : ""} onClick={() => setPortfolioTab("created")} aria-label={t("Created Strategy")} title={t("Created Strategy")}><TrendingUp size={21}/>{portfolioTab === "created" && <span>{t("Created Strategy")}</span>}</button>
-              <button type="button" role="tab" aria-selected={portfolioTab === "following"} className={portfolioTab === "following" ? "selected" : ""} onClick={() => setPortfolioTab("following")} aria-label={t("Following Strategy")} title={t("Following Strategy")}><Users size={21}/>{portfolioTab === "following" && <span>{t("Following Strategy")}</span>}</button>
-              <button type="button" role="tab" aria-selected={portfolioTab === "wallet"} className={portfolioTab === "wallet" ? "selected" : ""} onClick={() => setPortfolioTab("wallet")} aria-label={t("Web3 Wallet")} title={t("Web3 Wallet")}><Wallet size={21}/>{portfolioTab === "wallet" && <span>{t("Web3 Wallet")}</span>}</button>
-              <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")} aria-label={t("Transaction History")} title={t("Transaction History")}><Clock3 size={21}/>{portfolioTab === "history" && <span>{t("Transaction History")}</span>}</button>
+                <button type="button" role="tab" aria-selected={portfolioTab === "strategy"} className={portfolioTab === "strategy" ? "selected" : ""} onClick={() => setPortfolioTab("strategy")} aria-label={t("Strategy")} title={t("Strategy")}><Layers size={20}/>{portfolioTab === "strategy" && <span>{t("Strategy")}</span>}</button>
+                <button type="button" role="tab" aria-selected={portfolioTab === "wallet"} className={portfolioTab === "wallet" ? "selected" : ""} onClick={() => setPortfolioTab("wallet")} aria-label={t("Web3 Wallet")} title={t("Web3 Wallet")}><Wallet size={20}/>{portfolioTab === "wallet" && <span>{t("Web3 Wallet")}</span>}</button>
+                <button type="button" role="tab" aria-selected={portfolioTab === "history"} className={portfolioTab === "history" ? "selected" : ""} onClick={() => setPortfolioTab("history")} aria-label={t("History")} title={t("History")}><Clock3 size={20}/>{portfolioTab === "history" && <span>{t("History")}</span>}</button>
               </div>
             </section>
 
             <div className="portfolio-strategy-content">
-              {portfolioTab === "all" && (
+              {portfolioTab === "strategy" && (
                 <>
+                  {/* [MODIFIED] Performance overview stays visible above the strategy collection. */}
                   <section className="portfolio-performance-panel">
-                    <div className="portfolio-content-heading"><div><p className="eyebrow">{t("PORTFOLIO PERFORMANCE")}</p><h2>{t("All Strategy")}</h2><p>{t("Performance summary across your strategies.")}</p></div><span className="portfolio-period-chip">{t("7 Days")}</span></div>
-                    <div className="portfolio-pnl-card"><div><span>{t("Total PnL")}</span><strong>+12.48%</strong><small>+1,248.32 USDT</small></div><div className="portfolio-mini-chart"><svg viewBox="0 0 500 100" preserveAspectRatio="none" role="img" aria-label={t("Strategy performance chart")}><path d="M0 82 L35 74 L70 78 L105 54 L140 61 L175 42 L210 56 L245 31 L280 44 L315 25 L350 37 L385 15 L420 27 L455 8 L500 15" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></div></div>
+                    <div className="portfolio-content-heading">
+                      <div><p className="eyebrow">{t("PORTFOLIO PERFORMANCE")}</p><h2>{t("Performance Overview")}</h2><p>{t("Your trading performance across all strategies.")}</p></div>
+                      <span className="portfolio-period-chip">{t("7 Days")}</span>
+                    </div>
+                    <div className="portfolio-pnl-card">
+                      <div><span>{t("Total PnL")}</span><strong>+12.48%</strong><small>+1,248.32 USDT</small></div>
+                      <div className="portfolio-mini-chart"><svg viewBox="0 0 500 100" preserveAspectRatio="none" role="img" aria-label={t("Strategy performance chart")}><path d="M0 82 L35 74 L70 78 L105 54 L140 61 L175 42 L210 56 L245 31 L280 44 L315 25 L350 37 L385 15 L420 27 L455 8 L500 15" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+                    </div>
                     <div className="portfolio-metric-grid">
                       <div><span><Target size={15}/>{t("Win Rate")}</span><strong>72.4%</strong><small className="portfolio-positive">+4.8%</small></div>
                       <div><span><Activity size={15}/>{t("Total Trades")}</span><strong>346</strong><small className="portfolio-positive">+28</small></div>
                       <div><span><Users size={15}/>{t("AUM")}</span><strong>24,560 USDT</strong><small className="portfolio-positive">+8.2%</small></div>
                     </div>
                   </section>
+                  {/* [ADDED] My and Following filters are nested inside Strategy. */}
                   <section className="portfolio-strategy-list-section">
-                    <div className="portfolio-content-heading"><div><h2>{t("Your strategies")} (12)</h2><p>{t("Strategies you own and follow.")}</p></div><button type="button" onClick={() => setPortfolioTab("created")}>{t("See all")} <ChevronRight size={16}/></button></div>
+                    <div className="portfolio-content-heading">
+                      <div><p className="eyebrow">{t("STRATEGY COLLECTION")}</p><h2>{t("Strategies")}</h2><p>{t("Explore strategies you created and follow.")}</p></div>
+                      <span className="portfolio-period-chip">12 {t("Strategies")}</span>
+                    </div>
+                    <div className="portfolio-strategy-filters" role="tablist" aria-label={t("Filter strategies")}>
+                      <button type="button" role="tab" aria-selected={strategyFilter === "all"} className={strategyFilter === "all" ? "selected" : ""} onClick={() => setStrategyFilter("all")}>{t("All")}</button>
+                      <button type="button" role="tab" aria-selected={strategyFilter === "mine"} className={strategyFilter === "mine" ? "selected" : ""} onClick={() => setStrategyFilter("mine")}>{t("My Strategy")}</button>
+                      <button type="button" role="tab" aria-selected={strategyFilter === "following"} className={strategyFilter === "following" ? "selected" : ""} onClick={() => setStrategyFilter("following")}>{t("Following")}</button>
+                    </div>
                     <div className="portfolio-strategy-list">
-                      {[{name:"Scalping BNB",pair:"BNBUSDT",type:"Futures",timeframe:"5m",returns:"+18.32%",badge:"Personal",tone:"bnb"},{name:"Trend Catcher",pair:"BTCUSDT",type:"Futures",timeframe:"15m",returns:"+9.74%",badge:"Public",tone:"trend"}].map((strategy) => (
-                        <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>{strategy.tone === "bnb" ? "∞" : "↗"}</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>{strategy.type} · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
+                      {[
+                        {name:"Scalping BNB",pair:"BNBUSDT",type:"Futures",timeframe:"5m",returns:"+18.32%",badge:"Personal",tone:"bnb",owner:"mine"},
+                        {name:"Trend Catcher",pair:"BTCUSDT",type:"Futures",timeframe:"15m",returns:"+9.74%",badge:"Public",tone:"trend",owner:"mine"},
+                        {name:"ETH Momentum",pair:"ETHUSDT",type:"Futures",timeframe:"1h",returns:"+7.21%",badge:"Public",tone:"eth",owner:"mine"},
+                        {name:"BTC Trend Master",pair:"BTCUSDT",type:"Futures",timeframe:"1h",returns:"+24.80%",badge:"TradeWiz",tone:"btc",owner:"following"},
+                        {name:"ETH Quick Moves",pair:"ETHUSDT",type:"Futures",timeframe:"15m",returns:"+11.42%",badge:"CryptoFox",tone:"eth",owner:"following"}
+                      ].filter((strategy) => strategyFilter === "all" || strategy.owner === strategyFilter).map((strategy) => (
+                        <article className="portfolio-strategy-row" key={strategy.name}>
+                          <span className={`portfolio-strategy-symbol ${strategy.tone}`}>{strategy.tone === "bnb" ? "∞" : "↗"}</span>
+                          <span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>{strategy.type} · {strategy.pair} · {strategy.timeframe}</span></span>
+                          <strong className="portfolio-positive">{strategy.returns}</strong>
+                          <span className="portfolio-row-spark"><TrendingUp size={22}/></span>
+                        </article>
                       ))}
                     </div>
                   </section>
                 </>
-              )}
-
-              {portfolioTab === "created" && (
-                <section className="portfolio-strategy-list-section portfolio-tab-panel">
-                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("YOUR WORK")}</p><h2>{t("Created Strategy")}</h2><p>{t("Strategies published or managed by you.")}</p></div><span className="portfolio-period-chip">12 {t("Strategies")}</span></div>
-                  <div className="portfolio-strategy-list">
-                    {[{name:"Scalping BNB",pair:"BNBUSDT",timeframe:"5m",returns:"+18.32%",badge:"Personal",tone:"bnb"},{name:"Trend Catcher",pair:"BTCUSDT",timeframe:"15m",returns:"+9.74%",badge:"Public",tone:"trend"},{name:"ETH Momentum",pair:"ETHUSDT",timeframe:"1h",returns:"+7.21%",badge:"Public",tone:"eth"}].map((strategy) => (
-                      <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>{strategy.tone === "bnb" ? "∞" : "↗"}</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>Futures · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {portfolioTab === "following" && (
-                <section className="portfolio-strategy-list-section portfolio-tab-panel">
-                  <div className="portfolio-content-heading"><div><p className="eyebrow">{t("YOUR NETWORK")}</p><h2>{t("Following Strategy")}</h2><p>{t("Strategies you follow from the community.")}</p></div><span className="portfolio-period-chip">8 {t("Following")}</span></div>
-                  <div className="portfolio-strategy-list">
-                    {[{name:"BTC Trend Master",pair:"BTCUSDT",timeframe:"1h",returns:"+24.80%",badge:"TradeWiz",tone:"btc"},{name:"ETH Quick Moves",pair:"ETHUSDT",timeframe:"15m",returns:"+11.42%",badge:"CryptoFox",tone:"eth"}].map((strategy) => (
-                      <article className="portfolio-strategy-row" key={strategy.name}><span className={`portfolio-strategy-symbol ${strategy.tone}`}>↗</span><span className="portfolio-strategy-copy"><strong>{strategy.name}<small>{strategy.badge}</small></strong><span>Futures · {strategy.pair} · {strategy.timeframe}</span></span><strong className="portfolio-positive">{strategy.returns}</strong><span className="portfolio-row-spark"><TrendingUp size={22}/></span></article>
-                    ))}
-                  </div>
-                </section>
               )}
 
               {portfolioTab === "wallet" && (
