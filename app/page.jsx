@@ -1126,7 +1126,7 @@ function App() {
                 <>
                   {/* [MODIFIED] Strategy cards mirror the trader profile performance layout. */}
                   <section className="portfolio-strategy-list-section portfolio-owned-strategies-section">
-                    <div className="portfolio-content-heading portfolio-strategy-heading"><span className="portfolio-period-chip">5 {t("Strategies")}</span></div>
+                    <div className="portfolio-content-heading portfolio-strategy-heading"></div>
                     {/* [MODIFIED] Keep all strategy filters on one horizontal tab row. */}
                     <div className="portfolio-strategy-filters portfolio-strategy-all-filters" role="tablist" aria-label={t("Filter strategies")}>
                       <button type="button" role="tab" aria-selected={strategyFilter === "all"} className={strategyFilter === "all" ? "selected" : ""} onClick={() => setStrategyFilter("all")}>{t("All")}</button>
