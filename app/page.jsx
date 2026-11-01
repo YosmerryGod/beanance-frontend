@@ -1168,10 +1168,12 @@ function App() {
                 <section className="portfolio-wallet-panel portfolio-tab-panel portfolio-wallet-modern">
                   {!web3Connected ? (
                     <div className="portfolio-wallet-onboarding">
-                      <div className="portfolio-wallet-onboarding-icon"><Wallet size={30}/></div>
-                      <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}>{t("Create wallet")}</button>
-                      <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
-                      <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}>{t("Import wallet")}</button>
+                      <div className="portfolio-wallet-onboarding-icon"><Wallet size={25}/></div>
+                      <div className="portfolio-wallet-onboarding-actions">
+                        <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}>{t("Create wallet")}</button>
+                        <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
+                        <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}>{t("Import wallet")}</button>
+                      </div>
                                           </div>
                   ) : (
                     <>
