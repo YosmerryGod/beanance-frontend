@@ -3347,3 +3347,52 @@ body{background:#090909;color:var(--text)}
 .app-shell .portfolio-strategy-all-filters::-webkit-scrollbar{display:none!important}
 .app-shell .portfolio-strategy-all-filters button{flex:1 0 auto!important;white-space:nowrap!important;min-width:max-content!important}
 .app-shell .portfolio-strategy-all-filters button span{display:inline-flex!important;align-items:center!important;justify-content:center!important;margin-left:4px!important;padding:2px 6px!important;border-radius:6px!important;background:rgba(128,138,150,.14)!important;font-size:9px!important}
+
+
+/* [ADDED] Clean Web3 wallet onboarding and asset layout. */
+.app-shell .portfolio-wallet-modern{padding:22px!important}
+.app-shell .portfolio-wallet-onboarding{display:flex!important;flex-direction:column!important;align-items:center!important;max-width:390px!important;margin:0 auto!important;padding:34px 12px 26px!important;text-align:center!important}
+.app-shell .portfolio-wallet-onboarding-icon{display:grid!important;place-items:center!important;width:68px!important;height:68px!important;margin-bottom:18px!important;border:1px solid rgba(234,190,39,.22)!important;border-radius:22px!important;background:rgba(234,190,39,.09)!important;color:var(--gold)!important}
+.app-shell .portfolio-wallet-onboarding h2{margin:0!important;color:var(--text)!important;font-size:23px!important;font-weight:750!important;letter-spacing:-.04em!important}
+.app-shell .portfolio-wallet-onboarding>p{max-width:310px!important;margin:9px 0 24px!important;color:var(--muted)!important;font-size:13px!important;line-height:1.6!important}
+.app-shell .portfolio-wallet-primary-action,.app-shell .portfolio-wallet-secondary-action{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:48px!important;border-radius:13px!important;font:inherit!important;font-size:13px!important;font-weight:750!important;cursor:pointer!important}
+.app-shell .portfolio-wallet-primary-action{border:1px solid var(--gold)!important;background:var(--gold)!important;color:#171717!important}
+.app-shell .portfolio-wallet-secondary-action{border:1px solid var(--line)!important;background:var(--panel-soft)!important;color:var(--text)!important}
+.app-shell .portfolio-wallet-or{display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;margin:17px 0!important}
+.app-shell .portfolio-wallet-or span{height:1px!important;flex:1!important;background:var(--line)!important}
+.app-shell .portfolio-wallet-or small{color:var(--muted)!important;font-size:11px!important}
+.app-shell .portfolio-wallet-security-note{display:flex!important;align-items:center!important;gap:6px!important;margin-top:22px!important;color:var(--muted)!important;font-size:10px!important}
+.app-shell .portfolio-wallet-security-note svg{color:var(--green)!important}
+.app-shell .portfolio-wallet-balance-card{padding:21px!important;border:1px solid var(--line)!important;border-radius:18px!important;background:linear-gradient(135deg,var(--panel-soft),var(--panel))!important}
+.app-shell .portfolio-wallet-balance-top{display:flex!important;align-items:center!important;justify-content:space-between!important;color:var(--muted)!important;font-size:12px!important}
+.app-shell .portfolio-wallet-connected-label{display:flex!important;align-items:center!important;gap:5px!important;color:var(--green)!important;font-size:10px!important}
+.app-shell .portfolio-wallet-balance-card>strong{display:block!important;margin:16px 0 7px!important;color:var(--text)!important;font-size:36px!important;font-weight:800!important;letter-spacing:-.05em!important}
+.app-shell .portfolio-wallet-address{display:flex!important;align-items:center!important;gap:7px!important;color:var(--muted)!important;font-size:11px!important}
+.app-shell .portfolio-wallet-address button{display:grid!important;place-items:center!important;padding:4px!important;border:0!important;background:transparent!important;color:var(--muted)!important;cursor:pointer!important}
+.app-shell .portfolio-wallet-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin-top:23px!important}
+.app-shell .portfolio-wallet-actions button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-height:68px!important;border:1px solid var(--line)!important;border-radius:13px!important;background:var(--panel)!important;color:var(--text)!important;font:inherit!important;font-size:11px!important;font-weight:650!important;cursor:pointer!important}
+.app-shell .portfolio-wallet-actions button svg{color:var(--gold)!important}
+.app-shell .portfolio-wallet-token-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:25px 0 13px!important}
+.app-shell .portfolio-wallet-token-heading h3{margin:0!important;color:var(--text)!important;font-size:16px!important;font-weight:750!important}
+.app-shell .portfolio-wallet-token-heading p{margin:4px 0 0!important;color:var(--muted)!important;font-size:11px!important}
+.app-shell .portfolio-wallet-token-heading>button{display:flex!important;align-items:center!important;gap:5px!important;padding:8px 10px!important;border:1px solid var(--line)!important;border-radius:10px!important;background:var(--panel-soft)!important;color:var(--text)!important;font:inherit!important;font-size:11px!important;font-weight:650!important;white-space:nowrap!important;cursor:pointer!important}
+.app-shell .portfolio-wallet-token-list{display:grid!important;gap:9px!important}
+.app-shell .portfolio-wallet-token-card{display:flex!important;align-items:center!important;gap:12px!important;padding:14px!important;border:1px solid var(--line)!important;border-radius:14px!important;background:var(--panel-soft)!important}
+.app-shell .portfolio-wallet-token-logo{display:grid!important;place-items:center!important;flex:0 0 40px!important;width:40px!important;height:40px!important;border-radius:50%!important;font-size:17px!important;font-weight:850!important}
+.app-shell .portfolio-wallet-token-logo.bnb{background:#f3ba2f!important;color:#fff!important}
+.app-shell .portfolio-wallet-token-logo.bean{background:rgba(234,190,39,.14)!important;color:var(--gold)!important}
+.app-shell .portfolio-wallet-token-info,.app-shell .portfolio-wallet-token-value{display:grid!important;gap:4px!important;min-width:0!important}
+.app-shell .portfolio-wallet-token-info{flex:1!important}
+.app-shell .portfolio-wallet-token-info strong,.app-shell .portfolio-wallet-token-value strong{color:var(--text)!important;font-size:13px!important;font-weight:750!important}
+.app-shell .portfolio-wallet-token-info small,.app-shell .portfolio-wallet-token-value small{color:var(--muted)!important;font-size:10px!important}
+.app-shell .portfolio-wallet-token-value{text-align:right!important}
+@media(max-width:700px){
+ .app-shell .portfolio-wallet-modern{padding:14px!important}
+ .app-shell .portfolio-wallet-onboarding{padding:26px 5px 20px!important}
+ .app-shell .portfolio-wallet-onboarding h2{font-size:21px!important}
+ .app-shell .portfolio-wallet-balance-card{padding:16px!important}
+ .app-shell .portfolio-wallet-balance-card>strong{font-size:31px!important}
+ .app-shell .portfolio-wallet-actions{gap:7px!important}
+ .app-shell .portfolio-wallet-actions button{min-height:62px!important;font-size:10px!important}
+ .app-shell .portfolio-wallet-token-card{padding:12px!important}
+}
