@@ -573,7 +573,7 @@ function App() {
   const [traderProfileTab, setTraderProfileTab] = useState("trades");
   const [traderTradeFilter, setTraderTradeFilter] = useState("open");
   const [traderStrategyFilter, setTraderStrategyFilter] = useState("active");
-  const [portfolioTab, setPortfolioTab] = useState("all"); // [MODIFIED] Portfolio strategy, wallet, and transaction tabs
+  const [portfolioTab, setPortfolioTab] = useState("strategy"); // [MODIFIED] Default to the Strategy overview
   const [strategyFilter, setStrategyFilter] = useState("all"); // [ADDED] Filter strategies inside the Strategy tab
   const searchInputRef = useRef(null);
 
