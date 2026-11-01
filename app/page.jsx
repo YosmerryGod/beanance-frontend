@@ -354,6 +354,33 @@ const appTranslations = {
   }
 };
 
+
+Object.assign(appTranslations.en, {
+  "Trades": "Trades", "Active": "Active", "Inactive": "Inactive", "30D ago": "30D ago",
+  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Trade history and strategy performance shown here are sample data for the Beanance demo.",
+  "Profile": "Profile", "Beanance Account": "Beanance Account"
+});
+Object.assign(appTranslations.id, {
+  "Trades": "Transaksi", "Active": "Aktif", "Inactive": "Tidak aktif", "30D ago": "30 hari lalu",
+  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Riwayat trading dan performa strategi ini merupakan data contoh Beanance.",
+  "Profile": "Profil", "Beanance Account": "Akun Beanance", "Security": "Keamanan", "Language": "Bahasa"
+});
+Object.assign(appTranslations.zh, {
+  "Trades": "交易", "Active": "进行中", "Inactive": "未启用", "30D ago": "30天前",
+  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "此处的交易记录和策略表现为 Beanance 演示数据。",
+  "Profile": "个人资料", "Beanance Account": "Beanance 账户", "Security": "安全", "Language": "语言"
+});
+Object.assign(appTranslations.ja, {
+  "Trades": "取引", "Active": "有効", "Inactive": "無効", "30D ago": "30日前",
+  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "ここに表示される取引履歴と戦略実績はBeananceのデモデータです。",
+  "Profile": "プロフィール", "Beanance Account": "Beananceアカウント", "Security": "セキュリティ", "Language": "言語"
+});
+Object.assign(appTranslations.vi, {
+  "Trades": "Giao dịch", "Active": "Đang hoạt động", "Inactive": "Không hoạt động", "30D ago": "30 ngày trước",
+  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Lịch sử giao dịch và hiệu suất chiến lược ở đây là dữ liệu mẫu của Beanance.",
+  "Profile": "Hồ sơ", "Beanance Account": "Tài khoản Beanance", "Security": "Bảo mật", "Language": "Ngôn ngữ"
+});
+
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "dapps", label: "Discover", icon: Compass },
@@ -746,7 +773,7 @@ function App() {
 
             <div className="trader-profile-workspace">
               <div className="trader-profile-tabs" role="tablist" aria-label={t("Trader activity")}>
-                <button role="tab" aria-selected={traderProfileTab === "trades"} className={traderProfileTab === "trades" ? "selected" : ""} onClick={() => setTraderProfileTab("trades")}>Trades <span>{t("Activity")}</span></button>
+                <button role="tab" aria-selected={traderProfileTab === "trades"} className={traderProfileTab === "trades" ? "selected" : ""} onClick={() => setTraderProfileTab("trades")}>{t("Trades")} <span>{t("Activity")}</span></button>
                 <button role="tab" aria-selected={traderProfileTab === "strategies"} className={traderProfileTab === "strategies" ? "selected" : ""} onClick={() => setTraderProfileTab("strategies")}>Strategies <span>{traderProfiles[selectedTrader].strategies.length}</span></button>
               </div>
 
@@ -792,12 +819,12 @@ function App() {
                 <section className="trader-profile-section trader-strategy-overview-section">
                   <div className="trader-profile-section-heading"><div><h2>Strategies by @{selectedTrader}</h2></div><span className="trader-strategy-count">{traderProfiles[selectedTrader].strategies.length} total</span></div>
                   <div className="trader-subtabs" role="tablist" aria-label={t("Strategy status")}>
-                    <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>Active <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
-                    <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>Inactive <span>{Math.max(0,traderProfiles[selectedTrader].strategies.length-Math.max(1,traderProfiles[selectedTrader].strategies.length-1))}</span></button>
+                    <button className={traderStrategyFilter === "active" ? "selected" : ""} onClick={() => setTraderStrategyFilter("active")}>{t("Active")} <span>{Math.max(1,traderProfiles[selectedTrader].strategies.length-1)}</span></button>
+                    <button className={traderStrategyFilter === "inactive" ? "selected" : ""} onClick={() => setTraderStrategyFilter("inactive")}>{t("Inactive")} <span>{Math.max(0,traderProfiles[selectedTrader].strategies.length-Math.max(1,traderProfiles[selectedTrader].strategies.length-1))}</span></button>
                   </div>
                   <div className="trader-strategy-performance-list">
                     {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).length === 0 ? (
-                      <div className="trader-empty-state"><Activity size={20}/><strong>{t("No inactive strategies")}</strong><span>Trader ini belum memiliki strategi yang dinonaktifkan.</span></div>
+                      <div className="trader-empty-state"><Activity size={20}/><strong>{t("No inactive strategies")}</strong><span>{t("Trader ini belum memiliki strategi yang dinonaktifkan.")}</span></div>
                     ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
@@ -824,7 +851,7 @@ function App() {
                             <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6 L600 90 L0 90 Z" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5 L600 90 L0 90 Z"} fill={`url(#strategy-chart-fill-${selectedTrader}-${index})`}/>
                             <path d={index % 2 === 1 ? "M0 72 L40 64 L80 69 L120 49 L160 55 L200 42 L240 50 L280 31 L320 39 L360 25 L400 32 L440 17 L480 23 L520 13 L560 18 L600 6" : "M0 77 L40 68 L80 72 L120 54 L160 60 L200 43 L240 51 L280 34 L320 40 L360 24 L400 31 L440 19 L480 25 L520 12 L560 17 L600 5"} fill="none" stroke="#20bd68" strokeWidth="2.5" vectorEffect="non-scaling-stroke"/>
                           </svg>
-                          <div className="trader-chart-axis"><span>30D ago</span><span>{t("Today")}</span></div>
+                          <div className="trader-chart-axis"><span>{t("30D ago")}</span><span>{t("Today")}</span></div>
                         </div>
                       </article>
                     ))}
@@ -832,7 +859,7 @@ function App() {
                 </section>
               )}
             </div>
-            <p className="trader-profile-disclaimer">Trade history and strategy performance shown here are sample data for the Beanance demo.</p>
+            <p className="trader-profile-disclaimer">{t("Trade history and strategy performance shown here are sample data for the Beanance demo.")}</p>
           </section>
         )}
 
@@ -935,7 +962,7 @@ function App() {
             </div>
             <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
               <span className="sidebar-avatar">E</span>
-              <span className="sidebar-account-copy"><strong>Ezy</strong><small>Beanance Account</small></span>
+              <span className="sidebar-account-copy"><strong>Ezy</strong><small>{t("Beanance Account")}</small></span>
               <ChevronRight size={18} />
             </button>
             <p className="eyebrow sidebar-section-label">{sidebarText.account}</p>
