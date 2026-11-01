@@ -3889,3 +3889,7 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   transform:scale(1.75)!important;
   transform-origin:center!important;
 }
+
+
+/* [ADDED] Official Beanance sidebar brand asset. */
+.app-shell .sidebar-brand-logo{display:block;width:32px;height:32px;object-fit:contain;flex:0 0 auto;}
