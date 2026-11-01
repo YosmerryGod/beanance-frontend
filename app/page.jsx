@@ -1170,11 +1170,11 @@ function App() {
                     <div className="portfolio-wallet-onboarding">
                       <div className="portfolio-wallet-onboarding-icon"><Wallet size={25}/></div>
                       <div className="portfolio-wallet-onboarding-actions">
-                        <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}>{t("Create wallet")}</button>
+                        <button type="button" className="portfolio-wallet-primary-action" onClick={() => setNotice("Secure wallet creation is coming soon")}><Plus size={16}/>{t("Create wallet")}</button>
                         <div className="portfolio-wallet-or"><span></span><small>{t("or")}</small><span></span></div>
-                        <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}>{t("Import wallet")}</button>
+                        <button type="button" className="portfolio-wallet-secondary-action" onClick={() => setNotice("Secure wallet import is coming soon")}><ArrowDownLeft size={16}/>{t("Import wallet")}</button>
                       </div>
-                                          </div>
+                    </div>
                   ) : (
                     <>
                       <div className="portfolio-wallet-balance-card">
@@ -1187,7 +1187,7 @@ function App() {
                           <button type="button" onClick={() => setNotice("Swap is coming soon")}><Activity size={17}/><span>{t("Swap")}</span></button>
                         </div>
                       </div>
-                      <div className="portfolio-wallet-token-heading"><div><h3>{t("Your tokens")}</h3><p>{t("Assets held in your wallet")}</p></div><button type="button" onClick={() => setNotice("Add token is coming soon")}><Plus size={16}/>{t("Add token")}</button></div>
+                      <div className="portfolio-wallet-token-heading"><h3>{t("Assets")}</h3><button type="button" onClick={() => setNotice("Add token is coming soon")}><Plus size={16}/>{t("Add Token")}</button></div>
                       <div className="portfolio-wallet-token-list">
                         <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bnb">B</span><span className="portfolio-wallet-token-info"><strong>BNB</strong><small>BNB Chain</small></span><span className="portfolio-wallet-token-value"><strong>4.25 BNB</strong><small>$2,465.00</small></span></article>
                         <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean">B</span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>Beanance Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
