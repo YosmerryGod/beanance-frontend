@@ -777,7 +777,7 @@ function App() {
                 ].map((strategy) => (
                   <article className="strategy-card" key={strategy.name}>
                     <div className="strategy-card-head">
-                      <div className={`strategy-coin ${strategy.tone}`}><CoinLogo symbol={strategy.tone === "bitcoin" ? "BTC" : strategy.tone === "ethereum" ? "ETH" : "SOL"} /></div>
+                      <div className={`strategy-coin ${strategy.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
                       <div className="strategy-identity"><strong>{strategy.name}</strong><button className="strategy-owner-link" onClick={() => openTrader(strategy.user)}>{strategy.user}</button></div>
                       <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={() => setNotice(`${strategy.name} details are coming soon`)}>•••</button>
                     </div>
@@ -850,7 +850,7 @@ function App() {
                 ]).map((item) => (
                   <article className={`discover-podium-card podium-rank-${item.rank}`} key={item.name}>
                     <span className="podium-rank">{item.rank}</span>
-                    <div className={`discover-avatar ${item.tone}`}>{item.tone.startsWith("trader-avatar") ? item.avatar : <CoinLogo symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : "SOL"} />}</div>
+                    <div className={`discover-avatar ${item.tone}`}>{discoverTopTab === "strategies" ? <Layers size={21} strokeWidth={1.75} /> : item.tone.startsWith("trader-avatar") ? item.avatar : <CoinLogo symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : "SOL"} />}</div>
                     <strong>{item.name}</strong>
                     <small>{item.user}</small>
                     <b className="positive">{item.metric}</b>
@@ -887,7 +887,7 @@ function App() {
                   {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"ETH",tag:"Low Risk"}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
-                    <div className={`discover-avatar ${item.tone}`}><CoinLogo symbol={item.tone === "bitcoin" ? "BTC" : item.tone === "ethereum" ? "ETH" : item.tone === "solana" ? "SOL" : item.tone === "bnb" ? "BNB" : item.symbol} /></div>
+                    <div className={`discover-avatar ${item.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
                     <div className="discover-card-main"><strong>{item.name}</strong><button className="discover-owner-link" onClick={() => openTrader(item.user)}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
                     <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>{t("Follow")}</button>
@@ -989,7 +989,7 @@ function App() {
                     ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
                       <article className="trader-strategy-performance-card" key={strategy.name}>
                         <div className="trader-strategy-performance-heading">
-                          <div className="trader-owned-strategy-icon"><CoinLogo symbol={strategy.name.startsWith("BTC") ? "BTC" : strategy.name.startsWith("ETH") ? "ETH" : strategy.name.startsWith("SOL") ? "SOL" : "BNB"} /></div>
+                          <div className="trader-owned-strategy-icon"><Layers size={21} strokeWidth={1.75} /></div>
                           <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={`trader-strategy-risk-inline ${strategy.risk.toLowerCase().replace(" risk","")}`}>{t(strategy.risk)}</span></div><span>{t(strategy.type)}</span></div>
                           <div className="trader-strategy-actions">
                             <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
@@ -1138,7 +1138,7 @@ function App() {
                       ].filter((s) => strategyFilter === "inactive" ? s.status === "inactive" : (strategyFilter === "all" || s.owner === strategyFilter)).map((strategy,index) => (
                         <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name}>
                           <div className="trader-strategy-performance-heading">
-                            <div className="trader-owned-strategy-icon"><CoinLogo symbol={strategy.pair} /></div>
+                            <div className="trader-owned-strategy-icon"><Layers size={21} strokeWidth={1.75} /></div>
                             <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={"trader-strategy-risk-inline " + strategy.risk.toLowerCase().replace(" risk","")}>{t(strategy.risk)}</span></div><span>{t(strategy.type)} · {strategy.pair} · {strategy.timeframe}</span></div>
                             <div className="trader-strategy-actions"><span className={"strategy-status-pill " + strategy.status}>{t(strategy.status === "active" ? "Active" : "Inactive")}</span>{strategy.status === "active" && <button type="button" className="trader-copy-button" onClick={() => setNotice("Copy trading for " + strategy.name + " is coming soon")}><Copy size={14}/> {t("Copy")}</button>}</div>
                           </div>
