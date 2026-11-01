@@ -1339,9 +1339,7 @@ function App() {
             </button>
             <p className="eyebrow sidebar-section-label">{sidebarText.account}</p>
             <nav className="sidebar-navigation" aria-label="Account settings">
-              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);selectTab({ id: "profile" });}}>
-                <UserRound size={19} /><span>{sidebarText.profile}</span><ChevronRight className="sidebar-item-chevron" size={17} />
-              </button>
+              {/* [MODIFIED] Remove the Profile item from the sidebar; keep Language as the first account menu item. */}
               <button type="button" className="sidebar-nav-item" aria-expanded={languageOpen} onClick={() => setLanguageOpen((open) => !open)}>
                 <Languages size={19} /><span>{sidebarText.language}</span><small className="sidebar-current-language">{selectedLanguage.native}</small><ChevronRight className={languageOpen ? "sidebar-chevron-open" : "sidebar-item-chevron"} size={17} />
               </button>
