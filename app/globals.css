@@ -4332,3 +4332,24 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .market-compact-stats span{font-size:8px}
   .app-shell .market-compact-stats strong{font-size:9px}
 }
+
+
+/* [ADDED] Interactive Lightweight Charts canvas and native zoom controls. */
+.app-shell .market-trading-chart{display:flex;flex-direction:column;gap:7px;min-width:0;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft)}
+.app-shell .market-trading-chart-readout{display:flex;align-items:center;gap:clamp(7px,2vw,15px);flex-wrap:wrap;padding:9px 10px 0;color:var(--muted);font-size:9px;font-variant-numeric:tabular-nums}
+.app-shell .market-trading-chart-readout b{margin-left:2px;color:var(--text);font-weight:700}
+.app-shell .market-trading-chart-canvas{position:relative;width:100%;height:clamp(250px,52vw,420px);min-width:0;touch-action:pan-y}
+.app-shell .market-trading-chart-canvas>div{width:100%}
+.app-shell .market-trading-chart-controls{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:0 9px 9px;color:var(--muted);font-size:9px}
+.app-shell .market-trading-chart-controls>div{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+.app-shell .market-trading-chart-controls button{display:grid;place-items:center;min-width:29px;height:27px;padding:0 7px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--text);font-size:12px;font-weight:750;cursor:pointer}
+.app-shell .market-trading-chart-controls button:active{border-color:var(--gold);color:var(--gold)}
+.app-shell .market-trading-chart:fullscreen{width:100vw;height:100vh;padding:16px;border:0;border-radius:0;background:var(--bg)}
+.app-shell .market-trading-chart:fullscreen .market-trading-chart-canvas{height:calc(100vh - 90px);flex:1}
+@media(max-width:760px){
+  .app-shell .market-trading-chart{border-radius:9px;gap:5px}
+  .app-shell .market-trading-chart-canvas{height:clamp(260px,72vw,360px)}
+  .app-shell .market-trading-chart-readout{gap:7px;padding:8px 8px 0;font-size:8px}
+  .app-shell .market-trading-chart-controls{padding:0 7px 7px;font-size:8px}
+  .app-shell .market-trading-chart-controls button{min-width:27px;height:26px;padding:0 6px}
+}
