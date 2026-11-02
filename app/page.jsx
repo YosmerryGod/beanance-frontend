@@ -1415,9 +1415,9 @@ function App() {
                     if (aPinned !== bPinned) return aPinned ? -1 : 1;
                     const values = {
                       name: [a.name.toLowerCase(), b.name.toLowerCase()],
-                      volume: [Number(a.volume.replace(/[^0-9.]/g, "")) * (a.volume.includes("B") ? 1000 : a.volume.includes("M") ? 1 : 0.001), Number(b.volume.replace(/[^0-9.]/g, "")) * (b.volume.includes("B") ? 1000 : b.volume.includes("M") ? 1 : 0.001)],
-                      price: [Number(a.price.replace(/[^0-9.]/g, "")), Number(b.price.replace(/[^0-9.]/g, ""))],
-                      change: [Number(a.change.replace("%", "")), Number(b.change.replace("%", ""))]
+                      volume: [a.volumeNumber ?? Number(a.volume.replace(/[^0-9.]/g, "")) * (a.volume.includes("B") ? 1000 : a.volume.includes("M") ? 1 : 0.001), b.volumeNumber ?? Number(b.volume.replace(/[^0-9.]/g, "")) * (b.volume.includes("B") ? 1000 : b.volume.includes("M") ? 1 : 0.001)],
+                      price: [a.priceNumber ?? Number(a.price.replace(/[^0-9.]/g, "")), b.priceNumber ?? Number(b.price.replace(/[^0-9.]/g, ""))],
+                      change: [a.changeNumber ?? Number(a.change.replace("%", "")), b.changeNumber ?? Number(b.change.replace("%", ""))]
                     }[marketSort];
                     const comparison = typeof values[0] === "string" ? values[0].localeCompare(values[1]) : values[0] - values[1];
                     return comparison * (marketSortDirection === "asc" ? 1 : -1);
@@ -1451,7 +1451,7 @@ function App() {
                     <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
                   )}
                 </div>
-                <p className="top-movers-disclaimer">{t("Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.")}</p>
+                <p className="top-movers-disclaimer">Top Movers menampilkan perubahan harga rolling 24 jam dari Binance USDⓈ-M Futures.</p>
               </section>
             )}
           </section>
@@ -1512,7 +1512,7 @@ function App() {
             {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
             {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Recent market trades for {selectedMarket.symbol}/USDT.</p>{["18:01:24","18:01:19","18:01:11","18:01:03","18:00:57"].map((time,index)=><div key={time}><span>{time}</span><strong className={index%2?"negative":"positive"}>{index%2?"0.0003730":"0.0003729"}</strong><span>{(125.4+index*18).toFixed(2)} {selectedMarket.symbol}</span></div>)}</section>}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
-            <p className="market-data-disclaimer">Market figures and chart shown are sample interface data until a live market data provider is connected.</p>
+            <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades remain demo data.</p>
           </section>
         )}
 
