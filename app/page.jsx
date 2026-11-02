@@ -54,6 +54,7 @@ import {
   Maximize2, // [ADDED] Market chart fullscreen control
 } from "lucide-react";
 import CoinLogo from "./components/CoinLogo";
+import MarketTradingChart from "./components/MarketTradingChart"; // [ADDED] Interactive TradingView-style market chart
 
 
 const supportedLanguages = [
@@ -1365,14 +1366,7 @@ function App() {
                     <button type="button" className="market-detail-icon" onClick={()=>setNotice("Chart settings are coming soon")} aria-label="Chart settings"><SlidersHorizontal size={18}/></button>
                     <button type="button" className="market-detail-icon" onClick={()=>setNotice("Fullscreen chart is coming soon")} aria-label="Fullscreen chart"><Maximize2 size={18}/></button>
                   </div>
-                  <div className="market-candle-chart">
-                    <div className="market-chart-grid">{[0,1,2,3,4].map((n)=><span key={n}/>)}</div>
-                    <svg viewBox="0 0 340 220" preserveAspectRatio="none" role="img" aria-label={selectedMarket.symbol+" candlestick chart "+marketTimeframe}>
-                      {Array.from({length:34},(_,i)=>{const base=[150,138,160,120,132,105,118,90,112,128,98,82,104,74,95,68,88,106,78,92,62,80,58,76,52,70,48,66,42,58,38,53,32,45][i];const green=[1,3,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32].includes(i);const high=base-18-(i%4)*3;const low=base+20+(i%3)*4;const open=base+(i%2?8:-7);const close=base+(green?-9:10);return <g key={i}><line x1={i*10+4} y1={high} x2={i*10+4} y2={low} stroke={green?"#20bd88":"#ef5368"} strokeWidth="1.4"/><rect x={i*10+1} y={Math.min(open,close)} width="6" height={Math.max(3,Math.abs(close-open))} fill={green?"#20bd88":"#ef5368"}/></g>;})}
-                    </svg>
-                    <div className="market-chart-price-line"><span>{selectedMarket.price}</span></div>
-                    <div className="market-chart-axis"><span>High</span><span> </span><span> </span><span> </span><span>Low</span></div>
-                  </div>
+                  <MarketTradingChart symbol={selectedMarket.symbol} price={selectedMarket.price} timeframe={marketTimeframe} />
                   <div className="market-indicators">{["SUPER","VOL","MACD","RSI","KDJ","OBV","WR","Stoch"].map((indicator)=><button type="button" key={indicator} className={marketIndicator===indicator?"selected":""} onClick={()=>setMarketIndicator(indicator)}>{indicator}</button>)}</div>
                 </section>
                 <section className="market-performance-grid">
