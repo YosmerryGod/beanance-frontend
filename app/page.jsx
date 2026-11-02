@@ -935,7 +935,7 @@ function App() {
                     <small>{item.user}</small>
                     <b className="positive">{item.metric}</b>
                     <span className="podium-detail">{t(item.detail)}</span>
-                    <button onClick={(event) => { event.stopPropagation(); discoverTopTab === "strategies" ? openStrategy({ ...item, type: item.name === "Scalping AI v2" ? "Scalping" : item.name === "ETH Breakout" ? "Breakout" : "Trend Following", risk: item.name === "Scalping AI v2" ? "Low Risk" : "Medium Risk", win: item.name === "BTC Trend Master" ? "68%" : item.name === "Scalping AI v2" ? "72%" : "63%", trades: item.name === "BTC Trend Master" ? 680 : item.name === "Scalping AI v2" ? 1240 : 310, age: item.name === "BTC Trend Master" ? 240 : item.name === "Scalping AI v2" ? 120 : 75, symbol: item.avatar }) : openTrader(item.name); }}>{discoverTopTab === "strategies" ? t("View strategy") : t("View profile")}</button>
+                    <button onClick={(event) => { event.stopPropagation(); if (discoverTopTab === "strategies") setNotice(`Copy trading for ${item.name} is coming soon`); else openTrader(item.name); }}>{discoverTopTab === "strategies" ? t("Copy") : t("View profile")}</button>
                   </article>
                 ))}
               </div>
@@ -970,7 +970,7 @@ function App() {
                     <div className={`discover-avatar ${item.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
                     <div className="discover-card-main"><button type="button" className="discover-strategy-title-button" onClick={() => openStrategy(item)}>{item.name}</button><button className="discover-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(item.user); }}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
-                    <button onClick={(event) => { event.stopPropagation(); openStrategy(item); }}>{t("View strategy")}</button>
+                    <button onClick={(event) => { event.stopPropagation(); setNotice(`Copy trading for ${item.name} is coming soon`); }}><Copy size={13}/>{t("Copy")}</button>
                   </article>
                 )) : [
                   {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",age:240,trades:680,avatar:"T",tone:"trader-avatar-1",verified:true},
