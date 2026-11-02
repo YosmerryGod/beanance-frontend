@@ -810,6 +810,48 @@ function App() {
             </div>
           )}
           <div className="top-actions">
+
+        {active === "dashboard" && (
+              <div className="notification-wrap">
+                <button className="icon-button notification-button" aria-label={t("Notifications")} aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
+                  <Bell size={19} />
+                  <i />
+                </button>
+                {showNotifications && (
+                  <div className="notification-popover">
+                    <div className="notification-heading"><strong>{t("Notifications")}</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
+                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>{t("Wallet connected")}</strong><p>{t("Your demo wallet is ready to use.")}</p><small>{t("Just now")}</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol"><ArrowUpRight size={17} strokeWidth={1.75} /></span><div><strong>{t("Market update")}</strong><p>{t("Bitcoin is up 2.45% in the demo market.")}</p><small>{t("12 minutes ago")}</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol"><Sparkles size={17} strokeWidth={1.75} /></span><div><strong>{t("Welcome to Beanance")}</strong><p>{t("Explore assets and discover Web3 apps.")}</p><small>{t("Today")}</small></div></div>
+                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>{t("Mark all as read")}</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {(active === "dapps" || active === "market") && (
+              <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
+                <Search size={18} />
+                <input
+                  ref={searchInputRef}
+                  aria-label={active === "dapps" ? t("Search strategies and traders") : t("Search market assets")}
+                  placeholder={active === "dapps" ? t("Search strategies or traders...") : t("Search assets...")}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
+                  tabIndex={searchOpen ? 0 : -1}
+                />
+                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label={t("Close search")}><X size={17} /></button>}
+                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label={t("Open search")} />}
+              </div>
+            )}
+            {active !== "profile" && (
+              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")} onClick={toggleTheme}>
+                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+              </button>
+            )}
+          </div>
+        </header>}
+
             {active === "help-center" && (
           <section className="page page-enter help-center-page">
             <div className="help-center-topline">
@@ -900,47 +942,6 @@ function App() {
             <p className="help-center-footnote">Beanance Help Center · Support resources</p>
           </section>
         )}
-
-        {active === "dashboard" && (
-              <div className="notification-wrap">
-                <button className="icon-button notification-button" aria-label={t("Notifications")} aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
-                  <Bell size={19} />
-                  <i />
-                </button>
-                {showNotifications && (
-                  <div className="notification-popover">
-                    <div className="notification-heading"><strong>{t("Notifications")}</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
-                    <div className="notification-item unread"><span className="notification-dot" /><div><strong>{t("Wallet connected")}</strong><p>{t("Your demo wallet is ready to use.")}</p><small>{t("Just now")}</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol"><ArrowUpRight size={17} strokeWidth={1.75} /></span><div><strong>{t("Market update")}</strong><p>{t("Bitcoin is up 2.45% in the demo market.")}</p><small>{t("12 minutes ago")}</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol"><Sparkles size={17} strokeWidth={1.75} /></span><div><strong>{t("Welcome to Beanance")}</strong><p>{t("Explore assets and discover Web3 apps.")}</p><small>{t("Today")}</small></div></div>
-                    <button className="notification-footer" onClick={() => setShowNotifications(false)}>{t("Mark all as read")}</button>
-                  </div>
-                )}
-              </div>
-            )}
-            {(active === "dapps" || active === "market") && (
-              <div className={`header-search ${searchOpen ? "is-open" : ""}`}>
-                <Search size={18} />
-                <input
-                  ref={searchInputRef}
-                  aria-label={active === "dapps" ? t("Search strategies and traders") : t("Search market assets")}
-                  placeholder={active === "dapps" ? t("Search strategies or traders...") : t("Search assets...")}
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  onKeyDown={(event) => { if (event.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
-                  tabIndex={searchOpen ? 0 : -1}
-                />
-                {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label={t("Close search")}><X size={17} /></button>}
-                {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label={t("Open search")} />}
-              </div>
-            )}
-            {active !== "profile" && (
-              <button className="icon-button theme-toggle" aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")} onClick={toggleTheme}>
-                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
-              </button>
-            )}
-          </div>
-        </header>}
 
         {active === "dashboard" && (
           <section className="page page-enter dashboard-page">
