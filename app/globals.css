@@ -3964,3 +3964,40 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
         .app-shell.theme-light .strategy-detail-modal{background:var(--panel);box-shadow:0 24px 80px rgba(34,45,60,.22);}
         @media(max-width:700px){.app-shell .strategy-detail-overlay{padding:10px;}.app-shell .strategy-detail-modal{width:calc(100vw - 20px);height:88vh;max-height:88vh;border-radius:18px;}.app-shell .strategy-detail-header{padding:13px 14px;}.app-shell .strategy-detail-performance{padding:14px 14px 9px;}.app-shell .strategy-detail-tabs{padding:8px 10px;gap:3px;}.app-shell .strategy-detail-tabs button{gap:4px;min-height:39px;padding:6px 3px;font-size:10px;}.app-shell .strategy-detail-tab-content{padding:14px 14px 20px;}.app-shell .strategy-detail-stat-grid,.app-shell .strategy-detail-capital-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}.app-shell .strategy-detail-stat-grid>div,.app-shell .strategy-detail-capital-grid>div{padding:10px;}.app-shell .strategy-detail-stat-grid strong,.app-shell .strategy-detail-capital-grid strong{font-size:14px;}.app-shell .strategy-detail-info-list{grid-template-columns:1fr;}.app-shell .strategy-detail-month-bars{gap:5px;padding:8px;}.app-shell .strategy-detail-footer{padding:11px 14px;}.app-shell .strategy-detail-copy-button{min-height:36px;padding:0 12px;}.app-shell .strategy-detail-return-row>div:first-child strong{font-size:25px;}}
         @media(max-width:380px){.app-shell .strategy-detail-tabs button{font-size:9px;}.app-shell .strategy-detail-tabs button svg{width:13px;height:13px;}.app-shell .strategy-detail-status{font-size:9px;padding:4px 7px;}.app-shell .strategy-detail-timeframes{gap:3px;}.app-shell .strategy-detail-timeframes button{font-size:9px;padding:7px 1px;}}
+
+
+/* [ADDED] Match trader-profile and portfolio Copy buttons to Dashboard and Discover Copy styling. */
+.app-shell .trader-copy-button{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  min-height:32px!important;
+  padding:8px 14px!important;
+  border:0!important;
+  border-radius:9px!important;
+  background:#101820!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  white-space:nowrap!important;
+  box-shadow:none!important;
+  cursor:pointer!important;
+  transition:background .2s ease,transform .2s ease!important;
+}
+.app-shell .trader-copy-button:hover{
+  background:#202c38!important;
+}
+.app-shell.theme-light .trader-copy-button{
+  color:#fff8df!important;
+  background:#28200b!important;
+  border:1px solid #28200b!important;
+  box-shadow:4px 4px 9px rgba(105,78,0,.18),inset 1px 1px 2px rgba(255,255,255,.12)!important;
+}
+@media(max-width:760px){
+  .app-shell .trader-copy-button{
+    min-height:30px!important;
+    padding:7px 10px!important;
+    font-size:9px!important;
+  }
+}
