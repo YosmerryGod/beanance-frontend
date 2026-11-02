@@ -8,7 +8,7 @@ on:
 
 concurrency:
   group: beanance-vps-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false # [MODIFIED] Never cancel a build midway through writing .next.
 
 jobs:
   deploy:
@@ -22,6 +22,8 @@ jobs:
           git pull --ff-only origin main
           npm install --no-package-lock
           npm run build
+          # [ADDED] Do not restart PM2 unless Next.js produced a complete production build.
+          test -s .next/BUILD_ID
           if pm2 describe beanance-frontend >/dev/null 2>&1; then
             PORT=3012 pm2 restart beanance-frontend --update-env
           else
