@@ -589,6 +589,9 @@ function App() {
   const [pinnedMarketSymbols, setPinnedMarketSymbols] = useState([]); // [ADDED] Pinned market assets
   const [mobileDashboardTab, setMobileDashboardTab] = useState("traders");
   const [discoverTopTab, setDiscoverTopTab] = useState("strategies");
+  const [selectedStrategy, setSelectedStrategy] = useState(null); // [ADDED] Strategy detail modal selection
+  const [strategyDetailTab, setStrategyDetailTab] = useState("overview"); // [ADDED] Strategy detail modal tab
+  const [strategyTimeframe, setStrategyTimeframe] = useState("ALL"); // [ADDED] Strategy performance chart timeframe
   const [discoverFilter, setDiscoverFilter] = useState("All");
   const [showDiscoverFilter, setShowDiscoverFilter] = useState(false);
   const [discoverCriteria, setDiscoverCriteria] = useState({ minWinRate: "0", minAge: "0", minTrades: "0", minReturn: "0", risk: "All", sort: "popular" });
@@ -641,6 +644,52 @@ function App() {
 
 
   const toggleTheme = () => setTheme((current) => current === "dark" ? "light" : "dark");
+
+  // [ADDED] Open a centered detail modal for the selected Discover strategy.
+  const openStrategy = (strategy) => {
+    const owner = String(strategy.user || strategy.owner || "@tradewiz").replace(/^@/, "").toLowerCase();
+    const ownerProfile = traderProfiles[owner] || traderProfiles.tradewiz;
+    const returnValue = Number(String(strategy.returns || ownerProfile.returns).replace(/[+%]/g, ""));
+    const initialBalance = Number(strategy.initialBalance || 1000);
+    setSelectedStrategy({
+      ...strategy,
+      owner,
+      ownerName: ownerProfile.name,
+      ownerFollowers: ownerProfile.followers,
+      ownerBio: ownerProfile.bio,
+      returns: strategy.returns || ownerProfile.returns,
+      win: strategy.win || ownerProfile.win,
+      trades: strategy.trades || Number(String(ownerProfile.trades).replace(/,/g, "")),
+      age: strategy.age || Number(String(ownerProfile.age).split(" ")[0]),
+      initialBalance,
+      currentBalance: strategy.currentBalance || initialBalance * (1 + returnValue / 100),
+      aum: strategy.aum || (owner === "cryptofox" ? 68200 : owner === "moontrade" ? 31500 : owner === "quantalab" ? 18400 : 48250),
+      copiers: strategy.copiers || (owner === "cryptofox" ? 128 : owner === "moontrade" ? 74 : owner === "quantalab" ? 39 : 96),
+      pair: strategy.pair || `${strategy.symbol || "BTC"}/USDT`,
+      risk: strategy.risk || "Medium Risk",
+      type: strategy.type || "Trend Following",
+      maxDrawdown: strategy.maxDrawdown || (owner === "cryptofox" ? "-8.6%" : owner === "moontrade" ? "-15.2%" : "-12.8%"),
+      profitFactor: strategy.profitFactor || (owner === "cryptofox" ? "2.18" : owner === "moontrade" ? "1.92" : "2.45"),
+      sharpe: strategy.sharpe || "1.85",
+      avgWin: strategy.avgWin || "+3.2%",
+      avgLoss: strategy.avgLoss || "-1.4%",
+      leverage: strategy.leverage || "Up to 5x",
+      status: strategy.status || "active",
+    });
+    setStrategyDetailTab("overview");
+    setStrategyTimeframe("ALL");
+  };
+
+  const closeStrategy = () => setSelectedStrategy(null);
+
+  useEffect(() => {
+    if (!selectedStrategy) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") closeStrategy();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedStrategy]);
 
   const openTrader = (username) => {
     const normalized = String(username || "").replace(/^@/, "").toLowerCase();
@@ -886,7 +935,7 @@ function App() {
                     <small>{item.user}</small>
                     <b className="positive">{item.metric}</b>
                     <span className="podium-detail">{t(item.detail)}</span>
-                    <button onClick={() => setNotice(discoverTopTab === "strategies" ? `Strategy ${item.name} selected` : `Opening @${item.name} profile`)}>{discoverTopTab === "strategies" ? t("View strategy") : t("View profile")}</button>
+                    <button onClick={() => discoverTopTab === "strategies" ? openStrategy({ ...item, type: item.name === "Scalping AI v2" ? "Scalping" : item.name === "ETH Breakout" ? "Breakout" : "Trend Following", risk: item.name === "Scalping AI v2" ? "Low Risk" : "Medium Risk", win: item.name === "BTC Trend Master" ? "68%" : item.name === "Scalping AI v2" ? "72%" : "63%", trades: item.name === "BTC Trend Master" ? 680 : item.name === "Scalping AI v2" ? 1240 : 310, age: item.name === "BTC Trend Master" ? 240 : item.name === "Scalping AI v2" ? 120 : 75, symbol: item.avatar }) : openTrader(item.name)}>{discoverTopTab === "strategies" ? t("View strategy") : t("View profile")}</button>
                   </article>
                 ))}
               </div>
@@ -919,9 +968,9 @@ function App() {
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name}>
                     <div className={`discover-avatar ${item.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
-                    <div className="discover-card-main"><strong>{item.name}</strong><button className="discover-owner-link" onClick={() => openTrader(item.user)}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
+                    <div className="discover-card-main"><button type="button" className="discover-strategy-title-button" onClick={() => openStrategy(item)}>{item.name}</button><button className="discover-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(item.user); }}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
-                    <button onClick={() => setNotice(`Following ${item.name} is a demo action`)}>{t("Follow")}</button>
+                    <button onClick={(event) => { event.stopPropagation(); openStrategy(item); }}>{t("View strategy")}</button>
                   </article>
                 )) : [
                   {name:"tradewiz",followers:"342",returns:"+124.5%",win:"68%",age:240,trades:680,avatar:"T",tone:"trader-avatar-1",verified:true},
@@ -1393,6 +1442,214 @@ function App() {
           </section>
         </div>
       )}
+
+      {/* [ADDED] Centered Strategy Detail modal with a fixed viewport height and internal scrolling. */}
+      {selectedStrategy && (
+        <div className="strategy-detail-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeStrategy(); }}>
+          <section className="strategy-detail-modal" role="dialog" aria-modal="true" aria-labelledby="strategy-detail-title">
+            <header className="strategy-detail-header">
+              <div className="strategy-detail-heading">
+                <div className={`strategy-detail-icon ${selectedStrategy.tone || "bitcoin"}`}><Layers size={21} strokeWidth={1.8}/></div>
+                <div className="strategy-detail-title-wrap">
+                  <h2 id="strategy-detail-title">{selectedStrategy.name}</h2>
+                  <button type="button" className="strategy-detail-owner-link" onClick={() => { closeStrategy(); openTrader(selectedStrategy.owner); }}>@{selectedStrategy.owner} · {t(selectedStrategy.type)}</button>
+                </div>
+                <span className="strategy-detail-status">{t("Active")}</span>
+              </div>
+              <button type="button" className="strategy-detail-close" aria-label={t("Close")} onClick={closeStrategy}><X size={19}/></button>
+            </header>
+
+            <div className="strategy-detail-scroll">
+              <section className="strategy-detail-performance">
+                <div className="strategy-detail-return-row">
+                  <div><span>{t("Total Return")}</span><strong className={String(selectedStrategy.returns).startsWith("-") ? "negative" : "positive"}>{selectedStrategy.returns}</strong></div>
+                  <div className="strategy-detail-pnl"><span>{t("Total PnL")}</span><strong className="positive">${(selectedStrategy.currentBalance - selectedStrategy.initialBalance).toLocaleString("en-US", { maximumFractionDigits: 2 })}</strong></div>
+                </div>
+                <div className="strategy-detail-chart-heading"><span>{t("Performance")}</span><small>{t("Cumulative return")}</small></div>
+                <div className="strategy-detail-timeframes" role="tablist" aria-label={t("Chart timeframe")}>
+                  {["1D","7D","1M","3M","6M","1Y","ALL"].map((period) => (
+                    <button type="button" role="tab" aria-selected={strategyTimeframe === period} className={strategyTimeframe === period ? "selected" : ""} key={period} onClick={() => setStrategyTimeframe(period)}>{period}</button>
+                  ))}
+                </div>
+                <div className="strategy-detail-chart">
+                  <svg viewBox="0 0 640 170" preserveAspectRatio="none" role="img" aria-label={selectedStrategy.name + " " + strategyTimeframe + " performance chart"}>
+                    <defs><linearGradient id="strategy-detail-chart-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20bd68" stopOpacity=".22"/><stop offset="100%" stopColor="#20bd68" stopOpacity="0"/></linearGradient></defs>
+                    {[30,70,110,150].map((y) => <line key={y} x1="0" y1={y} x2="640" y2={y} stroke="currentColor" opacity=".10" strokeDasharray="4 5"/>)}
+                    <path d={strategyTimeframe === "1D" ? "M0 128 L40 120 L80 126 L120 96 L160 103 L200 91 L240 98 L280 70 L320 82 L360 61 L400 70 L440 48 L480 57 L520 36 L560 44 L600 20 L640 25 L640 170 L0 170 Z" : strategyTimeframe === "7D" ? "M0 138 L40 125 L80 130 L120 112 L160 116 L200 92 L240 101 L280 83 L320 90 L360 65 L400 73 L440 52 L480 61 L520 38 L560 45 L600 23 L640 15 L640 170 L0 170 Z" : "M0 145 L40 132 L80 137 L120 111 L160 119 L200 89 L240 98 L280 73 L320 84 L360 54 L400 65 L440 43 L480 52 L520 28 L560 37 L600 16 L640 8 L640 170 L0 170 Z"} fill="url(#strategy-detail-chart-fill)"/>
+                    <path d={strategyTimeframe === "1D" ? "M0 128 L40 120 L80 126 L120 96 L160 103 L200 91 L240 98 L280 70 L320 82 L360 61 L400 70 L440 48 L480 57 L520 36 L560 44 L600 20 L640 25" : strategyTimeframe === "7D" ? "M0 138 L40 125 L80 130 L120 112 L160 116 L200 92 L240 101 L280 83 L320 90 L360 65 L400 73 L440 52 L480 61 L520 38 L560 45 L600 23 L640 15" : "M0 145 L40 132 L80 137 L120 111 L160 119 L200 89 L240 98 L280 73 L320 84 L360 54 L400 65 L440 43 L480 52 L520 28 L560 37 L600 16 L640 8"} fill="none" stroke="#20bd68" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>
+                  </svg>
+                  <div className="strategy-detail-chart-axis"><span>{strategyTimeframe === "1D" ? "00:00" : strategyTimeframe === "7D" ? "7D ago" : strategyTimeframe === "ALL" ? "Start" : strategyTimeframe + " ago"}</span><span>{t("Today")}</span></div>
+                </div>
+              </section>
+
+              <nav className="strategy-detail-tabs" role="tablist" aria-label={t("Strategy detail sections")}>
+                {[
+                  {id:"overview",label:"Overview",icon:Activity},
+                  {id:"analytics",label:"Analytics",icon:BarChart3},
+                  {id:"trades",label:"Trades",icon:ArrowUpDown},
+                  {id:"owner",label:"Owner",icon:UserRound}
+                ].map((tab) => {
+                  const TabIcon = tab.icon;
+                  return <button type="button" role="tab" aria-selected={strategyDetailTab === tab.id} className={strategyDetailTab === tab.id ? "selected" : ""} key={tab.id} onClick={() => setStrategyDetailTab(tab.id)}><TabIcon size={15}/><span>{t(tab.label)}</span></button>;
+                })}
+              </nav>
+
+              {strategyDetailTab === "overview" && (
+                <div className="strategy-detail-tab-content">
+                  <div className="strategy-detail-section-title"><h3>{t("Key Statistics")}</h3><span>{t("All time")}</span></div>
+                  <div className="strategy-detail-stat-grid">
+                    <div><span>{t("Win Rate")}</span><strong>{selectedStrategy.win}</strong></div>
+                    <div><span>{t("Total Trades")}</span><strong>{Number(selectedStrategy.trades).toLocaleString()}</strong></div>
+                    <div><span>{t("Max Drawdown")}</span><strong className="negative">{selectedStrategy.maxDrawdown}</strong></div>
+                    <div><span>{t("Profit Factor")}</span><strong>{selectedStrategy.profitFactor}</strong></div>
+                  </div>
+                  <div className="strategy-detail-section-title"><h3>{t("Capital & AUM")}</h3><span>{t("Strategy account")}</span></div>
+                  <div className="strategy-detail-capital-grid">
+                    <div><span>{t("Initial Balance")}</span><strong>${selectedStrategy.initialBalance.toLocaleString("en-US")}</strong></div>
+                    <div><span>{t("Current Balance")}</span><strong>${selectedStrategy.currentBalance.toLocaleString("en-US", { maximumFractionDigits: 2 })}</strong></div>
+                    <div><span>{t("Current AUM")}</span><strong>${selectedStrategy.aum.toLocaleString("en-US")}</strong></div>
+                    <div><span>{t("Active Copiers")}</span><strong>{selectedStrategy.copiers}</strong></div>
+                  </div>
+                  <div className="strategy-detail-section-title"><h3>{t("Trading Information")}</h3></div>
+                  <div className="strategy-detail-info-list">
+                    <div><span>{t("Trading Pair")}</span><strong>{selectedStrategy.pair}</strong></div>
+                    <div><span>{t("Strategy Type")}</span><strong>{t(selectedStrategy.type)}</strong></div>
+                    <div><span>{t("Risk Level")}</span><strong>{t(selectedStrategy.risk)}</strong></div>
+                    <div><span>{t("Leverage")}</span><strong>{selectedStrategy.leverage}</strong></div>
+                    <div><span>{t("Strategy Age")}</span><strong>{selectedStrategy.age} {t("days")}</strong></div>
+                  </div>
+                </div>
+              )}
+
+              {strategyDetailTab === "analytics" && (
+                <div className="strategy-detail-tab-content">
+                  <div className="strategy-detail-section-title"><h3>{t("Risk & Returns")}</h3><span>{t("All time")}</span></div>
+                  <div className="strategy-detail-stat-grid">
+                    <div><span>{t("Sharpe Ratio")}</span><strong>{selectedStrategy.sharpe}</strong></div>
+                    <div><span>{t("Profit Factor")}</span><strong>{selectedStrategy.profitFactor}</strong></div>
+                    <div><span>{t("Average Win")}</span><strong className="positive">{selectedStrategy.avgWin}</strong></div>
+                    <div><span>{t("Average Loss")}</span><strong className="negative">{selectedStrategy.avgLoss}</strong></div>
+                  </div>
+                  <div className="strategy-detail-section-title"><h3>{t("Monthly Returns")}</h3><span>{t("Illustrative data")}</span></div>
+                  <div className="strategy-detail-month-bars">
+                    {["Jun","Jul","Aug","Sep","Oct","Nov"].map((month,index) => <div key={month}><span>{month}</span><i style={{height:[38,55,46,72,62,88][index] + "%"}}/><b>{["+4.2%","+7.1%","+5.8%","+9.4%","+8.1%","+12.8%"][index]}</b></div>)}
+                  </div>
+                  <p className="strategy-detail-note">{t("Strategy performance metrics are illustrative demo data and are not live trading results.")}</p>
+                </div>
+              )}
+
+              {strategyDetailTab === "trades" && (
+                <div className="strategy-detail-tab-content">
+                  <div className="strategy-detail-section-title"><h3>{t("Recent Trade History")}</h3><span>{t("Latest activity")}</span></div>
+                  <div className="strategy-detail-trade-list">
+                    {[
+                      {pair:selectedStrategy.pair,side:"LONG",entry:"$67,420.50",exit:"$70,286.87",pnl:"+4.25%",time:"Today · 10:32"},
+                      {pair:selectedStrategy.pair,side:"SHORT",entry:"$69,120.00",exit:"$68,290.56",pnl:"+1.20%",time:"Yesterday · 18:20"},
+                      {pair:selectedStrategy.pair,side:"LONG",entry:"$66,800.00",exit:"$65,864.80",pnl:"-1.40%",time:"Yesterday · 09:15"},
+                      {pair:selectedStrategy.pair,side:"LONG",entry:"$64,250.00",exit:"$66,176.50",pnl:"+3.00%",time:"Oct 30 · 14:45"}
+                    ].map((trade,index) => <div className="strategy-detail-trade-row" key={trade.time}><div><strong>{trade.pair}</strong><span>{trade.side} · {trade.time}</span><small>{t("Entry")}: {trade.entry} · {t("Exit")}: {trade.exit}</small></div><b className={trade.pnl.startsWith("-") ? "negative" : "positive"}>{trade.pnl}</b></div>)}
+                  </div>
+                  <p className="strategy-detail-note">{t("Recent trades shown are sample data for the Beanance demo.")}</p>
+                </div>
+              )}
+
+              {strategyDetailTab === "owner" && (
+                <div className="strategy-detail-tab-content strategy-detail-owner-panel">
+                  <div className="strategy-detail-owner-card">
+                    <div className={`strategy-detail-owner-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedStrategy.owner)+1}`}>{selectedStrategy.owner.charAt(0).toUpperCase()}</div>
+                    <div className="strategy-detail-owner-main"><strong>{selectedStrategy.ownerName}</strong><span>@{selectedStrategy.owner}</span><small><BadgeCheck size={13}/> {t("Verified trader")}</small></div>
+                    <button type="button" onClick={() => { const owner = selectedStrategy.owner; closeStrategy(); openTrader(owner); }}>{t("View Profile")}</button>
+                  </div>
+                  <p className="strategy-detail-owner-bio">{selectedStrategy.ownerBio}</p>
+                  <div className="strategy-detail-stat-grid">
+                    <div><span>{t("Followers")}</span><strong>{selectedStrategy.ownerFollowers}</strong></div>
+                    <div><span>{t("Strategies")}</span><strong>{traderProfiles[selectedStrategy.owner]?.strategies.length || 1}</strong></div>
+                    <div><span>{t("Win Rate")}</span><strong>{selectedStrategy.win}</strong></div>
+                    <div><span>{t("Active for")}</span><strong>{selectedStrategy.age}d</strong></div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <footer className="strategy-detail-footer">
+              <span>{t("Demo statistics")}</span>
+              <button type="button" className="strategy-detail-copy-button" onClick={() => setNotice(`Copy trading for ${selectedStrategy.name} is coming soon")}><Copy size={15}/>{t("Copy Strategy")}</button>
+            </footer>
+          </section>
+        </div>
+      )}
+
+      <style jsx global>{`
+        .app-shell .strategy-detail-overlay{position:fixed;inset:0;z-index:1400;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(4,8,14,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+        .app-shell .strategy-detail-modal{display:flex;flex-direction:column;width:min(760px,calc(100vw - 40px));height:min(820px,86vh);max-height:86vh;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--text);box-shadow:0 24px 80px rgba(0,0,0,.38);}
+        .app-shell .strategy-detail-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 20px;border-bottom:1px solid var(--line);flex:0 0 auto;}
+        .app-shell .strategy-detail-heading{display:flex;align-items:center;gap:12px;min-width:0;flex:1;}
+        .app-shell .strategy-detail-icon{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border-radius:13px;background:var(--panel-soft);color:var(--gold);}
+        .app-shell .strategy-detail-title-wrap{display:flex;flex-direction:column;gap:3px;min-width:0;}
+        .app-shell .strategy-detail-title-wrap h2{margin:0;color:var(--text);font-size:16px;font-weight:750;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .app-shell .strategy-detail-owner-link{width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:var(--muted);font-size:11px;text-align:left;cursor:pointer;}
+        .app-shell .strategy-detail-status{margin-left:auto;padding:5px 9px;border-radius:999px;background:rgba(32,189,104,.12);color:var(--green);font-size:10px;font-weight:750;white-space:nowrap;}
+        .app-shell .strategy-detail-close{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:10px;background:var(--panel-soft);color:var(--muted);cursor:pointer;}
+        .app-shell .strategy-detail-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--muted) transparent;}
+        .app-shell .strategy-detail-performance{padding:18px 20px 12px;}
+        .app-shell .strategy-detail-return-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
+        .app-shell .strategy-detail-return-row>div{display:flex;flex-direction:column;gap:4px;}
+        .app-shell .strategy-detail-return-row span,.app-shell .strategy-detail-chart-heading small{color:var(--muted);font-size:11px;}
+        .app-shell .strategy-detail-return-row>div:first-child strong{font-size:29px;font-weight:800;letter-spacing:-1.2px;line-height:1.1;}
+        .app-shell .strategy-detail-pnl{align-items:flex-end;}
+        .app-shell .strategy-detail-pnl strong{font-size:14px;font-weight:750;}
+        .app-shell .strategy-detail-chart-heading{display:flex;justify-content:space-between;align-items:center;margin:18px 0 9px;color:var(--text);font-size:12px;font-weight:700;}
+        .app-shell .strategy-detail-timeframes{display:flex;gap:5px;margin-bottom:8px;}
+        .app-shell .strategy-detail-timeframes button{flex:1;min-width:0;padding:7px 3px;border:1px solid transparent;border-radius:8px;background:var(--panel-soft);color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;}
+        .app-shell .strategy-detail-timeframes button.selected{border-color:rgba(218,174,39,.24);background:rgba(218,174,39,.12);color:var(--gold);}
+        .app-shell .strategy-detail-chart{height:132px;overflow:hidden;}
+        .app-shell .strategy-detail-chart svg{display:block;width:100%;height:108px;overflow:visible;}
+        .app-shell .strategy-detail-chart-axis{display:flex;justify-content:space-between;color:var(--muted);font-size:9px;}
+        .app-shell .strategy-detail-tabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:9px 20px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+        .app-shell .strategy-detail-tabs button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:7px 8px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:11px;font-weight:650;cursor:pointer;}
+        .app-shell .strategy-detail-tabs button.selected{border-color:rgba(218,174,39,.2);background:var(--panel-soft);color:var(--gold);box-shadow:inset 2px 2px 5px rgba(0,0,0,.10);}
+        .app-shell .strategy-detail-tab-content{display:flex;flex-direction:column;gap:15px;padding:17px 20px 22px;}
+        .app-shell .strategy-detail-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;}
+        .app-shell .strategy-detail-section-title h3{margin:0;color:var(--text);font-size:12px;font-weight:750;}
+        .app-shell .strategy-detail-section-title>span{color:var(--muted);font-size:10px;}
+        .app-shell .strategy-detail-stat-grid,.app-shell .strategy-detail-capital-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
+        .app-shell .strategy-detail-stat-grid>div,.app-shell .strategy-detail-capital-grid>div{display:flex;flex-direction:column;gap:7px;min-width:0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-soft);}
+        .app-shell .strategy-detail-stat-grid span,.app-shell .strategy-detail-capital-grid span{color:var(--muted);font-size:10px;line-height:1.3;}
+        .app-shell .strategy-detail-stat-grid strong,.app-shell .strategy-detail-capital-grid strong{color:var(--text);font-size:16px;font-weight:750;overflow-wrap:anywhere;}
+        .app-shell .strategy-detail-info-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;}
+        .app-shell .strategy-detail-info-list>div{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line);}
+        .app-shell .strategy-detail-info-list span{color:var(--muted);font-size:11px;}
+        .app-shell .strategy-detail-info-list strong{color:var(--text);font-size:11px;text-align:right;}
+        .app-shell .strategy-detail-month-bars{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:end;gap:10px;height:150px;padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft);}
+        .app-shell .strategy-detail-month-bars>div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;}
+        .app-shell .strategy-detail-month-bars i{display:block;width:100%;max-width:32px;min-height:8px;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#28c879,rgba(32,189,104,.3));}
+        .app-shell .strategy-detail-month-bars span{color:var(--muted);font-size:9px;}
+        .app-shell .strategy-detail-month-bars b{color:var(--green);font-size:9px;white-space:nowrap;}
+        .app-shell .strategy-detail-note{margin:0;color:var(--muted);font-size:10px;line-height:1.5;}
+        .app-shell .strategy-detail-trade-list{display:flex;flex-direction:column;}
+        .app-shell .strategy-detail-trade-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line);}
+        .app-shell .strategy-detail-trade-row>div{display:flex;flex-direction:column;gap:4px;min-width:0;}
+        .app-shell .strategy-detail-trade-row strong{color:var(--text);font-size:12px;}
+        .app-shell .strategy-detail-trade-row span,.app-shell .strategy-detail-trade-row small{color:var(--muted);font-size:10px;}
+        .app-shell .strategy-detail-trade-row b{font-size:13px;white-space:nowrap;}
+        .app-shell .strategy-detail-owner-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft);}
+        .app-shell .strategy-detail-owner-avatar{display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:var(--panel);color:var(--text);font-weight:800;}
+        .app-shell .strategy-detail-owner-main{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0;}
+        .app-shell .strategy-detail-owner-main strong{color:var(--text);font-size:13px;}
+        .app-shell .strategy-detail-owner-main span,.app-shell .strategy-detail-owner-main small{color:var(--muted);font-size:10px;}
+        .app-shell .strategy-detail-owner-main small{display:flex;align-items:center;gap:4px;color:var(--green);}
+        .app-shell .strategy-detail-owner-card>button{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font-size:10px;font-weight:700;cursor:pointer;}
+        .app-shell .strategy-detail-owner-bio{margin:0;color:var(--muted);font-size:11px;line-height:1.6;}
+        .app-shell .strategy-detail-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 20px;border-top:1px solid var(--line);background:var(--panel);flex:0 0 auto;}
+        .app-shell .strategy-detail-footer>span{color:var(--muted);font-size:10px;}
+        .app-shell .strategy-detail-copy-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 16px;border:1px solid rgba(218,174,39,.26);border-radius:10px;background:var(--gold);color:#171717;font-size:11px;font-weight:800;cursor:pointer;}
+        .app-shell .discover-strategy-title-button{display:block;width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:var(--text);font:inherit;font-size:inherit;font-weight:750;text-align:left;cursor:pointer;}
+        .app-shell .discover-strategy-title-button:hover,.app-shell .strategy-detail-owner-link:hover{color:var(--gold);}
+        .app-shell.theme-light .strategy-detail-modal{background:var(--panel);box-shadow:0 24px 80px rgba(34,45,60,.22);}
+        @media(max-width:700px){.app-shell .strategy-detail-overlay{padding:10px;}.app-shell .strategy-detail-modal{width:calc(100vw - 20px);height:88vh;max-height:88vh;border-radius:18px;}.app-shell .strategy-detail-header{padding:13px 14px;}.app-shell .strategy-detail-performance{padding:14px 14px 9px;}.app-shell .strategy-detail-tabs{padding:8px 10px;gap:3px;}.app-shell .strategy-detail-tabs button{gap:4px;min-height:39px;padding:6px 3px;font-size:10px;}.app-shell .strategy-detail-tab-content{padding:14px 14px 20px;}.app-shell .strategy-detail-stat-grid,.app-shell .strategy-detail-capital-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}.app-shell .strategy-detail-stat-grid>div,.app-shell .strategy-detail-capital-grid>div{padding:10px;}.app-shell .strategy-detail-stat-grid strong,.app-shell .strategy-detail-capital-grid strong{font-size:14px;}.app-shell .strategy-detail-info-list{grid-template-columns:1fr;}.app-shell .strategy-detail-month-bars{gap:5px;padding:8px;}.app-shell .strategy-detail-footer{padding:11px 14px;}.app-shell .strategy-detail-copy-button{min-height:36px;padding:0 12px;}.app-shell .strategy-detail-return-row>div:first-child strong{font-size:25px;}}
+        @media(max-width:380px){.app-shell .strategy-detail-tabs button{font-size:9px;}.app-shell .strategy-detail-tabs button svg{width:13px;height:13px;}.app-shell .strategy-detail-status{font-size:9px;padding:4px 7px;}.app-shell .strategy-detail-timeframes{gap:3px;}.app-shell .strategy-detail-timeframes button{font-size:9px;padding:7px 1px;}}
+      `}</style>
+
       {notice && <div className="toast" role="status">{notice}</div>}
     </main>
   );
