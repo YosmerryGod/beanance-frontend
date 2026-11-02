@@ -569,6 +569,7 @@ function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
   const [helpReturnTo, setHelpReturnTo] = useState("dashboard"); // [ADDED] Return destination for standalone Help Center
+  const [aboutReturnTo, setAboutReturnTo] = useState("dashboard"); // [ADDED] Return destination for standalone About page
   const [helpSearch, setHelpSearch] = useState(""); // [ADDED] Help Center article search
   const [helpCategory, setHelpCategory] = useState("All"); // [ADDED] Help Center category filter
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -783,7 +784,7 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        {active !== "edit-profile" && active !== "help-center" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
+        {active !== "edit-profile" && active !== "help-center" && active !== "about" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
           {active !== "trader-profile" && (
             <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
               <Menu size={20} />
@@ -940,6 +941,64 @@ function App() {
               <button type="button" onClick={() => setNotice("Support contact is coming soon") }><MessageCircle size={17}/> Contact Support</button>
             </section>
             <p className="help-center-footnote">Beanance Help Center · Support resources</p>
+          </section>
+        )}
+
+        {active === "about" && (
+          <section className="page page-enter about-page">
+            <div className="about-topline">
+              <button type="button" className="help-center-back" onClick={() => setActive(aboutReturnTo)} aria-label={t("Back")}><ArrowLeft size={19}/></button>
+              <div className="help-center-brand">
+                <span className="help-center-brand-icon"><Info size={23}/></span>
+                <div><strong>About Beanance</strong><small>Discover our platform</small></div>
+              </div>
+            </div>
+
+            <section className="about-hero">
+              <div className="about-hero-brand"><span className="about-logo-mark"><Layers size={34}/></span><strong>BEANANCE</strong></div>
+              <p className="about-eyebrow">DISCOVER · CONNECT · GROW</p>
+              <h1>Trade smarter.<br/><span>Build together.</span></h1>
+              <p className="about-hero-description">A community-driven platform to discover traders, explore strategies, and navigate the crypto ecosystem.</p>
+            </section>
+
+            <section className="about-section">
+              <div className="about-section-heading"><span>01</span><div><h2>Our Mission</h2><p>Why we are building Beanance</p></div></div>
+              <p className="about-body-copy">We believe useful trading insights should be easier to discover and understand. Beanance brings traders, strategies, market information, and portfolio tools together in one place — helping the community make more informed decisions.</p>
+            </section>
+
+            <section className="about-section">
+              <div className="about-section-heading"><span>02</span><div><h2>What matters to us</h2><p>The principles behind the platform</p></div></div>
+              <div className="about-values-grid">
+                <article className="about-value-card"><span><Users size={23}/></span><strong>Community</strong><p>Discover ideas and learn from other market participants.</p></article>
+                <article className="about-value-card"><span><Activity size={23}/></span><strong>Transparency</strong><p>Make strategy performance and risk easier to review.</p></article>
+                <article className="about-value-card"><span><ShieldCheck size={23}/></span><strong>Security</strong><p>Encourage careful account and wallet practices.</p></article>
+                <article className="about-value-card"><span><Sparkles size={23}/></span><strong>Innovation</strong><p>Keep improving tools for the evolving crypto ecosystem.</p></article>
+              </div>
+            </section>
+
+            <section className="about-section">
+              <div className="about-section-heading"><span>03</span><div><h2>One platform, connected tools</h2><p>Explore the Beanance experience</p></div></div>
+              <div className="about-feature-list">
+                <div><span><Compass size={20}/></span><div><strong>Discover</strong><p>Explore traders and community strategies.</p></div></div>
+                <div><span><BarChart3 size={20}/></span><div><strong>Markets</strong><p>Review market movements and asset information.</p></div></div>
+                <div><span><Wallet size={20}/></span><div><strong>Portfolio</strong><p>Keep an eye on your strategies and portfolio activity.</p></div></div>
+                <div><span><Layers size={20}/></span><div><strong>Strategy insights</strong><p>Review strategy metrics, trading style, and risk indicators.</p></div></div>
+              </div>
+            </section>
+
+            <section className="about-disclaimer">
+              <ShieldCheck size={21}/>
+              <p>Crypto markets involve risk. Information and performance indicators on the platform are for informational purposes and should not be treated as financial advice or a guarantee of future results.</p>
+            </section>
+
+            <section className="about-platform-info">
+              <h2>Platform Information</h2>
+              <div><span>Platform</span><strong>Beanance</strong></div>
+              <div><span>Category</span><strong>Crypto & Web3</strong></div>
+              <div><span>Purpose</span><strong>Trading discovery & insights</strong></div>
+              <div><span>Legal</span><button type="button" onClick={() => setNotice("Legal documents are coming soon")}>Terms & Privacy <ChevronRight size={15}/></button></div>
+            </section>
+            <p className="about-footer">© 2026 Beanance. Built for the crypto community.</p>
           </section>
         )}
 
@@ -1452,7 +1511,7 @@ function App() {
 
       </div>
 
-      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" || active === "help-center" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
+      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" || active === "help-center" || active === "about" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
@@ -1520,7 +1579,7 @@ function App() {
               <button type="button" className={`sidebar-nav-item ${active === "help-center" ? "selected" : ""}`} onClick={() => {setHelpReturnTo(active);setActive("help-center");setHelpSearch("");setHelpCategory("All");setSidebarOpen(false);window.scrollTo({top:0,behavior:"instant"});}}>
                 <CircleHelp size={19} /><span>{sidebarText.help}</span><ChevronRight className="sidebar-item-chevron" size={17} />
               </button>
-              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Beanance · Community trading platform");}}>
+              <button type="button" className={`sidebar-nav-item ${active === "about" ? "selected" : ""}`} onClick={() => {setAboutReturnTo(active);setActive("about");setSidebarOpen(false);window.scrollTo({top:0,behavior:"instant"});}}>
                 <Info size={19} /><span>{sidebarText.about}</span><ChevronRight className="sidebar-item-chevron" size={17} />
               </button>
             </nav>
