@@ -90,7 +90,7 @@ async function waitForHealth(logFile) {
         headers: { "cache-control": "no-cache" },
       });
 
-      if (response.status >= 200 && response.status < 500) {
+      if (response.status >= 200 && response.status < 400) { // [MODIFIED] Treat only successful and redirect responses as healthy.
         writeLog(logFile, "STAGE HEALTH_CHECK: SUCCESS HTTP " + response.status);
         return;
       }
