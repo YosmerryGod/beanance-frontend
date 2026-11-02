@@ -867,7 +867,7 @@ function App() {
                       <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
                     </svg>
                     <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
-                    <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={(event) => { event.stopPropagation(); setNotice(`Following ${strategy.name} is a demo action`); }}>{t("Follow")}</button></div>
+                    <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={(event) => { event.stopPropagation(); setNotice(`Copy trading for ${strategy.name} is coming soon`); }}>{t("Copy")}</button></div>
                   </article>
                 ))}
               </div>
