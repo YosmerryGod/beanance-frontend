@@ -3,6 +3,13 @@
 
 "use strict";
 
+// [ADDED] Load the private deployment secret from a server-only env file.
+try {
+  process.loadEnvFile(process.env.DEPLOY_ENV_FILE || "/etc/beanance-deploy.env");
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+
 const http = require("node:http");
 const crypto = require("node:crypto");
 const fs = require("node:fs");
