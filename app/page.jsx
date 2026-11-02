@@ -543,11 +543,11 @@ const traderProfiles = {
 };
 
 const marketAssets = [
-  { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "BTC", tone: "bitcoin", volume: "$28.4B" },
-  { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum", volume: "$14.2B" },
-  { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb", volume: "$1.8B" },
-  { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "SOL", tone: "solana", volume: "$3.9B" },
-  { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, tone: "xrp", volume: "$1.1B" },
+  { symbol: "BTC", name: "Bitcoin", price: "$65,120.40", change: "+2.45%", positive: true, icon: "BTC", tone: "bitcoin", volume: "$28.4B", high: "$66,240.00", low: "$63,810.20", quoteVolume: "$28.4B" },
+  { symbol: "ETH", name: "Ethereum", price: "$2,976.80", change: "+1.82%", positive: true, icon: "ETH", tone: "ethereum", volume: "$14.2B", high: "$3,025.40", low: "$2,910.15", quoteVolume: "$14.2B" },
+  { symbol: "BNB", name: "BNB", price: "$651.23", change: "-0.64%", positive: false, icon: "BNB", tone: "bnb", volume: "$1.8B", high: "$662.80", low: "$644.10", quoteVolume: "$1.8B" },
+  { symbol: "SOL", name: "Solana", price: "$158.72", change: "+4.21%", positive: true, icon: "SOL", tone: "solana", volume: "$3.9B", high: "$162.50", low: "$151.20", quoteVolume: "$3.9B" },
+  { symbol: "XRP", name: "XRP", price: "$0.6241", change: "-1.12%", positive: false, tone: "xrp", volume: "$1.1B", high: "$0.6380", low: "$0.6152", quoteVolume: "$1.1B" },
 ];
 
 // [ADDED] Short-term market movement examples for the Top Movers interface.
