@@ -4001,3 +4001,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     font-size:9px!important;
   }
 }
+
+
+/* [MODIFIED] Make trader and portfolio Copy buttons visually identical to Dashboard and Discover buttons. */
+.app-shell .trader-copy-button{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  min-height:32px!important;
+  padding:8px 14px!important;
+  color:#17150d!important;
+  background:linear-gradient(145deg,#ffe16a,#e2ad00)!important;
+  border:1px solid rgba(255,226,112,.45)!important;
+  border-radius:9px!important;
+  box-shadow:3px 3px 9px rgba(0,0,0,.2),inset 1px 1px 2px rgba(255,255,255,.4)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  white-space:nowrap!important;
+  cursor:pointer!important;
+  transition:filter .2s ease,transform .2s ease!important;
+}
+.app-shell .trader-copy-button:hover{filter:brightness(1.05)!important;}
+.app-shell .trader-copy-button svg{color:inherit!important;}
+@media(max-width:760px){
+  .app-shell .trader-copy-button{
+    min-height:30px!important;
+    padding:7px 10px!important;
+    font-size:9px!important;
+  }
+}
