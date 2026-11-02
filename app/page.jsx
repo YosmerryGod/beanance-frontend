@@ -855,11 +855,11 @@ function App() {
                   {name:"Scalping AI v2",user:"@cryptofox",symbol:"ETH",tone:"ethereum",returns:"+89.2%",win:"72%",type:"Scalping",risk:"Low Risk",riskTone:"low",chart:"M2 42 L18 35 L34 38 L50 28 L66 31 L82 20 L98 26 L114 18 L130 22 L146 13 L162 18 L178 8 L194 13 L210 5 L226 10 L242 2 L258 7 L274 -1"},
                   {name:"ETH Breakout",user:"@moontrade",symbol:"SOL",tone:"solana",returns:"+68.1%",win:"63%",type:"Breakout",risk:"Medium Risk",riskTone:"medium",chart:"M2 43 L18 35 L34 39 L50 29 L66 34 L82 24 L98 29 L114 19 L130 24 L146 14 L162 20 L178 10 L194 15 L210 7 L226 12 L242 3 L258 8 L274 -2"}
                 ].map((strategy) => (
-                  <article className="strategy-card" key={strategy.name}>
+                  <article className="strategy-card" key={strategy.name} role="button" tabIndex={0} aria-label={`View ${strategy.name} strategy details`} onClick={() => openStrategy(strategy)} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy(strategy); } }}>
                     <div className="strategy-card-head">
                       <div className={`strategy-coin ${strategy.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
-                      <div className="strategy-identity"><strong>{strategy.name}</strong><button className="strategy-owner-link" onClick={() => openTrader(strategy.user)}>{strategy.user}</button></div>
-                      <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={() => setNotice(`${strategy.name} details are coming soon`)}>•••</button>
+                      <div className="strategy-identity"><strong>{strategy.name}</strong><button className="strategy-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(strategy.user); }}>{strategy.user}</button></div>
+                      <button className="strategy-more" aria-label={`More about ${strategy.name}`} onClick={(event) => { event.stopPropagation(); openStrategy(strategy); }}>•••</button>
                     </div>
                     <svg className="strategy-chart" viewBox="0 0 276 48" preserveAspectRatio="none" aria-label="Strategy performance chart">
                       <defs><linearGradient id={`strategy-fill-${strategy.name.replaceAll(" ","-")}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#20c56a" stopOpacity=".24"/><stop offset="100%" stopColor="#20c56a" stopOpacity="0"/></linearGradient></defs>
@@ -867,7 +867,7 @@ function App() {
                       <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
                     </svg>
                     <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
-                    <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={() => setNotice(`Following ${strategy.name} is a demo action`)}>{t("Follow")}</button></div>
+                    <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={(event) => { event.stopPropagation(); setNotice(`Following ${strategy.name} is a demo action`); }}>{t("Follow")}</button></div>
                   </article>
                 ))}
               </div>
@@ -966,7 +966,7 @@ function App() {
                   {name:"ETH Breakout",user:"@moontrade",type:"Breakout",risk:"Medium Risk",returns:"+68.1%",win:"63%",age:75,trades:310,tone:"solana",symbol:"SOL",tag:"Trending"},
                   {name:"BNB Momentum",user:"@quantalab",type:"Momentum",risk:"Low Risk",returns:"+54.3%",win:"58%",age:35,trades:92,tone:"bnb",symbol:"ETH",tag:"Low Risk"}
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
-                  <article className="discover-list-card" key={item.name}>
+                  <article className="discover-list-card" key={item.name} role="button" tabIndex={0} aria-label={`View ${item.name} strategy details`} onClick={() => openStrategy(item)} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy(item); } }}>
                     <div className={`discover-avatar ${item.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
                     <div className="discover-card-main"><button type="button" className="discover-strategy-title-button" onClick={() => openStrategy(item)}>{item.name}</button><button className="discover-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(item.user); }}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
@@ -1067,13 +1067,13 @@ function App() {
                     {traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).length === 0 ? (
                       <div className="trader-empty-state"><Activity size={20}/><strong>{t("No inactive strategies")}</strong><span>{t("Trader ini belum memiliki strategi yang dinonaktifkan.")}</span></div>
                     ) : traderProfiles[selectedTrader].strategies.filter((strategy,index) => traderStrategyFilter === "active" ? index < Math.max(1,traderProfiles[selectedTrader].strategies.length-1) : index >= Math.max(1,traderProfiles[selectedTrader].strategies.length-1)).map((strategy,index) => (
-                      <article className="trader-strategy-performance-card" key={strategy.name}>
+                      <article className="trader-strategy-performance-card" key={strategy.name} role="button" tabIndex={0} aria-label={`View ${strategy.name} strategy details`} onClick={() => openStrategy({ ...strategy, user: `@${selectedTrader}` })} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy({ ...strategy, user: `@${selectedTrader}` }); } }}>
                         <div className="trader-strategy-performance-heading">
                           <div className="trader-owned-strategy-icon"><Layers size={21} strokeWidth={1.75} /></div>
                           <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={`trader-strategy-risk-inline ${strategy.risk.toLowerCase().replace(" risk","")}`}>{t(strategy.risk)}</span></div><span>{t(strategy.type)}</span></div>
                           <div className="trader-strategy-actions">
                             <span className={`strategy-status-pill ${traderStrategyFilter}`}>{traderStrategyFilter === "active" ? "Active" : "Inactive"}</span>
-                            {traderStrategyFilter === "active" && <button className="trader-copy-button" onClick={() => setNotice(`Copy trading for ${strategy.name} is coming soon`)}><Copy size={13}/> Copy</button>}
+                            {traderStrategyFilter === "active" && <button className="trader-copy-button" onClick={(event) => { event.stopPropagation(); setNotice(`Copy trading for ${strategy.name} is coming soon`); }}><Copy size={13}/> Copy</button>}
                           </div>
                         </div>
                         <div className="trader-strategy-metrics">
@@ -1216,11 +1216,11 @@ function App() {
                         {name:"BTC Trend Master",pair:"BTCUSDT",type:"Trend Following",timeframe:"1h",returns:"+24.80%",win:"71%",trades:"680",risk:"Medium Risk",owner:"following",status:"active",chart:1},
                         {name:"ETH Quick Moves",pair:"ETHUSDT",type:"Momentum",timeframe:"15m",returns:"-2.40%",win:"48%",trades:"92",risk:"High Risk",owner:"following",status:"inactive",chart:0}
                       ].filter((s) => strategyFilter === "inactive" ? s.status === "inactive" : (strategyFilter === "all" || s.owner === strategyFilter)).map((strategy,index) => (
-                        <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name}>
+                        <article className="trader-strategy-performance-card portfolio-owned-strategy-card" key={strategy.name} role="button" tabIndex={0} aria-label={`View ${strategy.name} strategy details`} onClick={() => openStrategy({ ...strategy, user: strategy.owner === "mine" ? "@ezy" : "@tradewiz", symbol: strategy.pair.replace("USDT", "") })} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy({ ...strategy, user: strategy.owner === "mine" ? "@ezy" : "@tradewiz", symbol: strategy.pair.replace("USDT", "") }); } }}>
                           <div className="trader-strategy-performance-heading">
                             <div className="trader-owned-strategy-icon"><Layers size={21} strokeWidth={1.75} /></div>
                             <div className="trader-owned-strategy-main"><div className="trader-strategy-name-line"><strong>{strategy.name}</strong><span className={"trader-strategy-risk-inline " + strategy.risk.toLowerCase().replace(" risk","")}>{t(strategy.risk)}</span></div><span>{t(strategy.type)} · {strategy.pair} · {strategy.timeframe}</span></div>
-                            <div className="trader-strategy-actions"><span className={"strategy-status-pill " + strategy.status}>{t(strategy.status === "active" ? "Active" : "Inactive")}</span>{strategy.status === "active" && <button type="button" className="trader-copy-button" onClick={() => setNotice("Copy trading for " + strategy.name + " is coming soon")}><Copy size={14}/> {t("Copy")}</button>}</div>
+                            <div className="trader-strategy-actions"><span className={"strategy-status-pill " + strategy.status}>{t(strategy.status === "active" ? "Active" : "Inactive")}</span>{strategy.status === "active" && <button type="button" className="trader-copy-button" onClick={(event) => { event.stopPropagation(); setNotice("Copy trading for " + strategy.name + " is coming soon"); }}><Copy size={14}/> {t("Copy")}</button>}</div>
                           </div>
                           <div className="trader-strategy-metrics"><div><span>{t("30D Return")}</span><strong className={strategy.returns.startsWith("-") ? "negative" : "positive"}>{strategy.returns}</strong></div><div><span>{t("Win Rate")}</span><strong>{strategy.win}</strong></div><div><span>{t("Total Trades")}</span><strong>{strategy.trades}</strong></div></div>
                           <div className="trader-strategy-chart trader-strategy-chart-compact">
@@ -1580,6 +1580,8 @@ function App() {
       )}
 
       <style jsx global>{`
+        .app-shell .strategy-card,.app-shell .discover-list-card:not(.trader-discover-card),.app-shell .trader-strategy-performance-card{cursor:pointer;}
+        .app-shell .strategy-card:focus-visible,.app-shell .discover-list-card:not(.trader-discover-card):focus-visible,.app-shell .trader-strategy-performance-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
         .app-shell .strategy-detail-overlay{position:fixed;inset:0;z-index:1400;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(4,8,14,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
         .app-shell .strategy-detail-modal{display:flex;flex-direction:column;width:min(760px,calc(100vw - 40px));height:min(820px,86vh);max-height:86vh;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--text);box-shadow:0 24px 80px rgba(0,0,0,.38);}
         .app-shell .strategy-detail-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 20px;border-bottom:1px solid var(--line);flex:0 0 auto;}
