@@ -25,9 +25,9 @@ jobs:
           # [ADDED] Do not restart PM2 unless Next.js produced a complete production build.
           test -s .next/BUILD_ID
           if pm2 describe beanance-frontend >/dev/null 2>&1; then
-            PORT=3012 pm2 restart beanance-frontend --update-env
+            PORT=3099 pm2 restart beanance-frontend --update-env # [MODIFIED] Use the confirmed production port.
           else
-            PORT=3012 pm2 start npm --name beanance-frontend -- start
+            PORT=3099 pm2 start npm --name beanance-frontend -- start # [MODIFIED] Use the confirmed production port.
           fi
           pm2 delete beanance-test || true
           pm2 save
