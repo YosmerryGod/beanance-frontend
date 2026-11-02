@@ -1,273 +1,109 @@
-// [ADDED] Beanance production webhook deployment service.
-// Run this file with PM2 as a separate, long-lived process.
-
+#!/usr/bin/env node
 "use strict";
 
-// [ADDED] Load the private deployment secret from a server-only env file.
-try {
-  process.loadEnvFile(process.env.DEPLOY_ENV_FILE || "/etc/beanance-deploy.env");
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
-}
-
-const http = require("node:http");
-const crypto = require("node:crypto");
+// [MODIFIED] Manual deployment runner invoked by GitHub Actions over SSH.
+const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
-const { spawn } = require("node:child_process");
 
-const APP_DIR = process.env.APP_DIR || "/var/www/beanance-frontend";
-const PORT = Number(process.env.DEPLOY_PORT || 3100);
-const BRANCH = process.env.DEPLOY_BRANCH || "main";
-const APP_PROCESS_NAME = process.env.APP_PROCESS_NAME || "beanance-frontend";
+const PROJECT_DIR = process.env.PROJECT_DIR || __dirname;
+const BRANCH = process.env.BRANCH || "main";
+const PM2_TARGET = process.env.PM2_TARGET || "beanance-frontend";
 const APP_PORT = Number(process.env.APP_PORT || 3099);
-const WEBHOOK_SECRET = process.env.DEPLOY_WEBHOOK_SECRET;
 const LOG_DIR = process.env.DEPLOY_LOG_DIR || "/var/log/beanance-deploy";
-const MAX_BODY_BYTES = 2 * 1024 * 1024;
 
-let deploymentRunning = false;
-let lastDeployment = null;
-
-function timestamp() {
-  return new Date().toISOString();
+function log(message) {
+  process.stdout.write(`[${new Date().toISOString()}] ${message}\n`);
 }
 
-function writeLog(file, message) {
-  const line = "[" + timestamp() + "] " + message + "\n";
-  fs.appendFileSync(file, line, "utf8");
-  process.stdout.write(line);
-}
-
-function runCommand(command, args, options, logFile, stage) {
-  return new Promise((resolve, reject) => {
-    writeLog(logFile, "STAGE " + stage + ": START");
-    const child = spawn(command, args, {
-      cwd: APP_DIR,
-      env: options && options.env ? options.env : process.env,
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-
-    child.stdout.on("data", (chunk) => {
-      fs.appendFileSync(logFile, chunk);
-      process.stdout.write(chunk);
-    });
-
-    child.stderr.on("data", (chunk) => {
-      fs.appendFileSync(logFile, chunk);
-      process.stderr.write(chunk);
-    });
-
-    child.on("error", (error) => {
-      writeLog(logFile, "STAGE " + stage + ": ERROR " + error.message);
-      reject(error);
-    });
-
-    child.on("close", (code, signal) => {
-      if (code === 0) {
-        writeLog(logFile, "STAGE " + stage + ": SUCCESS");
-        resolve();
-      } else {
-        const error = new Error(
-          stage + " failed (exit code " + code + ", signal " + (signal || "none") + ")"
-        );
-        writeLog(logFile, "STAGE " + stage + ": FAILED " + error.message);
-        reject(error);
-      }
-    });
+function run(step) {
+  log(`START: ${step.name}`);
+  const result = spawnSync(step.cmd, step.args, {
+    cwd: path.resolve(PROJECT_DIR),
+    stdio: "inherit",
+    env: { ...process.env, PORT: String(APP_PORT) },
   });
+
+  if (result.error) {
+    log(`ERROR: ${step.name}: ${result.error.message}`);
+    process.exit(1);
+  }
+
+  if (result.status !== 0) {
+    log(`ERROR: ${step.name} exited with code ${result.status}`);
+    process.exit(result.status || 1);
+  }
+
+  log(`SUCCESS: ${step.name}`);
 }
 
-async function waitForHealth(logFile) {
-  const url = "http://127.0.0.1:" + APP_PORT;
-  const attempts = 30;
-
-  writeLog(logFile, "STAGE HEALTH_CHECK: START " + url);
-
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+async function verifyHealth() {
+  const url = `http://127.0.0.1:${APP_PORT}`;
+  for (let attempt = 1; attempt <= 30; attempt += 1) {
     try {
-      const response = await fetch(url, {
-        signal: AbortSignal.timeout(3000),
-        headers: { "cache-control": "no-cache" },
-      });
-
-      if (response.status >= 200 && response.status < 400) { // [MODIFIED] Treat only successful and redirect responses as healthy.
-        writeLog(logFile, "STAGE HEALTH_CHECK: SUCCESS HTTP " + response.status);
+      const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
+      if (response.status >= 200 && response.status < 400) {
+        log(`HEALTH CHECK OK: HTTP ${response.status}`);
         return;
       }
-
-      writeLog(logFile, "STAGE HEALTH_CHECK: attempt " + attempt + " HTTP " + response.status);
+      log(`Health check attempt ${attempt}: HTTP ${response.status}`);
     } catch (error) {
-      writeLog(logFile, "STAGE HEALTH_CHECK: attempt " + attempt + " " + error.message);
+      log(`Health check attempt ${attempt}: ${error.message}`);
     }
-
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
-
-  throw new Error("Health check failed after " + attempts + " attempts");
+  throw new Error("Application health check failed after PM2 restart.");
 }
 
-async function deploy(payload) {
-  if (deploymentRunning) {
-    writeLog(lastDeployment.logFile, "DEPLOY SKIPPED: another deployment is already running");
-    return;
+async function main() {
+  const projectPath = path.resolve(PROJECT_DIR);
+  if (!fs.existsSync(path.join(projectPath, ".git"))) {
+    throw new Error(`Git repository not found: ${projectPath}`);
   }
-
-  deploymentRunning = true;
-  const runId = new Date().toISOString().replace(/[:.]/g, "-");
-  const logFile = path.join(LOG_DIR, "deploy-" + runId + ".log");
-  lastDeployment = { runId, logFile, status: "running", startedAt: timestamp() };
 
   fs.mkdirSync(LOG_DIR, { recursive: true });
-  writeLog(logFile, "DEPLOY START");
-  writeLog(logFile, "Repository: " + (payload.repository && payload.repository.full_name || "unknown"));
-  writeLog(logFile, "Branch: " + BRANCH);
-  writeLog(logFile, "Commit: " + (payload.after || "unknown"));
+  const logFile = path.join(LOG_DIR, `deploy-${new Date().toISOString().replace(/[:.]/g, "-")}.log`);
+  const startedAt = Date.now();
 
-  try {
-    await runCommand("git", ["pull", "--ff-only", "origin", BRANCH], {}, logFile, "GIT_PULL");
-    await runCommand("npm", ["install", "--no-package-lock"], {}, logFile, "NPM_INSTALL");
-    await runCommand("npm", ["run", "build"], {}, logFile, "BUILD");
+  log(`Deployment started in ${projectPath}`);
+  log(`Branch: ${BRANCH}`);
+  log(`PM2 target: ${PM2_TARGET}`);
+  log(`Detailed output is also streamed to GitHub Actions; deployment log: ${logFile}`);
 
-    const buildIdPath = path.join(APP_DIR, ".next", "BUILD_ID");
-    if (!fs.existsSync(buildIdPath) || fs.statSync(buildIdPath).size === 0) {
-      throw new Error("Build validation failed: .next/BUILD_ID is missing or empty");
-    }
-    writeLog(logFile, "STAGE BUILD_VALIDATION: SUCCESS");
+  const originalWrite = process.stdout.write.bind(process.stdout);
+  const originalError = process.stderr.write.bind(process.stderr);
+  const append = (stream, chunk, encoding, callback) => {
+    fs.appendFileSync(logFile, Buffer.isBuffer(chunk) ? chunk : String(chunk));
+    return stream(chunk, encoding, callback);
+  };
+  process.stdout.write = (chunk, encoding, callback) => append(originalWrite, chunk, encoding, callback);
+  process.stderr.write = (chunk, encoding, callback) => append(originalError, chunk, encoding, callback);
 
-    const pm2Env = { ...process.env, PORT: String(APP_PORT) };
-    await runCommand(
-      "pm2",
-      ["restart", APP_PROCESS_NAME, "--update-env"],
-      { env: pm2Env },
-      logFile,
-      "PM2_RESTART"
-    );
+  const steps = [
+    { name: "Git pull", cmd: "git", args: ["pull", "--ff-only", "origin", BRANCH] },
+    { name: "Install dependencies", cmd: "npm", args: ["install", "--no-package-lock"] },
+    { name: "Next.js production build", cmd: "npm", args: ["run", "build"] },
+  ];
 
-    await waitForHealth(logFile);
-    lastDeployment.status = "success";
-    lastDeployment.finishedAt = timestamp();
-    writeLog(logFile, "DEPLOY SUCCESS");
-  } catch (error) {
-    lastDeployment.status = "failed";
-    lastDeployment.finishedAt = timestamp();
-    lastDeployment.error = error.message;
-    writeLog(logFile, "DEPLOY FAILED at/after stage: " + error.message);
-    writeLog(logFile, "PM2 restart is not attempted after a failed pull, install, or build.");
-  } finally {
-    deploymentRunning = false;
+  for (const step of steps) run(step);
+
+  const buildIdPath = path.join(projectPath, ".next", "BUILD_ID");
+  if (!fs.existsSync(buildIdPath) || fs.statSync(buildIdPath).size === 0) {
+    throw new Error("Build validation failed: .next/BUILD_ID is missing or empty.");
   }
+  log("SUCCESS: Build validation");
+
+  run({
+    name: "Restart Beanance frontend with PM2",
+    cmd: "pm2",
+    args: ["restart", PM2_TARGET, "--update-env"],
+  });
+
+  await verifyHealth();
+  log(`DEPLOYMENT SUCCESS in ${((Date.now() - startedAt) / 1000).toFixed(1)} seconds`);
 }
 
-function verifySignature(rawBody, signatureHeader) {
-  if (!signatureHeader || !signatureHeader.startsWith("sha256=")) return false;
-
-  const received = Buffer.from(signatureHeader.slice(7), "hex");
-  const expected = crypto
-    .createHmac("sha256", WEBHOOK_SECRET)
-    .update(rawBody)
-    .digest();
-
-  return received.length === expected.length && crypto.timingSafeEqual(received, expected);
-}
-
-if (!WEBHOOK_SECRET) {
-  process.stderr.write("FATAL: DEPLOY_WEBHOOK_SECRET environment variable is required.\n");
+main().catch((error) => {
+  log(`DEPLOYMENT FAILED: ${error.stack || error.message}`);
   process.exit(1);
-}
-
-const server = http.createServer((request, response) => {
-  if (request.method === "GET" && request.url === "/health") {
-    response.writeHead(200, { "content-type": "application/json" });
-    response.end(JSON.stringify({
-      status: "ok",
-      service: "beanance-deploy",
-      deployment: lastDeployment,
-      deploymentRunning,
-    }));
-    return;
-  }
-
-  if (request.method !== "POST" || request.url !== "/github-webhook") {
-    response.writeHead(404, { "content-type": "application/json" });
-    response.end(JSON.stringify({ error: "Not found" }));
-    return;
-  }
-
-  const chunks = [];
-  let bodyBytes = 0;
-
-  request.on("data", (chunk) => {
-    bodyBytes += chunk.length;
-    if (bodyBytes > MAX_BODY_BYTES) {
-      response.writeHead(413);
-      response.end("Payload too large");
-      request.destroy();
-      return;
-    }
-    chunks.push(chunk);
-  });
-
-  request.on("end", () => {
-    const rawBody = Buffer.concat(chunks);
-    const signature = request.headers["x-hub-signature-256"];
-
-    if (!verifySignature(rawBody, signature)) {
-      response.writeHead(401, { "content-type": "application/json" });
-      response.end(JSON.stringify({ error: "Invalid webhook signature" }));
-      return;
-    }
-
-    if (request.headers["x-github-event"] !== "push") {
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ignored: "Not a push event" }));
-      return;
-    }
-
-    let payload;
-    try {
-      payload = JSON.parse(rawBody.toString("utf8"));
-    } catch {
-      response.writeHead(400, { "content-type": "application/json" });
-      response.end(JSON.stringify({ error: "Invalid JSON payload" }));
-      return;
-    }
-
-    if (payload.ref !== "refs/heads/" + BRANCH) {
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ignored: "Push is not for branch " + BRANCH }));
-      return;
-    }
-
-    if (payload.repository && payload.repository.full_name !== "YosmerryGod/beanance-frontend") {
-      response.writeHead(403, { "content-type": "application/json" });
-      response.end(JSON.stringify({ error: "Unexpected repository" }));
-      return;
-    }
-
-    if (deploymentRunning) {
-      response.writeHead(409, { "content-type": "application/json" });
-      response.end(JSON.stringify({ error: "Deployment already running" }));
-      return;
-    }
-
-    response.writeHead(202, { "content-type": "application/json" });
-    response.end(JSON.stringify({ accepted: true, message: "Deployment queued" }));
-    deploy(payload).catch((error) => {
-      process.stderr.write("Unexpected deployment error: " + error.message + "\n");
-    });
-  });
-});
-
-server.listen(PORT, "127.0.0.1", () => { // [MODIFIED] Keep webhook service private behind Nginx.
-  process.stdout.write(
-    "Beanance deploy webhook listening on 0.0.0.0:" + PORT + "\n"
-  );
-});
-
-process.on("SIGTERM", () => {
-  server.close(() => process.exit(0));
-});
-
-process.on("SIGINT", () => {
-  server.close(() => process.exit(0));
 });
