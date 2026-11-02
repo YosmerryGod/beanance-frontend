@@ -4130,3 +4130,13 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .help-category-copy strong{font-size:10px}
   .app-shell .help-category-copy small{font-size:8px}
 }
+
+
+/* [MODIFIED] Remove the reserved fixed-navbar offset on the standalone Help Center page. */
+@media(max-width:999px){
+  .app-shell:has(.help-center-page) .app-content{padding-top:0!important;}
+}
+.app-shell:has(.help-center-page) .help-center-page{padding-top:14px!important;margin-top:0!important;}
+@media(max-width:420px){
+  .app-shell:has(.help-center-page) .help-center-page{padding-top:10px!important;}
+}
