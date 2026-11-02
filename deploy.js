@@ -258,7 +258,7 @@ const server = http.createServer((request, response) => {
   });
 });
 
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, "127.0.0.1", () => { // [MODIFIED] Keep webhook service private behind Nginx.
   process.stdout.write(
     "Beanance deploy webhook listening on 0.0.0.0:" + PORT + "\n"
   );
