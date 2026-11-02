@@ -567,6 +567,65 @@ const topMoverEvents = [
 
 
 
+// [ADDED] Normalize Binance USDT-M ticker values for the existing Beanance market UI.
+function formatMarketPrice(value) {
+  const price = Number(value);
+  if (!Number.isFinite(price)) return "—";
+  const maximumFractionDigits = price >= 1000 ? 2 : price >= 1 ? 4 : 8;
+  return "$" + price.toLocaleString("en-US", { maximumFractionDigits });
+}
+
+// [ADDED] Keep large market volumes compact and readable in dashboard tables.
+function formatMarketVolume(value, prefix = "$") {
+  const volume = Number(value);
+  if (!Number.isFinite(volume)) return "—";
+  return prefix + new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 }).format(volume);
+}
+
+// [ADDED] Convert backend market records into the fields already used by Beanance components.
+function mapLiveMarketAsset(item) {
+  const symbol = item.baseAsset || String(item.symbol || "").replace(/USDT$/, "");
+  const metadata = marketAssets.find((asset) => asset.symbol === symbol);
+  const changeValue = Number(item.priceChangePercent || 0);
+  return {
+    symbol,
+    name: metadata?.name || symbol,
+    price: formatMarketPrice(item.lastPrice),
+    change: (changeValue > 0 ? "+" : "") + changeValue.toFixed(2) + "%",
+    positive: changeValue >= 0,
+    icon: symbol,
+    tone: metadata?.tone || "",
+    volume: formatMarketVolume(item.quoteVolume),
+    baseVolume: formatMarketVolume(item.baseVolume, ""),
+    high: formatMarketPrice(item.highPrice),
+    low: formatMarketPrice(item.lowPrice),
+    quoteVolume: formatMarketVolume(item.quoteVolume),
+    priceNumber: Number(item.lastPrice || 0),
+    changeNumber: changeValue,
+    volumeNumber: Number(item.quoteVolume || 0),
+    contractType: item.contractType,
+    marketType: item.marketType,
+    isTrading: item.isTrading,
+    eventTime: item.eventTime || item.closeTime || null,
+  };
+}
+
+// [ADDED] Turn backend gainers and losers into the existing Top Movers row format.
+function mapLiveTopMover(item, positive) {
+  const asset = mapLiveMarketAsset(item);
+  const eventTime = Number(item.eventTime || item.closeTime || Date.now());
+  return {
+    symbol: asset.symbol,
+    name: asset.name,
+    change: asset.change,
+    timeframe: "24h",
+    time: new Date(eventTime).toLocaleTimeString("en-US", { hour12: false }),
+    status: positive ? "24h gain" : "24h decline",
+    category: positive ? "Kenaikan" : "Penurunan",
+    positive,
+  };
+}
+
 function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
@@ -596,6 +655,9 @@ function App() {
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
   const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
+  const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from Beanance Market API
+  const [liveTopMoverEvents, setLiveTopMoverEvents] = useState(topMoverEvents); // [ADDED] Live 24-hour gainers and losers
+  const [marketConnectionStatus, setMarketConnectionStatus] = useState("connecting"); // [ADDED] Market feed connection state
   const [marketDetailTab, setMarketDetailTab] = useState("price"); // [ADDED] Market detail section tab
   const [marketTimeframe, setMarketTimeframe] = useState("30m"); // [ADDED] Market chart timeframe
   const [marketIndicator, setMarketIndicator] = useState("RSI"); // [ADDED] Active technical indicator
@@ -654,6 +716,69 @@ function App() {
     document.documentElement.lang = language;
     translator.changeLanguage(language); // [ADDED] Update the shared translation engine across all rendered pages.
   }, [language, languageReady]);
+
+  // [ADDED] Load Binance USDT-M perpetual markets through the same-origin Next.js proxy.
+  useEffect(() => {
+    let activeRequest = true;
+    let refreshTimer;
+
+    const refreshMarketData = async () => {
+      try {
+        const [marketsResponse, moversResponse] = await Promise.all([
+          fetch("/market-api/futures?sort=quoteVolume&order=desc", { cache: "no-store" }),
+          fetch("/market-api/top-movers?limit=20", { cache: "no-store" }),
+        ]);
+
+        if (!marketsResponse.ok || !moversResponse.ok) {
+          throw new Error("Market API returned an unsuccessful response");
+        }
+
+        const [marketsPayload, moversPayload] = await Promise.all([
+          marketsResponse.json(),
+          moversResponse.json(),
+        ]);
+
+        if (!activeRequest) return;
+
+        const nextMarkets = Array.isArray(marketsPayload.data)
+          ? marketsPayload.data.map(mapLiveMarketAsset)
+          : [];
+
+        if (nextMarkets.length > 0) {
+          setLiveMarketAssets(nextMarkets);
+          setSelectedMarket((current) => current
+            ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
+            : current);
+        }
+
+        const gainers = Array.isArray(moversPayload.data?.gainers)
+          ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true))
+          : [];
+        const losers = Array.isArray(moversPayload.data?.losers)
+          ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false))
+          : [];
+
+        if (gainers.length + losers.length > 0) {
+          setLiveTopMoverEvents([...gainers, ...losers]);
+        }
+
+        setMarketConnectionStatus("live");
+      } catch (error) {
+        if (activeRequest) {
+          setMarketConnectionStatus((current) => current === "live" ? "stale" : "offline");
+        }
+      }
+    };
+
+    refreshMarketData();
+    refreshTimer = window.setInterval(refreshMarketData, 10000);
+
+    return () => {
+      activeRequest = false;
+      window.clearInterval(refreshTimer);
+    };
+  }, []);
+
 
   const t = (value) => translate(value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
@@ -1068,14 +1193,14 @@ function App() {
 
             <section className={`dashboard-section market-overview-section mobile-tab-panel mobile-market-panel ${mobileDashboardTab === "market" ? "mobile-tab-active" : ""}`}>
               <div className="section-heading dashboard-section-heading">
-                <div><h2>{t("Market Overview")}</h2><p className="muted">{t("Top futures pairs by volume")}</p></div>
+                <div><h2>{t("Market Overview")}</h2><p className="muted">{t("Top futures pairs by volume")} <span className={`market-feed-status ${marketConnectionStatus}`}>{marketConnectionStatus === "live" ? "● Live" : marketConnectionStatus === "stale" ? "● Stale" : marketConnectionStatus === "offline" ? "● Offline" : "● Connecting"}</span></p></div>
                 <div className="section-tools"><div className="period-tabs market-tabs">{["Favorites","All","Futures","Crypto"].map((filter) => <button className={marketFilter === filter ? "selected" : ""} key={filter} onClick={() => setMarketFilter(filter)}>{filter}</button>)}</div><button className="text-link" onClick={() => setActive("market")}>{t("See All")} <ChevronRight size={15} /></button></div>
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table market-table">
                   <thead><tr><th>#</th><th>{t("Pair")}</th><th>{t("Price")}</th><th>{t("24h Change")}</th><th>{t("24h Volume")}</th><th>{t("Chart")}</th><th><Star size={15} strokeWidth={1.75} aria-label="Favorites" /></th></tr></thead>
                   <tbody>
-                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol} className="market-clickable-row" onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}><td>{index+1}</td><td><div className={"market-pair"}><span className={"asset-icon "+asset.tone}><CoinLogo symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={(event) => {event.stopPropagation();setNotice(asset.symbol+" favorites are demo only");}}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}</tbody>
+                    {liveMarketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol} className="market-clickable-row" onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}><td>{index+1}</td><td><div className={"market-pair"}><span className={"asset-icon "+asset.tone}><CoinLogo symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={(event) => {event.stopPropagation();setNotice(asset.symbol+" favorites are demo only");}}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}</tbody>
                 </table>
               </div>
             </section>
@@ -1273,6 +1398,7 @@ function App() {
 
         {active === "market" && (
           <section className="page page-enter simple-page market-page market-page-full">
+            <div className={`market-feed-status market-page-feed-status ${marketConnectionStatus}`}>{marketConnectionStatus === "live" ? "● Live market data" : marketConnectionStatus === "stale" ? "● Market data delayed" : marketConnectionStatus === "offline" ? "● Market API unavailable" : "● Connecting to market feed"}</div>
             {marketNavTab === "all-market" ? (
               <div className="market-table-flat">
                 <div className="market-table market-table-head">
@@ -1283,7 +1409,7 @@ function App() {
                   <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>{t("24h change")} <span>{marketSort === "change" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
                 </div>
                 <div className="market-table-body">
-                  {[...marketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
+                  {[...liveMarketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
                     const aPinned = pinnedMarketSymbols.includes(a.symbol);
                     const bPinned = pinnedMarketSymbols.includes(b.symbol);
                     if (aPinned !== bPinned) return aPinned ? -1 : 1;
@@ -1315,13 +1441,13 @@ function App() {
                 </div>
                 <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
                 <div className="top-movers-list">
-                  {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
-                    <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=marketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
+                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
+                    <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
                       <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {language === "en" ? ({ "5 mnt": "5 min", "15 mnt": "15 min", "30 mnt": "30 min", "1 jam": "1 hr", "2 jam": "2 hr" }[event.timeframe] || event.timeframe) : `${t(event.timeframe)} ${t("ago")}`}</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Kenaikan tajam": "Sharp increase", "Penurunan tajam": "Sharp decline", "High baru 24 jam": "24h high", "High baru 7 hari": "7-day high", "Low baru 24 jam": "24h low" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
                   ))}
-                  {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
                     <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
                   )}
                 </div>
@@ -1356,7 +1482,7 @@ function App() {
                   <div className="market-compact-stats">
                     <div><span>High 24 jam</span><strong>{selectedMarket.high||"—"}</strong></div>
                     <div><span>Low 24 jam</span><strong>{selectedMarket.low||"—"}</strong></div>
-                    <div><span>Vol 24 jam ({selectedMarket.symbol})</span><strong>{selectedMarket.volume}</strong></div>
+                    <div><span>Vol 24 jam ({selectedMarket.symbol})</span><strong>{selectedMarket.baseVolume || selectedMarket.volume}</strong></div>
                     <div><span>Vol 24 jam (USDT)</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div>
                   </div>
                 </section>
