@@ -1,5 +1,5 @@
 // [ADDED] Keep the market backend private and proxy browser requests through Next.js.
-const marketApiOrigin = (process.env.MARKET_API_INTERNAL_URL || "http://127.0.0.1:3030").replace(/\\/$/, "");
+const marketApiOrigin = process.env.MARKET_API_INTERNAL_URL || "http://127.0.0.1:3030";
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
