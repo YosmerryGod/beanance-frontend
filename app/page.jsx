@@ -45,6 +45,12 @@ import {
   ArrowDown,
   ArrowUpDown,
   Check,
+  Headset, // [ADDED] Help Center support branding
+  Rocket, // [ADDED] Help Center category icon
+  CandlestickChart, // [ADDED] Help Center trading category icon
+  AlertTriangle, // [ADDED] Help Center troubleshooting category icon
+  FileText, // [ADDED] Help Center article icon
+  MessageCircle, // [ADDED] Help Center contact support icon
 } from "lucide-react";
 import CoinLogo from "./components/CoinLogo";
 
@@ -562,6 +568,9 @@ const topMoverEvents = [
 function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
+  const [helpReturnTo, setHelpReturnTo] = useState("dashboard"); // [ADDED] Return destination for standalone Help Center
+  const [helpSearch, setHelpSearch] = useState(""); // [ADDED] Help Center article search
+  const [helpCategory, setHelpCategory] = useState("All"); // [ADDED] Help Center category filter
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [notice, setNotice] = useState("");
@@ -774,7 +783,7 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        {active !== "edit-profile" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
+        {active !== "edit-profile" && active !== "help-center" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
           {active !== "trader-profile" && (
             <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
               <Menu size={20} />
@@ -801,7 +810,98 @@ function App() {
             </div>
           )}
           <div className="top-actions">
-            {active === "dashboard" && (
+            {active === "help-center" && (
+          <section className="page page-enter help-center-page">
+            <div className="help-center-topline">
+              <button type="button" className="help-center-back" onClick={() => {setActive(helpReturnTo);setHelpSearch("");setHelpCategory("All");}} aria-label={t("Back")}>
+                <ArrowLeft size={19}/>
+              </button>
+              <div className="help-center-brand">
+                <span className="help-center-brand-icon"><Headset size={23}/></span>
+                <div><strong>Help Center</strong><small>Beanance Support</small></div>
+              </div>
+            </div>
+
+            <section className="help-center-hero">
+              <div className="help-center-hero-copy">
+                <h1>How can we <span>help you?</span></h1>
+                <p>Find answers, explore guides, or get support from our team.</p>
+              </div>
+              <div className="help-center-hero-art"><MessageCircle size={76}/><span>•••</span></div>
+            </section>
+
+            <label className="help-center-search">
+              <Search size={21}/>
+              <input type="search" value={helpSearch} onChange={(event) => {setHelpSearch(event.target.value);setHelpCategory("All");}} placeholder="Search for help, guides, or topics..." aria-label="Search help articles"/>
+              {helpSearch && <button type="button" onClick={() => setHelpSearch("")} aria-label="Clear search"><X size={17}/></button>}
+            </label>
+
+            <section className="help-center-categories" aria-label="Help categories">
+              {[
+                {name:"Getting Started",description:"Set up and start using Beanance",icon:Rocket},
+                {name:"Account & Security",description:"Profile, login, and account safety",icon:UserRound},
+                {name:"Wallet & Assets",description:"Wallet, deposits, and assets",icon:Wallet},
+                {name:"Markets & Trading",description:"Markets, orders, and trading",icon:CandlestickChart},
+                {name:"Copy Trading",description:"Copy strategies from top traders",icon:Layers},
+                {name:"Strategies & Traders",description:"Create, manage, and follow strategies",icon:Users},
+                {name:"Portfolio",description:"Track your performance",icon:BarChart3},
+                {name:"Troubleshooting",description:"Common issues and solutions",icon:AlertTriangle}
+              ].map((category) => {
+                const CategoryIcon=category.icon;
+                return (
+                  <button type="button" key={category.name} className={helpCategory===category.name ? "help-category-card selected" : "help-category-card"} onClick={() => {setHelpCategory(helpCategory===category.name ? "All" : category.name);setHelpSearch("");}}>
+                    <span className="help-category-icon"><CategoryIcon size={25}/></span>
+                    <span className="help-category-copy"><strong>{category.name}</strong><small>{category.description}</small></span>
+                    <ChevronRight size={19}/>
+                  </button>
+                );
+              })}
+            </section>
+
+            <section className="help-center-articles">
+              <div className="help-center-section-heading">
+                <div><h2>{helpSearch || helpCategory!=="All" ? "Help Articles" : "Popular Articles"}</h2><p>{helpSearch ? "Search results" : helpCategory!=="All" ? helpCategory : "Most frequently read by our users."}</p></div>
+                {(helpSearch || helpCategory!=="All") && <button type="button" onClick={() => {setHelpSearch("");setHelpCategory("All");}}>Clear</button>}
+              </div>
+              {[
+                {title:"How to get started with Beanance",category:"Getting Started",body:"Explore the Beanance dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
+                {title:"How to secure your account",category:"Account & Security",body:"Use a unique password, keep your account details private, and only connect wallets or services you trust. Review connected accounts regularly."},
+                {title:"Understanding your wallet and assets",category:"Wallet & Assets",body:"The wallet area helps you review connected wallet information and supported assets. Always verify network and address details before sending assets."},
+                {title:"Understanding markets and trading",category:"Markets & Trading",body:"Review market pairs, price movements, volume, and trading information before making decisions. Market data and demo indicators may not represent live execution."},
+                {title:"How Copy Trading works",category:"Copy Trading",body:"Copy Trading is designed to let users follow a strategy. Review its return, win rate, drawdown, trading history, and risk before copying. Copy execution is not yet available in this demo."},
+                {title:"How to evaluate a trading strategy",category:"Strategies & Traders",body:"Compare strategy performance over time and review risk, drawdown, total trades, and trading style. Past performance does not guarantee future results."},
+                {title:"Understanding your portfolio",category:"Portfolio",body:"Your portfolio brings together your strategies, wallet overview, and activity history so you can review your account from one place."},
+                {title:"Troubleshooting common issues",category:"Troubleshooting",body:"If a page does not load, refresh the app and check your connection. If an issue continues, contact support and include the page name and a short description."}
+              ].filter((article) => (helpCategory==="All" || article.category===helpCategory) && (!helpSearch || (article.title+" "+article.category+" "+article.body).toLowerCase().includes(helpSearch.toLowerCase()))).map((article) => (
+                <details className="help-article-row" key={article.title}>
+                  <summary><FileText size={19}/><span>{article.title}</span><ChevronRight size={18}/></summary>
+                  <p>{article.body}</p>
+                </details>
+              ))}
+              {[
+                {title:"How to get started with Beanance",category:"Getting Started",body:"Explore the Beanance dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
+                {title:"How to secure your account",category:"Account & Security",body:"Use a unique password, keep your account details private, and only connect wallets or services you trust. Review connected accounts regularly."},
+                {title:"Understanding your wallet and assets",category:"Wallet & Assets",body:"The wallet area helps you review connected wallet information and supported assets. Always verify network and address details before sending assets."},
+                {title:"Understanding markets and trading",category:"Markets & Trading",body:"Review market pairs, price movements, volume, and trading information before making decisions. Market data and demo indicators may not represent live execution."},
+                {title:"How Copy Trading works",category:"Copy Trading",body:"Copy Trading is designed to let users follow a strategy. Review its return, win rate, drawdown, trading history, and risk before copying. Copy execution is not yet available in this demo."},
+                {title:"How to evaluate a trading strategy",category:"Strategies & Traders",body:"Compare strategy performance over time and review risk, drawdown, total trades, and trading style. Past performance does not guarantee future results."},
+                {title:"Understanding your portfolio",category:"Portfolio",body:"Your portfolio brings together your strategies, wallet overview, and activity history so you can review your account from one place."},
+                {title:"Troubleshooting common issues",category:"Troubleshooting",body:"If a page does not load, refresh the app and check your connection. If an issue continues, contact support and include the page name and a short description."}
+              ].filter((article) => (helpCategory==="All" || article.category===helpCategory) && (!helpSearch || (article.title+" "+article.category+" "+article.body).toLowerCase().includes(helpSearch.toLowerCase()))).length===0 && (
+                <div className="help-center-empty"><Search size={23}/><strong>No articles found</strong><span>Try another search term or choose a different category.</span></div>
+              )}
+            </section>
+
+            <section className="help-center-contact">
+              <span className="help-contact-icon"><Headset size={38}/></span>
+              <div><h2>Still need help?</h2><p>Our support team is here to help you anytime.</p></div>
+              <button type="button" onClick={() => setNotice("Support contact is coming soon") }><MessageCircle size={17}/> Contact Support</button>
+            </section>
+            <p className="help-center-footnote">Beanance Help Center · Support resources</p>
+          </section>
+        )}
+
+        {active === "dashboard" && (
               <div className="notification-wrap">
                 <button className="icon-button notification-button" aria-label={t("Notifications")} aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
                   <Bell size={19} />
@@ -1351,7 +1451,7 @@ function App() {
 
       </div>
 
-      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
+      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" || active === "help-center" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
@@ -1416,7 +1516,7 @@ function App() {
             </nav>
             <p className="eyebrow sidebar-section-label">{sidebarText.support}</p>
             <nav className="sidebar-navigation" aria-label="Support">
-              <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Help center is coming soon");}}>
+              <button type="button" className={`sidebar-nav-item ${active === "help-center" ? "selected" : ""}`} onClick={() => {setHelpReturnTo(active);setActive("help-center");setHelpSearch("");setHelpCategory("All");setSidebarOpen(false);window.scrollTo({top:0,behavior:"instant"});}}>
                 <CircleHelp size={19} /><span>{sidebarText.help}</span><ChevronRight className="sidebar-item-chevron" size={17} />
               </button>
               <button type="button" className="sidebar-nav-item" onClick={() => {setSidebarOpen(false);setNotice("Beanance · Community trading platform");}}>
