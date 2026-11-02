@@ -1436,7 +1436,7 @@ function App() {
             ) : (
               <section className="top-movers-page">
                 <div className="top-movers-categories" role="tablist" aria-label="Kategori pergerakan harga">
-                  {["Semua", "Kenaikan", "Penurunan", "Pullback", "Rally", "High Baru", "Low Baru"].map((category) => (
+                  {["Semua", "Kenaikan", "Penurunan"].map((category) => (
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
