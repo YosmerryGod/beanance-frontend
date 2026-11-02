@@ -1573,7 +1573,7 @@ function App() {
 
             <footer className="strategy-detail-footer">
               <span>{t("Demo statistics")}</span>
-              <button type="button" className="strategy-detail-copy-button" onClick={() => setNotice(`Copy trading for ${selectedStrategy.name} is coming soon")}><Copy size={15}/>{t("Copy Strategy")}</button>
+              <button type="button" className="strategy-detail-copy-button" onClick={() => setNotice(`Copy trading for ${selectedStrategy.name} is coming soon`)}><Copy size={15}/>{t("Copy Strategy")}</button>
             </footer>
           </section>
         </div>
