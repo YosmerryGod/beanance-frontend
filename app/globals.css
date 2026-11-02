@@ -4213,3 +4213,122 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 @media(max-width:999px){
   .app-shell:has(.about-page) .app-content{padding-top:0!important;}
 }
+
+
+/* [ADDED] Full-page market detail view with compact stats, chart, indicators, and order book. */
+.app-shell .market-detail-page{width:100%;max-width:1040px;margin:0 auto;padding:12px 0 100px;display:flex;flex-direction:column;gap:15px;min-height:100dvh;color:var(--text)}
+.app-shell .market-detail-header{display:flex;align-items:center;gap:11px;min-width:0}
+.app-shell .market-detail-back,.app-shell .market-detail-icon{display:grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border:0;border-radius:11px;background:var(--panel-soft);color:var(--text);cursor:pointer}
+.app-shell .market-detail-pair{flex:1;min-width:0}
+.app-shell .market-detail-pair h1{display:flex;align-items:center;gap:8px;margin:0;font-size:19px;font-weight:850;letter-spacing:-.4px}
+.app-shell .market-detail-pair h1 span{padding:3px 6px;border-radius:5px;background:var(--panel-soft);color:var(--muted);font-size:10px;font-weight:700}
+.app-shell .market-detail-pair p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.app-shell .market-detail-tabs{display:flex;align-items:center;gap:23px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+.app-shell .market-detail-tabs::-webkit-scrollbar{display:none}
+.app-shell .market-detail-tabs button{position:relative;flex:0 0 auto;padding:8px 0 12px;border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}
+.app-shell .market-detail-tabs button.selected{color:var(--text)}
+.app-shell .market-detail-tabs button.selected:after{position:absolute;right:0;bottom:0;left:0;height:3px;border-radius:3px;background:var(--gold);content:""}
+.app-shell .market-price-summary{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;padding:4px 0 8px}
+.app-shell .market-last-price{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.app-shell .market-last-price>span,.app-shell .market-compact-stats span{color:var(--muted);font-size:11px}
+.app-shell .market-last-price>strong{max-width:100%;font-size:clamp(23px,5vw,34px);line-height:1.1;font-weight:850;letter-spacing:-.7px;overflow-wrap:anywhere}
+.app-shell .market-last-price>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.app-shell .market-last-price>div b{font-size:12px;font-weight:700}
+.app-shell .market-last-price>div em{font-size:12px;font-style:normal;font-weight:750}
+.app-shell .market-last-price>small{margin-top:2px;color:var(--muted);font-size:10px}
+.app-shell .market-compact-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;align-content:center}
+.app-shell .market-compact-stats>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.app-shell .market-compact-stats strong{font-size:11px;font-weight:750;overflow-wrap:anywhere}
+.app-shell .market-chart-section{display:flex;flex-direction:column;gap:9px}
+.app-shell .market-chart-toolbar{display:flex;align-items:center;gap:7px}
+.app-shell .market-timeframes{display:flex;align-items:center;justify-content:space-between;gap:clamp(8px,2vw,18px);flex:1;min-width:0}
+.app-shell .market-timeframes button,.app-shell .market-indicators button{padding:6px 0;border:0;background:transparent;color:var(--muted);font-size:12px;white-space:nowrap;cursor:pointer}
+.app-shell .market-timeframes button.selected,.app-shell .market-indicators button.selected{color:var(--gold);font-weight:850}
+.app-shell .market-candle-chart{position:relative;height:clamp(220px,48vw,390px);overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft)}
+.app-shell .market-chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-around}
+.app-shell .market-chart-grid span{width:100%;border-top:1px solid var(--line)}
+.app-shell .market-candle-chart>svg{position:absolute;inset:7% 16% 8% 2%;width:82%;height:85%;overflow:visible}
+.app-shell .market-chart-price-line{position:absolute;top:49%;right:0;left:0;border-top:1px dashed rgba(245,196,0,.65)}
+.app-shell .market-chart-price-line span{position:absolute;right:0;top:-11px;padding:3px 6px;border-radius:5px;background:var(--gold);color:#17150d;font-size:9px;font-weight:800}
+.app-shell .market-chart-axis{position:absolute;top:7%;right:6px;bottom:8%;display:flex;flex-direction:column;justify-content:space-between;color:var(--muted);font-size:9px;text-align:right}
+.app-shell .market-indicators{display:flex;align-items:center;justify-content:space-between;gap:12px;overflow-x:auto;scrollbar-width:none}
+.app-shell .market-indicators::-webkit-scrollbar{display:none}
+.app-shell .market-indicators button{font-size:10px}
+.app-shell .market-performance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.app-shell .market-performance-grid>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.app-shell .market-performance-grid span{color:var(--muted);font-size:10px}
+.app-shell .market-performance-grid strong{font-size:12px;font-weight:800}
+.app-shell .market-orderbook{display:flex;flex-direction:column;gap:11px;padding-bottom:10px}
+.app-shell .market-order-tabs{display:flex;align-items:center;gap:24px;border-bottom:1px solid var(--line)}
+.app-shell .market-order-tabs button{padding:9px 0;border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer}
+.app-shell .market-order-tabs button.selected{color:var(--text)}
+.app-shell .market-order-tabs button.selected:after{display:block;height:2px;margin-top:7px;border-radius:2px;background:var(--gold);content:""}
+.app-shell .market-book-ratio{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:750}
+.app-shell .market-book-ratio span:first-child{color:#20bd88}
+.app-shell .market-book-ratio span:last-child{color:#ef5368}
+.app-shell .market-book-bar{display:flex;gap:3px;height:7px;overflow:hidden;border-radius:8px}
+.app-shell .market-book-bar i:first-child{flex:45.94;background:#20bd88}
+.app-shell .market-book-bar i:last-child{flex:54.06;background:#ef5368}
+.app-shell .market-book-columns,.app-shell .market-book-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center}
+.app-shell .market-book-columns{color:var(--muted);font-size:10px}
+.app-shell .market-book-columns span:nth-child(2),.app-shell .market-book-row strong{text-align:center}
+.app-shell .market-book-columns span:last-child,.app-shell .market-book-row span:last-child{text-align:right}
+.app-shell .market-book-row{min-height:27px;font-size:11px;font-variant-numeric:tabular-nums}
+.app-shell .market-book-row span:first-child{color:#20bd88}
+.app-shell .market-book-row span:last-child{color:#ef5368}
+.app-shell .market-depth-placeholder{display:flex;align-items:center;flex-direction:column;gap:10px;padding:25px 12px;color:var(--muted);font-size:11px}
+.app-shell .market-depth-placeholder strong{color:var(--text);font-size:13px}
+.app-shell .market-depth-placeholder .market-book-bar{width:100%}
+.app-shell .market-trade-list{display:flex;flex-direction:column;gap:0}
+.app-shell .market-trade-list>div{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;min-height:34px;align-items:center;border-bottom:1px solid var(--line);font-size:11px;font-variant-numeric:tabular-nums}
+.app-shell .market-trade-list>div span:last-child{text-align:right;color:var(--muted)}
+.app-shell .market-info-panel{display:flex;flex-direction:column;gap:0;padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.app-shell .market-info-panel h2{margin:0 0 10px;font-size:17px}
+.app-shell .market-info-panel p{margin:0 0 12px;color:var(--muted);font-size:11px;line-height:1.65}
+.app-shell .market-info-panel>div{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:39px;border-top:1px solid var(--line);font-size:11px}
+.app-shell .market-info-panel>div span{color:var(--muted)}
+.app-shell .market-info-panel>div strong{font-weight:750;text-align:right}
+.app-shell .market-create-sticky{position:sticky;z-index:20;bottom:0;margin:4px -2px 0;padding:10px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 25%)}
+.app-shell .market-create-sticky button{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:52px;border:1px solid rgba(255,226,112,.5);border-radius:13px;background:linear-gradient(145deg,#ffe16a,#e2ad00);color:#17150d;font-size:15px;font-weight:850;box-shadow:3px 5px 13px rgba(0,0,0,.22),inset 1px 1px 2px rgba(255,255,255,.45);cursor:pointer}
+.app-shell .market-create-sticky button span{padding-left:9px;border-left:1px solid rgba(23,21,13,.25);font-size:10px;font-weight:700}
+.app-shell .market-data-disclaimer{margin:-8px 0 0;color:var(--muted);font-size:9px;line-height:1.5;text-align:center}
+.app-shell .market-clickable-row{cursor:pointer}
+.app-shell .market-clickable-row:active{opacity:.78}
+.app-shell:has(.market-detail-page) .app-content{padding-top:0!important}
+@media(max-width:760px){
+  .app-shell .market-detail-page{gap:12px;padding:9px 0 calc(90px + env(safe-area-inset-bottom))}
+  .app-shell .market-detail-header{gap:8px}
+  .app-shell .market-detail-back,.app-shell .market-detail-icon{width:34px;height:34px;border-radius:10px}
+  .app-shell .market-detail-header>.asset-icon{width:34px;height:34px;flex:0 0 34px}
+  .app-shell .market-detail-pair h1{font-size:16px;gap:6px}
+  .app-shell .market-detail-pair p{font-size:9px}
+  .app-shell .market-detail-tabs{gap:20px}
+  .app-shell .market-detail-tabs button{font-size:12px;padding:7px 0 10px}
+  .app-shell .market-price-summary{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;padding:2px 0 4px}
+  .app-shell .market-last-price>strong{font-size:clamp(21px,6vw,29px)}
+  .app-shell .market-last-price>div b,.app-shell .market-last-price>div em{font-size:10px}
+  .app-shell .market-last-price>small{font-size:9px}
+  .app-shell .market-compact-stats{gap:8px 9px}
+  .app-shell .market-compact-stats span{font-size:9px}
+  .app-shell .market-compact-stats strong{font-size:10px}
+  .app-shell .market-timeframes{gap:clamp(7px,2.3vw,14px)}
+  .app-shell .market-timeframes button{font-size:11px}
+  .app-shell .market-candle-chart{height:clamp(235px,68vw,330px);border-radius:9px}
+  .app-shell .market-indicators{gap:16px}
+  .app-shell .market-performance-grid{gap:10px 6px;padding:10px 0}
+  .app-shell .market-performance-grid span{font-size:9px}
+  .app-shell .market-performance-grid strong{font-size:11px}
+  .app-shell .market-order-tabs{gap:22px}
+  .app-shell .market-order-tabs button{font-size:11px}
+  .app-shell .market-create-sticky{position:fixed;right:0;bottom:0;left:0;margin:0;padding:9px 16px calc(9px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+  .app-shell .market-create-sticky button{min-height:48px;font-size:14px}
+}
+@media(max-width:360px){
+  .app-shell .market-detail-pair h1{font-size:14px}
+  .app-shell .market-detail-tabs{gap:15px}
+  .app-shell .market-detail-tabs button{font-size:11px}
+  .app-shell .market-timeframes{gap:6px}
+  .app-shell .market-timeframes button{font-size:10px}
+  .app-shell .market-compact-stats span{font-size:8px}
+  .app-shell .market-compact-stats strong{font-size:9px}
+}
