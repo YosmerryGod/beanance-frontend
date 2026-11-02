@@ -593,6 +593,12 @@ function App() {
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
+  const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
+  const [marketDetailTab, setMarketDetailTab] = useState("price"); // [ADDED] Market detail section tab
+  const [marketTimeframe, setMarketTimeframe] = useState("30m"); // [ADDED] Market chart timeframe
+  const [marketIndicator, setMarketIndicator] = useState("RSI"); // [ADDED] Active technical indicator
+  const [marketOrderTab, setMarketOrderTab] = useState("book"); // [ADDED] Order book, depth, and trades tabs
+
   const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
   const [marketSortDirection, setMarketSortDirection] = useState("desc"); // [ADDED] Market sort direction
@@ -1067,8 +1073,7 @@ function App() {
                 <table className="dashboard-table market-table">
                   <thead><tr><th>#</th><th>{t("Pair")}</th><th>{t("Price")}</th><th>{t("24h Change")}</th><th>{t("24h Volume")}</th><th>{t("Chart")}</th><th><Star size={15} strokeWidth={1.75} aria-label="Favorites" /></th></tr></thead>
                   <tbody>
-                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol}><td>{index+1}</td><td><div className="market-pair"><span className={`asset-icon ${asset.tone}`}><CoinLogo symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={() => setNotice(`${asset.symbol} favorites are demo only`)}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}
-                  </tbody>
+                    {marketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).map((asset,index) => <tr key={asset.symbol} className="market-clickable-row" onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}><td>{index+1}</td><td><div className={"market-pair"}><span className={"asset-icon "+asset.tone}><CoinLogo symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={(event) => {event.stopPropagation();setNotice(asset.symbol+" favorites are demo only");}}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}</tbody>
                 </table>
               </div>
             </section>
@@ -1289,7 +1294,7 @@ function App() {
                     const comparison = typeof values[0] === "string" ? values[0].localeCompare(values[1]) : values[0] - values[1];
                     return comparison * (marketSortDirection === "asc" ? 1 : -1);
                   }).map((asset) => (
-                    <article className="market-table market-table-row" key={asset.symbol}>
+                    <article className="market-table market-table-row market-clickable-row" key={asset.symbol} onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
                       <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={() => setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol])}><Star size={18} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
                       <div className="market-pair"><div className={`asset-icon ${asset.tone}`}><CoinLogo symbol={asset.symbol} /></div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
                       <div className="market-volume-cell">{asset.volume}</div>
@@ -1309,7 +1314,7 @@ function App() {
                 <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
                 <div className="top-movers-list">
                   {topMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
-                    <article className="top-mover-row" key={`${event.symbol}-${event.time}-${index}`}>
+                    <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=marketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
                       <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {language === "en" ? ({ "5 mnt": "5 min", "15 mnt": "15 min", "30 mnt": "30 min", "1 jam": "1 hr", "2 jam": "2 hr" }[event.timeframe] || event.timeframe) : `${t(event.timeframe)} ${t("ago")}`}</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Kenaikan tajam": "Sharp increase", "Penurunan tajam": "Sharp decline", "High baru 24 jam": "24h high", "High baru 7 hari": "7-day high", "Low baru 24 jam": "24h low" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
@@ -1321,6 +1326,72 @@ function App() {
                 <p className="top-movers-disclaimer">{t("Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.")}</p>
               </section>
             )}
+          </section>
+        )}
+
+
+        {active === "market-detail" && selectedMarket && (
+          <section className="page page-enter market-detail-page">
+            <div className="market-detail-header">
+              <button type="button" className="market-detail-back" onClick={() => setActive("market")} aria-label="Back to market"><ArrowLeft size={21}/></button>
+              <div className={"asset-icon "+selectedMarket.tone}><CoinLogo symbol={selectedMarket.symbol}/></div>
+              <div className="market-detail-pair"><h1>{selectedMarket.symbol}USDT <span>Perp</span></h1><p>{selectedMarket.name} · USDT Perpetual</p></div>
+              <button type="button" className="market-detail-icon" onClick={() => setPinnedMarketSymbols((current)=>current.includes(selectedMarket.symbol)?current.filter((symbol)=>symbol!==selectedMarket.symbol):[...current,selectedMarket.symbol])} aria-label="Toggle favorite"><Star size={20} fill={pinnedMarketSymbols.includes(selectedMarket.symbol)?"currentColor":"none"}/></button>
+              <button type="button" className="market-detail-icon" onClick={() => setNotice("Price alert is coming soon")} aria-label="Price alert"><Bell size={20}/></button>
+            </div>
+            <div className="market-detail-tabs" role="tablist" aria-label="Market detail sections">
+              {[["price","Harga"],["info","Info"],["trading-data","Data Perdagangan"],["trades","Trades"]].map(([id,label])=><button type="button" role="tab" aria-selected={marketDetailTab===id} className={marketDetailTab===id?"selected":""} key={id} onClick={()=>setMarketDetailTab(id)}>{label}</button>)}
+            </div>
+            {marketDetailTab==="price" && (
+              <>
+                <section className="market-price-summary">
+                  <div className="market-last-price">
+                    <span>Harga Terakhir</span>
+                    <strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong>
+                    <div><b>{selectedMarket.price}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
+                    <small>Harga Mark {selectedMarket.price}</small>
+                  </div>
+                  <div className="market-compact-stats">
+                    <div><span>High 24 jam</span><strong>{selectedMarket.high||"—"}</strong></div>
+                    <div><span>Low 24 jam</span><strong>{selectedMarket.low||"—"}</strong></div>
+                    <div><span>Vol 24 jam ({selectedMarket.symbol})</span><strong>{selectedMarket.volume}</strong></div>
+                    <div><span>Vol 24 jam (USDT)</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div>
+                  </div>
+                </section>
+                <section className="market-chart-section">
+                  <div className="market-chart-toolbar">
+                    <div className="market-timeframes">{["1m","5m","15m","30m","1h","4h","1d"].map((time)=><button type="button" key={time} className={marketTimeframe===time?"selected":""} onClick={()=>setMarketTimeframe(time)}>{time}</button>)}</div>
+                    <button type="button" className="market-detail-icon" onClick={()=>setNotice("Chart settings are coming soon")} aria-label="Chart settings"><SlidersHorizontal size={18}/></button>
+                    <button type="button" className="market-detail-icon" onClick={()=>setNotice("Fullscreen chart is coming soon")} aria-label="Fullscreen chart"><Maximize2 size={18}/></button>
+                  </div>
+                  <div className="market-candle-chart">
+                    <div className="market-chart-grid">{[0,1,2,3,4].map((n)=><span key={n}/>)}</div>
+                    <svg viewBox="0 0 340 220" preserveAspectRatio="none" role="img" aria-label={selectedMarket.symbol+" candlestick chart "+marketTimeframe}>
+                      {Array.from({length:34},(_,i)=>{const base=[150,138,160,120,132,105,118,90,112,128,98,82,104,74,95,68,88,106,78,92,62,80,58,76,52,70,48,66,42,58,38,53,32,45][i];const green=[1,3,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32].includes(i);const high=base-18-(i%4)*3;const low=base+20+(i%3)*4;const open=base+(i%2?8:-7);const close=base+(green?-9:10);return <g key={i}><line x1={i*10+4} y1={high} x2={i*10+4} y2={low} stroke={green?"#20bd88":"#ef5368"} strokeWidth="1.4"/><rect x={i*10+1} y={Math.min(open,close)} width="6" height={Math.max(3,Math.abs(close-open))} fill={green?"#20bd88":"#ef5368"}/></g>;})}
+                    </svg>
+                    <div className="market-chart-price-line"><span>{selectedMarket.price}</span></div>
+                    <div className="market-chart-axis"><span>High</span><span> </span><span> </span><span> </span><span>Low</span></div>
+                  </div>
+                  <div className="market-indicators">{["SUPER","VOL","MACD","RSI","KDJ","OBV","WR","Stoch"].map((indicator)=><button type="button" key={indicator} className={marketIndicator===indicator?"selected":""} onClick={()=>setMarketIndicator(indicator)}>{indicator}</button>)}</div>
+                </section>
+                <section className="market-performance-grid">
+                  {[["Hari Ini",selectedMarket.change],["7 Hari","+9.00%"],["30 Hari","-18.69%"],["90 Hari","+10.85%"],["180 Hari","-12.05%"],["1 Tahun","-41.28%"]].map(([label,value])=><div key={label}><span>{label}</span><strong className={value.startsWith("-")?"negative":"positive"}>{value}</strong></div>)}
+                </section>
+                <section className="market-orderbook">
+                  <div className="market-order-tabs" role="tablist" aria-label="Market order data">
+                    {[["book","Book"],["depth","Kedalaman"],["trades","Perdagangan"]].map(([id,label])=><button type="button" role="tab" aria-selected={marketOrderTab===id} className={marketOrderTab===id?"selected":""} key={id} onClick={()=>setMarketOrderTab(id)}>{label}</button>)}
+                  </div>
+                  {marketOrderTab==="book" && <><div className="market-book-ratio"><span>45.94%</span><span>54.06%</span></div><div className="market-book-bar"><i/><i/></div><div className="market-book-columns"><span>Bid</span><span>Price</span><span>Ask</span></div>{["0.0003729","0.0003728","0.0003727","0.0003726"].map((price,index)=><div className="market-book-row" key={price}><span>{(217.52-index*23).toFixed(2)}</span><strong>{price}</strong><span>{(160.44+index*17).toFixed(2)}</span></div>)}</>}
+                  {marketOrderTab==="depth" && <div className="market-depth-placeholder"><Activity size={23}/><strong>Market Depth</strong><span>Bid and ask liquidity visualization</span><div className="market-book-bar"><i/><i/></div></div>}
+                  {marketOrderTab==="trades" && <div className="market-trade-list">{["18:01:24","18:01:19","18:01:11","18:01:03"].map((time,index)=><div key={time}><span>{time}</span><strong className={index%2?"negative":"positive"}>{index%2?"0.0003730":"0.0003729"}</strong><span>{(125.4+index*18).toFixed(2)}</span></div>)}</div>}
+                </section>
+              </>
+            )}
+            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
+            {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
+            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Recent market trades for {selectedMarket.symbol}/USDT.</p>{["18:01:24","18:01:19","18:01:11","18:01:03","18:00:57"].map((time,index)=><div key={time}><span>{time}</span><strong className={index%2?"negative":"positive"}>{index%2?"0.0003730":"0.0003729"}</strong><span>{(125.4+index*18).toFixed(2)} {selectedMarket.symbol}</span></div>)}</section>}
+            <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
+            <p className="market-data-disclaimer">Market figures and chart shown are sample interface data until a live market data provider is connected.</p>
           </section>
         )}
 
