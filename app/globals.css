@@ -4353,3 +4353,12 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .market-trading-chart-controls{padding:0 7px 7px;font-size:8px}
   .app-shell .market-trading-chart-controls button{min-width:27px;height:26px;padding:0 6px}
 }
+
+
+/* [ADDED] Live Binance market-feed status indicators for Market and Dashboard. */
+.app-shell .market-feed-status{display:inline-flex;align-items:center;margin-left:8px;color:var(--muted);font-size:10px;font-weight:750;white-space:nowrap}
+.app-shell .market-feed-status.live{color:#20bd88}
+.app-shell .market-feed-status.stale{color:#d6a63c}
+.app-shell .market-feed-status.offline{color:#ef5368}
+.app-shell .market-feed-status.connecting{color:var(--muted)}
+.app-shell .market-page-feed-status{margin:0 0 12px}
