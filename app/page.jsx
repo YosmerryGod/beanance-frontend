@@ -791,7 +791,7 @@ function App() {
   return (
     <main className={`app-shell ${theme === "light" ? "theme-light" : "theme-dark"}`}>
       <div className="app-content">
-        {active !== "edit-profile" && active !== "help-center" && active !== "about" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
+        {active !== "edit-profile" && active !== "help-center" && active !== "about" && active !== "market-detail" && <header style={active === "profile" ? { display: "none" } : undefined} className={`topbar ${searchOpen ? "search-expanded" : ""} ${active === "trader-profile" ? "trader-profile-topbar-hidden" : ""} ${active === "profile" ? "portfolio-topbar-hidden" : ""}`}>
           {active !== "trader-profile" && (
             <button className="icon-button sidebar-trigger" type="button" aria-label="Open navigation menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)}>
               <Menu size={20} />
@@ -1583,7 +1583,7 @@ function App() {
 
       </div>
 
-      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" || active === "help-center" || active === "about" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
+      <nav className={`bottom-nav ${active === "trader-profile" || active === "edit-profile" || active === "help-center" || active === "about" || active === "market-detail" ? "bottom-nav-hidden" : ""}`} aria-label={t("Main navigation")}>
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
