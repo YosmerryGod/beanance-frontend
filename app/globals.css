@@ -276,6 +276,7 @@ h2{font-size:19px;margin:0}
   .strategy-card{padding:15px 18px 13px}
 }
 @media(max-width:760px){
+  .app-shell .discover-strategy-title-button{font-size:11px;}
   .dashboard-page{gap:22px;padding-top:22px}
   .strategy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .strategy-card:last-child{grid-column:1/-1}
@@ -3958,7 +3959,7 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
         .app-shell .strategy-detail-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 20px;border-top:1px solid var(--line);background:var(--panel);flex:0 0 auto;}
         .app-shell .strategy-detail-footer>span{color:var(--muted);font-size:10px;}
         .app-shell .strategy-detail-copy-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 16px;border:1px solid rgba(218,174,39,.26);border-radius:10px;background:var(--gold);color:#171717;font-size:11px;font-weight:800;cursor:pointer;}
-        .app-shell .discover-strategy-title-button{display:block;width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:var(--text);font:inherit;font-size:inherit;font-weight:750;text-align:left;cursor:pointer;}
+        .app-shell .discover-strategy-title-button{display:block;width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:var(--text);font:inherit;font-size:13px;font-weight:750;text-align:left;cursor:pointer;}
         .app-shell .discover-strategy-title-button:hover,.app-shell .strategy-detail-owner-link:hover{color:var(--gold);}
         .app-shell.theme-light .strategy-detail-modal{background:var(--panel);box-shadow:0 24px 80px rgba(34,45,60,.22);}
         @media(max-width:700px){.app-shell .strategy-detail-overlay{padding:10px;}.app-shell .strategy-detail-modal{width:calc(100vw - 20px);height:88vh;max-height:88vh;border-radius:18px;}.app-shell .strategy-detail-header{padding:13px 14px;}.app-shell .strategy-detail-performance{padding:14px 14px 9px;}.app-shell .strategy-detail-tabs{padding:8px 10px;gap:3px;}.app-shell .strategy-detail-tabs button{gap:4px;min-height:39px;padding:6px 3px;font-size:10px;}.app-shell .strategy-detail-tab-content{padding:14px 14px 20px;}.app-shell .strategy-detail-stat-grid,.app-shell .strategy-detail-capital-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}.app-shell .strategy-detail-stat-grid>div,.app-shell .strategy-detail-capital-grid>div{padding:10px;}.app-shell .strategy-detail-stat-grid strong,.app-shell .strategy-detail-capital-grid strong{font-size:14px;}.app-shell .strategy-detail-info-list{grid-template-columns:1fr;}.app-shell .strategy-detail-month-bars{gap:5px;padding:8px;}.app-shell .strategy-detail-footer{padding:11px 14px;}.app-shell .strategy-detail-copy-button{min-height:36px;padding:0 12px;}.app-shell .strategy-detail-return-row>div:first-child strong{font-size:25px;}}
