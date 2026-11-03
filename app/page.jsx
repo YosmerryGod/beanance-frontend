@@ -662,6 +662,12 @@ function App() {
   const [marketTimeframe, setMarketTimeframe] = useState("30m"); // [ADDED] Market chart timeframe
   const [marketIndicator, setMarketIndicator] = useState("RSI"); // [ADDED] Active technical indicator
   const [marketOrderTab, setMarketOrderTab] = useState("book"); // [ADDED] Order book, depth, and trades tabs
+  // [ADDED] Live market detail data from Beanance Market Backend.
+  const [marketOrderBook, setMarketOrderBook] = useState({ bids: [], asks: [] });
+  const [marketRecentTrades, setMarketRecentTrades] = useState([]);
+  const [marketMetrics, setMarketMetrics] = useState(null);
+  const [marketDetailStatus, setMarketDetailStatus] = useState("loading");
+  const [marketDetailError, setMarketDetailError] = useState("");
 
   const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
@@ -716,6 +722,186 @@ function App() {
     document.documentElement.lang = language;
     translator.changeLanguage(language); // [ADDED] Update the shared translation engine across all rendered pages.
   }, [language, languageReady]);
+
+  // [ADDED] Keep one page-level WebSocket for live ticker and selected-market detail updates.
+  useEffect(() => {
+    let activeSocket = true;
+    let socket = null;
+    let reconnectTimer = null;
+    let reconnectDelay = 1000;
+
+    const connect = () => {
+      if (!activeSocket) return;
+      const configuredUrl = process.env.NEXT_PUBLIC_MARKET_WS_URL;
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const socketUrl = configuredUrl || protocol + "//" + window.location.host + "/ws/market";
+
+      try {
+        socket = new WebSocket(socketUrl);
+      } catch {
+        reconnectTimer = window.setTimeout(connect, reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+        return;
+      }
+
+      socket.onopen = () => {
+        reconnectDelay = 1000;
+        if (active === "market-detail" && selectedMarket?.symbol) {
+          socket.send(JSON.stringify({
+            type: "market.detail.subscribe",
+            symbol: selectedMarket.symbol + "USDT",
+            streams: ["depth20@100ms", "aggTrade"],
+          }));
+        }
+      };
+
+      socket.onmessage = (event) => {
+        let message;
+        try {
+          message = JSON.parse(event.data);
+        } catch {
+          return;
+        }
+
+        if (message.type === "market.snapshot" && Array.isArray(message.data)) {
+          const nextMarkets = message.data.map(mapLiveMarketAsset);
+          if (nextMarkets.length) {
+            setLiveMarketAssets(nextMarkets);
+            setSelectedMarket((current) => current
+              ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
+              : current);
+          }
+          setMarketConnectionStatus("live");
+          return;
+        }
+
+        if (message.type === "market.ticker" && message.data) {
+          const updatedAsset = mapLiveMarketAsset(message.data);
+          setLiveMarketAssets((current) => current.map((asset) =>
+            asset.symbol === updatedAsset.symbol ? updatedAsset : asset
+          ));
+          setSelectedMarket((current) => current?.symbol === updatedAsset.symbol ? updatedAsset : current);
+          setMarketConnectionStatus("live");
+          return;
+        }
+
+        if (
+          message.type === "market.detail.depthUpdate" &&
+          message.symbol === (selectedMarket?.symbol || "") + "USDT"
+        ) {
+          setMarketOrderBook({
+            bids: Array.isArray(message.data?.bids) ? message.data.bids : [],
+            asks: Array.isArray(message.data?.asks) ? message.data.asks : [],
+          });
+          setMarketDetailStatus("live");
+          return;
+        }
+
+        if (
+          message.type === "market.detail.aggTrade" &&
+          message.symbol === (selectedMarket?.symbol || "") + "USDT"
+        ) {
+          const trade = message.data;
+          if (trade) {
+            setMarketRecentTrades((current) => [
+              {
+                ...trade,
+                time: Number(trade.time || message.timestamp || Date.now()),
+              },
+              ...current,
+            ].slice(0, 100));
+            setMarketDetailStatus("live");
+          }
+        }
+      };
+
+      socket.onclose = () => {
+        if (!activeSocket) return;
+        reconnectTimer = window.setTimeout(connect, reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+      };
+
+      socket.onerror = () => socket?.close();
+    };
+
+    connect();
+    return () => {
+      activeSocket = false;
+      if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      if (socket && socket.readyState === WebSocket.OPEN && active === "market-detail" && selectedMarket?.symbol) {
+        socket.send(JSON.stringify({
+          type: "market.detail.unsubscribe",
+          symbol: selectedMarket.symbol + "USDT",
+          streams: ["depth20@100ms", "aggTrade"],
+        }));
+      }
+      socket?.close();
+    };
+  }, [active, selectedMarket?.symbol]);
+
+  // [ADDED] Load the selected market's REST snapshots before applying realtime updates.
+  useEffect(() => {
+    if (active !== "market-detail" || !selectedMarket?.symbol) return undefined;
+
+    let activeRequest = true;
+    const symbol = selectedMarket.symbol + "USDT";
+    setMarketDetailStatus("loading");
+    setMarketDetailError("");
+    setMarketOrderBook({ bids: [], asks: [] });
+    setMarketRecentTrades([]);
+
+    const loadDetails = async () => {
+      try {
+        const [depthResponse, tradesResponse, metricsResponse] = await Promise.all([
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store" }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store" }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store" }),
+        ]);
+
+        if (!depthResponse.ok || !tradesResponse.ok || !metricsResponse.ok) {
+          throw new Error("Market detail API returned an unsuccessful response");
+        }
+
+        const [depthPayload, tradesPayload, metricsPayload] = await Promise.all([
+          depthResponse.json(),
+          tradesResponse.json(),
+          metricsResponse.json(),
+        ]);
+
+        if (!activeRequest) return;
+
+        if (depthPayload.success && depthPayload.data) {
+          setMarketOrderBook({
+            bids: Array.isArray(depthPayload.data.bids) ? depthPayload.data.bids : [],
+            asks: Array.isArray(depthPayload.data.asks) ? depthPayload.data.asks : [],
+          });
+        }
+
+        if (tradesPayload.success && Array.isArray(tradesPayload.data)) {
+          setMarketRecentTrades(tradesPayload.data.map((trade) => ({
+            ...trade,
+            time: Number(trade.time || Date.now()),
+          })));
+        }
+
+        if (metricsPayload.success && metricsPayload.data) {
+          setMarketMetrics(metricsPayload.data);
+        }
+
+        setMarketDetailStatus("live");
+      } catch (error) {
+        if (activeRequest) {
+          setMarketDetailStatus("offline");
+          setMarketDetailError(error.message || "Gagal mengambil detail market.");
+        }
+      }
+    };
+
+    loadDetails();
+    return () => {
+      activeRequest = false;
+    };
+  }, [active, selectedMarket?.symbol]);
 
   // [ADDED] Load Binance USDT-M perpetual markets through the same-origin Next.js proxy.
   useEffect(() => {
@@ -1478,13 +1664,15 @@ function App() {
                     <span>Harga Terakhir</span>
                     <strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong>
                     <div><b>{selectedMarket.price}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
-                    <small>Harga Mark {selectedMarket.price}</small>
+                    <small>Harga Mark {marketMetrics?.markPrice ? Number(marketMetrics.markPrice).toLocaleString("en-US", { maximumFractionDigits: 8 }) : selectedMarket.price}</small>
                   </div>
                   <div className="market-compact-stats">
                     <div><span>High 24 jam</span><strong>{selectedMarket.high||"—"}</strong></div>
                     <div><span>Low 24 jam</span><strong>{selectedMarket.low||"—"}</strong></div>
                     <div><span>Vol 24 jam ({selectedMarket.symbol})</span><strong>{selectedMarket.baseVolume || selectedMarket.volume}</strong></div>
                     <div><span>Vol 24 jam (USDT)</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div>
+                    <div><span>Index Price</span><strong>{marketMetrics?.indexPrice ? Number(marketMetrics.indexPrice).toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</strong></div>
+                    <div><span>Funding Rate</span><strong>{marketMetrics?.fundingRate !== undefined && marketMetrics?.fundingRate !== null ? (Number(marketMetrics.fundingRate) * 100).toFixed(4) + "%" : "—"}</strong></div>
                   </div>
                 </section>
                 <section className="market-chart-section">
@@ -1503,17 +1691,55 @@ function App() {
                   <div className="market-order-tabs" role="tablist" aria-label="Market order data">
                     {[["book","Book"],["depth","Kedalaman"],["trades","Perdagangan"]].map(([id,label])=><button type="button" role="tab" aria-selected={marketOrderTab===id} className={marketOrderTab===id?"selected":""} key={id} onClick={()=>setMarketOrderTab(id)}>{label}</button>)}
                   </div>
-                  {marketOrderTab==="book" && <><div className="market-book-ratio"><span>45.94%</span><span>54.06%</span></div><div className="market-book-bar"><i/><i/></div><div className="market-book-columns"><span>Bid</span><span>Price</span><span>Ask</span></div>{["0.0003729","0.0003728","0.0003727","0.0003726"].map((price,index)=><div className="market-book-row" key={price}><span>{(217.52-index*23).toFixed(2)}</span><strong>{price}</strong><span>{(160.44+index*17).toFixed(2)}</span></div>)}</>}
-                  {marketOrderTab==="depth" && <div className="market-depth-placeholder"><Activity size={23}/><strong>Market Depth</strong><span>Bid and ask liquidity visualization</span><div className="market-book-bar"><i/><i/></div></div>}
-                  {marketOrderTab==="trades" && <div className="market-trade-list">{["18:01:24","18:01:19","18:01:11","18:01:03"].map((time,index)=><div key={time}><span>{time}</span><strong className={index%2?"negative":"positive"}>{index%2?"0.0003730":"0.0003729"}</strong><span>{(125.4+index*18).toFixed(2)}</span></div>)}</div>}
+                  {marketOrderTab==="book" && (
+                    <>
+                      <div className="market-book-ratio">
+                        <span>{marketOrderBook.bids.length ? "Bid " + ((marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) / Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) + marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))) * 100).toFixed(2) + "%" : "Bid —"}</span>
+                        <span>{marketOrderBook.asks.length ? "Ask " + ((marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0) / Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) + marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))) * 100).toFixed(2) + "%" : "Ask —"}</span>
+                      </div>
+                      <div className="market-book-bar"><i style={{flex: Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0))}}/><i style={{flex: Math.max(1, marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))}}/></div>
+                      <div className="market-book-columns"><span>Bid Qty</span><span>Price (USDT)</span><span>Ask Qty</span></div>
+                      {Array.from({ length: Math.max(marketOrderBook.bids.length, marketOrderBook.asks.length) }).slice(0, 20).map((_, index) => {
+                        const bid = marketOrderBook.bids[index];
+                        const ask = marketOrderBook.asks[index];
+                        return <div className="market-book-row" key={String(bid?.price || "bid") + "-" + String(ask?.price || "ask")}>
+                          <span>{bid ? Number(bid.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</span>
+                          <strong>{bid ? Number(bid.price).toLocaleString("en-US", { maximumFractionDigits: 8 }) : ask ? Number(ask.price).toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</strong>
+                          <span>{ask ? Number(ask.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</span>
+                        </div>;
+                      })}
+                      {!marketOrderBook.bids.length && !marketOrderBook.asks.length && <div className="market-live-empty">Menunggu snapshot order book...</div>}
+                    </>
+                  )}
+                  {marketOrderTab==="depth" && (
+                    <div className="market-depth-placeholder">
+                      <Activity size={23}/>
+                      <strong>Market Depth</strong>
+                      <span>Live liquidity from Binance USDⓈ-M Futures</span>
+                      <div className="market-depth-ladder">
+                        {marketOrderBook.bids.slice(0, 10).map((item) => <div key={"bid-" + item.price} className="market-depth-bid" style={{width: Math.max(8, Number(item.quantity) / Math.max(1, ...marketOrderBook.bids.map((level) => Number(level.quantity))) * 100) + "%"}}><span>{Number(item.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</span><b>{Number(item.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</b></div>)}
+                        {marketOrderBook.asks.slice(0, 10).map((item) => <div key={"ask-" + item.price} className="market-depth-ask" style={{width: Math.max(8, Number(item.quantity) / Math.max(1, ...marketOrderBook.asks.map((level) => Number(level.quantity))) * 100) + "%"}}><span>{Number(item.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</span><b>{Number(item.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</b></div>)}
+                      </div>
+                    </div>
+                  )}
+                  {marketOrderTab==="trades" && (
+                    <div className="market-trade-list">
+                      {marketRecentTrades.map((trade, index) => <div key={String(trade.id ?? trade.time) + "-" + index}>
+                        <span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span>
+                        <strong className={trade.isBuyerMaker ? "negative" : "positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong>
+                        <span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</span>
+                      </div>)}
+                      {!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}
+                    </div>
+                  )}
                 </section>
               </>
             )}
             {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
             {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
-            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Recent market trades for {selectedMarket.symbol}/USDT.</p>{["18:01:24","18:01:19","18:01:11","18:01:03","18:00:57"].map((time,index)=><div key={time}><span>{time}</span><strong className={index%2?"negative":"positive"}>{index%2?"0.0003730":"0.0003729"}</strong><span>{(125.4+index*18).toFixed(2)} {selectedMarket.symbol}</span></div>)}</section>}
+            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Live public trades for {selectedMarket.symbol}/USDT.</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}</section>}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
-            <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades remain demo data.</p>
+            <p className="market-data-disclaimer">Ticker, candlestick history, order book, depth, funding, mark/index price, and recent trades are supplied by Beanance Market Backend using Binance USDⓈ-M Futures. {marketDetailStatus === "offline" ? marketDetailError : marketDetailStatus === "loading" ? "Memuat detail market..." : "Detail feed connected."}</p>
           </section>
         )}
 
