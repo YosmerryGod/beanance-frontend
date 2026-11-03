@@ -4362,3 +4362,142 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-feed-status.offline{color:#ef5368}
 .app-shell .market-feed-status.connecting{color:var(--muted)}
 .app-shell .market-page-feed-status{margin:0 0 12px}
+
+
+/* [ADDED] Binance-inspired compact chart toolbar and floating candle details. */
+.app-shell .market-chart-toolbar-inside{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-height:42px;
+  padding:5px 10px;
+  border-bottom:1px solid var(--line);
+  background:var(--panel-soft);
+}
+.app-shell .market-chart-toolbar-inside .market-timeframes{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:clamp(10px,2.5vw,19px);
+  min-width:0;
+  flex:1;
+}
+.app-shell .market-chart-toolbar-inside .market-timeframes>button,
+.app-shell .market-chart-more-wrap>button{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:6px 0;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+.app-shell .market-chart-toolbar-inside .market-timeframes>button.selected,
+.app-shell .market-chart-more-wrap>button.selected{
+  color:var(--text);
+  font-weight:800;
+}
+.app-shell .market-chart-more-wrap{position:relative;flex:0 0 auto}
+.app-shell .market-chart-dropdown,
+.app-shell .market-chart-tools-menu{
+  position:absolute;
+  z-index:20;
+  top:calc(100% + 5px);
+  right:0;
+  display:flex;
+  flex-direction:column;
+  min-width:92px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--panel);
+  box-shadow:0 12px 30px rgba(0,0,0,.32);
+}
+.app-shell .market-chart-dropdown button,
+.app-shell .market-chart-tools-menu button{
+  padding:9px 10px;
+  border:0;
+  border-radius:6px;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  font-size:12px;
+  white-space:nowrap;
+}
+.app-shell .market-chart-dropdown button.selected,
+.app-shell .market-chart-dropdown button:hover,
+.app-shell .market-chart-tools-menu button:hover{background:var(--panel-soft);color:var(--gold)}
+.app-shell .market-chart-icon-actions{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,2.4vw,18px);
+  flex:0 0 auto;
+}
+.app-shell .market-chart-icon-actions>button{
+  display:grid;
+  place-items:center;
+  width:25px;
+  height:30px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#c5cbd5;
+}
+.app-shell .market-chart-icon-actions>button:active{color:var(--gold)}
+.app-shell .market-chart-tools-menu{right:0;min-width:145px}
+.app-shell .market-trading-chart-canvas{overflow:hidden}
+.app-shell .market-candle-info{
+  position:absolute;
+  z-index:5;
+  top:12px;
+  left:10px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  width:158px;
+  max-width:calc(100% - 20px);
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:8px;
+  background:rgba(27,33,43,.91);
+  color:#dce1e9;
+  font-size:11px;
+  line-height:1.25;
+  font-variant-numeric:tabular-nums;
+  pointer-events:none;
+  backdrop-filter:blur(8px);
+}
+.app-shell .market-candle-info-time{
+  margin-bottom:2px;
+  color:#dce1e9;
+  font-weight:600;
+  white-space:nowrap;
+}
+.app-shell .market-candle-info>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.app-shell .market-candle-info>div span{color:#aab3c1}
+.app-shell .market-candle-info>div b{
+  color:#e8edf5;
+  font-weight:600;
+  text-align:right;
+}
+.app-shell .market-candle-info>div b.positive{color:#20bd88}
+.app-shell .market-candle-info>div b.negative{color:#ef5368}
+@media(max-width:760px){
+  .app-shell .market-chart-toolbar-inside{min-height:42px;padding:4px 9px}
+  .app-shell .market-chart-toolbar-inside .market-timeframes{gap:clamp(9px,3vw,17px)}
+  .app-shell .market-chart-toolbar-inside .market-timeframes>button,
+  .app-shell .market-chart-more-wrap>button{font-size:11px}
+  .app-shell .market-chart-icon-actions{gap:12px}
+  .app-shell .market-chart-icon-actions>button{width:22px}
+  .app-shell .market-candle-info{top:9px;left:8px;width:150px;padding:8px;font-size:10px}
+}
