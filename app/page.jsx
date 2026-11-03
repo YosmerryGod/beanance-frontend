@@ -1623,8 +1623,8 @@ function App() {
                   <div className="strategy-detail-section-title"><h3>{t("Capital & AUM")}</h3><span>{t("Strategy account")}</span></div>
                   <div className="strategy-detail-capital-grid">
                     <div><span>{t("Initial Balance")}</span><strong>${selectedStrategy.initialBalance.toLocaleString(language)}</strong></div>
-                    <div><span>{t("Current Balance")}</span><strong>${selectedStrategy.currentBalance.toLocaleString("en-US", { maximumFractionDigits: 2 })}</strong></div>
-                    <div><span>{t("Current AUM")}</span><strong>${selectedStrategy.aum.toLocaleString("en-US")}</strong></div>
+                    <div><span>{t("Current Balance")}</span><strong>${selectedStrategy.currentBalance.toLocaleString(language, { maximumFractionDigits: 2 })}</strong></div>
+                    <div><span>{t("Current AUM")}</span><strong>${selectedStrategy.aum.toLocaleString(language)}</strong></div>
                     <div><span>{t("Active Copiers")}</span><strong>{selectedStrategy.copiers}</strong></div>
                   </div>
                   <div className="strategy-detail-section-title"><h3>{t("Trading Information")}</h3></div>
