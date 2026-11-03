@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, createChart } from "lightweight-charts";
 import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { translationKeys } from "../../i18n/config";
 
 const TIMEFRAME_SECONDS = {
   "1m": 60,
@@ -60,7 +61,8 @@ function marketWebSocketUrl() {
 }
 
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
-  const { t } = useTranslation();
+  const { t: translate } = useTranslation();
+  const t = (value) => translate(translationKeys[value] || value, { defaultValue: value });
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
