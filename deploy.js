@@ -110,7 +110,7 @@ const handle = app.getRequestHandler();
 const port = Number(process.env.PORT || ${APP_PORT});
 const host = process.env.HOSTNAME || ${JSON.stringify(APP_HOST)};
 app.prepare().then(() => {
-  http.createServer((request, response) => handle(request, response)).listen(port, host, () => {
+  http.createServer((request, response) => {\n  if (request.url === "/api/health") {\n    response.writeHead(200, { "content-type": "application/json", "cache-control": "no-store" });\n    response.end(JSON.stringify({ success: true, service: "beanance-frontend", status: "ok" }));\n    return;\n  }\n  handle(request, response);\n}).listen(port, host, () => {
     process.stdout.write("Legacy Beanance server listening on " + host + ":" + port + "\\n");
   });
 }).catch((error) => {
