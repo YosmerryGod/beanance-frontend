@@ -132,6 +132,7 @@ export default function MarketTradingChart({ symbol, timeframe }) {
       }
 
       socket.onopen = () => {
+        if (!active || manuallyClosed) return;
         reconnectDelay = 1000;
         socket.send(JSON.stringify({
           type: "market.detail.subscribe",
