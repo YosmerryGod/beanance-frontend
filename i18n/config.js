@@ -5,6 +5,9 @@ import id from "./locales/id.json";
 import zh from "./locales/zh.json";
 import ja from "./locales/ja.json";
 import vi from "./locales/vi.json";
+import translationKeys from "./keys.json";
+
+export { translationKeys };
 
 export const supportedLanguages = [
   { code: "en", label: "English", native: "English", flag: "EN" },
@@ -35,6 +38,7 @@ if (!i18n.isInitialized) {
     resources,
     lng: "en",
     fallbackLng: "en",
+    keySeparator: false,
     interpolation: { escapeValue: false },
     initImmediate: false,
   });
