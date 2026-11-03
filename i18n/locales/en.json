@@ -318,7 +318,12 @@
     "app.k316": "YOUR PORTFOLIO",
     "app.k317": "Zoom in",
     "app.k318": "Zoom out",
-    "app.k319": "More"
+    "app.k319": "More",
+    "app.k320": "Open",
+    "app.k321": "Change",
+    "app.k322": "Change %",
+    "app.k323": "Range",
+    "app.k324": "Volume"
   },
   "sidebar": {
     "account": "ACCOUNT",
