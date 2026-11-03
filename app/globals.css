@@ -4537,11 +4537,13 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   pointer-events:none;
   user-select:none;
 }
-.app-shell .market-chart-watermark svg{
+/* [MODIFIED] Size the real Beanance logo used by the chart watermark. */
+.app-shell .market-chart-watermark img{
   display:block;
-  width:clamp(34px,7vw,58px);
-  height:clamp(34px,7vw,58px);
+  width:clamp(38px,7vw,60px);
+  height:clamp(38px,7vw,60px);
   flex:0 0 auto;
+  object-fit:contain;
 }
 .app-shell .market-chart-watermark span{
   color:var(--text);
