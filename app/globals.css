@@ -4551,3 +4551,22 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   line-height:1;
 }
 .app-shell .market-candle-info{z-index:12} /* [MODIFIED] Keep selected-candle details above the watermark. */
+
+
+/* [MODIFIED] Remove the remaining card-like surface from the chart toolbar and canvas. */
+.app-shell .market-trading-chart,
+.app-shell .market-trading-chart-canvas{
+  background:var(--bg)!important;
+}
+.app-shell .market-chart-toolbar-inside{
+  background:transparent!important;
+  border-bottom:0!important;
+}
+.app-shell .market-chart-watermark{
+  inset:0 76px 0 0;
+  justify-content:center;
+  transform:translateX(0);
+}
+@media(max-width:760px){
+  .app-shell .market-chart-watermark{right:68px}
+}
