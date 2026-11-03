@@ -317,5 +317,10 @@
   "YOUR PORTFOLIO": "app.k316",
   "Zoom in": "app.k317",
   "Zoom out": "app.k318",
-  "More": "app.k319"
+  "More": "app.k319",
+  "Open": "app.k320",
+  "Change": "app.k321",
+  "Change %": "app.k322",
+  "Range": "app.k323",
+  "Volume": "app.k324"
 }
