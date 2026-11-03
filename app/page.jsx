@@ -676,6 +676,7 @@ function App() {
   const [marketOrderBook, setMarketOrderBook] = useState({ bids: [], asks: [] });
   const [marketRecentTrades, setMarketRecentTrades] = useState([]);
   const [marketMetrics, setMarketMetrics] = useState(null);
+  const [marketDailyCandles, setMarketDailyCandles] = useState([]); // [ADDED] Daily history used to calculate real period returns.
   const [marketDetailStatus, setMarketDetailStatus] = useState("loading");
   const [marketDetailError, setMarketDetailError] = useState("");
 
@@ -859,23 +860,27 @@ function App() {
     setMarketDetailError("");
     setMarketOrderBook({ bids: [], asks: [] });
     setMarketRecentTrades([]);
+    setMarketMetrics(null);
+    setMarketDailyCandles([]);
 
     const loadDetails = async () => {
       try {
-        const [depthResponse, tradesResponse, metricsResponse] = await Promise.all([
+        const [depthResponse, tradesResponse, metricsResponse, dailyResponse] = await Promise.all([
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store" }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store" }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store" }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=365", { cache: "no-store" }),
         ]);
 
         if (!depthResponse.ok || !tradesResponse.ok || !metricsResponse.ok) {
           throw new Error("Market detail API returned an unsuccessful response");
         }
 
-        const [depthPayload, tradesPayload, metricsPayload] = await Promise.all([
+        const [depthPayload, tradesPayload, metricsPayload, dailyPayload] = await Promise.all([
           depthResponse.json(),
           tradesResponse.json(),
           metricsResponse.json(),
+          dailyResponse.ok ? dailyResponse.json() : Promise.resolve({ success: false, data: [] }),
         ]);
 
         if (!activeRequest) return;
@@ -896,6 +901,13 @@ function App() {
 
         if (metricsPayload.success && metricsPayload.data) {
           setMarketMetrics(metricsPayload.data);
+        }
+
+        if (dailyPayload.success && Array.isArray(dailyPayload.data)) {
+          setMarketDailyCandles(dailyPayload.data
+            .map((candle) => ({ openTime: Number(candle.openTime), close: Number(candle.close) }))
+            .filter((candle) => Number.isFinite(candle.openTime) && Number.isFinite(candle.close))
+            .sort((a, b) => a.openTime - b.openTime));
         }
 
         setMarketDetailStatus("live");
