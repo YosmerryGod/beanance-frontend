@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, createChart } from "lightweight-charts";
 import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -62,7 +62,16 @@ function marketWebSocketUrl() {
 
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
   const { t: translate } = useTranslation();
-  const t = (value) => translate(translationKeys[value] || value, { defaultValue: value });
+  const t = useCallback((value) => translate(translationKeys[value] || value, { defaultValue: value }), [translate]);
+  const [activeTheme, setActiveTheme] = useState("dark");
+
+  useEffect(() => {
+    const syncTheme = () => setActiveTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
@@ -347,7 +356,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       candleSeriesRef.current = null;
       volumeSeriesRef.current = null;
     };
-  }, []);
+  }, [activeTheme]);
 
   // [ADDED] Update chart series without recreating the chart on every live candle.
   useEffect(() => {
@@ -359,12 +368,12 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     volumeSeries.setData(candles.map((candle) => ({
       time: candle.time,
       value: candle.volume,
-      color: candle.close >= candle.open ? "color-mix(in srgb, var(--positive) 42%, transparent)" : "color-mix(in srgb, var(--negative) 42%, transparent)",
+      color: candle.close >= candle.open ? getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--positive").trim() || "#35cf86" : getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--negative").trim() || "#ef5368",
     })));
 
     if (candles.length) setLastCandle(candles[candles.length - 1]);
     else setLastCandle(null);
-  }, [candles]);
+  }, [candles, activeTheme]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
@@ -445,7 +454,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               className={timeframe === time ? "selected" : ""}
               onClick={() => onTimeframeChange?.(time)}
             >
-              {time === "1h" ? "1j" : time}
+              {time === "1h" ? "1h" : time}
             </button>
           ))}
           <div className="market-chart-more-wrap">
@@ -508,14 +517,14 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         {displayedCandle && (
           <div className="market-candle-info" aria-live="polite">
             <span className="market-candle-info-time">{t("Time")} {candleTime}</span>
-            <div><span>Buka</span><b>{formatPrice(displayedCandle.open)}</b></div>
+            <div><span>{t("Open")}</span><b>{formatPrice(displayedCandle.open)}</b></div>
             <div><span>High</span><b>{formatPrice(displayedCandle.high)}</b></div>
             <div><span>Low</span><b>{formatPrice(displayedCandle.low)}</b></div>
             <div><span>Close</span><b>{formatPrice(displayedCandle.close)}</b></div>
-            <div><span>Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
-            <div><span>%Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
-            <div><span>Rentang</span><b>{candleRange.toFixed(2) + "%"}</b></div>
-            <div><span>Vol</span><b>{formatVolume(displayedCandle.volume)}</b></div>
+            <div><span>{t("Change")}</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Change %")}</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Range")}</span><b>{candleRange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Volume")}</span><b>{formatVolume(displayedCandle.volume)}</b></div>
           </div>
         )}
       </div>
