@@ -327,7 +327,10 @@
     "app.k325": "Chào mừng {{name}} trở lại",
     "app.k326": "Giao dịch gần đây",
     "app.k327": "Giao dịch công khai trực tiếp cho {{symbol}}.",
-    "app.k328": "Đang chờ giao dịch mới nhất..."
+    "app.k328": "Đang chờ giao dịch mới nhất...",
+    "app.k329": "High-volume price increase",
+    "app.k330": "High-volume price decrease",
+    "app.k331": "24h Change / Status"
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
