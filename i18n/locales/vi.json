@@ -318,7 +318,12 @@
     "app.k316": "DANH MỤC ĐẦU TƯ",
     "app.k317": "Zoom in",
     "app.k318": "Zoom out",
-    "app.k319": "Thêm"
+    "app.k319": "Thêm",
+    "app.k320": "Mở cửa",
+    "app.k321": "Thay đổi",
+    "app.k322": "% thay đổi",
+    "app.k323": "Biên độ",
+    "app.k324": "Khối lượng"
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
