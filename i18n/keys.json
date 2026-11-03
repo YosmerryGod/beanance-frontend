@@ -326,5 +326,8 @@
   "Welcome back, {{name}}": "app.k325",
   "Recent Trades": "app.k326",
   "Live public trades for {{symbol}}.": "app.k327",
-  "Waiting for recent trades...": "app.k328"
+  "Waiting for recent trades...": "app.k328",
+  "Harga Naik dengan Vol. Tinggi": "app.k329",
+  "Harga Turun dengan Vol. Tinggi": "app.k330",
+  "Perubahan 24 jam / Status": "app.k331"
 }
