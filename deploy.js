@@ -17,7 +17,7 @@ const LOG_DIR = process.env.DEPLOY_LOG_DIR || "/var/log/beanance-deploy";
 const APP_LOG_DIR = process.env.APP_LOG_DIR || "/var/log/beanance-frontend";
 const LOCK_FILE = process.env.DEPLOY_LOCK_FILE || "/var/lock/beanance-frontend-deploy.lock";
 const KEEP_RELEASES = Math.max(2, Number(process.env.KEEP_RELEASES || 3));
-const HEALTH_ATTEMPTS = 15;
+const HEALTH_ATTEMPTS = 30;
 const HEALTH_TIMEOUT_MS = 2000;
 
 let lockFd = null;
@@ -83,7 +83,21 @@ function run(command, args, options = {}) {
     timeout: options.timeout || 10 * 60 * 1000,
   });
   if (result.error) throw result.error;
-  if (result.status !== 0) throw new Error(command + " exited with status " + result.status);
+  if (result.status !== 0) {
+    if (options.allowFailure) {
+      writeLog(command + " exited with status " + result.status + "; continuing because allowFailure is enabled.");
+      return result.status;
+    }
+    throw new Error(command + " exited with status " + result.status);
+  }
+  return result.status;
+}
+
+function restartApplication() {
+  // [MODIFIED] Remove the old PM2 process so its resolved release path cannot survive a symlink switch.
+  run("pm2", ["delete", PM2_TARGET], { allowFailure: true });
+  // [ADDED] Start the stable launcher, which resolves the current release on every fresh process start.
+  run("pm2", ["start", path.join(DEPLOY_DIR, "ecosystem.config.cjs"), "--update-env"]);
 }
 
 function currentTarget() {
@@ -209,7 +223,7 @@ async function main() {
 
     writeLog("Prepared release: " + nextRelease);
     switchRelease(nextRelease);
-    run("pm2", ["startOrReload", path.join(DEPLOY_DIR, "ecosystem.config.cjs"), "--update-env"]);
+    restartApplication();
     await waitForHealth();
     run("pm2", ["save"]);
     pruneReleases(nextRelease, previous);
@@ -222,7 +236,7 @@ async function main() {
       try {
         writeLog("Rolling back to " + previous);
         switchRelease(previous);
-        run("pm2", ["startOrReload", path.join(DEPLOY_DIR, "ecosystem.config.cjs"), "--update-env"]);
+        restartApplication();
         await waitForHealth();
         run("pm2", ["save"]);
         writeLog("ROLLBACK SUCCESS");
