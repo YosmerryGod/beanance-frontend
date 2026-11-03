@@ -53,8 +53,8 @@ import {
   MessageCircle, // [ADDED] Help Center contact support icon
   Maximize2, // [ADDED] Market chart fullscreen control
 } from "lucide-react";
-import CoinLogo from "../../app/components/CoinLogo";
-import MarketTradingChart from "../../app/components/MarketTradingChart"; // [ADDED] Interactive TradingView-style market chart
+import CoinLogo from "../../components/ui/CoinLogo";
+import MarketTradingChart from "../market/components/MarketTradingChart"; // [ADDED] Interactive TradingView-style market chart
 
 
 const navigation = [
