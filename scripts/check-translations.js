@@ -13,12 +13,12 @@ const mappedKeys = Object.values(keyMap);
 const duplicateMappedKeys = mappedKeys.filter((key, index) => mappedKeys.indexOf(key) !== index);
 if (duplicateMappedKeys.length) {
   failed = true;
-  process.stderr.write("Duplicate stable translation IDs: " + [...new Set(duplicateMappedKeys)].join(", ") + "\\n");
+  process.stderr.write("Duplicate stable translation IDs: " + [...new Set(duplicateMappedKeys)].join(", ") + "\n");
 }
 for (const [sourceText, stableKey] of Object.entries(keyMap)) {
   if (!(stableKey in (reference.app || {}))) {
     failed = true;
-    process.stderr.write("Missing English locale entry for " + sourceText + " (" + stableKey + ")\\n");
+    process.stderr.write("Missing English locale entry for " + sourceText + " (" + stableKey + ")\n");
   }
 }
 
