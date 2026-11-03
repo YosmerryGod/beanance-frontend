@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, createChart } from "lightweight-charts";
 import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { translationKeys } from "../../../i18n/config";
 
 const TIMEFRAME_SECONDS = {
   "1m": 60,
@@ -47,18 +49,20 @@ function klineStream(timeframe) {
   return "kline_" + timeframe;
 }
 
-// [ADDED] Use a configured public WebSocket URL when provided, otherwise use same-origin proxy.
-function marketWebSocketUrl() {
-  const configuredUrl = process.env.NEXT_PUBLIC_MARKET_WS_URL;
-  if (configuredUrl) return configuredUrl;
-
-  if (typeof window === "undefined") return "";
-
-  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return protocol + "//" + window.location.host + "/ws/market";
-}
 
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
+  const { t: translate, i18n: translator } = useTranslation();
+  const locale = translator.resolvedLanguage || translator.language || "en";
+  const t = useCallback((value) => translate(translationKeys[value] || value, { defaultValue: value }), [translate]);
+  const [activeTheme, setActiveTheme] = useState("dark");
+
+  useEffect(() => {
+    const syncTheme = () => setActiveTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
@@ -73,15 +77,12 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
 
-  // [ADDED] Load historical candles from the real market REST API and stream live updates.
+  // [MODIFIED] Load historical candles over REST and consume the app-wide market WebSocket.
   useEffect(() => {
     if (!normalizedSymbol) return undefined;
 
     let active = true;
-    let socket = null;
-    let reconnectTimer = null;
-    let reconnectDelay = 1000;
-    let manuallyClosed = false;
+    const controller = new AbortController();
 
     const loadCandles = async () => {
       try {
@@ -89,135 +90,69 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         const response = await fetch(
           "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
           "/klines?interval=" + encodeURIComponent(interval) + "&limit=500",
-          { cache: "no-store" }
+          { cache: "no-store", signal: controller.signal }
         );
-
-        if (!response.ok) {
-          throw new Error("Market candle API returned HTTP " + response.status);
-        }
-
+        if (!response.ok) throw new Error("Market candle API returned HTTP " + response.status);
         const payload = await response.json();
         if (!payload?.success || !Array.isArray(payload.data)) {
           throw new Error(payload?.message || "Invalid candle API response");
         }
-
         const normalized = payload.data
           .map(normalizeCandle)
           .filter(Boolean)
           .sort((a, b) => a.time - b.time);
-
-        if (active) {
-          setCandles((current) => {
-            const merged = new Map(normalized.map((candle) => [candle.time, candle]));
-            current.forEach((candle) => merged.set(candle.time, candle));
-            return Array.from(merged.values()).sort((a, b) => a.time - b.time).slice(-1500);
-          });
-          if (!normalized.length) setChartError("Belum ada data candle untuk market ini.");
-        }
+        if (!active) return;
+        setCandles(normalized.slice(-1500));
+        if (!normalized.length) setChartError(t("No candle data is available for this market."));
       } catch (error) {
-        if (active) {
+        if (active && error.name !== "AbortError") {
           setCandles([]);
-          setChartError(error.message || "Gagal mengambil data candle.");
+          setChartError(error.message || t("Failed to load candle data."));
         }
       }
     };
 
-    const connectWebSocket = () => {
-      if (!active || manuallyClosed) return;
+    const handleMarketKline = (event) => {
+      const message = event.detail;
+      if (
+        message?.type !== "market.detail.kline" ||
+        String(message.symbol || "").toUpperCase() !== normalizedSymbol ||
+        message.stream !== klineStream(interval)
+      ) return;
 
-      const url = marketWebSocketUrl();
-      if (!url) return;
-
-      try {
-        socket = new WebSocket(url);
-      } catch {
-        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
-        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
-        return;
-      }
-
-      socket.onopen = () => {
-        if (!active || manuallyClosed) return;
-        reconnectDelay = 1000;
-        socket.send(JSON.stringify({
-          type: "market.detail.subscribe",
-          symbol: normalizedSymbol,
-          streams: [klineStream(interval)],
-        }));
-      };
-
-      socket.onmessage = (event) => {
-        let message;
-        try {
-          message = JSON.parse(event.data);
-        } catch {
-          return;
-        }
-
-        if (
-          message.type !== "market.detail.kline" ||
-          String(message.symbol || "").toUpperCase() !== normalizedSymbol ||
-          message.stream !== klineStream(interval)
-        ) {
-          return;
-        }
-
-        const candle = normalizeCandle(message.data);
-        if (!candle || !active) return;
-
-        setCandles((current) => {
-          const next = [...current];
-          const existingIndex = next.findIndex((item) => item.time === candle.time);
-
-          if (existingIndex >= 0) {
-            next[existingIndex] = candle;
-          } else {
-            next.push(candle);
-            next.sort((a, b) => a.time - b.time);
-          }
-
-          return next.slice(-1500);
-        });
-      };
-
-      socket.onclose = () => {
-        if (!active || manuallyClosed) return;
-        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
-        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
-      };
-
-      socket.onerror = () => {
-        socket?.close();
-      };
+      const candle = normalizeCandle(message.data);
+      if (!candle || !active) return;
+      setCandles((current) => {
+        const next = [...current];
+        const existingIndex = next.findIndex((item) => item.time === candle.time);
+        if (existingIndex >= 0) next[existingIndex] = candle;
+        else next.push(candle);
+        return next.sort((a, b) => a.time - b.time).slice(-1500);
+      });
     };
 
     setCandles([]);
+    window.addEventListener("beanance:market-kline", handleMarketKline);
     loadCandles();
-    connectWebSocket();
 
     return () => {
       active = false;
-      manuallyClosed = true;
-      if (reconnectTimer) window.clearTimeout(reconnectTimer);
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({
-          type: "market.detail.unsubscribe",
-          symbol: normalizedSymbol,
-          streams: [klineStream(interval)],
-        }));
-      }
-      socket?.close();
+      controller.abort();
+      window.removeEventListener("beanance:market-kline", handleMarketKline);
     };
-  }, [normalizedSymbol, interval]);
+  }, [normalizedSymbol, interval, t]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return undefined;
 
     const styles = getComputedStyle(container.closest(".app-shell") || container);
-    const background = styles.getPropertyValue("--bg").trim() || "#000000"; // [MODIFIED] Blend chart canvas into the page instead of a card surface.
-    const textColor = styles.getPropertyValue("--muted").trim() || "#8b909b";
-    const gridColor = styles.getPropertyValue("--line").trim() || "rgba(130,140,155,.13)";
+    const background = styles.getPropertyValue("--bg").trim() || "#090909";
+    const textColor = styles.getPropertyValue("--text-muted").trim() || "#a8a18e";
+    const gridColor = styles.getPropertyValue("--border").trim() || "rgba(255,216,77,.13)";
+    const accentColor = styles.getPropertyValue("--accent").trim() || "#f5c400";
+    const positiveColor = styles.getPropertyValue("--positive").trim() || "#35cf86";
+    const negativeColor = styles.getPropertyValue("--negative").trim() || "#ef5368";
     const chart = createChart(container, {
       width: container.clientWidth,
       height: container.clientHeight,
@@ -225,7 +160,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         background: { type: "solid", color: background },
         textColor,
         attributionLogo: false, // [MODIFIED] Remove the TradingView attribution watermark.
-        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        fontFamily: getComputedStyle(document.body).fontFamily,
         fontSize: 10,
         panes: { separatorColor: gridColor, separatorHoverColor: gridColor },
       },
@@ -235,8 +170,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       },
       crosshair: {
         mode: 0,
-        vertLine: { color: "rgba(245,196,0,.65)", width: 1, style: 2, labelBackgroundColor: "#d9aa00" },
-        horzLine: { color: "rgba(245,196,0,.65)", width: 1, style: 2, labelBackgroundColor: "#d9aa00" },
+        vertLine: { color: accentColor, width: 1, style: 2, labelBackgroundColor: accentColor },
+        horzLine: { color: accentColor, width: 1, style: 2, labelBackgroundColor: accentColor },
       },
       rightPriceScale: {
         borderColor: gridColor,
@@ -268,18 +203,18 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       },
       localization: {
         priceFormatter: (value) => value >= 1000
-          ? value.toLocaleString("en-US", { maximumFractionDigits: 2 })
-          : value.toLocaleString("en-US", { maximumFractionDigits: 8 }),
+          ? value.toLocaleString(locale, { maximumFractionDigits: 2 })
+          : value.toLocaleString(locale, { maximumFractionDigits: 8 }),
       },
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: "#20bd88",
-      downColor: "#ef5368",
-      borderUpColor: "#20bd88",
-      borderDownColor: "#ef5368",
-      wickUpColor: "#20bd88",
-      wickDownColor: "#ef5368",
+      upColor: positiveColor,
+      downColor: negativeColor,
+      borderUpColor: positiveColor,
+      borderDownColor: negativeColor,
+      wickUpColor: positiveColor,
+      wickDownColor: negativeColor,
       priceLineVisible: true,
       lastValueVisible: true,
     });
@@ -339,7 +274,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       candleSeriesRef.current = null;
       volumeSeriesRef.current = null;
     };
-  }, []);
+  }, [activeTheme, locale]);
 
   // [ADDED] Update chart series without recreating the chart on every live candle.
   useEffect(() => {
@@ -351,12 +286,12 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     volumeSeries.setData(candles.map((candle) => ({
       time: candle.time,
       value: candle.volume,
-      color: candle.close >= candle.open ? "rgba(32,189,136,.42)" : "rgba(239,83,104,.42)",
+      color: candle.close >= candle.open ? getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--positive").trim() || "#35cf86" : getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--negative").trim() || "#ef5368",
     })));
 
     if (candles.length) setLastCandle(candles[candles.length - 1]);
     else setLastCandle(null);
-  }, [candles]);
+  }, [candles, activeTheme]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
@@ -405,8 +340,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   }, []);
 
   const displayedCandle = hoverCandle; // [MODIFIED] Show candle details only while crosshair is over a candle.
-  const formatPrice = (value) => Number(value).toLocaleString("en-US", { maximumFractionDigits: 8 });
-  const formatVolume = (value) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const formatPrice = (value) => Number(value).toLocaleString(locale, { maximumFractionDigits: 8 });
+  const formatVolume = (value) => Number(value || 0).toLocaleString(locale, { maximumFractionDigits: 2 });
   const candleChange = displayedCandle && displayedCandle.open
     ? ((displayedCandle.close - displayedCandle.open) / displayedCandle.open) * 100
     : 0;
@@ -414,11 +349,11 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     ? ((displayedCandle.high - displayedCandle.low) / displayedCandle.low) * 100
     : 0;
   const candleTime = displayedCandle
-    ? new Date(displayedCandle.time * 1000).toLocaleString("id-ID", {
+    ? new Date(displayedCandle.time * 1000).toLocaleString(locale, {
         year: "numeric", month: "2-digit", day: "2-digit",
         hour: "2-digit", minute: "2-digit", hour12: false
       })
-    : "Menunggu data";
+    : t("Waiting for data");
 
   const visibleTimeframes = ["1m", "5m", "15m", "30m", "1h"];
   const extraTimeframes = ["2h", "4h", "1d"];
@@ -436,7 +371,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               className={timeframe === time ? "selected" : ""}
               onClick={() => onTimeframeChange?.(time)}
             >
-              {time === "1h" ? "1j" : time}
+              {time === "1h" ? "1h" : time}
             </button>
           ))}
           <div className="market-chart-more-wrap">
@@ -469,20 +404,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           </div>
         </div>
         <div className="market-chart-icon-actions">
-          <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen chart" title="Fullscreen">
+          <button type="button" onClick={toggleFullscreen} aria-label={t("Fullscreen chart")} title={t("Fullscreen")}>
             <Expand size={18} />
           </button>
-          <button type="button" onClick={() => setChartToolsOpen((open) => !open)} aria-label="Chart settings" title="Chart settings">
+          <button type="button" onClick={() => setChartToolsOpen((open) => !open)} aria-label={t("Chart settings")} title={t("Chart settings")}>
             <SlidersHorizontal size={18} />
           </button>
-          <button type="button" onClick={resetChart} aria-label="Reset chart view" title="Reset chart">
+          <button type="button" onClick={resetChart} aria-label={t("Reset chart view")} title={t("Reset chart")}>
             <LayoutGrid size={18} />
           </button>
           {chartToolsOpen && (
             <div className="market-chart-tools-menu">
-              <button type="button" onClick={zoomIn}>Perbesar chart</button>
-              <button type="button" onClick={zoomOut}>Perkecil chart</button>
-              <button type="button" onClick={resetChart}>Reset tampilan</button>
+              <button type="button" onClick={zoomIn}>{t("Zoom in")}</button>
+              <button type="button" onClick={zoomOut}>{t("Zoom out")}</button>
+              <button type="button" onClick={resetChart}>{t("Reset view")}</button>
             </div>
           )}
         </div>
@@ -498,20 +433,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         {/* [MODIFIED] Keep the compact OHLC panel hidden until a candle is selected by crosshair. */}
         {displayedCandle && (
           <div className="market-candle-info" aria-live="polite">
-            <span className="market-candle-info-time">Waktu {candleTime}</span>
-            <div><span>Buka</span><b>{formatPrice(displayedCandle.open)}</b></div>
+            <span className="market-candle-info-time">{t("Time")} {candleTime}</span>
+            <div><span>{t("Open")}</span><b>{formatPrice(displayedCandle.open)}</b></div>
             <div><span>High</span><b>{formatPrice(displayedCandle.high)}</b></div>
             <div><span>Low</span><b>{formatPrice(displayedCandle.low)}</b></div>
             <div><span>Close</span><b>{formatPrice(displayedCandle.close)}</b></div>
-            <div><span>Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
-            <div><span>%Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
-            <div><span>Rentang</span><b>{candleRange.toFixed(2) + "%"}</b></div>
-            <div><span>Vol</span><b>{formatVolume(displayedCandle.volume)}</b></div>
+            <div><span>{t("Change")}</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Change %")}</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Range")}</span><b>{candleRange.toFixed(2) + "%"}</b></div>
+            <div><span>{t("Volume")}</span><b>{formatVolume(displayedCandle.volume)}</b></div>
           </div>
         )}
       </div>
       {chartError && <div className="market-trading-chart-error">{chartError}</div>}
-      {!chartError && !candles.length && <div className="market-trading-chart-error">Memuat data market...</div>}
+      {!chartError && !candles.length && <div className="market-trading-chart-error">{t("Loading market data...")}</div>}
     </div>
   );
 }

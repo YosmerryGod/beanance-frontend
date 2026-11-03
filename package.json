@@ -5,16 +5,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "check:i18n": "node scripts/check-translations.js"
   },
   "dependencies": {
-    "i18next": "^25.5.2",
-    "lucide-react": "^0.468.0",
-    "next": "^15.5.9",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-i18next": "^16.3.5",
-    "@web3icons/react": "^4.1.24",
-    "lightweight-charts": "^5.2.1"
+    "i18next": "25.6.2",
+    "lucide-react": "0.468.0",
+    "next": "15.5.9",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-i18next": "16.3.5",
+    "@web3icons/react": "4.1.24",
+    "lightweight-charts": "5.2.1"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }

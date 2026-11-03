@@ -4,26 +4,79 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".github/ISSUE_TEMPLATE/**"
   workflow_dispatch:
 
 concurrency:
   group: beanance-frontend-production
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
-  deploy:
-    name: Pull, build, and restart on VPS
+  build-and-deploy:
+    name: Build on GitHub and deploy atomic release
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
-      - name: Deploy through SSH
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Validate translations
+        run: npm run check:i18n
+
+      - name: Build standalone application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Assemble standalone release
+        run: |
+          test -f .next/standalone/server.js
+          test -f .next/BUILD_ID
+          mkdir -p .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/
+          if [ -d public ]; then
+            cp -a public .next/standalone/
+          fi
+          tar -czf beanance-release.tar.gz -C .next/standalone .
+          test -s beanance-release.tar.gz
+
+      - name: Upload release and deployment runner
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs"
+          target: "/tmp/beanance-frontend-release"
+          overwrite: true
+
+      - name: Activate release on VPS
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          command_timeout: 30m
+          command_timeout: 10m
           script_stop: true
           script: |
-            cd /var/www/beanance-frontend
-            node deploy.js
+            set -eu
+            mkdir -p /opt/beanance-frontend-deploy
+            cp /tmp/beanance-frontend-release/deploy.js /opt/beanance-frontend-deploy/deploy.js
+            cp /tmp/beanance-frontend-release/ecosystem.config.cjs /opt/beanance-frontend-deploy/ecosystem.config.cjs
+            PROJECT_DIR=/var/www/beanance-frontend APP_PORT=3099 node /opt/beanance-frontend-deploy/deploy.js /tmp/beanance-frontend-release/beanance-release.tar.gz

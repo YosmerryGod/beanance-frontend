@@ -1,8 +1,16 @@
-// [ADDED] Keep the market backend private and proxy browser requests through Next.js.
+// Keep the market backend private and proxy browser requests through Next.js.
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const marketApiOrigin = process.env.MARKET_API_INTERNAL_URL || "http://127.0.0.1:3030";
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
+  output: "standalone",
+  outputFileTracingRoot: projectRoot,
+  poweredByHeader: false,
+  compress: true,
   async rewrites() {
     return [
       {
