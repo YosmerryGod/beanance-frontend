@@ -126,13 +126,16 @@ function mapLiveMarketAsset(item, locale = "en") {
   };
 }
 
-// [MODIFIED] Normalize realtime one-minute candle momentum events from the market backend.
+// [MODIFIED] Normalize the complete Binance-style 24-hour Futures Top Movers dataset.
 function mapLiveTopMover(item, locale = "en") {
-  const symbol = String(item.baseAsset || item.symbol || "").replace(/USDT$/, "");
+  const fullSymbol = String(item.symbol || "");
+  const symbol = String(item.baseAsset || fullSymbol.replace(/USDT$/, ""));
   const metadata = marketAssets.find((asset) => asset.symbol === symbol);
-  const changeValue = Number(item.changePercent || 0);
+  const changeValue = Number(item.priceChangePercent ?? item.changePercent ?? 0);
   const eventTime = Number(item.eventTime || Date.now());
-  const status = item.status || (changeValue >= 0 ? "Momentum naik" : "Momentum turun");
+  const categories = Array.isArray(item.categories) && item.categories.length
+    ? item.categories
+    : [changeValue >= 0 ? "Kenaikan" : "Penurunan"];
   return {
     symbol,
     name: metadata?.name || symbol,
@@ -140,14 +143,14 @@ function mapLiveTopMover(item, locale = "en") {
     changeValue,
     positive: changeValue >= 0,
     category: changeValue >= 0 ? "Kenaikan" : "Penurunan",
-    timeframe: "1m",
+    categories,
     time: new Date(eventTime).toLocaleTimeString(locale, { hour12: false }),
-    status,
-    volumeRatio: Number.isFinite(Number(item.volumeRatio)) ? Number(item.volumeRatio) : null,
+    status: item.status || categories[0],
     quoteVolume: Number(item.quoteVolume || 0),
-    previousClose: Number(item.previousClose || 0),
-    candleOpen: Number(item.candleOpen || 0),
-    candleClosed: Boolean(item.candleClosed),
+    volumeRatio: Number.isFinite(Number(item.volumeRatio)) ? Number(item.volumeRatio) : null,
+    lastPrice: Number(item.lastPrice || 0),
+    highPrice: Number(item.highPrice || 0),
+    lowPrice: Number(item.lowPrice || 0),
   };
 }
 
@@ -507,7 +510,7 @@ function App() {
       try {
         const [marketsResponse, moversResponse] = await Promise.all([
           fetch("/market-api/futures?sort=quoteVolume&order=desc", { cache: "no-store", signal: controller.signal }),
-          fetch("/market-api/top-movers?limit=20", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/top-movers?limit=500", { cache: "no-store", signal: controller.signal }),
         ]);
         if (!marketsResponse.ok || !moversResponse.ok) throw new Error("Market API returned an unsuccessful response");
         const [marketsPayload, moversPayload] = await Promise.all([marketsResponse.json(), moversResponse.json()]);
@@ -1224,15 +1227,15 @@ function App() {
             ) : (
               <section className="top-movers-page">
                 <div className="top-movers-categories" role="tablist" aria-label="Kategori pergerakan harga">
-                  {["Semua", "Kenaikan", "Penurunan"].map((category) => (
+                  {["Semua", "Kenaikan", "Penurunan", "Pullback", "Rally", "High Baru", "Low Baru", "Harga Naik dengan Vol. Tinggi", "Harga Turun dengan Vol. Tinggi"].map((category) => (
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24 jam / Status")}</span></div>
                 <div className="top-movers-list">
-                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
+                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
-                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · 1m</small></div>
+                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time}</small></div>
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Momentum naik": "Upward momentum", "Momentum turun": "Downward momentum", "Rally": "Rally", "Sell-off": "Sell-off", "Breakout": "Breakout", "Breakdown": "Breakdown" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
                   ))}
@@ -1240,7 +1243,7 @@ function App() {
                     <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
                   )}
                 </div>
-                <p className="top-movers-disclaimer">Top Movers menampilkan perubahan harga rolling 24 jam dari Binance USDⓈ-M Futures.</p>
+                <p className="top-movers-disclaimer">Top Movers menampilkan seluruh kontrak USDT-M Perpetual berdasarkan perubahan harga 24 jam Binance Futures.</p>
               </section>
             )}
           </section>
