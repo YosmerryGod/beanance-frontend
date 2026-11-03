@@ -13,11 +13,6 @@ const TIMEFRAME_SECONDS = {
   "1d": 86400,
 };
 
-function numericPrice(value) {
-  const parsed = Number(String(value ?? "").replace(/,/g, "").replace(/[^0-9.\-]/g, ""));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
-}
-
 // [ADDED] Convert the selected base asset into the backend USDT-M market symbol.
 function marketSymbol(value) {
   const normalized = String(value || "").trim().toUpperCase();
@@ -61,7 +56,7 @@ function marketWebSocketUrl() {
   return protocol + "//" + window.location.host + "/ws/market";
 }
 
-export default function MarketTradingChart({ symbol, price, timeframe }) {
+export default function MarketTradingChart({ symbol, timeframe }) {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
@@ -70,7 +65,6 @@ export default function MarketTradingChart({ symbol, price, timeframe }) {
   const [lastCandle, setLastCandle] = useState(null);
   const [candles, setCandles] = useState([]);
   const [chartError, setChartError] = useState("");
-  const numeric = useMemo(() => numericPrice(price), [price]);
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
 
@@ -108,7 +102,11 @@ export default function MarketTradingChart({ symbol, price, timeframe }) {
           .sort((a, b) => a.time - b.time);
 
         if (active) {
-          setCandles(normalized);
+          setCandles((current) => {
+            const merged = new Map(normalized.map((candle) => [candle.time, candle]));
+            current.forEach((candle) => merged.set(candle.time, candle));
+            return Array.from(merged.values()).sort((a, b) => a.time - b.time).slice(-1500);
+          });
           if (!normalized.length) setChartError("Belum ada data candle untuk market ini.");
         }
       } catch (error) {
