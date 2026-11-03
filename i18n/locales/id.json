@@ -324,7 +324,10 @@
     "app.k322": "Perubahan %",
     "app.k323": "Rentang",
     "app.k324": "Volume",
-    "app.k325": "Selamat datang kembali, {{name}}"
+    "app.k325": "Selamat datang kembali, {{name}}",
+    "app.k326": "Transaksi Terbaru",
+    "app.k327": "Transaksi publik langsung untuk {{symbol}}.",
+    "app.k328": "Menunggu transaksi terbaru..."
   },
   "sidebar": {
     "account": "AKUN",
