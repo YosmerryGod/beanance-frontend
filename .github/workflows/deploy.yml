@@ -54,6 +54,24 @@ jobs:
           tar -czf beanance-release.tar.gz -C .next/standalone .
           test -s beanance-release.tar.gz
 
+      - name: Smoke test standalone health endpoint
+        run: |
+          PORT=3100 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/beanance-standalone-smoke.log 2>&1 &
+          SERVER_PID=$!
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3100/api/health -o /tmp/beanance-health.json; then
+              break
+            fi
+            sleep 1
+          done
+          node -e 'const fs = require("node:fs"); const data = JSON.parse(fs.readFileSync("/tmp/beanance-health.json", "utf8")); if (!data.success || data.service !== "beanance-frontend") { throw new Error("Standalone health response is invalid: " + JSON.stringify(data)); }'
+          cat /tmp/beanance-health.json
+
       - name: Upload release and deployment runner
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -61,7 +79,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs"
+          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs,start-current.js"
           target: "/tmp/beanance-frontend-release"
           overwrite: true
 
@@ -73,10 +91,10 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           command_timeout: 10m
-          script_stop: true
           script: |
             set -eu
             mkdir -p /opt/beanance-frontend-deploy
             cp /tmp/beanance-frontend-release/deploy.js /opt/beanance-frontend-deploy/deploy.js
             cp /tmp/beanance-frontend-release/ecosystem.config.cjs /opt/beanance-frontend-deploy/ecosystem.config.cjs
+            cp /tmp/beanance-frontend-release/start-current.js /opt/beanance-frontend-deploy/start-current.js
             PROJECT_DIR=/var/www/beanance-frontend APP_PORT=3099 node /opt/beanance-frontend-deploy/deploy.js /tmp/beanance-frontend-release/beanance-release.tar.gz

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "refactor/**"
+      - "fix/**"
     paths-ignore:
       - "package-lock.json"
   pull_request:
@@ -56,7 +57,7 @@ jobs:
         run: npm run check:i18n
 
       - name: Check deployment scripts
-        run: node --check deploy.js && node --check ecosystem.config.cjs && node --check scripts/check-translations.js
+        run: node --check deploy.js && node --check ecosystem.config.cjs && node --check start-current.js && node --check scripts/check-translations.js
 
       - name: Build production application
         run: npm run build
