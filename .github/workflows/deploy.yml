@@ -47,9 +47,9 @@ jobs:
           test -f .next/standalone/server.js
           test -f .next/BUILD_ID
           mkdir -p .next/standalone/.next
-          cp -a .next/static .next/standalone/.next/static
+          cp -a .next/static .next/standalone/.next/
           if [ -d public ]; then
-            cp -a public .next/standalone/public
+            cp -a public .next/standalone/
           fi
           tar -czf beanance-release.tar.gz -C .next/standalone .
           test -s beanance-release.tar.gz
