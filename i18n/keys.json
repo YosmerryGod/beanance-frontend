@@ -322,5 +322,6 @@
   "Change": "app.k321",
   "Change %": "app.k322",
   "Range": "app.k323",
-  "Volume": "app.k324"
+  "Volume": "app.k324",
+  "Welcome back, {{name}}": "app.k325"
 }
