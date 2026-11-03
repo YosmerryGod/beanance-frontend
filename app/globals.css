@@ -4517,3 +4517,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     max-width:calc(100% - 16px);
   }
 }
+
+
+/* [ADDED] Subtle centered Beanance identity watermark behind the market candles. */
+.app-shell .market-chart-watermark{
+  position:absolute;
+  z-index:1;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  color:var(--muted);
+  opacity:.085;
+  pointer-events:none;
+  user-select:none;
+}
+.app-shell .market-chart-watermark svg{
+  display:block;
+  width:clamp(34px,7vw,58px);
+  height:clamp(34px,7vw,58px);
+  flex:0 0 auto;
+}
+.app-shell .market-chart-watermark span{
+  color:var(--text);
+  font-size:clamp(22px,4.5vw,36px);
+  font-weight:850;
+  letter-spacing:.075em;
+  line-height:1;
+}
+.app-shell .market-candle-info{z-index:3}
