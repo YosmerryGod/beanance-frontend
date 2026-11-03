@@ -327,7 +327,10 @@
     "app.k325": "Selamat datang kembali, {{name}}",
     "app.k326": "Transaksi Terbaru",
     "app.k327": "Transaksi publik langsung untuk {{symbol}}.",
-    "app.k328": "Menunggu transaksi terbaru..."
+    "app.k328": "Menunggu transaksi terbaru...",
+    "app.k329": "Harga Naik dengan Volume Tinggi",
+    "app.k330": "Harga Turun dengan Volume Tinggi",
+    "app.k331": "Perubahan 24 jam / Status"
   },
   "sidebar": {
     "account": "AKUN",
