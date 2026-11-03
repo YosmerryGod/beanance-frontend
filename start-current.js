@@ -15,7 +15,7 @@ if (!fs.existsSync(serverPath)) {
 process.chdir(releaseDir);
 process.env.NODE_ENV = process.env.NODE_ENV || "production";
 process.env.PORT = process.env.PORT || "3099";
-process.env.HOSTNAME = process.env.HOSTNAME || "127.0.0.1";
+process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 
 process.stdout.write("Starting Beanance release: " + releaseDir + "\n");
 require(serverPath);
