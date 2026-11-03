@@ -49,16 +49,6 @@ function klineStream(timeframe) {
   return "kline_" + timeframe;
 }
 
-// [ADDED] Use a configured public WebSocket URL when provided, otherwise use same-origin proxy.
-function marketWebSocketUrl() {
-  const configuredUrl = process.env.NEXT_PUBLIC_MARKET_WS_URL;
-  if (configuredUrl) return configuredUrl;
-
-  if (typeof window === "undefined") return "";
-
-  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return protocol + "//" + window.location.host + "/ws/market";
-}
 
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
   const { t: translate } = useTranslation();
@@ -86,15 +76,12 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
 
-  // [ADDED] Load historical candles from the real market REST API and stream live updates.
+  // [MODIFIED] Load historical candles over REST and consume the app-wide market WebSocket.
   useEffect(() => {
     if (!normalizedSymbol) return undefined;
 
     let active = true;
-    let socket = null;
-    let reconnectTimer = null;
-    let reconnectDelay = 1000;
-    let manuallyClosed = false;
+    const controller = new AbortController();
 
     const loadCandles = async () => {
       try {
@@ -102,124 +89,55 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         const response = await fetch(
           "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
           "/klines?interval=" + encodeURIComponent(interval) + "&limit=500",
-          { cache: "no-store" }
+          { cache: "no-store", signal: controller.signal }
         );
-
-        if (!response.ok) {
-          throw new Error("Market candle API returned HTTP " + response.status);
-        }
-
+        if (!response.ok) throw new Error("Market candle API returned HTTP " + response.status);
         const payload = await response.json();
         if (!payload?.success || !Array.isArray(payload.data)) {
           throw new Error(payload?.message || "Invalid candle API response");
         }
-
         const normalized = payload.data
           .map(normalizeCandle)
           .filter(Boolean)
           .sort((a, b) => a.time - b.time);
-
-        if (active) {
-          setCandles((current) => {
-            const merged = new Map(normalized.map((candle) => [candle.time, candle]));
-            current.forEach((candle) => merged.set(candle.time, candle));
-            return Array.from(merged.values()).sort((a, b) => a.time - b.time).slice(-1500);
-          });
-          if (!normalized.length) setChartError(t("No candle data is available for this market."));
-        }
+        if (!active) return;
+        setCandles(normalized.slice(-1500));
+        if (!normalized.length) setChartError(t("No candle data is available for this market."));
       } catch (error) {
-        if (active) {
+        if (active && error.name !== "AbortError") {
           setCandles([]);
           setChartError(error.message || t("Failed to load candle data."));
         }
       }
     };
 
-    const connectWebSocket = () => {
-      if (!active || manuallyClosed) return;
+    const handleMarketKline = (event) => {
+      const message = event.detail;
+      if (
+        message?.type !== "market.detail.kline" ||
+        String(message.symbol || "").toUpperCase() !== normalizedSymbol ||
+        message.stream !== klineStream(interval)
+      ) return;
 
-      const url = marketWebSocketUrl();
-      if (!url) return;
-
-      try {
-        socket = new WebSocket(url);
-      } catch {
-        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
-        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
-        return;
-      }
-
-      socket.onopen = () => {
-        if (!active || manuallyClosed) return;
-        reconnectDelay = 1000;
-        socket.send(JSON.stringify({
-          type: "market.detail.subscribe",
-          symbol: normalizedSymbol,
-          streams: [klineStream(interval)],
-        }));
-      };
-
-      socket.onmessage = (event) => {
-        let message;
-        try {
-          message = JSON.parse(event.data);
-        } catch {
-          return;
-        }
-
-        if (
-          message.type !== "market.detail.kline" ||
-          String(message.symbol || "").toUpperCase() !== normalizedSymbol ||
-          message.stream !== klineStream(interval)
-        ) {
-          return;
-        }
-
-        const candle = normalizeCandle(message.data);
-        if (!candle || !active) return;
-
-        setCandles((current) => {
-          const next = [...current];
-          const existingIndex = next.findIndex((item) => item.time === candle.time);
-
-          if (existingIndex >= 0) {
-            next[existingIndex] = candle;
-          } else {
-            next.push(candle);
-            next.sort((a, b) => a.time - b.time);
-          }
-
-          return next.slice(-1500);
-        });
-      };
-
-      socket.onclose = () => {
-        if (!active || manuallyClosed) return;
-        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
-        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
-      };
-
-      socket.onerror = () => {
-        socket?.close();
-      };
+      const candle = normalizeCandle(message.data);
+      if (!candle || !active) return;
+      setCandles((current) => {
+        const next = [...current];
+        const existingIndex = next.findIndex((item) => item.time === candle.time);
+        if (existingIndex >= 0) next[existingIndex] = candle;
+        else next.push(candle);
+        return next.sort((a, b) => a.time - b.time).slice(-1500);
+      });
     };
 
     setCandles([]);
+    window.addEventListener("beanance:market-kline", handleMarketKline);
     loadCandles();
-    connectWebSocket();
 
     return () => {
       active = false;
-      manuallyClosed = true;
-      if (reconnectTimer) window.clearTimeout(reconnectTimer);
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({
-          type: "market.detail.unsubscribe",
-          symbol: normalizedSymbol,
-          streams: [klineStream(interval)],
-        }));
-      }
-      socket?.close();
+      controller.abort();
+      window.removeEventListener("beanance:market-kline", handleMarketKline);
     };
   }, [normalizedSymbol, interval, t]);
 
