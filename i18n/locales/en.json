@@ -327,7 +327,10 @@
     "app.k325": "Welcome back, {{name}}",
     "app.k326": "Recent Trades",
     "app.k327": "Live public trades for {{symbol}}.",
-    "app.k328": "Waiting for recent trades..."
+    "app.k328": "Waiting for recent trades...",
+    "app.k329": "Price Up with High Volume",
+    "app.k330": "Price Down with High Volume",
+    "app.k331": "24h Change / Status"
   },
   "sidebar": {
     "account": "ACCOUNT",
