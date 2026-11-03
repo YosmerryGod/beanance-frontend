@@ -490,9 +490,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
         <div className="market-chart-watermark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" role="presentation" focusable="false">
-            <path d="M4 8.5 22 6v16H4V8.5Zm22-3 18-2.5V22H26V5.5ZM4 26h18v16L4 39.5V26Zm22 0h18v21.5L26 45V26Z" fill="currentColor"/>
-          </svg>
+          {/* [MODIFIED] Use the existing Beanance brand logo from public assets. */}
+          <img src="/icons/logo.png" alt="" />
           <span>BEANANCE</span>
         </div>
         {/* [ADDED] Floating candle information panel, updated from crosshair position. */}
