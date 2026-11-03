@@ -98,38 +98,38 @@ const topMoverEvents = [
 
 
 // [ADDED] Normalize Binance USDT-M ticker values for the existing Beanance market UI.
-function formatMarketPrice(value) {
+function formatMarketPrice(value, locale = "en") {
   const price = Number(value);
   if (!Number.isFinite(price)) return "—";
   const maximumFractionDigits = price >= 1000 ? 2 : price >= 1 ? 4 : 8;
-  return "$" + price.toLocaleString("en-US", { maximumFractionDigits });
+  return "$" + price.toLocaleString(locale, { maximumFractionDigits });
 }
 
 // [ADDED] Keep large market volumes compact and readable in dashboard tables.
-function formatMarketVolume(value, prefix = "$") {
+function formatMarketVolume(value, prefix = "$", locale = "en") {
   const volume = Number(value);
   if (!Number.isFinite(volume)) return "—";
-  return prefix + new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 }).format(volume);
+  return prefix + new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 2 }).format(volume);
 }
 
 // [ADDED] Convert backend market records into the fields already used by Beanance components.
-function mapLiveMarketAsset(item) {
+function mapLiveMarketAsset(item, locale = "en") {
   const symbol = item.baseAsset || String(item.symbol || "").replace(/USDT$/, "");
   const metadata = marketAssets.find((asset) => asset.symbol === symbol);
   const changeValue = Number(item.priceChangePercent || 0);
   return {
     symbol,
     name: metadata?.name || symbol,
-    price: formatMarketPrice(item.lastPrice),
+    price: formatMarketPrice(item.lastPrice, locale),
     change: (changeValue > 0 ? "+" : "") + changeValue.toFixed(2) + "%",
     positive: changeValue >= 0,
     icon: symbol,
     tone: metadata?.tone || "",
-    volume: formatMarketVolume(item.quoteVolume),
-    baseVolume: formatMarketVolume(item.baseVolume, ""),
-    high: formatMarketPrice(item.highPrice),
-    low: formatMarketPrice(item.lowPrice),
-    quoteVolume: formatMarketVolume(item.quoteVolume),
+    volume: formatMarketVolume(item.quoteVolume, "$", locale),
+    baseVolume: formatMarketVolume(item.baseVolume, "", locale),
+    high: formatMarketPrice(item.highPrice, locale),
+    low: formatMarketPrice(item.lowPrice, locale),
+    quoteVolume: formatMarketVolume(item.quoteVolume, "$", locale),
     priceNumber: Number(item.lastPrice || 0),
     changeNumber: changeValue,
     volumeNumber: Number(item.quoteVolume || 0),
@@ -151,15 +151,15 @@ function formatMarketPeriodReturn(candles, days) {
 }
 
 // [ADDED] Turn backend gainers and losers into the existing Top Movers row format.
-function mapLiveTopMover(item, positive) {
-  const asset = mapLiveMarketAsset(item);
+function mapLiveTopMover(item, positive, locale = "en") {
+  const asset = mapLiveMarketAsset(item, locale);
   const eventTime = Number(item.eventTime || item.closeTime || Date.now());
   return {
     symbol: asset.symbol,
     name: asset.name,
     change: asset.change,
     timeframe: "24h",
-    time: new Date(eventTime).toLocaleTimeString("en-US", { hour12: false }),
+    time: new Date(eventTime).toLocaleTimeString(locale, { hour12: false }),
     status: positive ? "24h gain" : "24h decline",
     category: positive ? "Kenaikan" : "Penurunan",
     positive,
@@ -189,6 +189,7 @@ function App() {
   const [walletPreviewMode, setWalletPreviewMode] = useState(false); // [ADDED] Lets users preview the connected wallet layout without claiming a real connection
   const profilePhotoInputRef = useRef(null); // [ADDED] Hidden profile photo picker
   const [language, setLanguage] = useState("en"); // [MODIFIED] App language, English by default
+  const languageRef = useRef("en"); // [ADDED] Keep async market callbacks formatted in the active language.
   const [languageReady, setLanguageReady] = useState(false); // [ADDED] Wait for saved language before persisting
   const [languageOpen, setLanguageOpen] = useState(false); // [ADDED] Language picker visibility
   const [traderPeriod, setTraderPeriod] = useState("All");
@@ -267,6 +268,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    languageRef.current = language;
+  }, [language]);
+
+  useEffect(() => {
     if (!languageReady) return;
     window.localStorage.setItem("beanance-language", language);
     document.documentElement.lang = language;
@@ -317,7 +322,7 @@ function App() {
         }
 
         if (message.type === "market.snapshot" && Array.isArray(message.data)) {
-          const nextMarkets = message.data.map(mapLiveMarketAsset);
+          const nextMarkets = message.data.map((item) => mapLiveMarketAsset(item, languageRef.current));
           if (nextMarkets.length) {
             setLiveMarketAssets(nextMarkets);
             setSelectedMarket((current) => current
@@ -329,7 +334,7 @@ function App() {
         }
 
         if (message.type === "market.ticker" && message.data) {
-          const updatedAsset = mapLiveMarketAsset(message.data);
+          const updatedAsset = mapLiveMarketAsset(message.data, languageRef.current);
           setLiveMarketAssets((current) => current.map((asset) =>
             asset.symbol === updatedAsset.symbol ? updatedAsset : asset
           ));
@@ -490,15 +495,15 @@ function App() {
         const [marketsPayload, moversPayload] = await Promise.all([marketsResponse.json(), moversResponse.json()]);
         if (!activeRequest) return;
 
-        const nextMarkets = Array.isArray(marketsPayload.data) ? marketsPayload.data.map(mapLiveMarketAsset) : [];
+        const nextMarkets = Array.isArray(marketsPayload.data) ? marketsPayload.data.map((item) => mapLiveMarketAsset(item, languageRef.current)) : [];
         if (nextMarkets.length) {
           setLiveMarketAssets(nextMarkets);
           setSelectedMarket((current) => current
             ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
             : current);
         }
-        const gainers = Array.isArray(moversPayload.data?.gainers) ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true)) : [];
-        const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false)) : [];
+        const gainers = Array.isArray(moversPayload.data?.gainers) ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true, languageRef.current)) : [];
+        const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false, languageRef.current)) : [];
         if (gainers.length + losers.length) setLiveTopMoverEvents([...gainers, ...losers]);
         retryDelay = 10000;
       } catch {
@@ -1264,13 +1269,13 @@ function App() {
                   </div>
                   {marketOrderTab==="book" && <><div className="market-book-ratio"><span>{marketOrderBook.bids.length ? ((marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)/Math.max(1,marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)+marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)))*100).toFixed(2)+"%" : "—"}</span><span>{marketOrderBook.asks.length ? ((marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)/Math.max(1,marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)+marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)))*100).toFixed(2)+"%" : "—"}</span></div><div className="market-book-bar"><i/><i/></div><div className="market-book-columns"><span>Bid</span><span>Price</span><span>Ask</span></div>{Array.from({length:4},(_,index)=>({bid:marketOrderBook.bids[index],ask:marketOrderBook.asks[index]})).map(({bid,ask},index)=><div className="market-book-row" key={String(bid?.price||"bid")+"-"+String(ask?.price||"ask")}><span>{bid?Number(bid.quantity).toFixed(2):"—"}</span><strong>{bid?Number(bid.price).toFixed(8):ask?Number(ask.price).toFixed(8):"—"}</strong><span>{ask?Number(ask.quantity).toFixed(2):"—"}</span></div>)}</>}
                   {marketOrderTab==="depth" && <div className="market-depth-placeholder"><Activity size={23}/><strong>Market Depth</strong><span>Bid and ask liquidity visualization</span><div className="market-book-bar"><i/><i/></div></div>}
-                  {marketOrderTab==="trades" && <div className="market-trade-list">{marketRecentTrades.slice(0,4).map((trade,index)=><div key={String(trade.id??trade.time)+"-"+index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US",{hour12:false})}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toFixed(8)}</strong><span>{Number(trade.quantity).toFixed(2)}</span></div>)}</div>}
+                  {marketOrderTab==="trades" && <div className="market-trade-list">{marketRecentTrades.slice(0,4).map((trade,index)=><div key={String(trade.id??trade.time)+"-"+index}><span>{new Date(Number(trade.time)).toLocaleTimeString(language,{hour12:false})}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toFixed(8)}</strong><span>{Number(trade.quantity).toFixed(2)}</span></div>)}</div>}
                 </section>
               </>
             )}
             {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
             {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
-            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Live public trades for {selectedMarket.symbol}/USDT.</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}</section>}
+            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Live public trades for {selectedMarket.symbol}/USDT.</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString(language, { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString(language, { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString(language, { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}</section>}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
             <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades are supplied by Beanance Market Backend.</p>
           </section>
@@ -1575,7 +1580,7 @@ function App() {
               <section className="strategy-detail-performance">
                 <div className="strategy-detail-return-row">
                   <div><span>{t("Total Return")}</span><strong className={String(selectedStrategy.returns).startsWith("-") ? "negative" : "positive"}>{selectedStrategy.returns}</strong></div>
-                  <div className="strategy-detail-pnl"><span>{t("Total PnL")}</span><strong className="positive">${(selectedStrategy.currentBalance - selectedStrategy.initialBalance).toLocaleString("en-US", { maximumFractionDigits: 2 })}</strong></div>
+                  <div className="strategy-detail-pnl"><span>{t("Total PnL")}</span><strong className="positive">${(selectedStrategy.currentBalance - selectedStrategy.initialBalance).toLocaleString(language, { maximumFractionDigits: 2 })}</strong></div>
                 </div>
                 <div className="strategy-detail-chart-heading"><span>{t("Performance")}</span><small>{t("Cumulative return")}</small></div>
                 <div className="strategy-detail-timeframes" role="tablist" aria-label={t("Chart timeframe")}>
@@ -1617,7 +1622,7 @@ function App() {
                   </div>
                   <div className="strategy-detail-section-title"><h3>{t("Capital & AUM")}</h3><span>{t("Strategy account")}</span></div>
                   <div className="strategy-detail-capital-grid">
-                    <div><span>{t("Initial Balance")}</span><strong>${selectedStrategy.initialBalance.toLocaleString("en-US")}</strong></div>
+                    <div><span>{t("Initial Balance")}</span><strong>${selectedStrategy.initialBalance.toLocaleString(language)}</strong></div>
                     <div><span>{t("Current Balance")}</span><strong>${selectedStrategy.currentBalance.toLocaleString("en-US", { maximumFractionDigits: 2 })}</strong></div>
                     <div><span>{t("Current AUM")}</span><strong>${selectedStrategy.aum.toLocaleString("en-US")}</strong></div>
                     <div><span>{t("Active Copiers")}</span><strong>{selectedStrategy.copiers}</strong></div>
