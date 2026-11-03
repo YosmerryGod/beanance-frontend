@@ -15,54 +15,196 @@ const TIMEFRAME_SECONDS = {
 
 function numericPrice(value) {
   const parsed = Number(String(value ?? "").replace(/,/g, "").replace(/[^0-9.\-]/g, ""));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
-function createDemoCandles(symbol, price, timeframe) {
-  const interval = TIMEFRAME_SECONDS[timeframe] || 1800;
-  const seed = Array.from(symbol).reduce((total, character) => total + character.charCodeAt(0), 0);
-  const now = Math.floor(Date.now() / 1000 / interval) * interval;
-  const candles = [];
-  let previousClose = price * (0.965 + (seed % 35) / 1000);
+// [ADDED] Convert the selected base asset into the backend USDT-M market symbol.
+function marketSymbol(value) {
+  const normalized = String(value || "").trim().toUpperCase();
+  return normalized.endsWith("USDT") ? normalized : normalized + "USDT";
+}
 
-  for (let index = 119; index >= 0; index -= 1) {
-    const wave = Math.sin((index + seed) * 0.47) * 0.004;
-    const drift = Math.cos((index + seed) * 0.13) * 0.002;
-    const open = previousClose;
-    const close = Math.max(price * 0.7, open * (1 + wave + drift));
-    const wick = Math.max(price * 0.0007, close * (0.0015 + (index % 5) * 0.00035));
-    candles.push({
-      time: now - index * interval,
-      open,
-      high: Math.max(open, close) + wick,
-      low: Math.max(0.00000001, Math.min(open, close) - wick),
-      close,
-    });
-    previousClose = close;
-  }
+// [ADDED] Normalize the backend's millisecond candle timestamps for Lightweight Charts.
+function normalizeCandle(candle) {
+  const openTime = Number(candle?.openTime ?? candle?.time);
+  const open = Number(candle?.open);
+  const high = Number(candle?.high);
+  const low = Number(candle?.low);
+  const close = Number(candle?.close);
+  const volume = Number(candle?.volume ?? 0);
 
-  const last = candles[candles.length - 1];
-  const adjustment = price / last.close;
-  return candles.map((candle) => ({
-    ...candle,
-    open: candle.open * adjustment,
-    high: candle.high * adjustment,
-    low: candle.low * adjustment,
-    close: candle.close * adjustment,
-  }));
+  if (![openTime, open, high, low, close].every(Number.isFinite)) return null;
+
+  return {
+    time: Math.floor(openTime / 1000),
+    open,
+    high,
+    low,
+    close,
+    volume: Number.isFinite(volume) && volume >= 0 ? volume : 0,
+  };
+}
+
+// [ADDED] Convert the selected interval into the WebSocket stream name.
+function klineStream(timeframe) {
+  return "kline_" + timeframe;
+}
+
+// [ADDED] Use a configured public WebSocket URL when provided, otherwise use same-origin proxy.
+function marketWebSocketUrl() {
+  const configuredUrl = process.env.NEXT_PUBLIC_MARKET_WS_URL;
+  if (configuredUrl) return configuredUrl;
+
+  if (typeof window === "undefined") return "";
+
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return protocol + "//" + window.location.host + "/ws/market";
 }
 
 export default function MarketTradingChart({ symbol, price, timeframe }) {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
+  const volumeSeriesRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
+  const [candles, setCandles] = useState([]);
+  const [chartError, setChartError] = useState("");
   const numeric = useMemo(() => numericPrice(price), [price]);
-  const candles = useMemo(
-    () => createDemoCandles(symbol, numeric, timeframe),
-    [symbol, numeric, timeframe]
-  );
+  const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
+  const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
+
+  // [ADDED] Load historical candles from the real market REST API and stream live updates.
+  useEffect(() => {
+    if (!normalizedSymbol) return undefined;
+
+    let active = true;
+    let socket = null;
+    let reconnectTimer = null;
+    let reconnectDelay = 1000;
+    let manuallyClosed = false;
+
+    const loadCandles = async () => {
+      try {
+        setChartError("");
+        const response = await fetch(
+          "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
+          "/klines?interval=" + encodeURIComponent(interval) + "&limit=500",
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Market candle API returned HTTP " + response.status);
+        }
+
+        const payload = await response.json();
+        if (!payload?.success || !Array.isArray(payload.data)) {
+          throw new Error(payload?.message || "Invalid candle API response");
+        }
+
+        const normalized = payload.data
+          .map(normalizeCandle)
+          .filter(Boolean)
+          .sort((a, b) => a.time - b.time);
+
+        if (active) {
+          setCandles(normalized);
+          if (!normalized.length) setChartError("Belum ada data candle untuk market ini.");
+        }
+      } catch (error) {
+        if (active) {
+          setCandles([]);
+          setChartError(error.message || "Gagal mengambil data candle.");
+        }
+      }
+    };
+
+    const connectWebSocket = () => {
+      if (!active || manuallyClosed) return;
+
+      const url = marketWebSocketUrl();
+      if (!url) return;
+
+      try {
+        socket = new WebSocket(url);
+      } catch {
+        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+        return;
+      }
+
+      socket.onopen = () => {
+        reconnectDelay = 1000;
+        socket.send(JSON.stringify({
+          type: "market.detail.subscribe",
+          symbol: normalizedSymbol,
+          streams: [klineStream(interval)],
+        }));
+      };
+
+      socket.onmessage = (event) => {
+        let message;
+        try {
+          message = JSON.parse(event.data);
+        } catch {
+          return;
+        }
+
+        if (
+          message.type !== "market.detail.kline" ||
+          String(message.symbol || "").toUpperCase() !== normalizedSymbol ||
+          message.stream !== klineStream(interval)
+        ) {
+          return;
+        }
+
+        const candle = normalizeCandle(message.data);
+        if (!candle || !active) return;
+
+        setCandles((current) => {
+          const next = [...current];
+          const existingIndex = next.findIndex((item) => item.time === candle.time);
+
+          if (existingIndex >= 0) {
+            next[existingIndex] = candle;
+          } else {
+            next.push(candle);
+            next.sort((a, b) => a.time - b.time);
+          }
+
+          return next.slice(-1500);
+        });
+      };
+
+      socket.onclose = () => {
+        if (!active || manuallyClosed) return;
+        reconnectTimer = window.setTimeout(connectWebSocket, reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+      };
+
+      socket.onerror = () => {
+        socket?.close();
+      };
+    };
+
+    setCandles([]);
+    loadCandles();
+    connectWebSocket();
+
+    return () => {
+      active = false;
+      manuallyClosed = true;
+      if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+          type: "market.detail.unsubscribe",
+          symbol: normalizedSymbol,
+          streams: [klineStream(interval)],
+        }));
+      }
+      socket?.close();
+    };
+  }, [normalizedSymbol, interval]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -148,15 +290,6 @@ export default function MarketTradingChart({ symbol, price, timeframe }) {
       scaleMargins: { top: 0.84, bottom: 0 },
     });
 
-    candleSeries.setData(candles);
-    volumeSeries.setData(candles.map((candle, index) => ({
-      time: candle.time,
-      value: 80 + ((index * 37 + symbol.length * 19) % 180),
-      color: candle.close >= candle.open ? "rgba(32,189,136,.42)" : "rgba(239,83,104,.42)",
-    })));
-    chart.timeScale().fitContent();
-    setLastCandle(candles[candles.length - 1]);
-
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (entry && entry.contentRect.width > 0 && entry.contentRect.height > 0) {
@@ -170,14 +303,33 @@ export default function MarketTradingChart({ symbol, price, timeframe }) {
 
     chartRef.current = chart;
     candleSeriesRef.current = candleSeries;
+    volumeSeriesRef.current = volumeSeries;
 
     return () => {
       resizeObserver.disconnect();
       chart.remove();
       chartRef.current = null;
       candleSeriesRef.current = null;
+      volumeSeriesRef.current = null;
     };
-  }, [candles, symbol]);
+  }, []);
+
+  // [ADDED] Update chart series without recreating the chart on every live candle.
+  useEffect(() => {
+    const candleSeries = candleSeriesRef.current;
+    const volumeSeries = volumeSeriesRef.current;
+    if (!candleSeries || !volumeSeries) return;
+
+    candleSeries.setData(candles);
+    volumeSeries.setData(candles.map((candle) => ({
+      time: candle.time,
+      value: candle.volume,
+      color: candle.close >= candle.open ? "rgba(32,189,136,.42)" : "rgba(239,83,104,.42)",
+    })));
+
+    if (candles.length) setLastCandle(candles[candles.length - 1]);
+    else setLastCandle(null);
+  }, [candles]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
@@ -234,6 +386,8 @@ export default function MarketTradingChart({ symbol, price, timeframe }) {
         <span>C <b>{lastCandle?.close?.toLocaleString("en-US", { maximumFractionDigits: 8 }) ?? "—"}</b></span>
       </div>
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe} />
+      {chartError && <div className="market-trading-chart-error">{chartError}</div>}
+      {!chartError && !candles.length && <div className="market-trading-chart-error">Memuat data market...</div>}
       <div className="market-trading-chart-controls">
         <span>Drag chart to move · Drag price axis to scale</span>
         <div>
