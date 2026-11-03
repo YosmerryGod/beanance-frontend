@@ -1698,12 +1698,8 @@ function App() {
                   </div>
                 </section>
                 <section className="market-chart-section">
-                  <div className="market-chart-toolbar">
-                    <div className="market-timeframes">{["1m","5m","15m","30m","1h","4h","1d"].map((time)=><button type="button" key={time} className={marketTimeframe===time?"selected":""} onClick={()=>setMarketTimeframe(time)}>{time}</button>)}</div>
-                    <button type="button" className="market-detail-icon" onClick={()=>setNotice("Chart settings are coming soon")} aria-label="Chart settings"><SlidersHorizontal size={18}/></button>
-                    <button type="button" className="market-detail-icon" onClick={()=>setNotice("Fullscreen chart is coming soon")} aria-label="Fullscreen chart"><Maximize2 size={18}/></button>
-                  </div>
-                  <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} />
+                  {/* [MODIFIED] Timeframe controls and three chart actions are now integrated into the chart toolbar. */}
+                  <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} onTimeframeChange={setMarketTimeframe} />
                   <div className="market-indicators">{["SUPER","VOL","MACD","RSI","KDJ","OBV","WR","Stoch"].map((indicator)=><button type="button" key={indicator} className={marketIndicator===indicator?"selected":""} onClick={()=>setMarketIndicator(indicator)}>{indicator}</button>)}</div>
                 </section>
                 <section className="market-performance-grid">
