@@ -1,17 +1,18 @@
 const path = require("node:path");
 
 const projectDir = path.resolve(process.env.PROJECT_DIR || "/var/www/beanance-frontend");
-const currentDir = path.join(projectDir, "current");
+const launcherPath = path.join(__dirname, "start-current.js");
 const appPort = String(process.env.APP_PORT || "3099");
 
 module.exports = {
   apps: [
     {
       name: "beanance-frontend",
-      cwd: currentDir,
-      script: "server.js",
+      cwd: projectDir,
+      script: launcherPath,
+      interpreter: process.execPath,
       instances: 1,
-      exec_mode: "cluster",
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       max_restarts: 8,
@@ -28,6 +29,8 @@ module.exports = {
       error_file: "/var/log/beanance-frontend/error.log",
       env: {
         NODE_ENV: "production",
+        PROJECT_DIR: projectDir,
+        CURRENT_RELEASE_LINK: path.join(projectDir, "current"),
         PORT: appPort,
         HOSTNAME: "127.0.0.1",
         NODE_OPTIONS: "--max-old-space-size=384",
