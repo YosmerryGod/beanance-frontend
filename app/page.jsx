@@ -307,7 +307,7 @@ function App() {
           socket.send(JSON.stringify({
             type: "market.detail.subscribe",
             symbol: selectedMarket.symbol + "USDT",
-            streams: ["depth20@100ms", "aggTrade"],
+            streams: ["depth20@100ms", "aggTrade", "kline_" + marketTimeframe],
           }));
         }
       };
@@ -340,6 +340,14 @@ function App() {
           ));
           setSelectedMarket((current) => current?.symbol === updatedAsset.symbol ? updatedAsset : current);
           setMarketConnectionStatus("live");
+          return;
+        }
+
+        if (
+          message.type === "market.detail.kline" &&
+          message.symbol === (selectedMarket?.symbol || "") + "USDT"
+        ) {
+          window.dispatchEvent(new CustomEvent("beanance:market-kline", { detail: message }));
           return;
         }
 
@@ -394,12 +402,12 @@ function App() {
         socket.send(JSON.stringify({
           type: "market.detail.unsubscribe",
           symbol: selectedMarket.symbol + "USDT",
-          streams: ["depth20@100ms", "aggTrade"],
+          streams: ["depth20@100ms", "aggTrade", "kline_" + marketTimeframe],
         }));
       }
       socket?.close();
     };
-  }, [active, selectedMarket?.symbol]);
+  }, [active, selectedMarket?.symbol, marketTimeframe]);
 
   // [ADDED] Load the selected market's REST snapshots before applying realtime updates.
   useEffect(() => {
