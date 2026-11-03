@@ -215,7 +215,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     if (!container) return undefined;
 
     const styles = getComputedStyle(container.closest(".app-shell") || container);
-    const background = styles.getPropertyValue("--panel-soft").trim() || "#17191e";
+    const background = styles.getPropertyValue("--bg").trim() || "#000000"; // [MODIFIED] Blend chart canvas into the page instead of a card surface.
     const textColor = styles.getPropertyValue("--muted").trim() || "#8b909b";
     const gridColor = styles.getPropertyValue("--line").trim() || "rgba(130,140,155,.13)";
     const chart = createChart(container, {
