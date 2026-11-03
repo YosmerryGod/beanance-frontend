@@ -1,3 +1,0 @@
-Beanance automatic deployment test.
-
-This file was added to the main branch to verify that GitHub Actions automatically connects to the VPS, runs deploy.js, builds the application, and restarts the Beanance frontend through PM2.
