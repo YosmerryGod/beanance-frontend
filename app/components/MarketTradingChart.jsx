@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, createChart } from "lightweight-charts";
+import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
 
 const TIMEFRAME_SECONDS = {
   "1m": 60,
@@ -9,6 +10,7 @@ const TIMEFRAME_SECONDS = {
   "15m": 900,
   "30m": 1800,
   "1h": 3600,
+  "2h": 7200,
   "4h": 14400,
   "1d": 86400,
 };
@@ -56,13 +58,16 @@ function marketWebSocketUrl() {
   return protocol + "//" + window.location.host + "/ws/market";
 }
 
-export default function MarketTradingChart({ symbol, timeframe }) {
+export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
   const volumeSeriesRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
+  const [hoverCandle, setHoverCandle] = useState(null);
+  const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false);
+  const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
@@ -300,12 +305,35 @@ export default function MarketTradingChart({ symbol, timeframe }) {
     });
     resizeObserver.observe(container);
 
+    // [ADDED] Track the candle under the crosshair for the floating OHLC panel.
+    const handleCrosshairMove = (param) => {
+      if (!param || !param.time) {
+        setHoverCandle(null);
+        return;
+      }
+      const data = param.seriesData.get(candleSeries);
+      if (!data) {
+        setHoverCandle(null);
+        return;
+      }
+      setHoverCandle({
+        time: Number(param.time),
+        open: Number(data.open),
+        high: Number(data.high),
+        low: Number(data.low),
+        close: Number(data.close),
+        volume: Number(data.volume || 0),
+      });
+    };
+    chart.subscribeCrosshairMove(handleCrosshairMove);
+
     chartRef.current = chart;
     candleSeriesRef.current = candleSeries;
     volumeSeriesRef.current = volumeSeries;
 
     return () => {
       resizeObserver.disconnect();
+      chart.unsubscribeCrosshairMove(handleCrosshairMove);
       chart.remove();
       chartRef.current = null;
       candleSeriesRef.current = null;
@@ -376,26 +404,105 @@ export default function MarketTradingChart({ symbol, timeframe }) {
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
+  const displayedCandle = hoverCandle || lastCandle;
+  const formatPrice = (value) => Number(value).toLocaleString("en-US", { maximumFractionDigits: 8 });
+  const formatVolume = (value) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const candleChange = displayedCandle && displayedCandle.open
+    ? ((displayedCandle.close - displayedCandle.open) / displayedCandle.open) * 100
+    : 0;
+  const candleRange = displayedCandle && displayedCandle.low
+    ? ((displayedCandle.high - displayedCandle.low) / displayedCandle.low) * 100
+    : 0;
+  const candleTime = displayedCandle
+    ? new Date(displayedCandle.time * 1000).toLocaleString("id-ID", {
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", hour12: false
+      })
+    : "Menunggu data";
+
+  const visibleTimeframes = ["1m", "5m", "15m", "30m", "1h"];
+  const extraTimeframes = ["2h", "4h", "1d"];
+  const activeExtraTimeframe = extraTimeframes.includes(timeframe);
+
   return (
     <div className="market-trading-chart">
-      <div className="market-trading-chart-readout">
-        <span>O <b>{lastCandle?.open?.toLocaleString("en-US", { maximumFractionDigits: 8 }) ?? "—"}</b></span>
-        <span>H <b>{lastCandle?.high?.toLocaleString("en-US", { maximumFractionDigits: 8 }) ?? "—"}</b></span>
-        <span>L <b>{lastCandle?.low?.toLocaleString("en-US", { maximumFractionDigits: 8 }) ?? "—"}</b></span>
-        <span>C <b>{lastCandle?.close?.toLocaleString("en-US", { maximumFractionDigits: 8 }) ?? "—"}</b></span>
-      </div>
-      <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe} />
-      {chartError && <div className="market-trading-chart-error">{chartError}</div>}
-      {!chartError && !candles.length && <div className="market-trading-chart-error">Memuat data market...</div>}
-      <div className="market-trading-chart-controls">
-        <span>Drag chart to move · Drag price axis to scale</span>
-        <div>
-          <button type="button" onClick={zoomOut} aria-label="Zoom out chart">−</button>
-          <button type="button" onClick={zoomIn} aria-label="Zoom in chart">+</button>
-          <button type="button" onClick={resetChart} aria-label="Reset chart scale">Reset</button>
-          <button type="button" onClick={toggleFullscreen} aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen chart"}>{isFullscreen ? "Exit" : "⛶"}</button>
+      {/* [ADDED] Binance-style timeframe toolbar with three compact chart controls. */}
+      <div className="market-chart-toolbar market-chart-toolbar-inside">
+        <div className="market-timeframes">
+          {visibleTimeframes.map((time) => (
+            <button
+              type="button"
+              key={time}
+              className={timeframe === time ? "selected" : ""}
+              onClick={() => onTimeframeChange?.(time)}
+            >
+              {time === "1h" ? "1j" : time}
+            </button>
+          ))}
+          <div className="market-chart-more-wrap">
+            <button
+              type="button"
+              className={activeExtraTimeframe ? "selected" : ""}
+              onClick={() => setMoreTimeframesOpen((open) => !open)}
+              aria-expanded={moreTimeframesOpen}
+            >
+              {activeExtraTimeframe ? (timeframe === "1h" ? "1j" : timeframe) : "Lainnya"}
+              <ChevronDown size={13} />
+            </button>
+            {moreTimeframesOpen && (
+              <div className="market-chart-dropdown">
+                {extraTimeframes.map((time) => (
+                  <button
+                    type="button"
+                    key={time}
+                    className={timeframe === time ? "selected" : ""}
+                    onClick={() => {
+                      onTimeframeChange?.(time);
+                      setMoreTimeframesOpen(false);
+                    }}
+                  >
+                    {time === "1h" ? "1j" : time}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="market-chart-icon-actions">
+          <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen chart" title="Fullscreen">
+            <Expand size={18} />
+          </button>
+          <button type="button" onClick={() => setChartToolsOpen((open) => !open)} aria-label="Chart settings" title="Chart settings">
+            <SlidersHorizontal size={18} />
+          </button>
+          <button type="button" onClick={resetChart} aria-label="Reset chart view" title="Reset chart">
+            <LayoutGrid size={18} />
+          </button>
+          {chartToolsOpen && (
+            <div className="market-chart-tools-menu">
+              <button type="button" onClick={zoomIn}>Perbesar chart</button>
+              <button type="button" onClick={zoomOut}>Perkecil chart</button>
+              <button type="button" onClick={resetChart}>Reset tampilan</button>
+            </div>
+          )}
         </div>
       </div>
+      <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
+        {/* [ADDED] Floating candle information panel, updated from crosshair position. */}
+        <div className="market-candle-info" aria-live="polite">
+          <span className="market-candle-info-time">Waktu {candleTime}</span>
+          <div><span>Buka</span><b>{displayedCandle ? formatPrice(displayedCandle.open) : "—"}</b></div>
+          <div><span>High</span><b>{displayedCandle ? formatPrice(displayedCandle.high) : "—"}</b></div>
+          <div><span>Low</span><b>{displayedCandle ? formatPrice(displayedCandle.low) : "—"}</b></div>
+          <div><span>Close</span><b>{displayedCandle ? formatPrice(displayedCandle.close) : "—"}</b></div>
+          <div><span>Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{displayedCandle ? (candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%" : "—"}</b></div>
+          <div><span>%Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{displayedCandle ? (candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%" : "—"}</b></div>
+          <div><span>Rentang</span><b>{displayedCandle ? candleRange.toFixed(2) + "%" : "—"}</b></div>
+          <div><span>Vol</span><b>{displayedCandle ? formatVolume(displayedCandle.volume) : "—"}</b></div>
+        </div>
+      </div>
+      {chartError && <div className="market-trading-chart-error">{chartError}</div>}
+      {!chartError && !candles.length && <div className="market-trading-chart-error">Memuat data market...</div>}
     </div>
   );
 }
