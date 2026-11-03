@@ -54,17 +54,6 @@ jobs:
           tar -czf beanance-release.tar.gz -C .next/standalone .
           test -s beanance-release.tar.gz
 
-      - name: Upload release and deployment runner
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
-          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs,start-current.js"
-          target: "/tmp/beanance-frontend-release"
-          overwrite: true
-
       - name: Smoke test standalone health endpoint
         run: |
           PORT=3100 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/beanance-standalone-smoke.log 2>&1 &
@@ -82,6 +71,17 @@ jobs:
           done
           node -e 'const fs = require("node:fs"); const data = JSON.parse(fs.readFileSync("/tmp/beanance-health.json", "utf8")); if (!data.success || data.service !== "beanance-frontend") { throw new Error("Standalone health response is invalid: " + JSON.stringify(data)); }'
           cat /tmp/beanance-health.json
+
+      - name: Upload release and deployment runner
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs,start-current.js"
+          target: "/tmp/beanance-frontend-release"
+          overwrite: true
 
       - name: Activate release on VPS
         uses: appleboy/ssh-action@v1.2.2
