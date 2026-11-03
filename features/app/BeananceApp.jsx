@@ -54,7 +54,8 @@ import {
   Maximize2, // [ADDED] Market chart fullscreen control
 } from "lucide-react";
 import CoinLogo from "../../components/ui/CoinLogo";
-import MarketTradingChart from "../market/components/MarketTradingChart"; // [ADDED] Interactive TradingView-style market chart
+import MarketTradingChart from "../market/components/MarketTradingChart";
+import { formatMarketPeriodReturn, formatMarketPrice, formatMarketVolume } from "../market/lib/format"; // [ADDED] Interactive TradingView-style market chart
 
 
 const navigation = [
@@ -98,21 +99,6 @@ const topMoverEvents = [
 
 
 // [ADDED] Normalize Binance USDT-M ticker values for the existing Beanance market UI.
-function formatMarketPrice(value, locale = "en") {
-  const price = Number(value);
-  if (!Number.isFinite(price)) return "—";
-  const maximumFractionDigits = price >= 1000 ? 2 : price >= 1 ? 4 : 8;
-  return "$" + price.toLocaleString(locale, { maximumFractionDigits });
-}
-
-// [ADDED] Keep large market volumes compact and readable in dashboard tables.
-function formatMarketVolume(value, prefix = "$", locale = "en") {
-  const volume = Number(value);
-  if (!Number.isFinite(volume)) return "—";
-  return prefix + new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 2 }).format(volume);
-}
-
-// [ADDED] Convert backend market records into the fields already used by Beanance components.
 function mapLiveMarketAsset(item, locale = "en") {
   const symbol = item.baseAsset || String(item.symbol || "").replace(/USDT$/, "");
   const metadata = marketAssets.find((asset) => asset.symbol === symbol);
@@ -141,16 +127,6 @@ function mapLiveMarketAsset(item, locale = "en") {
 }
 
 // [ADDED] Calculate period performance from real daily backend candles.
-function formatMarketPeriodReturn(candles, days) {
-  if (!Array.isArray(candles) || candles.length <= days) return "—";
-  const current = Number(candles[candles.length - 1]?.close);
-  const previous = Number(candles[candles.length - 1 - days]?.close);
-  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous <= 0) return "—";
-  const change = ((current - previous) / previous) * 100;
-  return (change > 0 ? "+" : "") + change.toFixed(2) + "%";
-}
-
-// [ADDED] Turn backend gainers and losers into the existing Top Movers row format.
 function mapLiveTopMover(item, positive, locale = "en") {
   const asset = mapLiveMarketAsset(item, locale);
   const eventTime = Number(item.eventTime || item.closeTime || Date.now());
