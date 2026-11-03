@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "refactor/**"
+      - "fix/**"
     paths-ignore:
       - "package-lock.json"
   pull_request:
