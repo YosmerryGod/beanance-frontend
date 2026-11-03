@@ -327,7 +327,10 @@
     "app.k325": "欢迎回来，{{name}}",
     "app.k326": "最近交易",
     "app.k327": "{{symbol}} 的实时公开交易。",
-    "app.k328": "正在等待最新交易..."
+    "app.k328": "正在等待最新交易...",
+    "app.k329": "High-volume price increase",
+    "app.k330": "High-volume price decrease",
+    "app.k331": "24h Change / Status"
   },
   "sidebar": {
     "account": "账户",
