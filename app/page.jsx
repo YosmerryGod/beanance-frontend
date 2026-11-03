@@ -756,6 +756,7 @@ function App() {
       }
 
       socket.onopen = () => {
+        if (!activeSocket) return;
         reconnectDelay = 1000;
         if (active === "market-detail" && selectedMarket?.symbol) {
           socket.send(JSON.stringify({
@@ -767,6 +768,7 @@ function App() {
       };
 
       socket.onmessage = (event) => {
+        if (!activeSocket) return;
         let message;
         try {
           message = JSON.parse(event.data);
