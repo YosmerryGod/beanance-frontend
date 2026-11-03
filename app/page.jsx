@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import i18n, { sidebarTranslations, supportedLanguages } from "../i18n/config";
+import { sidebarTranslations, supportedLanguages } from "../i18n/config";
 import {
   ArrowDownLeft,
   ArrowLeft,
@@ -296,6 +296,7 @@ function App() {
       socket.onopen = () => {
         if (!activeSocket) return;
         reconnectDelay = 1000;
+        setMarketConnectionStatus("connecting");
         if (active === "market-detail" && selectedMarket?.symbol) {
           socket.send(JSON.stringify({
             type: "market.detail.subscribe",
@@ -368,11 +369,15 @@ function App() {
 
       socket.onclose = () => {
         if (!activeSocket) return;
+        setMarketConnectionStatus("offline");
         reconnectTimer = window.setTimeout(connect, reconnectDelay);
         reconnectDelay = Math.min(reconnectDelay * 2, 15000);
       };
 
-      socket.onerror = () => socket?.close();
+      socket.onerror = () => {
+        setMarketConnectionStatus("offline");
+        socket?.close();
+      };
     };
 
     connect();
@@ -395,6 +400,7 @@ function App() {
     if (active !== "market-detail" || !selectedMarket?.symbol) return undefined;
 
     let activeRequest = true;
+    const controller = new AbortController();
     const symbol = selectedMarket.symbol + "USDT";
     setMarketDetailStatus("loading");
     setMarketDetailError("");
@@ -406,10 +412,10 @@ function App() {
     const loadDetails = async () => {
       try {
         const [depthResponse, tradesResponse, metricsResponse, dailyResponse] = await Promise.all([
-          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store" }),
-          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store" }),
-          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store" }),
-          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=366", { cache: "no-store" }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=366", { cache: "no-store", signal: controller.signal }),
         ]);
 
         if (!depthResponse.ok || !tradesResponse.ok || !metricsResponse.ok) {
@@ -452,7 +458,7 @@ function App() {
 
         setMarketDetailStatus("live");
       } catch (error) {
-        if (activeRequest) {
+        if (activeRequest && error.name !== "AbortError") {
           setMarketDetailStatus("offline");
           setMarketDetailError(error.message || "Gagal mengambil detail market.");
         }
@@ -462,6 +468,7 @@ function App() {
     loadDetails();
     return () => {
       activeRequest = false;
+      controller.abort();
     };
   }, [active, selectedMarket?.symbol]);
 
