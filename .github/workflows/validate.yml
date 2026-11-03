@@ -63,3 +63,27 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Smoke test standalone health endpoint
+        run: |
+          test -f .next/standalone/server.js
+          mkdir -p .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/
+          if [ -d public ]; then
+            cp -a public .next/standalone/
+          fi
+          PORT=3100 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/beanance-standalone-smoke.log 2>&1 &
+          SERVER_PID=$!
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3100/api/health -o /tmp/beanance-health.json; then
+              break
+            fi
+            sleep 1
+          done
+          node -e 'const fs = require("node:fs"); const data = JSON.parse(fs.readFileSync("/tmp/beanance-health.json", "utf8")); if (!data.success || data.service !== "beanance-frontend") { throw new Error("Standalone health response is invalid: " + JSON.stringify(data)); }'
+          cat /tmp/beanance-health.json
