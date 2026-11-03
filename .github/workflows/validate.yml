@@ -33,15 +33,18 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
+        id: install
         run: |
           if [ -f package-lock.json ]; then
             npm ci --no-audit --no-fund
+            echo "lock_created=false" >> "$GITHUB_OUTPUT"
           else
             npm install --no-audit --no-fund
+            echo "lock_created=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Commit generated dependency lockfile on refactor branches
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/refactor/') && !hashFiles('package-lock.json')
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/refactor/') && steps.install.outputs.lock_created == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
