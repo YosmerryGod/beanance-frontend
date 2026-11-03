@@ -4570,3 +4570,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 @media(max-width:760px){
   .app-shell .market-chart-watermark{right:68px}
 }
+
+
+/* [MODIFIED] Break the Market chart section out of the centered content column to full viewport width. */
+.app-shell .market-detail-page>.market-chart-section{
+  position:relative;
+  width:100vw;
+  max-width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  min-width:100vw;
+}
+.app-shell .market-detail-page>.market-chart-section>.market-trading-chart{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+.app-shell .market-detail-page>.market-chart-section>.market-trading-chart>.market-chart-toolbar-inside{
+  width:100%;
+  padding-left:16px;
+  padding-right:16px;
+}
+.app-shell .market-detail-page>.market-chart-section>.market-trading-chart>.market-trading-chart-canvas{
+  width:100%;
+  max-width:100%;
+}
+.app-shell .market-detail-page>.market-chart-section>.market-indicators{
+  width:100%;
+  padding-left:16px;
+  padding-right:16px;
+}
