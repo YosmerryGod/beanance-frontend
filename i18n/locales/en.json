@@ -323,7 +323,8 @@
     "app.k321": "Change",
     "app.k322": "Change %",
     "app.k323": "Range",
-    "app.k324": "Volume"
+    "app.k324": "Volume",
+    "app.k325": "Welcome back, {{name}}"
   },
   "sidebar": {
     "account": "ACCOUNT",
