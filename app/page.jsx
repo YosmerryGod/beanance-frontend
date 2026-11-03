@@ -255,6 +255,7 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem("beanance-theme", theme);
     document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) themeColor.setAttribute("content", theme === "light" ? "#fff9e8" : "#090909");
   }, [theme]);
@@ -500,7 +501,6 @@ function App() {
         const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false)) : [];
         if (gainers.length + losers.length) setLiveTopMoverEvents([...gainers, ...losers]);
         retryDelay = 10000;
-        if (marketConnectionStatus !== "live") setMarketConnectionStatus("stale");
       } catch {
         if (activeRequest) {
           setMarketConnectionStatus((current) => current === "live" ? current : "offline");
@@ -528,6 +528,7 @@ function App() {
         refreshTimer = null;
       } else if (marketConnectionStatus !== "live") {
         if (refreshTimer) window.clearTimeout(refreshTimer);
+        refreshMarketData();
         scheduleFallback();
       }
     };
