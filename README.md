@@ -573,3 +573,37 @@ REST tetap digunakan untuk initial snapshot, pagination, daftar trade, dan metad
 - Angka demo di UI bukan data produksi.
 - Backend menjadi sumber kebenaran untuk ranking, status strategi, performa, dan jumlah followers.
 - Frontend bertanggung jawab pada rendering, interaksi, loading state, dan error handling.
+
+
+## Beanance Market Backend Integration
+
+The Market page uses the private Beanance Market Backend for USDT-M perpetual futures data.
+
+- REST proxy: `/market-api/*` is rewritten to `http://127.0.0.1:3030/api/v1/market/*`.
+- WebSocket: browser clients connect to same-origin `/ws/market`.
+- Historical candles: `GET /futures/:symbol/klines`.
+- Order book: `GET /futures/:symbol/depth`, followed by `depth20@100ms` WebSocket updates.
+- Recent trades: `GET /futures/:symbol/trades`, followed by `aggTrade` WebSocket updates.
+- Funding, mark price, index price, and open interest: `GET /futures/:symbol/metrics`.
+- Market ticker snapshots and updates: `GET /futures` and `market.snapshot` / `market.ticker` WebSocket events.
+
+### Required reverse proxy for WebSocket
+
+The REST rewrite in `next.config.mjs` does not configure the WebSocket upgrade route. The frontend domain's Nginx HTTPS server block must include the contents of `nginx/market-websocket-location.conf` so `/ws/market` is forwarded to the private backend at `127.0.0.1:3030`.
+
+After adding the location block to the active Nginx server configuration, validate and reload Nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Keep the backend port private; do not expose port 3030 publicly just to make browser WebSockets work.
+
+### Optional direct WebSocket URL
+
+If a public WebSocket endpoint is intentionally provided by a separate reverse proxy, set `NEXT_PUBLIC_MARKET_WS_URL` at frontend build time to its `wss://` URL. Otherwise the frontend uses same-origin `/ws/market`.
+
+### Backend availability
+
+The frontend can still render its UI when the market backend is stopped, but market data will show offline/loading states until the backend is running. Start the backend before testing live market data.
