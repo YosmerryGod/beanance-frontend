@@ -4362,15 +4362,3 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-feed-status.offline{color:#ef5368}
 .app-shell .market-feed-status.connecting{color:var(--muted)}
 .app-shell .market-page-feed-status{margin:0 0 12px}
-
-
-/* [ADDED] Live market detail loading states and real order-book depth visualization. */
-.app-shell .market-live-empty{padding:18px 10px;color:var(--muted);font-size:11px;text-align:center}
-.app-shell .market-depth-ladder{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%;padding:5px 0}
-.app-shell .market-depth-ladder>div{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:24px;padding:4px 8px;border-radius:5px;font-size:10px;font-variant-numeric:tabular-nums}
-.app-shell .market-depth-ladder>div span,.app-shell .market-depth-ladder>div b{position:relative;z-index:1}
-.app-shell .market-depth-bid{background:linear-gradient(90deg,rgba(32,189,136,.22),rgba(32,189,136,.04));color:#20bd88}
-.app-shell .market-depth-ask{background:linear-gradient(90deg,rgba(239,83,104,.22),rgba(239,83,104,.04));color:#ef5368}
-.app-shell .market-trading-chart-error{padding:8px 10px;color:var(--muted);font-size:10px;text-align:center}
-.app-shell.theme-light .market-depth-bid{color:#138d68}
-.app-shell.theme-light .market-depth-ask{color:#d83f56}
