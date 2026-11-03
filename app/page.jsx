@@ -610,6 +610,16 @@ function mapLiveMarketAsset(item) {
   };
 }
 
+// [ADDED] Calculate period performance from real daily backend candles.
+function formatMarketPeriodReturn(candles, days) {
+  if (!Array.isArray(candles) || candles.length <= days) return "—";
+  const current = Number(candles[candles.length - 1]?.close);
+  const previous = Number(candles[candles.length - 1 - days]?.close);
+  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous <= 0) return "—";
+  const change = ((current - previous) / previous) * 100;
+  return (change > 0 ? "+" : "") + change.toFixed(2) + "%";
+}
+
 // [ADDED] Turn backend gainers and losers into the existing Top Movers row format.
 function mapLiveTopMover(item, positive) {
   const asset = mapLiveMarketAsset(item);
