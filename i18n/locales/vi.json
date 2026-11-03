@@ -323,7 +323,8 @@
     "app.k321": "Thay đổi",
     "app.k322": "% thay đổi",
     "app.k323": "Biên độ",
-    "app.k324": "Khối lượng"
+    "app.k324": "Khối lượng",
+    "app.k325": "Chào mừng {{name}} trở lại"
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
