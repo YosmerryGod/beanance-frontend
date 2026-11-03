@@ -323,5 +323,8 @@
   "Change %": "app.k322",
   "Range": "app.k323",
   "Volume": "app.k324",
-  "Welcome back, {{name}}": "app.k325"
+  "Welcome back, {{name}}": "app.k325",
+  "Recent Trades": "app.k326",
+  "Live public trades for {{symbol}}.": "app.k327",
+  "Waiting for recent trades...": "app.k328"
 }
