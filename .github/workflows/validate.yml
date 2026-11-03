@@ -34,7 +34,10 @@ jobs:
       - name: Validate translations
         run: npm run check:i18n
 
-      - name: Check deployment scripts\n        run: node --check deploy.js && node --check ecosystem.config.cjs && node --check scripts/check-translations.js\n\n      - name: Build production application
+      - name: Check deployment scripts
+        run: node --check deploy.js && node --check ecosystem.config.cjs && node --check scripts/check-translations.js
+
+      - name: Build production application
         run: npm run build
         env:
           NODE_ENV: production
