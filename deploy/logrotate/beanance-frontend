@@ -8,14 +8,3 @@
     copytruncate
     dateext
 }
-
-/var/log/beanance-frontend/*.log {
-    daily
-    rotate 7
-    compress
-    delaycompress
-    missingok
-    notifempty
-    copytruncate
-    dateext
-}
