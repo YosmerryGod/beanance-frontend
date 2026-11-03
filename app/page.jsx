@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import i18n from "i18next";
-import { initReactI18next, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import i18n, { sidebarTranslations, supportedLanguages } from "../i18n/config";
 import {
   ArrowDownLeft,
   ArrowLeft,
@@ -56,476 +56,6 @@ import {
 import CoinLogo from "./components/CoinLogo";
 import MarketTradingChart from "./components/MarketTradingChart"; // [ADDED] Interactive TradingView-style market chart
 
-
-const supportedLanguages = [
-  { code: "en", label: "English", native: "English", flag: "EN" },
-  { code: "zh", label: "Chinese", native: "简体中文", flag: "CN" },
-  { code: "id", label: "Indonesian", native: "Bahasa Indonesia", flag: "ID" },
-  { code: "ja", label: "Japanese", native: "日本語", flag: "JP" },
-  { code: "vi", label: "Vietnamese", native: "Tiếng Việt", flag: "VN" },
-];
-
-const sidebarTranslations = {
-  en: { account: "ACCOUNT", preferences: "PREFERENCES", support: "SUPPORT", profile: "Profile", language: "Language", security: "Security", notifications: "Notifications", appearance: "Appearance", help: "Help Center", about: "About Beanance", menu: "MENU", community: "BEANANCE COMMUNITY", footer: "Explore markets and trading strategies" },
-  zh: { account: "账户", preferences: "偏好设置", support: "支持", profile: "个人资料", language: "语言", security: "安全", notifications: "通知", appearance: "外观", help: "帮助中心", about: "关于 Beanance", menu: "菜单", community: "BEANANCE 社区", footer: "探索市场和交易策略" },
-  id: { account: "AKUN", preferences: "PREFERENSI", support: "BANTUAN", profile: "Profil", language: "Bahasa", security: "Keamanan", notifications: "Notifikasi", appearance: "Tampilan", help: "Pusat Bantuan", about: "Tentang Beanance", menu: "MENU", community: "KOMUNITAS BEANANCE", footer: "Jelajahi market dan strategi trading" },
-  ja: { account: "アカウント", preferences: "設定", support: "サポート", profile: "プロフィール", language: "言語", security: "セキュリティ", notifications: "通知", appearance: "外観", help: "ヘルプセンター", about: "Beananceについて", menu: "メニュー", community: "BEANANCE コミュニティ", footer: "市場と取引戦略をチェック" },
-  vi: { account: "TÀI KHOẢN", preferences: "TÙY CHỈNH", support: "HỖ TRỢ", profile: "Hồ sơ", language: "Ngôn ngữ", security: "Bảo mật", notifications: "Thông báo", appearance: "Giao diện", help: "Trung tâm trợ giúp", about: "Về Beanance", menu: "DANH MỤC", community: "CỘNG ĐỒNG BEANANCE", footer: "Khám phá thị trường và chiến lược giao dịch" },
-};
-
-const appTranslations = {
-  "en": {},
-  "id": {
-    "Dashboard": "Beranda",
-    "Discover": "Jelajahi",
-    "Create": "Buat",
-    "Market": "Pasar",
-    "Profile": "Profil",
-    "Strategies": "Strategi",
-    "Traders": "Trader",
-    "All Market": "Semua Pasar",
-    "Top Movers": "Pergerakan Teratas",
-    "Notifications": "Notifikasi",
-    "Wallet connected": "Dompet terhubung",
-    "Your demo wallet is ready to use.": "Dompet demo kamu siap digunakan.",
-    "Just now": "Baru saja",
-    "Market update": "Pembaruan pasar",
-    "Bitcoin is up 2.45% in the demo market.": "Bitcoin naik 2,45% di pasar demo.",
-    "Welcome to Beanance": "Selamat datang di Beanance",
-    "Explore assets and discover Web3 apps.": "Jelajahi aset dan aplikasi Web3.",
-    "12 minutes ago": "12 menit lalu",
-    "Today": "Hari ini",
-    "Mark all as read": "Tandai semua sudah dibaca",
-    "Top Strategies": "Strategi Teratas",
-    "Best performing strategies from our community": "Strategi dengan performa terbaik dari komunitas kami",
-    "See All": "Lihat Semua",
-    "Total Return": "Total Return",
-    "Win Rate": "Tingkat Kemenangan",
-    "Follow": "Ikuti",
-    "Top Traders": "Trader Teratas",
-    "Most consistent and successful traders": "Trader paling konsisten dan sukses",
-    "Trader": "Trader",
-    "Followers": "Pengikut",
-    "Return": "Return",
-    "Equity Curve": "Kurva Ekuitas",
-    "Action": "Aksi",
-    "Market Overview": "Ringkasan Pasar",
-    "Top futures pairs by volume": "Pasangan futures berdasarkan volume",
-    "Pair": "Pasangan",
-    "Price": "Harga",
-    "24h Change": "Perubahan 24 Jam",
-    "24h Volume": "Volume 24 Jam",
-    "Chart": "Grafik",
-    "Explore Strategies": "Jelajahi Strategi",
-    "Explore Traders": "Jelajahi Trader",
-    "Pilih strategi sesuai gaya trading kamu.": "Pilih strategi sesuai gaya trading kamu.",
-    "Kenali trader dan performa mereka.": "Kenali trader dan performa mereka.",
-    "View strategy": "Lihat strategi",
-    "View profile": "Lihat profil",
-    "Filter": "Filter",
-    "Minimum win rate": "Minimal tingkat kemenangan",
-    "Any win rate": "Semua tingkat kemenangan",
-    "Above 50%": "Di atas 50%",
-    "Above 60%": "Di atas 60%",
-    "Above 70%": "Di atas 70%",
-    "Above 80%": "Di atas 80%",
-    "Trader age": "Usia trader",
-    "Any age": "Semua usia",
-    "30+ days": "30+ hari",
-    "90+ days": "90+ hari",
-    "6+ months": "6+ bulan",
-    "1+ year": "1+ tahun",
-    "Minimum total trades": "Minimal total transaksi",
-    "Any trades": "Semua transaksi",
-    "50+ trades": "50+ transaksi",
-    "100+ trades": "100+ transaksi",
-    "500+ trades": "500+ transaksi",
-    "1,000+ trades": "1.000+ transaksi",
-    "Minimum return": "Minimal return",
-    "Any return": "Semua return",
-    "Above 20%": "Di atas 20%",
-    "Above 100%": "Di atas 100%",
-    "Risk level": "Tingkat risiko",
-    "All risk levels": "Semua tingkat risiko",
-    "Low risk": "Risiko rendah",
-    "Medium risk": "Risiko sedang",
-    "High risk": "Risiko tinggi",
-    "Sort by": "Urutkan",
-    "Most popular": "Terpopuler",
-    "Newest": "Terbaru",
-    "Highest win rate": "Tingkat kemenangan tertinggi",
-    "Highest return": "Return tertinggi",
-    "Reset": "Atur ulang",
-    "Apply filters": "Terapkan filter",
-    "Back": "Kembali",
-    "BEANANCE TRADER": "TRADER BEANANCE",
-    "Follow Trader": "Ikuti Trader",
-    "Activity": "Aktivitas",
-    "Trade history": "Riwayat trading",
-    "Demo activity": "Aktivitas demo",
-    "Open positions": "Posisi terbuka",
-    "Closed trades": "Transaksi ditutup",
-    "Entry price": "Harga masuk",
-    "Position size": "Ukuran posisi",
-    "Active": "Aktif",
-    "Inactive": "Tidak aktif",
-    "No inactive strategies": "Tidak ada strategi nonaktif",
-    "Copy": "Salin",
-    "30D Return": "Return 30 Hari",
-    "Total Trades": "Total Transaksi",
-    "Pasangan": "Pasangan",
-    "Perubahan / Status": "Perubahan / Status",
-    "Perp": "Perpetual",
-    "Belum ada pergerakan untuk kategori ini.": "Belum ada pergerakan untuk kategori ini.",
-    "YOUR ACCOUNT": "AKUN KAMU",
-    "Hey, Ezy": "Hai, Ezy",
-    "Welcome back, Ezy": "Selamat datang kembali, Ezy",
-    "Name": "Nama",
-    "Vol": "Volume",
-    "Last price": "Harga terakhir",
-    "24h change": "Perubahan 24 jam",
-    "Semua": "Semua",
-    "Kenaikan": "Kenaikan",
-    "Penurunan": "Penurunan",
-    "Pullback": "Pullback",
-    "Rally": "Rally",
-    "High Baru": "High Baru",
-    "Low Baru": "Low Baru",
-    "Wallet management": "Pengelolaan dompet",
-    "Security & privacy": "Keamanan & privasi",
-    "Preferences": "Preferensi",
-    "Help center": "Pusat bantuan",
-    "QUICK ACTION": "AKSI CEPAT",
-    "What would you like to do?": "Apa yang ingin kamu lakukan?",
-    "Swap tokens": "Tukar token",
-    "Exchange one asset for another": "Tukar satu aset dengan aset lainnya",
-    "Buy crypto": "Beli kripto",
-    "Add crypto to your wallet": "Tambahkan kripto ke dompet",
-    "Connect dApp": "Hubungkan dApp",
-    "Explore decentralized apps": "Jelajahi aplikasi terdesentralisasi",
-    "Search strategies or traders...": "Cari strategi atau trader...",
-    "Search assets...": "Cari aset...",
-    "Search strategies and traders": "Cari strategi dan trader",
-    "Search market assets": "Cari aset pasar",
-    "GOOD EVENING": "SELAMAT SORE",
-    "Switch to light mode": "Ubah ke mode terang",
-    "Switch to dark mode": "Ubah ke mode gelap",
-    "All": "Semua",
-    "Favorites": "Favorit",
-    "Futures": "Futures",
-    "Crypto": "Kripto",
-    "Verified": "Terverifikasi",
-    "Most Followers": "Pengikut terbanyak",
-    "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Riwayat trading dan performa strategi di sini merupakan data contoh Beanance demo.",
-    "Trader ini belum memiliki strategi yang dinonaktifkan.": "Trader ini belum memiliki strategi yang dinonaktifkan."
-  },
-  "zh": {
-    "Dashboard": "首页",
-    "Discover": "发现",
-    "Create": "创建",
-    "Market": "市场",
-    "Profile": "个人资料",
-    "Strategies": "策略",
-    "Traders": "交易员",
-    "All Market": "全部市场",
-    "Top Movers": "涨幅榜",
-    "Notifications": "通知",
-    "Top Strategies": "热门策略",
-    "See All": "查看全部",
-    "Total Return": "总回报",
-    "Win Rate": "胜率",
-    "Follow": "关注",
-    "Top Traders": "热门交易员",
-    "Market Overview": "市场概览",
-    "Pair": "交易对",
-    "Price": "价格",
-    "24h Change": "24小时涨跌",
-    "24h Volume": "24小时成交量",
-    "Explore Strategies": "探索策略",
-    "Explore Traders": "探索交易员",
-    "Back": "返回",
-    "Trade history": "交易记录",
-    "Open positions": "未平仓位",
-    "Closed trades": "已平仓交易",
-    "Entry price": "入场价格",
-    "Position size": "仓位大小",
-    "Name": "名称",
-    "Vol": "成交量",
-    "Last price": "最新价格",
-    "Search assets...": "搜索资产...",
-    "Search strategies or traders...": "搜索策略或交易员...",
-    "Wallet management": "钱包管理",
-    "Security & privacy": "安全与隐私",
-    "Preferences": "偏好设置",
-    "Help center": "帮助中心",
-    "QUICK ACTION": "快捷操作",
-    "What would you like to do?": "你想做什么？",
-    "Swap tokens": "兑换代币",
-    "Buy crypto": "购买加密货币",
-    "Connect dApp": "连接 dApp",
-    "All": "全部",
-    "Favorites": "收藏",
-    "Futures": "合约",
-    "Crypto": "加密货币",
-    "Reset": "重置",
-    "Apply filters": "应用筛选"
-  },
-  "ja": {
-    "Dashboard": "ホーム",
-    "Discover": "見つける",
-    "Create": "作成",
-    "Market": "市場",
-    "Profile": "プロフィール",
-    "Strategies": "戦略",
-    "Traders": "トレーダー",
-    "All Market": "すべての市場",
-    "Top Movers": "値上がりランキング",
-    "Notifications": "通知",
-    "Top Strategies": "人気の戦略",
-    "See All": "すべて表示",
-    "Total Return": "総リターン",
-    "Win Rate": "勝率",
-    "Follow": "フォロー",
-    "Top Traders": "トップトレーダー",
-    "Market Overview": "市場概要",
-    "Pair": "取引ペア",
-    "Price": "価格",
-    "24h Change": "24時間変動",
-    "24h Volume": "24時間取引量",
-    "Explore Strategies": "戦略を探す",
-    "Explore Traders": "トレーダーを探す",
-    "Back": "戻る",
-    "Trade history": "取引履歴",
-    "Open positions": "保有ポジション",
-    "Closed trades": "決済済み取引",
-    "Entry price": "エントリー価格",
-    "Position size": "ポジションサイズ",
-    "Name": "名前",
-    "Vol": "出来高",
-    "Last price": "現在価格",
-    "Search assets...": "資産を検索...",
-    "Search strategies or traders...": "戦略やトレーダーを検索...",
-    "Wallet management": "ウォレット管理",
-    "Security & privacy": "セキュリティとプライバシー",
-    "Preferences": "設定",
-    "Help center": "ヘルプセンター",
-    "QUICK ACTION": "クイック操作",
-    "What would you like to do?": "何をしますか？",
-    "Swap tokens": "トークン交換",
-    "Buy crypto": "暗号資産を購入",
-    "Connect dApp": "dAppに接続",
-    "All": "すべて",
-    "Favorites": "お気に入り",
-    "Futures": "先物",
-    "Crypto": "暗号資産",
-    "Reset": "リセット",
-    "Apply filters": "フィルターを適用"
-  },
-  "vi": {
-    "Dashboard": "Trang chủ",
-    "Discover": "Khám phá",
-    "Create": "Tạo",
-    "Market": "Thị trường",
-    "Profile": "Hồ sơ",
-    "Strategies": "Chiến lược",
-    "Traders": "Nhà giao dịch",
-    "All Market": "Tất cả thị trường",
-    "Top Movers": "Biến động mạnh",
-    "Notifications": "Thông báo",
-    "Top Strategies": "Chiến lược hàng đầu",
-    "See All": "Xem tất cả",
-    "Total Return": "Tổng lợi nhuận",
-    "Win Rate": "Tỷ lệ thắng",
-    "Follow": "Theo dõi",
-    "Top Traders": "Nhà giao dịch hàng đầu",
-    "Market Overview": "Tổng quan thị trường",
-    "Pair": "Cặp giao dịch",
-    "Price": "Giá",
-    "24h Change": "Biến động 24h",
-    "24h Volume": "Khối lượng 24h",
-    "Explore Strategies": "Khám phá chiến lược",
-    "Explore Traders": "Khám phá nhà giao dịch",
-    "Back": "Quay lại",
-    "Trade history": "Lịch sử giao dịch",
-    "Open positions": "Vị thế đang mở",
-    "Closed trades": "Giao dịch đã đóng",
-    "Entry price": "Giá vào lệnh",
-    "Position size": "Kích thước vị thế",
-    "Name": "Tên",
-    "Vol": "Khối lượng",
-    "Last price": "Giá gần nhất",
-    "Search assets...": "Tìm tài sản...",
-    "Search strategies or traders...": "Tìm chiến lược hoặc nhà giao dịch...",
-    "Wallet management": "Quản lý ví",
-    "Security & privacy": "Bảo mật & quyền riêng tư",
-    "Preferences": "Tùy chọn",
-    "Help center": "Trung tâm trợ giúp",
-    "QUICK ACTION": "THAO TÁC NHANH",
-    "What would you like to do?": "Bạn muốn làm gì?",
-    "Swap tokens": "Hoán đổi token",
-    "Buy crypto": "Mua tiền mã hóa",
-    "Connect dApp": "Kết nối dApp",
-    "All": "Tất cả",
-    "Favorites": "Yêu thích",
-    "Futures": "Hợp đồng tương lai",
-    "Crypto": "Tiền mã hóa",
-    "Reset": "Đặt lại",
-    "Apply filters": "Áp dụng bộ lọc"
-  }
-};
-
-
-Object.assign(appTranslations.en, {
-  "Trades": "Trades", "Active": "Active", "Inactive": "Inactive", "30D ago": "30D ago",
-  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Trade history and strategy performance shown here are sample data for the Beanance demo.",
-  "Profile": "Profile", "Beanance Account": "Beanance Account"
-});
-Object.assign(appTranslations.id, {
-  "Trades": "Transaksi", "Active": "Aktif", "Inactive": "Tidak aktif", "30D ago": "30 hari lalu",
-  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Riwayat trading dan performa strategi ini merupakan data contoh Beanance.",
-  "Profile": "Profil", "Beanance Account": "Akun Beanance", "Security": "Keamanan", "Language": "Bahasa"
-});
-Object.assign(appTranslations.zh, {
-  "Trades": "交易", "Active": "进行中", "Inactive": "未启用", "30D ago": "30天前",
-  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "此处的交易记录和策略表现为 Beanance 演示数据。",
-  "Profile": "个人资料", "Beanance Account": "Beanance 账户", "Security": "安全", "Language": "语言"
-});
-Object.assign(appTranslations.ja, {
-  "Trades": "取引", "Active": "有効", "Inactive": "無効", "30D ago": "30日前",
-  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "ここに表示される取引履歴と戦略実績はBeananceのデモデータです。",
-  "Profile": "プロフィール", "Beanance Account": "Beananceアカウント", "Security": "セキュリティ", "Language": "言語"
-});
-Object.assign(appTranslations.en, {
-  "Profile settings":"Profile settings","Profile photo":"Profile photo","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG or WEBP · Max 5 MB","Change photo":"Change photo","Username":"Username","Enter username":"Enter username","Email address":"Email address","Email not added":"Email not added","Save changes":"Save changes","Connected accounts":"Connected accounts","Connection status is shown only after a verified connection.":"Connection status is shown only after a verified connection.","Connected":"Connected","Not connected":"Not connected"
-});
-Object.assign(appTranslations.id, {
-  "Profile settings":"Pengaturan profil","Profile photo":"Foto profil","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG atau WEBP · Maks. 5 MB","Change photo":"Ganti foto","Username":"Username","Enter username":"Masukkan username","Email address":"Alamat email","Email not added":"Email belum ditambahkan","Save changes":"Simpan perubahan","Connected accounts":"Akun terhubung","Connection status is shown only after a verified connection.":"Status hanya ditampilkan setelah koneksi terverifikasi.","Connected":"Terhubung","Not connected":"Belum terhubung"
-});
-Object.assign(appTranslations.zh, {
-  "Profile settings":"个人资料设置","Profile photo":"头像","JPG, PNG or WEBP · Max 5 MB":"JPG、PNG 或 WEBP · 最大 5 MB","Change photo":"更换照片","Username":"用户名","Enter username":"输入用户名","Email address":"电子邮件","Email not added":"尚未添加邮箱","Save changes":"保存更改","Connected accounts":"已连接账户","Connection status is shown only after a verified connection.":"仅显示已验证的连接状态。","Connected":"已连接","Not connected":"未连接"
-});
-Object.assign(appTranslations.ja, {
-  "Profile settings":"プロフィール設定","Profile photo":"プロフィール写真","JPG, PNG or WEBP · Max 5 MB":"JPG、PNG、WEBP · 最大5MB","Change photo":"写真を変更","Username":"ユーザー名","Enter username":"ユーザー名を入力","Email address":"メールアドレス","Email not added":"メール未登録","Save changes":"変更を保存","Connected accounts":"接続済みアカウント","Connection status is shown only after a verified connection.":"確認済みの接続のみ表示されます。","Connected":"接続済み","Not connected":"未接続"
-});
-Object.assign(appTranslations.vi, {
-  "Profile settings":"Cài đặt hồ sơ","Profile photo":"Ảnh hồ sơ","JPG, PNG or WEBP · Max 5 MB":"JPG, PNG hoặc WEBP · Tối đa 5 MB","Change photo":"Đổi ảnh","Username":"Tên người dùng","Enter username":"Nhập tên người dùng","Email address":"Địa chỉ email","Email not added":"Chưa thêm email","Save changes":"Lưu thay đổi","Connected accounts":"Tài khoản đã kết nối","Connection status is shown only after a verified connection.":"Chỉ hiển thị trạng thái sau khi xác minh kết nối.","Connected":"Đã kết nối","Not connected":"Chưa kết nối"
-});
-
-Object.assign(appTranslations.vi, {
-  "Trades": "Giao dịch", "Active": "Đang hoạt động", "Inactive": "Không hoạt động", "30D ago": "30 ngày trước",
-  "Trade history and strategy performance shown here are sample data for the Beanance demo.": "Lịch sử giao dịch và hiệu suất chiến lược ở đây là dữ liệu mẫu của Beanance.",
-  "Profile": "Hồ sơ", "Beanance Account": "Tài khoản Beanance", "Security": "Bảo mật", "Language": "Ngôn ngữ"
-});
-
-
-/* [ADDED] Complete common page translations for all supported locales. */
-Object.assign(appTranslations.id, {
-  "Trend Following":"Mengikuti Tren","Scalping":"Scalping","Breakout":"Breakout","Medium Risk":"Risiko Menengah","Low Risk":"Risiko Rendah","High Risk":"Risiko Tinggi",
-  "Total return":"Total return","30D return":"Return 30 Hari","Return (30D)":"Return (30 Hari)","All":"Semua","Favorites":"Favorit","Futures":"Futures","Crypto":"Kripto",
-  "View strategy":"Lihat strategi","View profile":"Lihat profil","Filter":"Filter","Filter strategies":"Filter strategi","Filter traders":"Filter trader","Open filters":"Buka filter",
-  "Trending":"Tren","Low Risk":"Risiko Rendah","win rate":"tingkat kemenangan","followers":"pengikut","days active":"hari aktif",
-  "Strategies by":"Strategi oleh","Verified trader":"Trader terverifikasi","Active for":"Aktif selama","strategies":"strategi",
-  "Mark price":"Harga mark","Exit price":"Harga keluar","Unrealized PnL":"PnL belum terealisasi","Realized PnL":"PnL terealisasi","Opened":"Dibuka","Closed":"Ditutup","Isolated · 5x":"Isolated · 5x","Trade completed":"Transaksi selesai","Copy":"Salin",
-  "Return (30D)":"Return (30 Hari)","Wallet address copied":"Alamat wallet disalin","Wallet settings are coming soon":"Pengaturan wallet segera hadir",
-  "Semua":"Semua","Kenaikan":"Kenaikan","Penurunan":"Penurunan","Pullback":"Pullback","Rally":"Rally","High Baru":"High Baru","Low Baru":"Low Baru",
-  "Pasangan":"Pasangan","Perubahan / Status":"Perubahan / Status","Perp":"Perpetual","Belum ada pergerakan untuk kategori ini.":"Belum ada pergerakan untuk kategori ini.",
-  "Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.":"Contoh sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.",
-  "Pilih strategi sesuai gaya trading kamu.":"Pilih strategi sesuai gaya trading kamu.","Kenali trader dan performa mereka.":"Kenali trader dan performa mereka."
-});
-Object.assign(appTranslations.zh, {
-  "Dashboard":"首页","Discover":"发现","Create":"创建","Market":"市场","Profile":"个人资料","Strategies":"策略","Traders":"交易员",
-  "Top Strategies":"热门策略","Best performing strategies from our community":"社区表现最佳的策略","See All":"查看全部","Total Return":"总回报","Win Rate":"胜率","Follow":"关注","Top Traders":"顶级交易员","Most consistent and successful traders":"表现最稳定、最成功的交易员",
-  "Trader":"交易员","Followers":"关注者","Equity Curve":"权益曲线","Action":"操作","Market Overview":"市场概览","Top futures pairs by volume":"按成交量排名的热门合约交易对","Pair":"交易对","Price":"价格","24h Change":"24小时涨跌","24h Volume":"24小时成交量","Chart":"图表",
-  "Explore Strategies":"探索策略","Explore Traders":"探索交易员","Pilih strategi sesuai gaya trading kamu.":"选择适合你交易风格的策略。","Kenali trader dan performa mereka.":"了解交易员及其表现。","View strategy":"查看策略","View profile":"查看资料",
-  "Filter":"筛选","Filter strategies":"筛选策略","Filter traders":"筛选交易员","Minimum win rate":"最低胜率","Any win rate":"不限胜率","Above 50%":"高于50%","Above 60%":"高于60%","Above 70%":"高于70%","Above 80%":"高于80%",
-  "Trader age":"交易员活跃时间","Any age":"不限时间","30+ days":"超过30天","90+ days":"超过90天","6+ months":"超过6个月","1+ year":"超过1年","Minimum total trades":"最低交易次数","Any trades":"不限交易次数","50+ trades":"超过50笔","100+ trades":"超过100笔","500+ trades":"超过500笔","1,000+ trades":"超过1,000笔",
-  "Minimum return":"最低回报","Any return":"不限回报","Above 20%":"高于20%","Above 100%":"高于100%","Risk level":"风险等级","All risk levels":"所有风险等级","Low risk":"低风险","Medium risk":"中风险","High risk":"高风险","Sort by":"排序方式","Most popular":"最受欢迎","Newest":"最新","Highest win rate":"最高胜率","Highest return":"最高回报","Reset":"重置","Apply filters":"应用筛选",
-  "Back":"返回","BEANANCE TRADER":"BEANANCE交易员","Follow Trader":"关注交易员","Activity":"动态","Trades":"交易","Trade history":"交易记录","Demo activity":"演示活动","Open positions":"未平仓位","Closed trades":"已平仓交易","Entry price":"入场价格","Position size":"仓位大小","Active":"启用","Inactive":"停用","No inactive strategies":"没有停用的策略","Copy":"复制","30D Return":"30天回报","Total Trades":"总交易次数","30D ago":"30天前","Today":"今天",
-  "Name":"名称","Vol":"成交量","Last price":"最新价格","24h change":"24小时涨跌","All Market":"全部市场","Top Movers":"热门波动","Pasangan":"交易对","Perubahan / Status":"涨跌 / 状态","Perp":"永续合约","Semua":"全部","Kenaikan":"上涨","Penurunan":"下跌","Pullback":"回调","Rally":"反弹","High Baru":"新高","Low Baru":"新低","Belum ada pergerakan untuk kategori ini.":"此类别暂无价格变动。","Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.":"短期价格信号示例。需要连接实时市场数据源。",
-  "YOUR ACCOUNT":"您的账户","Hey, Ezy":"你好，Ezy","Welcome back, Ezy":"欢迎回来，Ezy","Wallet management":"钱包管理","Security & privacy":"安全与隐私","Preferences":"偏好设置","Help center":"帮助中心","QUICK ACTION":"快捷操作","What would you like to do?":"您想做什么？","Swap tokens":"兑换代币","Exchange one asset for another":"兑换不同资产","Buy crypto":"购买加密货币","Add crypto to your wallet":"向钱包添加加密货币","Connect dApp":"连接 dApp","Explore decentralized apps":"探索去中心化应用","Search strategies or traders...":"搜索策略或交易员...","Search assets...":"搜索资产...","Favorites":"收藏","Futures":"合约","Crypto":"加密货币","Verified":"已验证","Most Followers":"最多关注者","Mark price":"标记价格","Exit price":"退出价格","Unrealized PnL":"未实现盈亏","Realized PnL":"已实现盈亏","Strategies by":"策略创建者","Verified trader":"已验证交易员","Active for":"活跃时间","followers":"关注者","days active":"活跃天数","win rate":"胜率","Return (30D)":"30天回报","Total return":"总回报","Trend Following":"趋势跟踪","Scalping":"剥头皮","Breakout":"突破","Medium Risk":"中风险","Low Risk":"低风险","High Risk":"高风险","Trending":"热门趋势","All":"全部","1M":"1个月","3M":"3个月","6M":"6个月","1Y":"1年"
-});
-Object.assign(appTranslations.ja, {
-  "Top Strategies":"人気の戦略","Best performing strategies from our community":"コミュニティで高い成果を上げている戦略","See All":"すべて表示","Total Return":"総リターン","Win Rate":"勝率","Follow":"フォロー","Top Traders":"トップトレーダー","Most consistent and successful traders":"安定した実績を持つトレーダー","Trader":"トレーダー","Followers":"フォロワー","Equity Curve":"資産曲線","Action":"操作","Market Overview":"マーケット概要","Top futures pairs by volume":"取引量上位の先物ペア","Pair":"取引ペア","Price":"価格","24h Change":"24時間変動","24h Volume":"24時間取引量","Chart":"チャート",
-  "Explore Strategies":"戦略を探す","Explore Traders":"トレーダーを探す","Pilih strategi sesuai gaya trading kamu.":"自分の取引スタイルに合う戦略を選びましょう。","Kenali trader dan performa mereka.":"トレーダーと実績を確認しましょう。","View strategy":"戦略を見る","View profile":"プロフィールを見る","Filter":"フィルター","Minimum win rate":"最低勝率","Any win rate":"指定なし","Trader age":"運用期間","Any age":"指定なし","Minimum total trades":"最低取引回数","Minimum return":"最低リターン","Risk level":"リスクレベル","All risk levels":"すべてのリスク","Low risk":"低リスク","Medium risk":"中リスク","High risk":"高リスク","Sort by":"並び替え","Most popular":"人気順","Newest":"新着順","Highest win rate":"勝率順","Highest return":"リターン順","Reset":"リセット","Apply filters":"適用",
-  "Back":"戻る","BEANANCE TRADER":"BEANANCEトレーダー","Follow Trader":"フォローする","Activity":"アクティビティ","Trades":"取引","Trade history":"取引履歴","Demo activity":"デモ取引","Open positions":"未決済ポジション","Closed trades":"決済済み取引","Entry price":"エントリー価格","Position size":"ポジションサイズ","Active":"有効","Inactive":"無効","No inactive strategies":"無効な戦略はありません","Copy":"コピー","30D Return":"30日リターン","Total Trades":"総取引数","30D ago":"30日前","Today":"今日",
-  "Name":"銘柄名","Vol":"出来高","Last price":"最終価格","24h change":"24時間変動","All Market":"すべての市場","Top Movers":"値動きランキング","Pasangan":"取引ペア","Perubahan / Status":"変動 / 状態","Perp":"無期限","Semua":"すべて","Kenaikan":"上昇","Penurunan":"下落","Pullback":"押し目","Rally":"反発","High Baru":"新高値","Low Baru":"新安値","Belum ada pergerakan untuk kategori ini.":"このカテゴリーに値動きはありません。","Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.":"短期的な値動きシグナルの例です。リアルタイム市場データへの接続が必要です。",
-  "YOUR ACCOUNT":"アカウント","Hey, Ezy":"こんにちは、Ezy","Welcome back, Ezy":"おかえりなさい、Ezy","Wallet management":"ウォレット管理","Security & privacy":"セキュリティとプライバシー","Preferences":"設定","Help center":"ヘルプセンター","QUICK ACTION":"クイック操作","What would you like to do?":"何をしますか？","Swap tokens":"トークン交換","Exchange one asset for another":"資産を交換","Buy crypto":"暗号資産を購入","Add crypto to your wallet":"ウォレットに暗号資産を追加","Connect dApp":"dAppに接続","Explore decentralized apps":"分散型アプリを探す","Search strategies or traders...":"戦略やトレーダーを検索...","Search assets...":"資産を検索...","Favorites":"お気に入り","Futures":"先物","Crypto":"暗号資産","Verified":"認証済み","Most Followers":"フォロワー数順","Mark price":"マーク価格","Exit price":"決済価格","Unrealized PnL":"未実現損益","Realized PnL":"実現損益","Strategies by":"戦略作成者","Verified trader":"認証済みトレーダー","Active for":"活動期間","followers":"フォロワー","days active":"活動日数","win rate":"勝率","Return (30D)":"30日リターン","Total return":"総リターン","Trend Following":"トレンドフォロー","Scalping":"スキャルピング","Breakout":"ブレイクアウト","Medium Risk":"中リスク","Low Risk":"低リスク","High Risk":"高リスク","Trending":"トレンド","All":"すべて","1M":"1か月","3M":"3か月","6M":"6か月","1Y":"1年"
-});
-Object.assign(appTranslations.vi, {
-  "Top Strategies":"Chiến lược hàng đầu","Best performing strategies from our community":"Các chiến lược có hiệu suất tốt nhất từ cộng đồng","See All":"Xem tất cả","Total Return":"Tổng lợi nhuận","Win Rate":"Tỷ lệ thắng","Follow":"Theo dõi","Top Traders":"Nhà giao dịch hàng đầu","Most consistent and successful traders":"Những nhà giao dịch ổn định và thành công nhất","Trader":"Nhà giao dịch","Followers":"Người theo dõi","Equity Curve":"Đường vốn","Action":"Thao tác","Market Overview":"Tổng quan thị trường","Top futures pairs by volume":"Các cặp futures có khối lượng cao nhất","Pair":"Cặp giao dịch","Price":"Giá","24h Change":"Biến động 24h","24h Volume":"Khối lượng 24h","Chart":"Biểu đồ",
-  "Explore Strategies":"Khám phá chiến lược","Explore Traders":"Khám phá nhà giao dịch","Pilih strategi sesuai gaya trading kamu.":"Chọn chiến lược phù hợp với phong cách giao dịch của bạn.","Kenali trader dan performa mereka.":"Tìm hiểu nhà giao dịch và hiệu suất của họ.","View strategy":"Xem chiến lược","View profile":"Xem hồ sơ","Filter":"Bộ lọc","Minimum win rate":"Tỷ lệ thắng tối thiểu","Any win rate":"Mọi tỷ lệ thắng","Trader age":"Thời gian hoạt động","Any age":"Bất kỳ","Minimum total trades":"Số giao dịch tối thiểu","Minimum return":"Lợi nhuận tối thiểu","Risk level":"Mức độ rủi ro","All risk levels":"Tất cả mức rủi ro","Low risk":"Rủi ro thấp","Medium risk":"Rủi ro trung bình","High risk":"Rủi ro cao","Sort by":"Sắp xếp","Most popular":"Phổ biến nhất","Newest":"Mới nhất","Highest win rate":"Tỷ lệ thắng cao nhất","Highest return":"Lợi nhuận cao nhất","Reset":"Đặt lại","Apply filters":"Áp dụng bộ lọc",
-  "Back":"Quay lại","BEANANCE TRADER":"NHÀ GIAO DỊCH BEANANCE","Follow Trader":"Theo dõi nhà giao dịch","Activity":"Hoạt động","Trades":"Giao dịch","Trade history":"Lịch sử giao dịch","Demo activity":"Hoạt động demo","Open positions":"Vị thế đang mở","Closed trades":"Giao dịch đã đóng","Entry price":"Giá vào lệnh","Position size":"Kích thước vị thế","Active":"Đang hoạt động","Inactive":"Không hoạt động","No inactive strategies":"Không có chiến lược không hoạt động","Copy":"Sao chép","30D Return":"Lợi nhuận 30 ngày","Total Trades":"Tổng số giao dịch","30D ago":"30 ngày trước","Today":"Hôm nay",
-  "Name":"Tên","Vol":"Khối lượng","Last price":"Giá gần nhất","24h change":"Biến động 24h","All Market":"Tất cả thị trường","Top Movers":"Biến động mạnh","Pasangan":"Cặp giao dịch","Perubahan / Status":"Biến động / Trạng thái","Perp":"Vĩnh cửu","Semua":"Tất cả","Kenaikan":"Tăng","Penurunan":"Giảm","Pullback":"Điều chỉnh","Rally":"Phục hồi","High Baru":"Đỉnh mới","Low Baru":"Đáy mới","Belum ada pergerakan untuk kategori ini.":"Chưa có biến động trong danh mục này.","Contoh tampilan sinyal pergerakan jangka pendek. Data perlu dihubungkan ke feed market real-time.":"Ví dụ tín hiệu biến động ngắn hạn. Cần kết nối nguồn dữ liệu thị trường thời gian thực.",
-  "YOUR ACCOUNT":"TÀI KHOẢN CỦA BẠN","Hey, Ezy":"Xin chào, Ezy","Welcome back, Ezy":"Chào mừng trở lại, Ezy","Wallet management":"Quản lý ví","Security & privacy":"Bảo mật & quyền riêng tư","Preferences":"Tùy chọn","Help center":"Trung tâm trợ giúp","QUICK ACTION":"THAO TÁC NHANH","What would you like to do?":"Bạn muốn làm gì?","Swap tokens":"Hoán đổi token","Exchange one asset for another":"Đổi tài sản này sang tài sản khác","Buy crypto":"Mua tiền mã hóa","Add crypto to your wallet":"Thêm tiền mã hóa vào ví","Connect dApp":"Kết nối dApp","Explore decentralized apps":"Khám phá ứng dụng phi tập trung","Search strategies or traders...":"Tìm chiến lược hoặc nhà giao dịch...","Search assets...":"Tìm tài sản...","Favorites":"Yêu thích","Futures":"Hợp đồng tương lai","Crypto":"Tiền mã hóa","Verified":"Đã xác minh","Most Followers":"Nhiều người theo dõi nhất","Mark price":"Giá đánh dấu","Exit price":"Giá thoát","Unrealized PnL":"PnL chưa thực hiện","Realized PnL":"PnL đã thực hiện","Strategies by":"Chiến lược của","Verified trader":"Nhà giao dịch đã xác minh","Active for":"Hoạt động trong","followers":"người theo dõi","days active":"ngày hoạt động","win rate":"tỷ lệ thắng","Return (30D)":"Lợi nhuận 30 ngày","Total return":"Tổng lợi nhuận","Trend Following":"Theo xu hướng","Scalping":"Lướt sóng","Breakout":"Đột phá","Medium Risk":"Rủi ro trung bình","Low Risk":"Rủi ro thấp","High Risk":"Rủi ro cao","Trending":"Xu hướng","All":"Tất cả","1M":"1 tháng","3M":"3 tháng","6M":"6 tháng","1Y":"1 năm"
-});
-
-/* [MODIFIED] English translations for Top Movers timeframes and movement labels. */
-Object.assign(appTranslations.en, {
-  "5 mnt":"5 min",
-  "15 mnt":"15 min",
-  "30 mnt":"30 min",
-  "1 jam":"1 hr",
-  "2 jam":"2 hr",
-  "Kenaikan tajam":"Sharp increase",
-  "Penurunan tajam":"Sharp decline",
-  "High baru 24 jam":"24h high",
-  "High baru 7 hari":"7-day high",
-  "Low baru 24 jam":"24h low"
-});
-
-/* [MODIFIED] Complete English translations used by the Top Movers page. */
-Object.assign(appTranslations.en, {
-  "Pasangan":"Pair",
-  "Perubahan / Status":"Change / Status",
-  "Semua":"All",
-  "Kenaikan":"Gainers",
-  "Penurunan":"Losers",
-  "Pullback":"Pullback",
-  "Rally":"Rally",
-  "High Baru":"New High",
-  "Low Baru":"New Low",
-  "Belum ada pergerakan untuk kategori ini.":"No market movements in this category yet.",
-  "ago":"ago",
-  "Rally":"Rally",
-  "Pullback":"Pullback"
-});
-
-// [ADDED] Translate the Portfolio navigation label in all five supported languages.
-Object.assign(appTranslations.en, { "Portfolio": "Portfolio" });
-Object.assign(appTranslations.id, { "Portfolio": "Portofolio" });
-Object.assign(appTranslations.zh, { "Portfolio": "投资组合" });
-Object.assign(appTranslations.ja, { "Portfolio": "ポートフォリオ" });
-Object.assign(appTranslations.vi, { "Portfolio": "Danh mục đầu tư" });
-
-// [ADDED] Portfolio dashboard translations for all supported languages.
-Object.assign(appTranslations.en, {
-  "YOUR PORTFOLIO":"YOUR PORTFOLIO","Portfolio overview":"Portfolio overview","DEMO DATA":"DEMO DATA","Total portfolio value":"Total portfolio value","Past 24 hours":"Past 24 hours","Illustrative portfolio performance chart":"Illustrative portfolio performance chart","Portfolio value trend":"Portfolio value trend","Total assets":"Total assets","24h PnL":"24h PnL","Portfolio sections":"Portfolio sections","Overview":"Overview","Assets":"Assets","Positions":"Positions","History":"History","Your assets":"Your assets","Spot asset allocation":"Spot asset allocation","Open positions":"Open positions","Your active trading positions":"Your active trading positions","open":"open","Entry":"Entry","Mark":"Mark","Recent activity":"Recent activity","Your latest portfolio transactions":"Your latest portfolio transactions","Bought":"Bought","Sold":"Sold","Received":"Received","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances."
-});
-Object.assign(appTranslations.id, {
-  "YOUR PORTFOLIO":"PORTOFOLIO ANDA","Portfolio overview":"Ringkasan portofolio","DEMO DATA":"DATA DEMO","Total portfolio value":"Total nilai portofolio","Past 24 hours":"24 jam terakhir","Illustrative portfolio performance chart":"Grafik performa portofolio ilustrasi","Portfolio value trend":"Tren nilai portofolio","Total assets":"Total aset","24h PnL":"PnL 24 jam","Portfolio sections":"Bagian portofolio","Overview":"Ringkasan","Assets":"Aset","Positions":"Posisi","History":"Riwayat","Your assets":"Aset Anda","Spot asset allocation":"Alokasi aset spot","Open positions":"Posisi terbuka","Your active trading positions":"Posisi trading aktif Anda","open":"terbuka","Entry":"Entry","Mark":"Harga mark","Recent activity":"Aktivitas terbaru","Your latest portfolio transactions":"Transaksi portofolio terbaru","Bought":"Beli","Sold":"Jual","Received":"Diterima","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Angka dan aktivitas portofolio ini merupakan data demo. Hubungkan exchange atau wallet untuk menampilkan saldo asli Anda."
-});
-Object.assign(appTranslations.zh, {
-  "YOUR PORTFOLIO":"你的投资组合","Portfolio overview":"投资组合概览","DEMO DATA":"演示数据","Total portfolio value":"投资组合总价值","Past 24 hours":"过去24小时","Illustrative portfolio performance chart":"投资组合表现示意图","Portfolio value trend":"投资组合价值趋势","Total assets":"总资产","24h PnL":"24小时盈亏","Portfolio sections":"投资组合栏目","Overview":"概览","Assets":"资产","Positions":"持仓","History":"历史记录","Your assets":"你的资产","Spot asset allocation":"现货资产配置","Open positions":"未平仓头寸","Your active trading positions":"当前交易头寸","open":"未平仓","Entry":"入场价","Mark":"标记价格","Recent activity":"最近活动","Your latest portfolio transactions":"最新投资组合交易","Bought":"买入","Sold":"卖出","Received":"收到","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"投资组合数据为示例数据。连接交易所或钱包以显示真实余额。"
-});
-Object.assign(appTranslations.ja, {
-  "YOUR PORTFOLIO":"ポートフォリオ","Portfolio overview":"ポートフォリオ概要","DEMO DATA":"デモデータ","Total portfolio value":"ポートフォリオ総額","Past 24 hours":"過去24時間","Illustrative portfolio performance chart":"ポートフォリオ推移のサンプルチャート","Portfolio value trend":"ポートフォリオ価値の推移","Total assets":"総資産","24h PnL":"24時間損益","Portfolio sections":"ポートフォリオ項目","Overview":"概要","Assets":"資産","Positions":"ポジション","History":"履歴","Your assets":"保有資産","Spot asset allocation":"現物資産の配分","Open positions":"保有中のポジション","Your active trading positions":"現在の取引ポジション","open":"保有中","Entry":"エントリー","Mark":"マーク価格","Recent activity":"最近のアクティビティ","Your latest portfolio transactions":"最新のポートフォリオ取引","Bought":"購入","Sold":"売却","Received":"受取","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"ポートフォリオの数値と履歴はデモデータです。実際の残高を表示するには取引所またはウォレットを接続してください。"
-});
-Object.assign(appTranslations.vi, {
-  "YOUR PORTFOLIO":"DANH MỤC ĐẦU TƯ","Portfolio overview":"Tổng quan danh mục","DEMO DATA":"DỮ LIỆU DEMO","Total portfolio value":"Tổng giá trị danh mục","Past 24 hours":"24 giờ qua","Illustrative portfolio performance chart":"Biểu đồ hiệu suất danh mục minh họa","Portfolio value trend":"Xu hướng giá trị danh mục","Total assets":"Tổng tài sản","24h PnL":"PnL 24 giờ","Portfolio sections":"Mục danh mục","Overview":"Tổng quan","Assets":"Tài sản","Positions":"Vị thế","History":"Lịch sử","Your assets":"Tài sản của bạn","Spot asset allocation":"Phân bổ tài sản spot","Open positions":"Vị thế đang mở","Your active trading positions":"Các vị thế giao dịch đang hoạt động","open":"đang mở","Entry":"Giá vào","Mark":"Giá đánh dấu","Recent activity":"Hoạt động gần đây","Your latest portfolio transactions":"Giao dịch danh mục gần đây","Bought":"Đã mua","Sold":"Đã bán","Received":"Đã nhận","Portfolio figures and activity are illustrative demo data. Connect an exchange or wallet to show your real balances.":"Số liệu và hoạt động danh mục là dữ liệu demo. Kết nối sàn giao dịch hoặc ví để hiển thị số dư thực."
-});
-
-// [ADDED] Initialize one shared i18next instance from the existing five-language catalog.
-if (!i18n.isInitialized) {
-  i18n.use(initReactI18next).init({
-    resources: Object.fromEntries(
-      Object.entries(appTranslations).map(([code, translation]) => [code, { translation }])
-    ),
-    lng: "en",
-    fallbackLng: "en",
-    interpolation: { escapeValue: false },
-    initImmediate: false,
-  });
-}
 
 const navigation = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -702,6 +232,7 @@ function App() {
   const [historyFilter, setHistoryFilter] = useState("not-running"); // [ADDED] Filter portfolio strategy and wallet activity history
   const [portfolioStrategyStatus, setPortfolioStrategyStatus] = useState("active"); // [ADDED] Active/inactive strategy filter
   const searchInputRef = useRef(null);
+  const marketInitialFetchRef = useRef(false); // [ADDED] Prevent repeated initial market snapshots when socket status changes.
 
   useEffect(() => {
     const savedProfileName = window.localStorage.getItem("beanance-profile-name");
@@ -714,11 +245,18 @@ function App() {
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beanance-theme");
-    if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
+    const initialTheme = savedTheme === "light" || savedTheme === "dark"
+      ? savedTheme
+      : document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    setTheme(initialTheme);
+    document.documentElement.dataset.theme = initialTheme;
   }, []);
 
   useEffect(() => {
     window.localStorage.setItem("beanance-theme", theme);
+    document.documentElement.dataset.theme = theme;
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.setAttribute("content", theme === "light" ? "#fff9e8" : "#090909");
   }, [theme]);
 
   useEffect(() => {
@@ -927,67 +465,74 @@ function App() {
     };
   }, [active, selectedMarket?.symbol]);
 
-  // [ADDED] Load Binance USDT-M perpetual markets through the same-origin Next.js proxy.
+  // [MODIFIED] Fetch one REST snapshot, then poll with backoff only while the market socket is offline.
   useEffect(() => {
     let activeRequest = true;
-    let refreshTimer;
+    let refreshTimer = null;
+    let retryDelay = 10000;
 
     const refreshMarketData = async () => {
+      if (document.hidden) return;
       try {
         const [marketsResponse, moversResponse] = await Promise.all([
           fetch("/market-api/futures?sort=quoteVolume&order=desc", { cache: "no-store" }),
           fetch("/market-api/top-movers?limit=20", { cache: "no-store" }),
         ]);
-
-        if (!marketsResponse.ok || !moversResponse.ok) {
-          throw new Error("Market API returned an unsuccessful response");
-        }
-
-        const [marketsPayload, moversPayload] = await Promise.all([
-          marketsResponse.json(),
-          moversResponse.json(),
-        ]);
-
+        if (!marketsResponse.ok || !moversResponse.ok) throw new Error("Market API returned an unsuccessful response");
+        const [marketsPayload, moversPayload] = await Promise.all([marketsResponse.json(), moversResponse.json()]);
         if (!activeRequest) return;
 
-        const nextMarkets = Array.isArray(marketsPayload.data)
-          ? marketsPayload.data.map(mapLiveMarketAsset)
-          : [];
-
-        if (nextMarkets.length > 0) {
+        const nextMarkets = Array.isArray(marketsPayload.data) ? marketsPayload.data.map(mapLiveMarketAsset) : [];
+        if (nextMarkets.length) {
           setLiveMarketAssets(nextMarkets);
           setSelectedMarket((current) => current
             ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
             : current);
         }
-
-        const gainers = Array.isArray(moversPayload.data?.gainers)
-          ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true))
-          : [];
-        const losers = Array.isArray(moversPayload.data?.losers)
-          ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false))
-          : [];
-
-        if (gainers.length + losers.length > 0) {
-          setLiveTopMoverEvents([...gainers, ...losers]);
-        }
-
-        setMarketConnectionStatus("live");
-      } catch (error) {
+        const gainers = Array.isArray(moversPayload.data?.gainers) ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true)) : [];
+        const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false)) : [];
+        if (gainers.length + losers.length) setLiveTopMoverEvents([...gainers, ...losers]);
+        retryDelay = 10000;
+        if (marketConnectionStatus !== "live") setMarketConnectionStatus("stale");
+      } catch {
         if (activeRequest) {
-          setMarketConnectionStatus((current) => current === "live" ? "stale" : "offline");
+          setMarketConnectionStatus((current) => current === "live" ? current : "offline");
+          retryDelay = Math.min(retryDelay * 2, 60000);
         }
       }
     };
 
-    refreshMarketData();
-    refreshTimer = window.setInterval(refreshMarketData, 10000);
+    if (!marketInitialFetchRef.current) {
+      marketInitialFetchRef.current = true;
+      refreshMarketData();
+    }
 
+    const scheduleFallback = () => {
+      if (!activeRequest || marketConnectionStatus === "live" || document.hidden) return;
+      refreshTimer = window.setTimeout(async () => {
+        await refreshMarketData();
+        scheduleFallback();
+      }, retryDelay);
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (refreshTimer) window.clearTimeout(refreshTimer);
+        refreshTimer = null;
+      } else if (marketConnectionStatus !== "live") {
+        if (refreshTimer) window.clearTimeout(refreshTimer);
+        scheduleFallback();
+      }
+    };
+
+    if (marketConnectionStatus !== "live") scheduleFallback();
+    document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       activeRequest = false;
-      window.clearInterval(refreshTimer);
+      if (refreshTimer) window.clearTimeout(refreshTimer);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, []);
+  }, [marketConnectionStatus]);
 
 
   const t = (value) => translate(value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
