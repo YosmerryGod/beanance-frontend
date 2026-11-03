@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { sidebarTranslations, supportedLanguages } from "../i18n/config";
+import { sidebarTranslations, supportedLanguages, translationKeys } from "../i18n/config";
 import {
   ArrowDownLeft,
   ArrowLeft,
@@ -542,7 +542,7 @@ function App() {
   }, [marketConnectionStatus]);
 
 
-  const t = (value) => translate(value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
+  const t = (value) => translate(translationKeys[value] || value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
   const selectedLanguage = supportedLanguages.find((item) => item.code === language) || supportedLanguages[0];
 
