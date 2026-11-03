@@ -1695,6 +1695,7 @@ function App() {
                     <div><span>Vol 24 jam (USDT)</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div>
                     <div><span>Index Price</span><strong>{marketMetrics?.indexPrice ? Number(marketMetrics.indexPrice).toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</strong></div>
                     <div><span>Funding Rate</span><strong>{marketMetrics?.fundingRate !== undefined && marketMetrics?.fundingRate !== null ? (Number(marketMetrics.fundingRate) * 100).toFixed(4) + "%" : "—"}</strong></div>
+                    <div><span>Open Interest</span><strong>{marketMetrics?.openInterest !== undefined && marketMetrics?.openInterest !== null ? Number(marketMetrics.openInterest).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</strong></div>
                   </div>
                 </section>
                 <section className="market-chart-section">
@@ -1707,7 +1708,7 @@ function App() {
                   <div className="market-indicators">{["SUPER","VOL","MACD","RSI","KDJ","OBV","WR","Stoch"].map((indicator)=><button type="button" key={indicator} className={marketIndicator===indicator?"selected":""} onClick={()=>setMarketIndicator(indicator)}>{indicator}</button>)}</div>
                 </section>
                 <section className="market-performance-grid">
-                  {[["Hari Ini",selectedMarket.change],["7 Hari","+9.00%"],["30 Hari","-18.69%"],["90 Hari","+10.85%"],["180 Hari","-12.05%"],["1 Tahun","-41.28%"]].map(([label,value])=><div key={label}><span>{label}</span><strong className={value.startsWith("-")?"negative":"positive"}>{value}</strong></div>)}
+                  {[["Hari Ini",selectedMarket.change],["7 Hari",formatMarketPeriodReturn(marketDailyCandles,7)],["30 Hari",formatMarketPeriodReturn(marketDailyCandles,30)],["90 Hari",formatMarketPeriodReturn(marketDailyCandles,90)],["180 Hari",formatMarketPeriodReturn(marketDailyCandles,180)],["1 Tahun",formatMarketPeriodReturn(marketDailyCandles,365)]].map(([label,value])=><div key={label}><span>{label}</span><strong className={value.startsWith("-")?"negative":"positive"}>{value}</strong></div>)}
                 </section>
                 <section className="market-orderbook">
                   <div className="market-order-tabs" role="tablist" aria-label="Market order data">
@@ -1757,7 +1758,7 @@ function App() {
                 </section>
               </>
             )}
-            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
+            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Public contract and market data for Binance USDⓈ-M USDT perpetual futures, provided by Beanance Market Backend.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
             {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
             {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Live public trades for {selectedMarket.symbol}/USDT.</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}</section>}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
