@@ -160,7 +160,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         background: { type: "solid", color: background },
         textColor,
         attributionLogo: false, // [MODIFIED] Remove the TradingView attribution watermark.
-        fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
+        fontFamily: getComputedStyle(document.body).fontFamily,
         fontSize: 10,
         panes: { separatorColor: gridColor, separatorHoverColor: gridColor },
       },
