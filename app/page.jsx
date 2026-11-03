@@ -871,7 +871,7 @@ function App() {
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store" }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store" }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store" }),
-          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=365", { cache: "no-store" }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=366", { cache: "no-store" }),
         ]);
 
         if (!depthResponse.ok || !tradesResponse.ok || !metricsResponse.ok) {
