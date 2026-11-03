@@ -1228,7 +1228,7 @@ function App() {
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Pergerakan 1m / Status")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
                 <div className="top-movers-list">
                   {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
