@@ -548,7 +548,7 @@ function App() {
   }, [marketConnectionStatus]);
 
 
-  const t = (value) => translate(translationKeys[value] || value, { defaultValue: value }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
+  const t = (value, options = {}) => translate(translationKeys[value] || value, { defaultValue: value, ...options }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
   const sidebarText = sidebarTranslations[language] || sidebarTranslations.en;
   const selectedLanguage = supportedLanguages.find((item) => item.code === language) || supportedLanguages[0];
 
@@ -696,7 +696,7 @@ function App() {
           ) : (
             <div className={`nav-greeting navbar-greeting-hidden ${active === "dapps" ? "discover-greeting-hidden" : ""}`}>
               <p className="eyebrow">{active === "profile" ? t("YOUR PORTFOLIO") : t("GOOD EVENING")}</p>
-              <strong>{active === "profile" ? t("Portfolio overview") : t("Welcome back, Ezy")}</strong>
+              <strong>{active === "profile" ? t("Portfolio overview") : t("Welcome back, {{name}}", { name: profileName })}</strong>
             </div>
           )}
           {active === "dapps" && (
