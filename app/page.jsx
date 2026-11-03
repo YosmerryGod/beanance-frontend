@@ -233,6 +233,8 @@ function App() {
   const [historyFilter, setHistoryFilter] = useState("not-running"); // [ADDED] Filter portfolio strategy and wallet activity history
   const [portfolioStrategyStatus, setPortfolioStrategyStatus] = useState("active"); // [ADDED] Active/inactive strategy filter
   const searchInputRef = useRef(null);
+  const pendingMarketUpdatesRef = useRef(new Map()); // [ADDED] Coalesce high-frequency ticker events before React state updates.
+  const marketFlushTimerRef = useRef(null); // [ADDED] Limit ticker-driven renders to four per second.
   const marketInitialFetchRef = useRef(false); // [ADDED] Prevent repeated initial market snapshots when socket status changes.
 
   useEffect(() => {
@@ -322,6 +324,9 @@ function App() {
         }
 
         if (message.type === "market.snapshot" && Array.isArray(message.data)) {
+          if (marketFlushTimerRef.current) window.clearTimeout(marketFlushTimerRef.current);
+          marketFlushTimerRef.current = null;
+          pendingMarketUpdatesRef.current.clear();
           const nextMarkets = message.data.map((item) => mapLiveMarketAsset(item, languageRef.current));
           if (nextMarkets.length) {
             setLiveMarketAssets(nextMarkets);
@@ -335,10 +340,17 @@ function App() {
 
         if (message.type === "market.ticker" && message.data) {
           const updatedAsset = mapLiveMarketAsset(message.data, languageRef.current);
-          setLiveMarketAssets((current) => current.map((asset) =>
-            asset.symbol === updatedAsset.symbol ? updatedAsset : asset
-          ));
-          setSelectedMarket((current) => current?.symbol === updatedAsset.symbol ? updatedAsset : current);
+          pendingMarketUpdatesRef.current.set(updatedAsset.symbol, updatedAsset);
+          if (marketFlushTimerRef.current === null) {
+            marketFlushTimerRef.current = window.setTimeout(() => {
+              const updates = new Map(pendingMarketUpdatesRef.current);
+              pendingMarketUpdatesRef.current.clear();
+              marketFlushTimerRef.current = null;
+              if (!updates.size) return;
+              setLiveMarketAssets((current) => current.map((asset) => updates.get(asset.symbol) || asset));
+              setSelectedMarket((current) => current ? updates.get(current.symbol) || current : current);
+            }, 250);
+          }
           setMarketConnectionStatus("live");
           return;
         }
@@ -398,6 +410,9 @@ function App() {
     return () => {
       activeSocket = false;
       if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      if (marketFlushTimerRef.current) window.clearTimeout(marketFlushTimerRef.current);
+      marketFlushTimerRef.current = null;
+      pendingMarketUpdatesRef.current.clear();
       if (socket && socket.readyState === WebSocket.OPEN && active === "market-detail" && selectedMarket?.symbol) {
         socket.send(JSON.stringify({
           type: "market.detail.unsubscribe",
