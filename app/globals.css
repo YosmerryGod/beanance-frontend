@@ -4336,6 +4336,8 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 
 /* [ADDED] Interactive Lightweight Charts canvas and native zoom controls. */
 .app-shell .market-trading-chart{display:flex;flex-direction:column;gap:7px;min-width:0;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel-soft)}
+/* [MODIFIED] Remove the outer card frame so the chart sits directly in the Market page. */
+.app-shell .market-trading-chart{gap:0;overflow:visible;border:0;border-radius:0;background:transparent}
 .app-shell .market-trading-chart-readout{display:flex;align-items:center;gap:clamp(7px,2vw,15px);flex-wrap:wrap;padding:9px 10px 0;color:var(--muted);font-size:9px;font-variant-numeric:tabular-nums}
 .app-shell .market-trading-chart-readout b{margin-left:2px;color:var(--text);font-weight:700}
 .app-shell .market-trading-chart-canvas{position:relative;width:100%;height:clamp(250px,52vw,420px);min-width:0;touch-action:pan-y}
@@ -4348,6 +4350,8 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-trading-chart:fullscreen .market-trading-chart-canvas{height:calc(100vh - 90px);flex:1}
 @media(max-width:760px){
   .app-shell .market-trading-chart{border-radius:9px;gap:5px}
+  /* [MODIFIED] Keep the chart unboxed on mobile as well. */
+  .app-shell .market-trading-chart{gap:0;border:0;border-radius:0;background:transparent;overflow:visible}
   .app-shell .market-trading-chart-canvas{height:clamp(260px,72vw,360px)}
   .app-shell .market-trading-chart-readout{gap:7px;padding:8px 8px 0;font-size:8px}
   .app-shell .market-trading-chart-controls{padding:0 7px 7px;font-size:8px}
@@ -4522,7 +4526,7 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 /* [ADDED] Subtle centered Beanance identity watermark behind the market candles. */
 .app-shell .market-chart-watermark{
   position:absolute;
-  z-index:1;
+  z-index:10; /* [MODIFIED] Render above Lightweight Charts canvas layers. */
   inset:0;
   display:flex;
   align-items:center;
@@ -4546,4 +4550,4 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   letter-spacing:.075em;
   line-height:1;
 }
-.app-shell .market-candle-info{z-index:3}
+.app-shell .market-candle-info{z-index:12} /* [MODIFIED] Keep selected-candle details above the watermark. */
