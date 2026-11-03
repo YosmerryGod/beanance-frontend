@@ -1,4 +1,5 @@
 import "./globals.css";
+import "../styles/tokens.css";
 import { DM_Sans, Manrope } from "next/font/google";
 
 const dmSans = DM_Sans({
