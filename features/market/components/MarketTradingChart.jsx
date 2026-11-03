@@ -51,7 +51,8 @@ function klineStream(timeframe) {
 
 
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n: translator } = useTranslation();
+  const locale = translator.resolvedLanguage || translator.language || "en";
   const t = useCallback((value) => translate(translationKeys[value] || value, { defaultValue: value }), [translate]);
   const [activeTheme, setActiveTheme] = useState("dark");
 
@@ -152,7 +153,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     const accentColor = styles.getPropertyValue("--accent").trim() || "#f5c400";
     const positiveColor = styles.getPropertyValue("--positive").trim() || "#35cf86";
     const negativeColor = styles.getPropertyValue("--negative").trim() || "#ef5368";
-    const locale = document.documentElement.lang || "en";
     const chart = createChart(container, {
       width: container.clientWidth,
       height: container.clientHeight,
@@ -274,7 +274,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       candleSeriesRef.current = null;
       volumeSeriesRef.current = null;
     };
-  }, [activeTheme]);
+  }, [activeTheme, locale]);
 
   // [ADDED] Update chart series without recreating the chart on every live candle.
   useEffect(() => {
@@ -340,7 +340,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   }, []);
 
   const displayedCandle = hoverCandle; // [MODIFIED] Show candle details only while crosshair is over a candle.
-  const locale = typeof document !== "undefined" ? document.documentElement.lang || "en" : "en";
   const formatPrice = (value) => Number(value).toLocaleString(locale, { maximumFractionDigits: 8 });
   const formatVolume = (value) => Number(value || 0).toLocaleString(locale, { maximumFractionDigits: 2 });
   const candleChange = displayedCandle && displayedCandle.open
