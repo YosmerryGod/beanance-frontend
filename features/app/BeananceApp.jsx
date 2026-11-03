@@ -126,19 +126,28 @@ function mapLiveMarketAsset(item, locale = "en") {
   };
 }
 
-// [ADDED] Calculate period performance from real daily backend candles.
-function mapLiveTopMover(item, positive, locale = "en") {
-  const asset = mapLiveMarketAsset(item, locale);
-  const eventTime = Number(item.eventTime || item.closeTime || Date.now());
+// [MODIFIED] Normalize realtime one-minute candle momentum events from the market backend.
+function mapLiveTopMover(item, locale = "en") {
+  const symbol = String(item.baseAsset || item.symbol || "").replace(/USDT$/, "");
+  const metadata = marketAssets.find((asset) => asset.symbol === symbol);
+  const changeValue = Number(item.changePercent || 0);
+  const eventTime = Number(item.eventTime || Date.now());
+  const status = item.status || (changeValue >= 0 ? "Momentum naik" : "Momentum turun");
   return {
-    symbol: asset.symbol,
-    name: asset.name,
-    change: asset.change,
-    timeframe: "24h",
+    symbol,
+    name: metadata?.name || symbol,
+    change: (changeValue > 0 ? "+" : "") + changeValue.toFixed(2) + "%",
+    changeValue,
+    positive: changeValue >= 0,
+    category: changeValue >= 0 ? "Kenaikan" : "Penurunan",
+    timeframe: "1m",
     time: new Date(eventTime).toLocaleTimeString(locale, { hour12: false }),
-    status: positive ? "24h gain" : "24h decline",
-    category: positive ? "Kenaikan" : "Penurunan",
-    positive,
+    status,
+    volumeRatio: Number.isFinite(Number(item.volumeRatio)) ? Number(item.volumeRatio) : null,
+    quoteVolume: Number(item.quoteVolume || 0),
+    previousClose: Number(item.previousClose || 0),
+    candleOpen: Number(item.candleOpen || 0),
+    candleClosed: Boolean(item.candleClosed),
   };
 }
 
@@ -174,7 +183,7 @@ function App() {
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
   const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
   const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from Beanance Market API
-  const [liveTopMoverEvents, setLiveTopMoverEvents] = useState(topMoverEvents); // [ADDED] Live 24-hour gainers and losers
+  const [liveTopMoverEvents, setLiveTopMoverEvents] = useState([]); // [MODIFIED] Live one-minute candle momentum events
   const [marketConnectionStatus, setMarketConnectionStatus] = useState("connecting"); // [ADDED] Market feed connection state
   const [marketDetailTab, setMarketDetailTab] = useState("price"); // [ADDED] Market detail section tab
   const [marketTimeframe, setMarketTimeframe] = useState("30m"); // [ADDED] Market chart timeframe
@@ -313,6 +322,12 @@ function App() {
               ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
               : current);
           }
+          setMarketConnectionStatus("live");
+          return;
+        }
+
+        if (message.type === "market.top-movers" && Array.isArray(message.data?.events)) {
+          setLiveTopMoverEvents(message.data.events.map((item) => mapLiveTopMover(item, languageRef.current)));
           setMarketConnectionStatus("live");
           return;
         }
@@ -505,9 +520,10 @@ function App() {
             ? nextMarkets.find((asset) => asset.symbol === current.symbol) || current
             : current);
         }
-        const gainers = Array.isArray(moversPayload.data?.gainers) ? moversPayload.data.gainers.map((item) => mapLiveTopMover(item, true, languageRef.current)) : [];
-        const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false, languageRef.current)) : [];
-        if (gainers.length + losers.length) setLiveTopMoverEvents([...gainers, ...losers]);
+        const moverEvents = Array.isArray(moversPayload.data?.events)
+          ? moversPayload.data.events.map((item) => mapLiveTopMover(item, languageRef.current))
+          : [];
+        setLiveTopMoverEvents(moverEvents);
         retryDelay = 10000;
       } catch (error) {
         if (activeRequest && error.name !== "AbortError") {
@@ -1212,12 +1228,12 @@ function App() {
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan / Status")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Pergerakan 1m / Status")}</span></div>
                 <div className="top-movers-list">
                   {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
                     <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
-                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · {language === "en" ? ({ "5 mnt": "5 min", "15 mnt": "15 min", "30 mnt": "30 min", "1 jam": "1 hr", "2 jam": "2 hr" }[event.timeframe] || event.timeframe) : `${t(event.timeframe)} ${t("ago")}`}</small></div>
-                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Kenaikan tajam": "Sharp increase", "Penurunan tajam": "Sharp decline", "High baru 24 jam": "24h high", "High baru 7 hari": "7-day high", "Low baru 24 jam": "24h low" }[event.status] || event.status) : t(event.status)}</span></div>
+                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time} · 1m</small></div>
+                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Momentum naik": "Upward momentum", "Momentum turun": "Downward momentum", "Rally": "Rally", "Sell-off": "Sell-off", "Breakout": "Breakout", "Breakdown": "Breakdown" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
                   ))}
                   {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
