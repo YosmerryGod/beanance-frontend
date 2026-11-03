@@ -4501,3 +4501,19 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .market-chart-icon-actions>button{width:22px}
   .app-shell .market-candle-info{top:9px;left:8px;width:150px;padding:8px;font-size:10px}
 }
+
+
+/* [MODIFIED] Override generic chart-canvas child sizing so the OHLC panel stays compact. */
+.app-shell .market-trading-chart-canvas>.market-candle-info{
+  display:flex;
+  width:158px;
+  max-width:calc(100% - 20px);
+  height:auto;
+  min-height:0;
+}
+@media(max-width:760px){
+  .app-shell .market-trading-chart-canvas>.market-candle-info{
+    width:150px;
+    max-width:calc(100% - 16px);
+  }
+}
