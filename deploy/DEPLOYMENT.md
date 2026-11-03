@@ -31,7 +31,7 @@ sudo mkdir -p /var/log/beanance-deploy /var/log/beanance-frontend
 sudo mkdir -p /var/cache/nginx/beanance_market
 ```
 
-The deployment workflow uploads `deploy.js` and `ecosystem.config.cjs` to `/opt/beanance-frontend-deploy` on every release. The legacy rollback target is created from the currently deployed Next.js app on the first atomic deployment.
+The deployment workflow uploads `deploy.js` and `ecosystem.config.cjs` to `/opt/beanance-frontend-deploy` on every release. The legacy rollback target is created from the currently deployed Next.js app on the first atomic deployment. After merging the Nginx changes, refresh the source checkout once so the configuration files are available on the VPS; the production deployment workflow itself does not run `git pull`.
 
 ## Nginx setup
 
@@ -73,7 +73,7 @@ Configure PM2's log rotation once:
 bash /var/www/beanance-frontend/deploy/setup-pm2-logrotate.sh
 ```
 
-The PM2 policy retains seven compressed logs with a 10 MB rotation threshold. Deployment logs are also pruned to the latest seven files by the deploy runner.
+The PM2 policy retains seven compressed application logs with a 10 MB rotation threshold. The OS logrotate policy handles deployment logs only, avoiding double rotation of PM2 output files. Deployment logs are also pruned to the latest seven files by the deploy runner.
 
 ## Resource limits
 
