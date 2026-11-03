@@ -404,7 +404,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
-  const displayedCandle = hoverCandle || lastCandle;
+  const displayedCandle = hoverCandle; // [MODIFIED] Show candle details only while crosshair is over a candle.
   const formatPrice = (value) => Number(value).toLocaleString("en-US", { maximumFractionDigits: 8 });
   const formatVolume = (value) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
   const candleChange = displayedCandle && displayedCandle.open
@@ -489,17 +489,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       </div>
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Floating candle information panel, updated from crosshair position. */}
-        <div className="market-candle-info" aria-live="polite">
-          <span className="market-candle-info-time">Waktu {candleTime}</span>
-          <div><span>Buka</span><b>{displayedCandle ? formatPrice(displayedCandle.open) : "—"}</b></div>
-          <div><span>High</span><b>{displayedCandle ? formatPrice(displayedCandle.high) : "—"}</b></div>
-          <div><span>Low</span><b>{displayedCandle ? formatPrice(displayedCandle.low) : "—"}</b></div>
-          <div><span>Close</span><b>{displayedCandle ? formatPrice(displayedCandle.close) : "—"}</b></div>
-          <div><span>Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{displayedCandle ? (candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%" : "—"}</b></div>
-          <div><span>%Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{displayedCandle ? (candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%" : "—"}</b></div>
-          <div><span>Rentang</span><b>{displayedCandle ? candleRange.toFixed(2) + "%" : "—"}</b></div>
-          <div><span>Vol</span><b>{displayedCandle ? formatVolume(displayedCandle.volume) : "—"}</b></div>
-        </div>
+        {/* [MODIFIED] Keep the compact OHLC panel hidden until a candle is selected by crosshair. */}
+        {displayedCandle && (
+          <div className="market-candle-info" aria-live="polite">
+            <span className="market-candle-info-time">Waktu {candleTime}</span>
+            <div><span>Buka</span><b>{formatPrice(displayedCandle.open)}</b></div>
+            <div><span>High</span><b>{formatPrice(displayedCandle.high)}</b></div>
+            <div><span>Low</span><b>{formatPrice(displayedCandle.low)}</b></div>
+            <div><span>Close</span><b>{formatPrice(displayedCandle.close)}</b></div>
+            <div><span>Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>%Chg</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
+            <div><span>Rentang</span><b>{candleRange.toFixed(2) + "%"}</b></div>
+            <div><span>Vol</span><b>{formatVolume(displayedCandle.volume)}</b></div>
+          </div>
+        )}
       </div>
       {chartError && <div className="market-trading-chart-error">{chartError}</div>}
       {!chartError && !candles.length && <div className="market-trading-chart-error">Memuat data market...</div>}
