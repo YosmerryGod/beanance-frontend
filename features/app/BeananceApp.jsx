@@ -153,6 +153,7 @@ function App() {
   const [showCreate, setShowCreate] = useState(false);
   const [notice, setNotice] = useState("");
   const [theme, setTheme] = useState("dark");
+  const [themeReady, setThemeReady] = useState(false); // [ADDED] Avoid overwriting the pre-hydrated theme before it is restored.
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
@@ -229,15 +230,17 @@ function App() {
       : document.documentElement.dataset.theme === "light" ? "light" : "dark";
     setTheme(initialTheme);
     document.documentElement.dataset.theme = initialTheme;
+    setThemeReady(true);
   }, []);
 
   useEffect(() => {
+    if (!themeReady) return;
     window.localStorage.setItem("beanance-theme", theme);
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) themeColor.setAttribute("content", theme === "light" ? "#fff9e8" : "#090909");
-  }, [theme]);
+  }, [theme, themeReady]);
 
   useEffect(() => {
     const savedLanguage = window.localStorage.getItem("beanance-language");
