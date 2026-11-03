@@ -327,7 +327,10 @@
     "app.k325": "{{name}}さん、お帰りなさい",
     "app.k326": "最近の取引",
     "app.k327": "{{symbol}} のリアルタイム公開取引。",
-    "app.k328": "最新の取引を待っています..."
+    "app.k328": "最新の取引を待っています...",
+    "app.k329": "High-volume price increase",
+    "app.k330": "High-volume price decrease",
+    "app.k331": "24h Change / Status"
   },
   "sidebar": {
     "account": "アカウント",
