@@ -36,7 +36,7 @@ for (const language of languages) {
   }
 }
 
-for (const sourcePath of ["app/page.jsx", "app/components/MarketTradingChart.jsx"]) {
+for (const sourcePath of ["features/app/BeananceApp.jsx", "features/market/components/MarketTradingChart.jsx"]) {
   const source = fs.readFileSync(path.join(root, sourcePath), "utf8");
   for (const match of source.matchAll(/\bt\("([^"]+)"\)/g)) {
     if (!(match[1] in keyMap)) {
