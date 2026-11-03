@@ -32,7 +32,7 @@ module.exports = {
         PROJECT_DIR: projectDir,
         CURRENT_RELEASE_LINK: path.join(projectDir, "current"),
         PORT: appPort,
-        HOSTNAME: "127.0.0.1",
+        HOSTNAME: "0.0.0.0",
         NODE_OPTIONS: "--max-old-space-size=384",
         LEGACY_APP_DIR: projectDir,
       },
