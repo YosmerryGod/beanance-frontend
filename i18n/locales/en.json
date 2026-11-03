@@ -324,7 +324,10 @@
     "app.k322": "Change %",
     "app.k323": "Range",
     "app.k324": "Volume",
-    "app.k325": "Welcome back, {{name}}"
+    "app.k325": "Welcome back, {{name}}",
+    "app.k326": "Recent Trades",
+    "app.k327": "Live public trades for {{symbol}}.",
+    "app.k328": "Waiting for recent trades..."
   },
   "sidebar": {
     "account": "ACCOUNT",
