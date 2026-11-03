@@ -484,14 +484,15 @@ function App() {
   useEffect(() => {
     let activeRequest = true;
     let refreshTimer = null;
+    const controller = new AbortController();
     let retryDelay = 10000;
 
     const refreshMarketData = async () => {
       if (document.hidden) return;
       try {
         const [marketsResponse, moversResponse] = await Promise.all([
-          fetch("/market-api/futures?sort=quoteVolume&order=desc", { cache: "no-store" }),
-          fetch("/market-api/top-movers?limit=20", { cache: "no-store" }),
+          fetch("/market-api/futures?sort=quoteVolume&order=desc", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/top-movers?limit=20", { cache: "no-store", signal: controller.signal }),
         ]);
         if (!marketsResponse.ok || !moversResponse.ok) throw new Error("Market API returned an unsuccessful response");
         const [marketsPayload, moversPayload] = await Promise.all([marketsResponse.json(), moversResponse.json()]);
@@ -508,8 +509,8 @@ function App() {
         const losers = Array.isArray(moversPayload.data?.losers) ? moversPayload.data.losers.map((item) => mapLiveTopMover(item, false, languageRef.current)) : [];
         if (gainers.length + losers.length) setLiveTopMoverEvents([...gainers, ...losers]);
         retryDelay = 10000;
-      } catch {
-        if (activeRequest) {
+      } catch (error) {
+        if (activeRequest && error.name !== "AbortError") {
           setMarketConnectionStatus((current) => current === "live" ? current : "offline");
           retryDelay = Math.min(retryDelay * 2, 60000);
         }
@@ -544,6 +545,7 @@ function App() {
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       activeRequest = false;
+      controller.abort();
       if (refreshTimer) window.clearTimeout(refreshTimer);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
