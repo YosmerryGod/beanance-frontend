@@ -1688,16 +1688,13 @@ function App() {
                     <span>Harga Terakhir</span>
                     <strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong>
                     <div><b>{selectedMarket.price}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
-                    <small>Harga Mark {marketMetrics?.markPrice ? Number(marketMetrics.markPrice).toLocaleString("en-US", { maximumFractionDigits: 8 }) : selectedMarket.price}</small>
+                    <small>Harga Mark {selectedMarket.price}</small>
                   </div>
                   <div className="market-compact-stats">
                     <div><span>High 24 jam</span><strong>{selectedMarket.high||"—"}</strong></div>
                     <div><span>Low 24 jam</span><strong>{selectedMarket.low||"—"}</strong></div>
                     <div><span>Vol 24 jam ({selectedMarket.symbol})</span><strong>{selectedMarket.baseVolume || selectedMarket.volume}</strong></div>
                     <div><span>Vol 24 jam (USDT)</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div>
-                    <div><span>Index Price</span><strong>{marketMetrics?.indexPrice ? Number(marketMetrics.indexPrice).toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</strong></div>
-                    <div><span>Funding Rate</span><strong>{marketMetrics?.fundingRate !== undefined && marketMetrics?.fundingRate !== null ? (Number(marketMetrics.fundingRate) * 100).toFixed(4) + "%" : "—"}</strong></div>
-                    <div><span>Open Interest</span><strong>{marketMetrics?.openInterest !== undefined && marketMetrics?.openInterest !== null ? Number(marketMetrics.openInterest).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</strong></div>
                   </div>
                 </section>
                 <section className="market-chart-section">
@@ -1716,55 +1713,17 @@ function App() {
                   <div className="market-order-tabs" role="tablist" aria-label="Market order data">
                     {[["book","Book"],["depth","Kedalaman"],["trades","Perdagangan"]].map(([id,label])=><button type="button" role="tab" aria-selected={marketOrderTab===id} className={marketOrderTab===id?"selected":""} key={id} onClick={()=>setMarketOrderTab(id)}>{label}</button>)}
                   </div>
-                  {marketOrderTab==="book" && (
-                    <>
-                      <div className="market-book-ratio">
-                        <span>{marketOrderBook.bids.length ? "Bid " + ((marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) / Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) + marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))) * 100).toFixed(2) + "%" : "Bid —"}</span>
-                        <span>{marketOrderBook.asks.length ? "Ask " + ((marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0) / Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0) + marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))) * 100).toFixed(2) + "%" : "Ask —"}</span>
-                      </div>
-                      <div className="market-book-bar"><i style={{flex: Math.max(1, marketOrderBook.bids.reduce((sum, item) => sum + Number(item.quantity || 0), 0))}}/><i style={{flex: Math.max(1, marketOrderBook.asks.reduce((sum, item) => sum + Number(item.quantity || 0), 0))}}/></div>
-                      <div className="market-book-columns"><span>Bid Qty</span><span>Price (USDT)</span><span>Ask Qty</span></div>
-                      {Array.from({ length: Math.max(marketOrderBook.bids.length, marketOrderBook.asks.length) }).slice(0, 20).map((_, index) => {
-                        const bid = marketOrderBook.bids[index];
-                        const ask = marketOrderBook.asks[index];
-                        return <div className="market-book-row" key={String(bid?.price || "bid") + "-" + String(ask?.price || "ask")}>
-                          <span>{bid ? Number(bid.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</span>
-                          <strong>{bid ? Number(bid.price).toLocaleString("en-US", { maximumFractionDigits: 8 }) : ask ? Number(ask.price).toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</strong>
-                          <span>{ask ? Number(ask.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 }) : "—"}</span>
-                        </div>;
-                      })}
-                      {!marketOrderBook.bids.length && !marketOrderBook.asks.length && <div className="market-live-empty">Menunggu snapshot order book...</div>}
-                    </>
-                  )}
-                  {marketOrderTab==="depth" && (
-                    <div className="market-depth-placeholder">
-                      <Activity size={23}/>
-                      <strong>Market Depth</strong>
-                      <span>Live liquidity from Binance USDⓈ-M Futures</span>
-                      <div className="market-depth-ladder">
-                        {marketOrderBook.bids.slice(0, 10).map((item) => <div key={"bid-" + item.price} className="market-depth-bid" style={{width: Math.max(8, Number(item.quantity) / Math.max(1, ...marketOrderBook.bids.map((level) => Number(level.quantity))) * 100) + "%"}}><span>{Number(item.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</span><b>{Number(item.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</b></div>)}
-                        {marketOrderBook.asks.slice(0, 10).map((item) => <div key={"ask-" + item.price} className="market-depth-ask" style={{width: Math.max(8, Number(item.quantity) / Math.max(1, ...marketOrderBook.asks.map((level) => Number(level.quantity))) * 100) + "%"}}><span>{Number(item.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</span><b>{Number(item.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</b></div>)}
-                      </div>
-                    </div>
-                  )}
-                  {marketOrderTab==="trades" && (
-                    <div className="market-trade-list">
-                      {marketRecentTrades.map((trade, index) => <div key={String(trade.id ?? trade.time) + "-" + index}>
-                        <span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span>
-                        <strong className={trade.isBuyerMaker ? "negative" : "positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong>
-                        <span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })}</span>
-                      </div>)}
-                      {!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}
-                    </div>
-                  )}
+                  {marketOrderTab==="book" && <><div className="market-book-ratio"><span>{marketOrderBook.bids.length ? ((marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)/Math.max(1,marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)+marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)))*100).toFixed(2)+"%" : "—"}</span><span>{marketOrderBook.asks.length ? ((marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)/Math.max(1,marketOrderBook.bids.reduce((sum,item)=>sum+Number(item.quantity||0),0)+marketOrderBook.asks.reduce((sum,item)=>sum+Number(item.quantity||0),0)))*100).toFixed(2)+"%" : "—"}</span></div><div className="market-book-bar"><i/><i/></div><div className="market-book-columns"><span>Bid</span><span>Price</span><span>Ask</span></div>{Array.from({length:4},(_,index)=>({bid:marketOrderBook.bids[index],ask:marketOrderBook.asks[index]})).map(({bid,ask},index)=><div className="market-book-row" key={String(bid?.price||"bid")+"-"+String(ask?.price||"ask")}><span>{bid?Number(bid.quantity).toFixed(2):"—"}</span><strong>{bid?Number(bid.price).toFixed(8):ask?Number(ask.price).toFixed(8):"—"}</strong><span>{ask?Number(ask.quantity).toFixed(2):"—"}</span></div>)}</>}
+                  {marketOrderTab==="depth" && <div className="market-depth-placeholder"><Activity size={23}/><strong>Market Depth</strong><span>Bid and ask liquidity visualization</span><div className="market-book-bar"><i/><i/></div></div>}
+                  {marketOrderTab==="trades" && <div className="market-trade-list">{marketRecentTrades.slice(0,4).map((trade,index)=><div key={String(trade.id??trade.time)+"-"+index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US",{hour12:false})}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toFixed(8)}</strong><span>{Number(trade.quantity).toFixed(2)}</span></div>)}</div>}
                 </section>
               </>
             )}
-            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Public contract and market data for Binance USDⓈ-M USDT perpetual futures, provided by Beanance Market Backend.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
+            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
             {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
             {marketDetailTab==="trades" && <section className="market-info-panel"><h2>Recent Trades</h2><p>Live public trades for {selectedMarket.symbol}/USDT.</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString("en-US", { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString("en-US", { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">Menunggu transaksi terbaru...</div>}</section>}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
-            <p className="market-data-disclaimer">Ticker, candlestick history, order book, depth, funding, mark/index price, and recent trades are supplied by Beanance Market Backend using Binance USDⓈ-M Futures. {marketDetailStatus === "offline" ? marketDetailError : marketDetailStatus === "loading" ? "Memuat detail market..." : "Detail feed connected."}</p>
+            <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades are supplied by Beanance Market Backend.</p>
           </section>
         )}
 
