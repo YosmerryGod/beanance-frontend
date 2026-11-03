@@ -324,7 +324,10 @@
     "app.k322": "% thay đổi",
     "app.k323": "Biên độ",
     "app.k324": "Khối lượng",
-    "app.k325": "Chào mừng {{name}} trở lại"
+    "app.k325": "Chào mừng {{name}} trở lại",
+    "app.k326": "Giao dịch gần đây",
+    "app.k327": "Giao dịch công khai trực tiếp cho {{symbol}}.",
+    "app.k328": "Đang chờ giao dịch mới nhất..."
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
