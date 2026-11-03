@@ -323,7 +323,8 @@
     "app.k321": "Perubahan",
     "app.k322": "Perubahan %",
     "app.k323": "Rentang",
-    "app.k324": "Volume"
+    "app.k324": "Volume",
+    "app.k325": "Selamat datang kembali, {{name}}"
   },
   "sidebar": {
     "account": "AKUN",
