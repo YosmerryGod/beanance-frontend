@@ -330,7 +330,12 @@
     "app.k328": "Menunggu transaksi terbaru...",
     "app.k329": "Harga Naik dengan Volume Tinggi",
     "app.k330": "Harga Turun dengan Volume Tinggi",
-    "app.k331": "Perubahan 24 jam / Status"
+    "app.k331": "Perubahan 24 jam / Status",
+    "app.k332": "Arah pergerakan harga",
+    "app.k333": "Perubahan 24 jam / Status",
+    "app.k334": "Memuat riwayat Top Movers...",
+    "app.k335": "Tidak dapat memuat riwayat Top Movers. Periksa backend market.",
+    "app.k336": "Belum ada riwayat Top Movers yang tersimpan."
   },
   "sidebar": {
     "account": "AKUN",
