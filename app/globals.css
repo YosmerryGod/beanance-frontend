@@ -4626,3 +4626,4 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-indicator-settings-divider{height:1px;margin:7px 4px;background:var(--border,rgba(255,255,255,.1))}
 .app-shell .market-chart-icon-actions{position:relative}
 @media(max-width:760px){.app-shell .market-indicator-settings-menu{right:0;width:min(238px,calc(100vw - 40px));min-width:min(238px,calc(100vw - 40px))}}
+

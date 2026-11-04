@@ -155,6 +155,41 @@ function mapLiveTopMover(item, locale = "en") {
   };
 }
 
+
+// [ADDED] Normalize persisted Top Movers candle history returned by the backend.
+function mapHistoricalTopMover(item, locale = "en") {
+  const fullSymbol = String(item.symbol || "");
+  const symbol = String(item.baseAsset || fullSymbol.replace(/USDT$/, ""));
+  const metadata = marketAssets.find((asset) => asset.symbol === symbol);
+  const changeValue = Number(item.changePercent || 0);
+  const eventTime = Number(item.eventTime || item.candleCloseTime || item.candleOpenTime || Date.now());
+  const direction = item.direction || (changeValue >= 0 ? "Kenaikan" : "Penurunan");
+  const severity = item.severity || "Kecil";
+  const date = new Date(eventTime);
+
+  return {
+    symbol,
+    name: metadata?.name || symbol,
+    change: (changeValue > 0 ? "+" : "") + changeValue.toFixed(2) + "%",
+    changeValue,
+    positive: changeValue >= 0,
+    category: direction,
+    categories: [direction],
+    direction,
+    severity,
+    timeframe: item.timeframe || "",
+    timeframeLabel: ({ "1m": "1 mnt", "5m": "5 mnt", "15m": "15 mnt", "1h": "1 jam", "4h": "4 jam", "1d": "1 hari", "1w": "1 minggu" })[item.timeframe] || item.timeframe || "",
+    time: `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")} ${date.toLocaleTimeString(locale, { hour12: false })}`,
+    eventTime,
+    status: severity,
+    lastPrice: Number(item.lastPrice || 0),
+    quoteVolume: Number(item.quoteVolume || 0),
+    baseVolume: Number(item.baseVolume || 0),
+    highPrice: Number(item.highPrice || 0),
+    lowPrice: Number(item.lowPrice || 0),
+  };
+}
+
 function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
@@ -202,6 +237,8 @@ function App() {
   const [marketDetailError, setMarketDetailError] = useState("");
 
   const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
+  const [topMoverHistory, setTopMoverHistory] = useState([]); // [ADDED] Persisted Top Movers records from SQLite history API.
+  const [topMoverHistoryStatus, setTopMoverHistoryStatus] = useState("loading"); // [ADDED] History request state.
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
   const [marketSortDirection, setMarketSortDirection] = useState("desc"); // [ADDED] Market sort direction
   const [pinnedMarketSymbols, setPinnedMarketSymbols] = useState([]); // [ADDED] Pinned market assets
@@ -570,6 +607,59 @@ function App() {
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [marketConnectionStatus]);
+
+
+// [ADDED] Load persisted Top Movers history for the selected candle timeframe.
+  useEffect(() => {
+    if (active !== "market" || marketNavTab !== "top-movers") return undefined;
+
+    setTopMoverHistory([]);
+    setTopMoverHistoryStatus("loading");
+
+    let activeRequest = true;
+    let requestController = null;
+    let refreshTimer = null;
+
+    const refreshHistory = async () => {
+      if (document.hidden) return;
+      if (requestController) requestController.abort();
+      requestController = new AbortController();
+
+      try {
+        const response = await fetch(
+          `/market-api/top-movers/history?limit=500`,
+          { cache: "no-store", signal: requestController.signal }
+        );
+        if (!response.ok) throw new Error("Top Movers history request failed");
+
+        const payload = await response.json();
+        if (!activeRequest) return;
+
+        const rows = Array.isArray(payload.data) ? payload.data : [];
+        setTopMoverHistory(rows.map((item) => mapHistoricalTopMover(item, languageRef.current)));
+        setTopMoverHistoryStatus("live");
+      } catch (error) {
+        if (activeRequest && error.name !== "AbortError") {
+          setTopMoverHistoryStatus("offline");
+        }
+      }
+    };
+
+    refreshHistory();
+    refreshTimer = window.setInterval(refreshHistory, 30000);
+
+    const handleVisibility = () => {
+      if (!document.hidden) refreshHistory();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      activeRequest = false;
+      if (requestController) requestController.abort();
+      if (refreshTimer) window.clearInterval(refreshTimer);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [active, marketNavTab]);
 
 
   const t = (value, options = {}) => translate(translationKeys[value] || value, { defaultValue: value, ...options }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
@@ -1227,24 +1317,58 @@ function App() {
               </div>
             ) : (
               <section className="top-movers-page">
-                <div className="top-movers-categories" role="tablist" aria-label="Kategori pergerakan harga">
-                  {["Semua", "Kenaikan", "Penurunan", "Pullback", "Rally", "High Baru", "Low Baru", "Harga Naik dengan Vol. Tinggi", "Harga Turun dengan Vol. Tinggi"].map((category) => (
+                <div className="top-movers-categories" role="tablist" aria-label={t("Price movement direction")}>
+                  {["Semua", "Kenaikan", "Penurunan"].map((category) => (
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24 jam / Status")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24j / Status")}</span></div>
                 <div className="top-movers-list">
-                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a, b) => Number(b.eventTime || 0) - Number(a.eventTime || 0)).map((event, index) => (
-                    <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
-                      <div className="top-mover-pair"><strong>{event.symbol}USDT <span className="perp-tag">Perp</span></strong><small>{event.time}</small></div> {/* [MODIFIED] Match Binance pair label, Perp badge, and timestamp layout. */}
-                      <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Momentum naik": "Upward momentum", "Momentum turun": "Downward momentum", "Rally": "Rally", "Sell-off": "Sell-off", "Breakout": "Breakout", "Breakdown": "Breakdown" }[event.status] || event.status) : t(event.status)}</span></div>
-                    </article>
-                  ))}
-                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
-                    <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
+                  {topMoverHistory
+                    .filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .sort((a, b) => Number(b.eventTime || 0) - Number(a.eventTime || 0))
+                    .map((event) => (
+                      <article
+                        className="top-mover-row market-clickable-row"
+                        key={`${event.symbol}-${event.timeframe}-${event.eventTime}`}
+                        onClick={() => {
+                          const liveAsset = liveMarketAssets.find((item) => item.symbol === event.symbol);
+                          const asset = liveAsset || {
+                            symbol: event.symbol,
+                            name: event.name,
+                            price: formatMarketPrice(event.lastPrice, language),
+                            change: event.change,
+                            positive: event.positive,
+                            volume: formatMarketVolume(event.quoteVolume, "$", language),
+                            tone: "",
+                            lastPrice: event.lastPrice,
+                          };
+                          setSelectedMarket(asset);
+                          setMarketDetailTab("price");
+                          setActive("market-detail");
+                          window.scrollTo({ top: 0, behavior: "instant" });
+                        }}
+                      >
+                        <div className="top-mover-pair">
+                          <strong>{event.symbol}USDT <span className="perp-tag">Perp</span></strong>
+                          <small>{event.time}</small>
+                        </div>
+                        <div className="top-mover-movement">
+                          <strong className={event.positive ? "positive" : "negative"}>{event.change}</strong>
+                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.direction + " " + event.timeframeLabel}</span>
+                        </div>
+                      </article>
+                    ))}
+                  {topMoverHistoryStatus === "loading" && topMoverHistory.length === 0 && (
+                    <div className="top-movers-empty">{t("Loading Top Movers history...")}</div>
+                  )}
+                  {topMoverHistoryStatus === "offline" && topMoverHistory.length === 0 && (
+                    <div className="top-movers-empty">{t("Unable to load Top Movers history. Check the market backend.")}</div>
+                  )}
+                  {topMoverHistoryStatus === "live" && topMoverHistory.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                    <div className="top-movers-empty">{t("No saved Top Movers history yet.")}</div>
                   )}
                 </div>
-                {/* [REMOVED] Binance-style Top Movers list has no explanatory footer. */}
               </section>
             )}
           </section>
