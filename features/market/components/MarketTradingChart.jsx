@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CandlestickSeries, HistogramSeries, createChart } from "lightweight-charts";
+import { CandlestickSeries, HistogramSeries, LineSeries, createChart } from "lightweight-charts";
 import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { translationKeys } from "../../../i18n/config";
@@ -15,6 +15,7 @@ const TIMEFRAME_SECONDS = {
   "2h": 7200,
   "4h": 14400,
   "1d": 86400,
+  "1w": 604800,
 };
 
 // [ADDED] Convert the selected base asset into the backend USDT-M market symbol.
@@ -67,12 +68,15 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const chartRef = useRef(null);
   const candleSeriesRef = useRef(null);
   const volumeSeriesRef = useRef(null);
+  const indicatorSeriesRef = useRef(null); // [ADDED] Native overlay series references.
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
   const [hoverCandle, setHoverCandle] = useState(null);
   const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false);
   const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
+  const [indicatorData, setIndicatorData] = useState(null); // [ADDED] Backend-calculated overlay values.
+  const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: true, bollinger: false, sar: true, supertrend: true }); // [ADDED] Chart overlay visibility.
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
@@ -89,25 +93,27 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         setChartError("");
         const response = await fetch(
           "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
-          "/klines?interval=" + encodeURIComponent(interval) + "&limit=500",
+          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500",
           { cache: "no-store", signal: controller.signal }
         );
-        if (!response.ok) throw new Error("Market candle API returned HTTP " + response.status);
+        if (!response.ok) throw new Error("Market indicators API returned HTTP " + response.status);
         const payload = await response.json();
-        if (!payload?.success || !Array.isArray(payload.data)) {
-          throw new Error(payload?.message || "Invalid candle API response");
+        if (!payload?.success || !Array.isArray(payload.candles) || !payload.indicators) {
+          throw new Error(payload?.message || "Invalid market indicators response");
         }
-        const normalized = payload.data
+        const normalized = payload.candles
           .map(normalizeCandle)
           .filter(Boolean)
           .sort((a, b) => a.time - b.time);
         if (!active) return;
         setCandles(normalized.slice(-1500));
+        setIndicatorData(payload.indicators);
         if (!normalized.length) setChartError(t("No candle data is available for this market."));
       } catch (error) {
         if (active && error.name !== "AbortError") {
           setCandles([]);
-          setChartError(error.message || t("Failed to load candle data."));
+          setIndicatorData(null);
+          setChartError(error.message || t("Failed to load market indicators."));
         }
       }
     };
@@ -132,6 +138,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     };
 
     setCandles([]);
+    setIndicatorData(null);
     window.addEventListener("beanance:market-kline", handleMarketKline);
     loadCandles();
 
@@ -229,6 +236,29 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       scaleMargins: { top: 0.84, bottom: 0 },
     });
 
+    // [ADDED] Create native Lightweight Charts overlay series for backend indicators.
+    const lineOptions = { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, lineWidth: 2 };
+    const indicatorSeries = {
+      ma: {
+        20: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b", title: "MA 20" }),
+        50: chart.addSeries(LineSeries, { ...lineOptions, color: "#9b7cff", title: "MA 50" }),
+      },
+      ema: {
+        9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9", title: "EMA 9" }),
+        21: chart.addSeries(LineSeries, { ...lineOptions, color: "#f28b52", title: "EMA 21" }),
+      },
+      bollinger: {
+        upper: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1, title: "BB Upper" }),
+        middle: chart.addSeries(LineSeries, { ...lineOptions, color: "#a0a8b5", lineWidth: 1, lineStyle: 2, title: "BB Basis" }),
+        lower: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1, title: "BB Lower" }),
+      },
+      sar: chart.addSeries(LineSeries, { ...lineOptions, color: "#e6a23c", lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2, title: "SAR" }),
+      supertrend: {
+        up: chart.addSeries(LineSeries, { ...lineOptions, color: "#20bd88", lineWidth: 2, title: "Supertrend Up" }),
+        down: chart.addSeries(LineSeries, { ...lineOptions, color: "#ef5368", lineWidth: 2, title: "Supertrend Down" }),
+      },
+    };
+
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (entry && entry.contentRect.width > 0 && entry.contentRect.height > 0) {
@@ -265,6 +295,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     chartRef.current = chart;
     candleSeriesRef.current = candleSeries;
     volumeSeriesRef.current = volumeSeries;
+    indicatorSeriesRef.current = indicatorSeries; // [ADDED] Keep overlay series available for updates.
 
     return () => {
       resizeObserver.disconnect();
@@ -273,6 +304,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       chartRef.current = null;
       candleSeriesRef.current = null;
       volumeSeriesRef.current = null;
+      indicatorSeriesRef.current = null;
     };
   }, [activeTheme, locale]);
 
@@ -280,6 +312,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   useEffect(() => {
     const candleSeries = candleSeriesRef.current;
     const volumeSeries = volumeSeriesRef.current;
+    const overlays = indicatorSeriesRef.current;
     if (!candleSeries || !volumeSeries) return;
 
     candleSeries.setData(candles);
@@ -289,9 +322,45 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       color: candle.close >= candle.open ? getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--positive").trim() || "#35cf86" : getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--negative").trim() || "#ef5368",
     })));
 
+    // [ADDED] Align backend indicator arrays with the exact candle timestamps.
+    if (overlays && indicatorData && candles.length) {
+      const toLineData = (values) => candles.flatMap((candle, index) => {
+        if (values?.[index] === null || values?.[index] === undefined) return [];
+        const value = Number(values[index]);
+        return Number.isFinite(value) ? [{ time: candle.time, value }] : [];
+      });
+      for (const [period, series] of Object.entries(overlays.ma)) {
+        series.setData(toLineData(indicatorData.ma?.[period]));
+        series.applyOptions({ visible: enabledIndicators.ma });
+      }
+      for (const [period, series] of Object.entries(overlays.ema)) {
+        series.setData(toLineData(indicatorData.ema?.[period]));
+        series.applyOptions({ visible: enabledIndicators.ema });
+      }
+      overlays.bollinger.upper.setData(toLineData(indicatorData.bollinger?.upper));
+      overlays.bollinger.middle.setData(toLineData(indicatorData.bollinger?.middle));
+      overlays.bollinger.lower.setData(toLineData(indicatorData.bollinger?.lower));
+      Object.values(overlays.bollinger).forEach((series) => series.applyOptions({ visible: enabledIndicators.bollinger }));
+      overlays.sar.setData(toLineData(indicatorData.sar));
+      overlays.sar.applyOptions({ visible: enabledIndicators.sar });
+      const supertrendUp = [];
+      const supertrendDown = [];
+      candles.forEach((candle, index) => {
+        const value = indicatorData.supertrend?.value?.[index];
+        const direction = indicatorData.supertrend?.direction?.[index];
+        if (value === null || value === undefined) return;
+        if (direction === 1) supertrendUp.push({ time: candle.time, value: Number(value) });
+        if (direction === -1) supertrendDown.push({ time: candle.time, value: Number(value) });
+      });
+      overlays.supertrend.up.setData(supertrendUp);
+      overlays.supertrend.down.setData(supertrendDown);
+      overlays.supertrend.up.applyOptions({ visible: enabledIndicators.supertrend });
+      overlays.supertrend.down.applyOptions({ visible: enabledIndicators.supertrend });
+    }
+
     if (candles.length) setLastCandle(candles[candles.length - 1]);
     else setLastCandle(null);
-  }, [candles, activeTheme]);
+  }, [candles, indicatorData, enabledIndicators, activeTheme]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
@@ -355,8 +424,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
-  const visibleTimeframes = ["1m", "5m", "15m", "30m", "1h"];
-  const extraTimeframes = ["2h", "4h", "1d"];
+  const visibleTimeframes = ["1m", "5m", "15m", "1h"];
+  const extraTimeframes = ["4h", "1d", "1w"];
   const activeExtraTimeframe = extraTimeframes.includes(timeframe);
 
   return (
@@ -381,7 +450,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               onClick={() => setMoreTimeframesOpen((open) => !open)}
               aria-expanded={moreTimeframesOpen}
             >
-              {activeExtraTimeframe ? (timeframe === "1h" ? "1j" : timeframe) : "Lainnya"}
+              {activeExtraTimeframe ? (timeframe === "1d" ? "1D" : timeframe === "1w" ? "1W" : timeframe) : "Lainnya"}
               <ChevronDown size={13} />
             </button>
             {moreTimeframesOpen && (
@@ -396,7 +465,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
                       setMoreTimeframesOpen(false);
                     }}
                   >
-                    {time === "1h" ? "1j" : time}
+                    {time === "1d" ? "1D" : time === "1w" ? "1W" : time}
                   </button>
                 ))}
               </div>
@@ -421,6 +490,27 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             </div>
           )}
         </div>
+      </div>
+      {/* [ADDED] Toggleable technical overlays connected to the backend indicator endpoint. */}
+      <div className="market-chart-indicator-toolbar" role="group" aria-label="Technical indicators">
+        {[
+          { key: "ma", label: "MA", detail: "20 / 50" },
+          { key: "ema", label: "EMA", detail: "9 / 21" },
+          { key: "bollinger", label: "BOLL", detail: "20, 2" },
+          { key: "sar", label: "SAR", detail: "0.02 / 0.2" },
+          { key: "supertrend", label: "SUPER", detail: "10, 3" },
+        ].map((item) => (
+          <button
+            type="button"
+            key={item.key}
+            className={enabledIndicators[item.key] ? "selected" : ""}
+            aria-pressed={enabledIndicators[item.key]}
+            onClick={() => setEnabledIndicators((current) => ({ ...current, [item.key]: !current[item.key] }))}
+            title={item.label + " " + item.detail}
+          >
+            {item.label}
+          </button>
+        ))}
       </div>
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
