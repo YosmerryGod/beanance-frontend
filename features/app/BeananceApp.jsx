@@ -613,6 +613,9 @@ function App() {
   useEffect(() => {
     if (active !== "market" || marketNavTab !== "top-movers") return undefined;
 
+    setTopMoverHistory([]);
+    setTopMoverHistoryStatus("loading");
+
     let activeRequest = true;
     let requestController = null;
     let refreshTimer = null;
