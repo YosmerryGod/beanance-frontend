@@ -4601,3 +4601,11 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   padding-left:16px;
   padding-right:16px;
 }
+
+
+/* [ADDED] Compact indicator toggles integrated with the full-width market chart. */
+.app-shell .market-chart-indicator-toolbar{display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:2px 16px 8px;scrollbar-width:none}
+.app-shell .market-chart-indicator-toolbar::-webkit-scrollbar{display:none}
+.app-shell .market-chart-indicator-toolbar button{flex:0 0 auto;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--muted);font-size:10px;font-weight:750;cursor:pointer;white-space:nowrap}
+.app-shell .market-chart-indicator-toolbar button.selected{border-color:rgba(245,196,0,.38);background:rgba(245,196,0,.09);color:var(--gold)}
+.app-shell .market-chart-indicator-toolbar button:active{transform:translateY(1px)}
