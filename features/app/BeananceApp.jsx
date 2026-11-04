@@ -190,7 +190,7 @@ function App() {
   const [liveTopMoverEvents, setLiveTopMoverEvents] = useState([]); // [MODIFIED] Live one-minute candle momentum events
   const [marketConnectionStatus, setMarketConnectionStatus] = useState("connecting"); // [ADDED] Market feed connection state
   const [marketDetailTab, setMarketDetailTab] = useState("price"); // [ADDED] Market detail section tab
-  const [marketTimeframe, setMarketTimeframe] = useState("30m"); // [ADDED] Market chart timeframe
+  const [marketTimeframe, setMarketTimeframe] = useState("1m"); // [MODIFIED] Start with a supported chart timeframe. // [ADDED] Market chart timeframe
   const [marketIndicator, setMarketIndicator] = useState("RSI"); // [ADDED] Active technical indicator
   const [marketOrderTab, setMarketOrderTab] = useState("book"); // [ADDED] Order book, depth, and trades tabs
   // [ADDED] Live market detail data from Beanance Market Backend.
@@ -1282,7 +1282,7 @@ function App() {
                 <section className="market-chart-section">
                   {/* [MODIFIED] Timeframe controls and three chart actions are now integrated into the chart toolbar. */}
                   <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} onTimeframeChange={setMarketTimeframe} />
-                  <div className="market-indicators">{["SUPER","VOL","MACD","RSI","KDJ","OBV","WR","Stoch"].map((indicator)=><button type="button" key={indicator} className={marketIndicator===indicator?"selected":""} onClick={()=>setMarketIndicator(indicator)}>{indicator}</button>)}</div>
+                  
                 </section>
                 <section className="market-performance-grid">
                   {[["Hari Ini",selectedMarket.change],["7 Hari",formatMarketPeriodReturn(marketDailyCandles,7)],["30 Hari",formatMarketPeriodReturn(marketDailyCandles,30)],["90 Hari",formatMarketPeriodReturn(marketDailyCandles,90)],["180 Hari",formatMarketPeriodReturn(marketDailyCandles,180)],["1 Tahun",formatMarketPeriodReturn(marketDailyCandles,365)]].map(([label,value])=><div key={label}><span>{label}</span><strong className={value.startsWith("-")?"negative":"positive"}>{value}</strong></div>)}
