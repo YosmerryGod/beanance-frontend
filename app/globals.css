@@ -2444,8 +2444,8 @@ body{background:#090909;color:var(--text)}
   align-items:center;
   justify-content:space-between;
   gap:16px;
-  min-height:82px;
-  padding:13px 2px;
+  min-height:96px; /* [MODIFIED] Match Binance mobile row spacing. */
+  padding:16px 2px;
   border-bottom:1px solid var(--line);
 }
 .app-shell .top-mover-pair,
