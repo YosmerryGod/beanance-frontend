@@ -69,6 +69,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const candleSeriesRef = useRef(null);
   const volumeSeriesRef = useRef(null);
   const indicatorSeriesRef = useRef(null); // [ADDED] Native overlay series references.
+  const indicatorCandleTimeRef = useRef(null); // [ADDED] Refresh overlays only when a new candle starts.
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
   const [hoverCandle, setHoverCandle] = useState(null);
@@ -107,6 +108,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           .sort((a, b) => a.time - b.time);
         if (!active) return;
         setCandles(normalized.slice(-1500));
+        indicatorCandleTimeRef.current = normalized.length ? normalized[normalized.length - 1].time : null;
         setIndicatorData(payload.indicators);
         if (!normalized.length) setChartError(t("No candle data is available for this market."));
       } catch (error) {
@@ -128,6 +130,32 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
       const candle = normalizeCandle(message.data);
       if (!candle || !active) return;
+      const previousCandleTime = indicatorCandleTimeRef.current;
+      if (previousCandleTime === null || candle.time > previousCandleTime) {
+        indicatorCandleTimeRef.current = candle.time;
+      }
+      if (previousCandleTime !== null && candle.time > previousCandleTime) {
+        // [ADDED] Recalculate overlays once at each new candle, not on every live kline update.
+        fetch(
+          "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
+          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500",
+          { cache: "no-store", signal: controller.signal }
+        )
+          .then((response) => {
+            if (!response.ok) throw new Error("Indicator refresh failed");
+            return response.json();
+          })
+          .then((payload) => {
+            if (!active || !payload?.success || !Array.isArray(payload.candles) || !payload.indicators) return;
+            const refreshedCandles = payload.candles.map(normalizeCandle).filter(Boolean).sort((a, b) => a.time - b.time);
+            setCandles(refreshedCandles);
+            setIndicatorData(payload.indicators);
+            indicatorCandleTimeRef.current = refreshedCandles.length ? refreshedCandles[refreshedCandles.length - 1].time : candle.time;
+          })
+          .catch((error) => {
+            if (active && error.name !== "AbortError") console.warn("Beanance indicator refresh:", error.message);
+          });
+      }
       setCandles((current) => {
         const next = [...current];
         const existingIndex = next.findIndex((item) => item.time === candle.time);
@@ -139,6 +167,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
     setCandles([]);
     setIndicatorData(null);
+    indicatorCandleTimeRef.current = null;
     window.addEventListener("beanance:market-kline", handleMarketKline);
     loadCandles();
 
