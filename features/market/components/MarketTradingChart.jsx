@@ -80,7 +80,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: true, bollinger: false, sar: true, supertrend: true }); // [ADDED] Chart overlay visibility.
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
-  const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "30m";
+  const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "1m"; // [MODIFIED] Keep chart requests on supported timeframes.
 
   // [MODIFIED] Load historical candles over REST and consume the app-wide market WebSocket.
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         setChartError("");
         const response = await fetch(
           "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
-          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500",
+          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500&includeFunding=false",
           { cache: "no-store", signal: controller.signal }
         );
         if (!response.ok) throw new Error("Market indicators API returned HTTP " + response.status);
@@ -138,7 +138,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         // [ADDED] Recalculate overlays once at each new candle, not on every live kline update.
         fetch(
           "/market-api/futures/" + encodeURIComponent(normalizedSymbol) +
-          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500",
+          "/indicators?interval=" + encodeURIComponent(interval) + "&limit=500&includeFunding=false",
           { cache: "no-store", signal: controller.signal }
         )
           .then((response) => {
