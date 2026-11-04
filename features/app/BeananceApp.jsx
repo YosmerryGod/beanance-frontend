@@ -178,6 +178,7 @@ function mapHistoricalTopMover(item, locale = "en") {
     direction,
     severity,
     timeframe: item.timeframe || "",
+    timeframeLabel: ({ "1m": "1 mnt", "5m": "5 mnt", "15m": "15 mnt", "1h": "1 jam", "4h": "4 jam", "1d": "1 hari", "1w": "1 minggu" })[item.timeframe] || item.timeframe || "",
     time: `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")} ${date.toLocaleTimeString(locale, { hour12: false })}`,
     eventTime,
     status: severity,
@@ -236,7 +237,6 @@ function App() {
   const [marketDetailError, setMarketDetailError] = useState("");
 
   const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
-  const [moverTimeframe, setMoverTimeframe] = useState("5m"); // [ADDED] Selected persisted Top Movers candle timeframe.
   const [topMoverHistory, setTopMoverHistory] = useState([]); // [ADDED] Persisted Top Movers records from SQLite history API.
   const [topMoverHistoryStatus, setTopMoverHistoryStatus] = useState("loading"); // [ADDED] History request state.
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
@@ -627,7 +627,7 @@ function App() {
 
       try {
         const response = await fetch(
-          `/market-api/top-movers/history?timeframe=${encodeURIComponent(moverTimeframe)}&limit=500`,
+          `/market-api/top-movers/history?limit=500`,
           { cache: "no-store", signal: requestController.signal }
         );
         if (!response.ok) throw new Error("Top Movers history request failed");
@@ -659,7 +659,7 @@ function App() {
       if (refreshTimer) window.clearInterval(refreshTimer);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [active, marketNavTab, moverTimeframe]);
+  }, [active, marketNavTab]);
 
 
   const t = (value, options = {}) => translate(translationKeys[value] || value, { defaultValue: value, ...options }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
@@ -1317,40 +1317,12 @@ function App() {
               </div>
             ) : (
               <section className="top-movers-page">
-                <div className="top-movers-toolbar">
-                  <div className="top-movers-timeframes" role="tablist" aria-label={t("Top Movers timeframe")}>
-                    {[
-                      { value: "5m", label: "5m" },
-                      { value: "1h", label: "1h" },
-                      { value: "4h", label: "4h" },
-                      { value: "1d", label: "1D" },
-                    ].map((period) => (
-                      <button
-                        key={period.value}
-                        type="button"
-                        role="tab"
-                        aria-selected={moverTimeframe === period.value}
-                        className={moverTimeframe === period.value ? "selected" : ""}
-                        onClick={() => setMoverTimeframe(period.value)}
-                      >
-                        {period.label}
-                      </button>
-                    ))}
-                  </div>
-                  <span className={`top-movers-feed-status ${topMoverHistoryStatus}`}>
-                    {topMoverHistoryStatus === "loading"
-                      ? t("Loading history...")
-                      : topMoverHistoryStatus === "offline"
-                        ? t("History unavailable")
-                        : `${topMoverHistory.length} ${t("records")}`}
-                  </span>
-                </div>
                 <div className="top-movers-categories" role="tablist" aria-label={t("Price movement direction")}>
                   {["Semua", "Kenaikan", "Penurunan"].map((category) => (
                     <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pair / Time")}</span><span>{t("Change / Signal")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24j / Status")}</span></div>
                 <div className="top-movers-list">
                   {topMoverHistory
                     .filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -1379,13 +1351,11 @@ function App() {
                       >
                         <div className="top-mover-pair">
                           <strong>{event.symbol}USDT <span className="perp-tag">Perp</span></strong>
-                          <small>{event.time} · {event.timeframe.toUpperCase()}</small>
+                          <small>{event.time}</small>
                         </div>
                         <div className="top-mover-movement">
                           <strong className={event.positive ? "positive" : "negative"}>{event.change}</strong>
-                          <span>{language === "en"
-                            ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.direction)
-                            : `${event.severity} · ${event.direction}`}</span>
+                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.direction + " " + event.timeframeLabel}</span>
                         </div>
                       </article>
                     ))}
