@@ -4609,3 +4609,20 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-chart-indicator-toolbar button{flex:0 0 auto;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--muted);font-size:10px;font-weight:750;cursor:pointer;white-space:nowrap}
 .app-shell .market-chart-indicator-toolbar button.selected{border-color:rgba(245,196,0,.38);background:rgba(245,196,0,.09);color:var(--gold)}
 .app-shell .market-chart-indicator-toolbar button:active{transform:translateY(1px)}
+
+
+/* [ADDED] Indicator controls inside the chart's top-right settings icon menu. */
+.app-shell .market-indicator-settings-menu{width:238px;min-width:238px;max-height:min(70vh,440px);overflow-y:auto;padding:8px}
+.app-shell .market-indicator-settings-heading{padding:7px 9px 5px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.app-shell .market-indicator-settings-menu .market-indicator-setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:43px;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:var(--text);text-align:left;cursor:pointer}
+.app-shell .market-indicator-settings-menu .market-indicator-setting-row:hover{background:var(--surface-hover,rgba(255,255,255,.055))}
+.app-shell .market-indicator-setting-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.app-shell .market-indicator-setting-copy strong{font-size:12px;font-weight:700}
+.app-shell .market-indicator-setting-copy small{color:var(--muted);font-size:10px}
+.app-shell .market-indicator-switch{position:relative;display:block;width:29px;height:17px;flex:0 0 auto;border-radius:99px;background:var(--border,#555);transition:background .18s ease}
+.app-shell .market-indicator-switch>span{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:transform .18s ease}
+.app-shell .market-indicator-switch.is-on{background:var(--accent,#f5c400)}
+.app-shell .market-indicator-switch.is-on>span{transform:translateX(12px)}
+.app-shell .market-indicator-settings-divider{height:1px;margin:7px 4px;background:var(--border,rgba(255,255,255,.1))}
+.app-shell .market-chart-icon-actions{position:relative}
+@media(max-width:760px){.app-shell .market-indicator-settings-menu{right:0;width:min(238px,calc(100vw - 40px));min-width:min(238px,calc(100vw - 40px))}}
