@@ -145,6 +145,7 @@ function mapLiveTopMover(item, locale = "en") {
     category: changeValue >= 0 ? "Kenaikan" : "Penurunan",
     categories,
     time: `${String(new Date(eventTime).getMonth() + 1).padStart(2, "0")}-${String(new Date(eventTime).getDate()).padStart(2, "0")} ${new Date(eventTime).toLocaleTimeString(locale, { hour12: false })}`, // [MODIFIED] Match Binance Top Movers date and time format.
+    eventTime, // [ADDED] Keep event timestamp for newest-first sorting.
     status: item.status || categories[0],
     quoteVolume: Number(item.quoteVolume || 0),
     volumeRatio: Number.isFinite(Number(item.volumeRatio)) ? Number(item.volumeRatio) : null,
