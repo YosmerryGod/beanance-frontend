@@ -330,7 +330,12 @@
     "app.k328": "Waiting for recent trades...",
     "app.k329": "Price Up with High Volume",
     "app.k330": "Price Down with High Volume",
-    "app.k331": "24h Change / Status"
+    "app.k331": "24h Change / Status",
+    "app.k332": "Price movement direction",
+    "app.k333": "24h Change / Status",
+    "app.k334": "Loading Top Movers history...",
+    "app.k335": "Unable to load Top Movers history. Check the market backend.",
+    "app.k336": "No saved Top Movers history yet."
   },
   "sidebar": {
     "account": "ACCOUNT",
