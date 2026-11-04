@@ -330,7 +330,12 @@
     "app.k328": "Đang chờ giao dịch mới nhất...",
     "app.k329": "High-volume price increase",
     "app.k330": "High-volume price decrease",
-    "app.k331": "24h Change / Status"
+    "app.k331": "24h Change / Status",
+    "app.k332": "Hướng biến động giá",
+    "app.k333": "Biến động 24h / Trạng thái",
+    "app.k334": "Đang tải lịch sử Top Movers...",
+    "app.k335": "Không thể tải lịch sử Top Movers. Hãy kiểm tra market backend.",
+    "app.k336": "Chưa có lịch sử Top Movers nào được lưu."
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
