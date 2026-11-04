@@ -1370,7 +1370,8 @@ function App() {
                         </div>
                         <div className="top-mover-movement">
                           <strong className={event.positive ? "positive" : "negative"}>{event.change}</strong>
-                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.direction + " " + event.timeframeLabel}</span>
+                          {/* [MODIFIED] Display the actual scanner signal categories instead of only movement direction. */}
+                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.categories.map((category) => ({ kenaikan: "Kenaikan", penurunan: "Penurunan", pullback: "Pullback", rally: "Rally", high_baru: "High Baru", low_baru: "Low Baru", harga_naik_volume_tinggi: "Harga Naik + Volume Tinggi", harga_turun_volume_tinggi: "Harga Turun + Volume Tinggi" }[category] || category)).map((label) => t(label)).join(", ") + " · " + event.timeframeLabel}</span>
                         </div>
                       </article>
                     ))}
