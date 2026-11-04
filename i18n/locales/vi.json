@@ -219,7 +219,7 @@
     "app.k217": "Profit Factor",
     "app.k218": "Điều chỉnh",
     "app.k219": "THAO TÁC NHANH",
-    "app.k220": "Phục hồi",
+    "app.k220": "Tăng giá",
     "app.k221": "PnL đã thực hiện",
     "app.k222": "Đã nhận",
     "app.k223": "Hoạt động gần đây",
@@ -335,7 +335,11 @@
     "app.k333": "Biến động 24h / Trạng thái",
     "app.k334": "Đang tải lịch sử Top Movers...",
     "app.k335": "Không thể tải lịch sử Top Movers. Hãy kiểm tra market backend.",
-    "app.k336": "Chưa có lịch sử Top Movers nào được lưu."
+    "app.k336": "Chưa có lịch sử Top Movers nào được lưu.",
+    "app.k337": "Giá tăng + Khối lượng cao",
+    "app.k338": "Giá giảm + Khối lượng cao",
+    "app.k339": "Biến động nến / Tín hiệu",
+    "app.k340": "Danh mục Top Movers"
   },
   "sidebar": {
     "account": "TÀI KHOẢN",

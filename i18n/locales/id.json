@@ -335,7 +335,11 @@
     "app.k333": "Perubahan 24 jam / Status",
     "app.k334": "Memuat riwayat Top Movers...",
     "app.k335": "Tidak dapat memuat riwayat Top Movers. Periksa backend market.",
-    "app.k336": "Belum ada riwayat Top Movers yang tersimpan."
+    "app.k336": "Belum ada riwayat Top Movers yang tersimpan.",
+    "app.k337": "Harga Naik + Volume Tinggi",
+    "app.k338": "Harga Turun + Volume Tinggi",
+    "app.k339": "Perubahan Candle / Sinyal",
+    "app.k340": "Kategori Top Movers"
   },
   "sidebar": {
     "account": "AKUN",

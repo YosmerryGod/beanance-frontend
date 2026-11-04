@@ -164,6 +164,10 @@ function mapHistoricalTopMover(item, locale = "en") {
   const changeValue = Number(item.changePercent || 0);
   const eventTime = Number(item.eventTime || item.candleCloseTime || item.candleOpenTime || Date.now());
   const direction = item.direction || (changeValue >= 0 ? "Kenaikan" : "Penurunan");
+  // [MODIFIED] Preserve scanner category IDs from the backend for exact filtering.
+  const categories = Array.isArray(item.categories) && item.categories.length
+    ? item.categories.map((category) => String(category).toLowerCase())
+    : [changeValue >= 0 ? "kenaikan" : "penurunan"];
   const severity = item.severity || "Kecil";
   const date = new Date(eventTime);
 
@@ -173,8 +177,8 @@ function mapHistoricalTopMover(item, locale = "en") {
     change: (changeValue > 0 ? "+" : "") + changeValue.toFixed(2) + "%",
     changeValue,
     positive: changeValue >= 0,
-    category: direction,
-    categories: [direction],
+    category: categories[0] || direction,
+    categories,
     direction,
     severity,
     timeframe: item.timeframe || "",
@@ -236,7 +240,7 @@ function App() {
   const [marketDetailStatus, setMarketDetailStatus] = useState("loading");
   const [marketDetailError, setMarketDetailError] = useState("");
 
-  const [moverCategory, setMoverCategory] = useState("Semua"); // [ADDED] Top Movers short-term filters
+  const [moverCategory, setMoverCategory] = useState("all"); // [MODIFIED] Selected backend scanner category.
   const [topMoverHistory, setTopMoverHistory] = useState([]); // [ADDED] Persisted Top Movers records from SQLite history API.
   const [topMoverHistoryStatus, setTopMoverHistoryStatus] = useState("loading"); // [ADDED] History request state.
   const [marketSort, setMarketSort] = useState("volume"); // [ADDED] Market table sorting
@@ -627,7 +631,7 @@ function App() {
 
       try {
         const response = await fetch(
-          `/market-api/top-movers/history?limit=500`,
+          `/market-api/top-movers/history?limit=500${moverCategory !== "all" ? `&category=${encodeURIComponent(moverCategory)}` : ""}`,
           { cache: "no-store", signal: requestController.signal }
         );
         if (!response.ok) throw new Error("Top Movers history request failed");
@@ -659,7 +663,7 @@ function App() {
       if (refreshTimer) window.clearInterval(refreshTimer);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [active, marketNavTab]);
+  }, [active, marketNavTab, moverCategory]);
 
 
   const t = (value, options = {}) => translate(translationKeys[value] || value, { defaultValue: value, ...options }); // [MODIFIED] Use the shared i18next catalog instead of a local-only lookup.
@@ -1317,15 +1321,26 @@ function App() {
               </div>
             ) : (
               <section className="top-movers-page">
-                <div className="top-movers-categories" role="tablist" aria-label={t("Price movement direction")}>
-                  {["Semua", "Kenaikan", "Penurunan"].map((category) => (
-                    <button key={category} type="button" role="tab" aria-selected={moverCategory === category} className={moverCategory === category ? "selected" : ""} onClick={() => setMoverCategory(category)}>{t(category)}</button>
+                {/* [MODIFIED] Show the full scanner category set supplied by the backend. */}
+                <div className="top-movers-categories" role="tablist" aria-label={t("Top Movers categories")}>
+                  {[
+                    { id: "all", label: "Semua" },
+                    { id: "kenaikan", label: "Kenaikan" },
+                    { id: "penurunan", label: "Penurunan" },
+                    { id: "pullback", label: "Pullback" },
+                    { id: "rally", label: "Rally" },
+                    { id: "high_baru", label: "High Baru" },
+                    { id: "low_baru", label: "Low Baru" },
+                    { id: "harga_naik_volume_tinggi", label: "Harga Naik + Volume Tinggi" },
+                    { id: "harga_turun_volume_tinggi", label: "Harga Turun + Volume Tinggi" },
+                  ].map((category) => (
+                    <button key={category.id} type="button" role="tab" aria-selected={moverCategory === category.id} className={moverCategory === category.id ? "selected" : ""} onClick={() => setMoverCategory(category.id)}>{t(category.label)}</button>
                   ))}
                 </div>
-                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24j / Status")}</span></div>
+                <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan Candle / Sinyal")}</span></div>
                 <div className="top-movers-list">
                   {topMoverHistory
-                    .filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .filter((event) => (moverCategory === "all" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase()))
                     .sort((a, b) => Number(b.eventTime || 0) - Number(a.eventTime || 0))
                     .map((event) => (
                       <article
@@ -1355,7 +1370,8 @@ function App() {
                         </div>
                         <div className="top-mover-movement">
                           <strong className={event.positive ? "positive" : "negative"}>{event.change}</strong>
-                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.direction + " " + event.timeframeLabel}</span>
+                          {/* [MODIFIED] Display the actual scanner signal categories instead of only movement direction. */}
+                          <span>{"[" + (language === "en" ? ({ "Kecil": "Low", "Sedang": "Medium", "Tinggi": "High" }[event.severity] || event.severity) : event.severity) + "] " + event.categories.map((category) => ({ kenaikan: "Kenaikan", penurunan: "Penurunan", pullback: "Pullback", rally: "Rally", high_baru: "High Baru", low_baru: "Low Baru", harga_naik_volume_tinggi: "Harga Naik + Volume Tinggi", harga_turun_volume_tinggi: "Harga Turun + Volume Tinggi" }[category] || category)).map((label) => t(label)).join(", ") + " · " + event.timeframeLabel}</span>
                         </div>
                       </article>
                     ))}
