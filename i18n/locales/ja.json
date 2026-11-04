@@ -330,7 +330,12 @@
     "app.k328": "最新の取引を待っています...",
     "app.k329": "High-volume price increase",
     "app.k330": "High-volume price decrease",
-    "app.k331": "24h Change / Status"
+    "app.k331": "24h Change / Status",
+    "app.k332": "価格変動の方向",
+    "app.k333": "24時間変動 / ステータス",
+    "app.k334": "Top Moversの履歴を読み込み中...",
+    "app.k335": "Top Moversの履歴を読み込めません。マーケットバックエンドを確認してください。",
+    "app.k336": "保存されたTop Moversの履歴はまだありません。"
   },
   "sidebar": {
     "account": "アカウント",
