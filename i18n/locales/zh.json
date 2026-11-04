@@ -330,7 +330,12 @@
     "app.k328": "正在等待最新交易...",
     "app.k329": "High-volume price increase",
     "app.k330": "High-volume price decrease",
-    "app.k331": "24h Change / Status"
+    "app.k331": "24h Change / Status",
+    "app.k332": "价格变动方向",
+    "app.k333": "24小时涨跌 / 状态",
+    "app.k334": "正在加载 Top Movers 历史记录...",
+    "app.k335": "无法加载 Top Movers 历史记录。请检查行情后端。",
+    "app.k336": "暂无已保存的 Top Movers 历史记录。"
   },
   "sidebar": {
     "account": "账户",
