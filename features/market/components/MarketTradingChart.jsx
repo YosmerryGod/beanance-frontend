@@ -115,7 +115,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         if (active && error.name !== "AbortError") {
           setCandles([]);
           setIndicatorData(null);
-          setChartError(error.message || t("Failed to load market indicators."));
+          setChartError(error.message || t("Failed to load candle data."));
         }
       }
     };
