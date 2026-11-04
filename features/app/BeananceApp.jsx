@@ -1366,7 +1366,7 @@ function App() {
                     <div className="top-movers-empty">{t("Unable to load Top Movers history. Check the market backend.")}</div>
                   )}
                   {topMoverHistoryStatus === "live" && topMoverHistory.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
-                    <div className="top-movers-empty">{t("No saved Top Movers history for this timeframe yet.")}</div>
+                    <div className="top-movers-empty">{t("No saved Top Movers history yet.")}</div>
                   )}
                 </div>
               </section>
