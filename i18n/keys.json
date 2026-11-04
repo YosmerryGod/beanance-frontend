@@ -329,5 +329,10 @@
   "Waiting for recent trades...": "app.k328",
   "Harga Naik dengan Vol. Tinggi": "app.k329",
   "Harga Turun dengan Vol. Tinggi": "app.k330",
-  "Perubahan 24 jam / Status": "app.k331"
+  "Perubahan 24 jam / Status": "app.k331",
+  "Price movement direction": "app.k332",
+  "Perubahan 24j / Status": "app.k333",
+  "Loading Top Movers history...": "app.k334",
+  "Unable to load Top Movers history. Check the market backend.": "app.k335",
+  "No saved Top Movers history yet.": "app.k336"
 }
