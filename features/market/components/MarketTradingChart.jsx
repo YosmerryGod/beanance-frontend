@@ -512,7 +512,33 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             <LayoutGrid size={18} />
           </button>
           {chartToolsOpen && (
-            <div className="market-chart-tools-menu">
+            <div className="market-chart-tools-menu market-indicator-settings-menu">
+              <div className="market-indicator-settings-heading">Indicators</div>
+              {[
+                { key: "ma", label: "MA", detail: "20 / 50" },
+                { key: "ema", label: "EMA", detail: "9 / 21" },
+                { key: "bollinger", label: "Bollinger Bands", detail: "20, 2" },
+                { key: "sar", label: "Parabolic SAR", detail: "0.02 / 0.2" },
+                { key: "supertrend", label: "Supertrend", detail: "10, 3" },
+              ].map((item) => (
+                <button
+                  type="button"
+                  key={item.key}
+                  className="market-indicator-setting-row"
+                  aria-pressed={enabledIndicators[item.key]}
+                  onClick={() => setEnabledIndicators((current) => ({ ...current, [item.key]: !current[item.key] }))}
+                >
+                  <span className="market-indicator-setting-copy">
+                    <strong>{item.label}</strong>
+                    <small>{item.detail}</small>
+                  </span>
+                  <span className={enabledIndicators[item.key] ? "market-indicator-switch is-on" : "market-indicator-switch"}>
+                    <span />
+                  </span>
+                </button>
+              ))}
+              <div className="market-indicator-settings-divider" />
+              <div className="market-indicator-settings-heading">Chart</div>
               <button type="button" onClick={zoomIn}>{t("Zoom in")}</button>
               <button type="button" onClick={zoomOut}>{t("Zoom out")}</button>
               <button type="button" onClick={resetChart}>{t("Reset view")}</button>
@@ -520,27 +546,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
-      {/* [ADDED] Toggleable technical overlays connected to the backend indicator endpoint. */}
-      <div className="market-chart-indicator-toolbar" role="group" aria-label="Technical indicators">
-        {[
-          { key: "ma", label: "MA", detail: "20 / 50" },
-          { key: "ema", label: "EMA", detail: "9 / 21" },
-          { key: "bollinger", label: "BOLL", detail: "20, 2" },
-          { key: "sar", label: "SAR", detail: "0.02 / 0.2" },
-          { key: "supertrend", label: "SUPER", detail: "10, 3" },
-        ].map((item) => (
-          <button
-            type="button"
-            key={item.key}
-            className={enabledIndicators[item.key] ? "selected" : ""}
-            aria-pressed={enabledIndicators[item.key]}
-            onClick={() => setEnabledIndicators((current) => ({ ...current, [item.key]: !current[item.key] }))}
-            title={item.label + " " + item.detail}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
+      {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
         <div className="market-chart-watermark" aria-hidden="true">
