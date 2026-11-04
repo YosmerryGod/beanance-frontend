@@ -144,7 +144,7 @@ function mapLiveTopMover(item, locale = "en") {
     positive: changeValue >= 0,
     category: changeValue >= 0 ? "Kenaikan" : "Penurunan",
     categories,
-    time: new Date(eventTime).toLocaleTimeString(locale, { hour12: false }),
+    time: `${String(new Date(eventTime).getMonth() + 1).padStart(2, "0")}-${String(new Date(eventTime).getDate()).padStart(2, "0")} ${new Date(eventTime).toLocaleTimeString(locale, { hour12: false })}`, // [MODIFIED] Match Binance Top Movers date and time format.
     status: item.status || categories[0],
     quoteVolume: Number(item.quoteVolume || 0),
     volumeRatio: Number.isFinite(Number(item.volumeRatio)) ? Number(item.volumeRatio) : null,
@@ -1233,17 +1233,17 @@ function App() {
                 </div>
                 <div className="top-movers-list-head"><span>{t("Pasangan")}</span><span>{t("Perubahan 24 jam / Status")}</span></div>
                 <div className="top-movers-list">
-                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).map((event, index) => (
+                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a, b) => Number(b.eventTime || 0) - Number(a.eventTime || 0)).map((event, index) => (
                     <article className="top-mover-row market-clickable-row" key={`${event.symbol}-${event.time}-${index}`} onClick={() => {const asset=liveMarketAssets.find((item)=>item.symbol===event.symbol)||{symbol:event.symbol,name:event.name,price:"—",change:event.change,positive:event.positive,volume:"—",tone:""};setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
-                      <div className="top-mover-pair"><div className="top-mover-asset"><CoinLogo symbol={event.symbol} /><strong>{event.symbol}USDT</strong></div><small>{event.time}</small></div>
+                      <div className="top-mover-pair"><strong>{event.symbol}USDT <span className="perp-tag">Perp</span></strong><small>{event.time}</small></div> {/* [MODIFIED] Match Binance pair label, Perp badge, and timestamp layout. */}
                       <div className="top-mover-movement"><strong className={event.positive ? "positive" : "negative"}>{event.change}</strong><span>{language === "en" ? ({ "Momentum naik": "Upward momentum", "Momentum turun": "Downward momentum", "Rally": "Rally", "Sell-off": "Sell-off", "Breakout": "Breakout", "Breakdown": "Breakdown" }[event.status] || event.status) : t(event.status)}</span></div>
                     </article>
                   ))}
-                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.category === moverCategory) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                  {liveTopMoverEvents.filter((event) => (moverCategory === "Semua" || event.categories.includes(moverCategory)) && `${event.name} ${event.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
                     <div className="top-movers-empty">{t("Belum ada pergerakan untuk kategori ini.")}</div>
                   )}
                 </div>
-                <p className="top-movers-disclaimer">Top Movers menampilkan seluruh kontrak USDT-M Perpetual berdasarkan perubahan harga 24 jam Binance Futures.</p>
+                {/* [REMOVED] Binance-style Top Movers list has no explanatory footer. */}
               </section>
             )}
           </section>
