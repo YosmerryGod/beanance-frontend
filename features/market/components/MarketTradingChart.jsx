@@ -269,9 +269,9 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     const lineOptions = { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, lineWidth: 2 };
     const indicatorSeries = {
       ma: {
-        7: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b", title: "MA 7" }), // [MODIFIED] Default MA period.
-        25: chart.addSeries(LineSeries, { ...lineOptions, color: "#3b82f6", title: "MA 25" }), // [ADDED] Medium MA period.
-        99: chart.addSeries(LineSeries, { ...lineOptions, color: "#a855f7", title: "MA 99" }), // [ADDED] Long MA period.
+        7: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b" }), // [MODIFIED] Hide the MA label beside the price scale.
+        25: chart.addSeries(LineSeries, { ...lineOptions, color: "#3b82f6" }), // [MODIFIED] Hide the MA label beside the price scale.
+        99: chart.addSeries(LineSeries, { ...lineOptions, color: "#a855f7" }), // [MODIFIED] Hide the MA label beside the price scale.
       },
       ema: {
         9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9", title: "EMA 9" }),
