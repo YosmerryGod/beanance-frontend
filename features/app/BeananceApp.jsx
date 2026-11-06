@@ -111,6 +111,9 @@ function mapLiveMarketAsset(item, locale = "en") {
     positive: changeValue >= 0,
     icon: symbol,
     tone: metadata?.tone || "",
+    logo: item.logo || "",
+    logoSource: item.logoSource || "",
+    coingeckoId: item.coingeckoId || "",
     volume: formatMarketVolume(item.quoteVolume, "$", locale),
     baseVolume: formatMarketVolume(item.baseVolume, "", locale),
     high: formatMarketPrice(item.highPrice, locale),
@@ -386,8 +389,32 @@ function App() {
               pendingMarketUpdatesRef.current.clear();
               marketFlushTimerRef.current = null;
               if (!updates.size) return;
-              setLiveMarketAssets((current) => current.map((asset) => updates.get(asset.symbol) || asset));
-              setSelectedMarket((current) => current ? updates.get(current.symbol) || current : current);
+              // [MODIFIED] Keep resolved logo metadata when a ticker-only WebSocket update omits it.
+              setLiveMarketAssets((current) => current.map((asset) => {
+                const update = updates.get(asset.symbol);
+                return update
+                  ? {
+                      ...asset,
+                      ...update,
+                      logo: update.logo || asset.logo || "",
+                      logoSource: update.logoSource || asset.logoSource || "",
+                      coingeckoId: update.coingeckoId || asset.coingeckoId || "",
+                    }
+                  : asset;
+              }));
+              setSelectedMarket((current) => {
+                if (!current) return current;
+                const update = updates.get(current.symbol);
+                return update
+                  ? {
+                      ...current,
+                      ...update,
+                      logo: update.logo || current.logo || "",
+                      logoSource: update.logoSource || current.logoSource || "",
+                      coingeckoId: update.coingeckoId || current.coingeckoId || "",
+                    }
+                  : current;
+              });
             }, 250);
           }
           setMarketConnectionStatus("live");
@@ -1087,7 +1114,7 @@ function App() {
                   <thead><tr><th>#</th><th>{t("Pair")}</th><th>{t("Price")}</th><th>{t("24h Change")}</th><th>{t("24h Volume")}</th><th>{t("Chart")}</th><th><Star size={15} strokeWidth={1.75} aria-label="Favorites" /></th></tr></thead>
                   <tbody>
                     {/* [MODIFIED] Show the five highest-volume live markets in the compact dashboard preview. */}
-                    {liveMarketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).slice(0, 5).map((asset,index) => <tr key={asset.symbol} className="market-clickable-row" onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}><td>{index+1}</td><td><div className={"market-pair"}><span className={"asset-icon "+asset.tone}><CoinLogo symbol={asset.symbol} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={(event) => {event.stopPropagation();setNotice(asset.symbol+" favorites are demo only");}}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}</tbody>
+                    {liveMarketAssets.filter((asset) => marketFilter !== "Favorites" || ["BTC","BNB"].includes(asset.symbol)).slice(0, 5).map((asset,index) => <tr key={asset.symbol} className="market-clickable-row" onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}><td>{index+1}</td><td><div className={"market-pair"}><span className={"asset-icon "+asset.tone}><CoinLogo symbol={asset.symbol} logo={asset.logo} /></span><div><strong>{asset.symbol}USDT</strong><small>{asset.symbol}</small></div></div></td><td>{asset.price.replace("$","")}</td><td className={asset.positive ? "positive" : "negative"}>{asset.change}</td><td>{asset.volume}</td><td><svg className="table-sparkline" viewBox="0 0 110 28" preserveAspectRatio="none"><path d={asset.positive ? "M1 24 L10 19 L18 21 L27 13 L36 16 L45 10 L54 13 L63 8 L72 11 L81 5 L90 8 L100 2 L109 4" : "M1 3 L10 8 L18 5 L27 12 L36 9 L45 15 L54 12 L63 18 L72 15 L81 21 L90 18 L100 25 L109 23"} fill="none" stroke={asset.positive ? "#20bd68" : "#e45b5b"} strokeWidth="1.8"/></svg></td><td><button className="favorite-star" onClick={(event) => {event.stopPropagation();setNotice(asset.symbol+" favorites are demo only");}}><Star size={16} strokeWidth={1.75} /></button></td></tr>)}</tbody>
                 </table>
               </div>
             </section>
@@ -1395,7 +1422,7 @@ function App() {
           <section className="page page-enter market-detail-page">
             <div className="market-detail-header">
               <button type="button" className="market-detail-back" onClick={() => setActive("market")} aria-label="Back to market"><ArrowLeft size={21}/></button>
-              <div className={"asset-icon "+selectedMarket.tone}><CoinLogo symbol={selectedMarket.symbol}/></div>
+              <div className={"asset-icon "+selectedMarket.tone}><CoinLogo symbol={selectedMarket.symbol} logo={selectedMarket.logo}/></div>
               <div className="market-detail-pair"><h1>{selectedMarket.symbol}USDT <span>Perp</span></h1><p>{selectedMarket.name} · USDT Perpetual</p></div>
               <button type="button" className="market-detail-icon" onClick={() => setPinnedMarketSymbols((current)=>current.includes(selectedMarket.symbol)?current.filter((symbol)=>symbol!==selectedMarket.symbol):[...current,selectedMarket.symbol])} aria-label="Toggle favorite"><Star size={20} fill={pinnedMarketSymbols.includes(selectedMarket.symbol)?"currentColor":"none"}/></button>
               <button type="button" className="market-detail-icon" onClick={() => setNotice("Price alert is coming soon")} aria-label="Price alert"><Bell size={20}/></button>
