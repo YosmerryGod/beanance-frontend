@@ -569,6 +569,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
+      {/* [MODIFIED] Show live MA values directly below the timeframe toolbar, outside the candle detail box. */}
+      {enabledIndicators.ma && candles.length > 0 && (
+        <div className="market-chart-ma-values" aria-label="Moving Average values">
+          {Object.entries(movingAverageValues).map(([period, values]) => {
+            const value = values[values.length - 1];
+            return (
+              <div className={"market-chart-ma-value ma-" + period} key={period}>
+                <span>MA({period})</span>
+                <b>{Number.isFinite(value) ? formatPrice(value) : "—"}</b>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
@@ -590,25 +604,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             <div><span>{t("Change %")}</span><b className={candleChange >= 0 ? "positive" : "negative"}>{(candleChange >= 0 ? "+" : "") + candleChange.toFixed(2) + "%"}</b></div>
             <div><span>{t("Range")}</span><b>{candleRange.toFixed(2) + "%"}</b></div>
             <div><span>{t("Volume")}</span><b>{formatVolume(displayedCandle.volume)}</b></div>
-            {/* [ADDED] Show MA values for the candle currently selected by the crosshair. */}
-            {enabledIndicators.ma && (() => {
-              const candleIndex = candles.findIndex((candle) => candle.time === displayedCandle.time);
-              if (candleIndex < 0) return null;
-              return (
-                <>
-                  <div className="market-candle-info-indicator-heading">Moving Average</div>
-                  {Object.entries(movingAverageValues).map(([period, values]) => {
-                    const value = values[candleIndex];
-                    return (
-                      <div key={period}>
-                        <span className={"market-candle-info-ma-label ma-" + period}>MA({period})</span>
-                        <b>{Number.isFinite(value) ? formatPrice(value) : "—"}</b>
-                      </div>
-                    );
-                  })}
-                </>
-              );
-            })()}
           </div>
         )}
       </div>
