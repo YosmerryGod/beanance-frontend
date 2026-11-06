@@ -115,6 +115,7 @@ function mapLiveMarketAsset(item, locale = "en") {
     logo: item.logo || "",
     logoSource: item.logoSource || "",
     coingeckoId: item.coingeckoId || "",
+    underlyingSubType: Array.isArray(item.underlyingSubType) ? [...new Set(item.underlyingSubType.filter((category) => typeof category === "string" && category.trim()))] : [], // [ADDED] Carry Binance's official asset categories into the Market UI.
     volume: formatMarketVolume(item.quoteVolume, "$", locale),
     baseVolume: formatMarketVolume(item.baseVolume, "", locale),
     high: formatMarketPrice(item.highPrice, locale),
@@ -228,6 +229,7 @@ function App() {
   const [traderPeriod, setTraderPeriod] = useState("All");
   const [marketFilter, setMarketFilter] = useState("Favorites");
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
+  const [marketAssetCategory, setMarketAssetCategory] = useState("all"); // [ADDED] Active Binance Futures asset category filter.
   const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
   const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from Beanance Market API
   const [liveTopMoverEvents, setLiveTopMoverEvents] = useState([]); // [MODIFIED] Live one-minute candle momentum events
@@ -1313,9 +1315,16 @@ function App() {
 
         {active === "market" && (
           <section className="page page-enter simple-page market-page market-page-full">
-            <div className={`market-feed-status market-page-feed-status ${marketConnectionStatus}`}>{marketConnectionStatus === "live" ? "● Live market data" : marketConnectionStatus === "stale" ? "● Market data delayed" : marketConnectionStatus === "offline" ? "● Market API unavailable" : "● Connecting to market feed"}</div>
             {marketNavTab === "all-market" ? (
               <div className="market-table-flat">
+                <div className="market-asset-categories" role="tablist" aria-label={t("Market asset categories")}>
+                  <button type="button" role="tab" aria-selected={marketAssetCategory === "all"} className={marketAssetCategory === "all" ? "selected" : ""} onClick={() => setMarketAssetCategory("all")}>{t("All")}</button>
+                  {[...new Set(liveMarketAssets.flatMap((asset) => Array.isArray(asset.underlyingSubType) ? asset.underlyingSubType : []))]
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((category) => (
+                      <button type="button" role="tab" aria-selected={marketAssetCategory === category} className={marketAssetCategory === category ? "selected" : ""} key={category} onClick={() => setMarketAssetCategory(category)}>{category}</button>
+                    ))}
+                </div>
                 <div className="market-table market-table-head">
                   <span className="market-star-column" aria-hidden="true"><Star size={15} strokeWidth={1.75} /></span>
                   <button className={marketSort === "name" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("name");setMarketSortDirection((direction) => marketSort === "name" && direction === "asc" ? "desc" : "asc");}}>{t("Name")} <span>{marketSort === "name" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
@@ -1324,7 +1333,11 @@ function App() {
                   <button className={marketSort === "change" ? "market-sort active" : "market-sort"} onClick={() => {setMarketSort("change");setMarketSortDirection((direction) => marketSort === "change" && direction === "desc" ? "asc" : "desc");}}>{t("24h change")} <span>{marketSort === "change" ? (marketSortDirection === "asc" ? <ArrowUp size={13} /> : <ArrowDown size={13} />) : <ArrowUpDown size={13} />}</span></button>
                 </div>
                 <div className="market-table-body">
-                  {[...liveMarketAssets].filter((asset) => `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase())).sort((a,b) => {
+                  {[...liveMarketAssets].filter((asset) => {
+                    const matchesCategory = marketAssetCategory === "all" || (Array.isArray(asset.underlyingSubType) && asset.underlyingSubType.includes(marketAssetCategory));
+                    const matchesSearch = `${asset.name} ${asset.symbol}`.toLowerCase().includes(searchQuery.toLowerCase());
+                    return matchesCategory && matchesSearch;
+                  }).sort((a,b) => {
                     const aPinned = pinnedMarketSymbols.includes(a.symbol);
                     const bPinned = pinnedMarketSymbols.includes(b.symbol);
                     if (aPinned !== bPinned) return aPinned ? -1 : 1;
