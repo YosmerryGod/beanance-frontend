@@ -1338,7 +1338,7 @@ function App() {
                   }).map((asset) => (
                     <article className="market-table market-table-row market-clickable-row" key={asset.symbol} onClick={() => {setSelectedMarket(asset);setMarketDetailTab("price");setActive("market-detail");window.scrollTo({top:0,behavior:"instant"});}}>
                       <button className={pinnedMarketSymbols.includes(asset.symbol) ? "favorite-star is-pinned" : "favorite-star"} aria-label={pinnedMarketSymbols.includes(asset.symbol) ? `Unpin ${asset.symbol}` : `Pin ${asset.symbol}`} aria-pressed={pinnedMarketSymbols.includes(asset.symbol)} onClick={(event) => {event.stopPropagation();setPinnedMarketSymbols((current) => current.includes(asset.symbol) ? current.filter((symbol) => symbol !== asset.symbol) : [...current, asset.symbol]);}}><Star size={18} fill={pinnedMarketSymbols.includes(asset.symbol) ? "currentColor" : "none"} /></button>
-                      <div className="market-pair"><div className={`asset-icon ${asset.tone}`}><CoinLogo symbol={asset.symbol} /></div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
+                      <div className="market-pair"><div className={`asset-icon ${asset.tone}`}><CoinLogo symbol={asset.symbol} logo={asset.logo} /></div><div><strong>{asset.symbol}<span className="market-quote">/USDT</span><small>{asset.name}</small></strong></div></div>
                       <div className="market-volume-cell">{asset.volume}</div>
                       <div className="market-price-cell">{asset.price}</div>
                       <div className={asset.positive ? "market-change-cell positive" : "market-change-cell negative"}>{asset.change}</div>
