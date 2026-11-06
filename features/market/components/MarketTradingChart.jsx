@@ -201,7 +201,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false);
   const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
-  const [indicatorData, setIndicatorData] = useState(null); // [ADDED] Backend-calculated overlay values.
   const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: true, bollinger: false, sar: true, supertrend: true }); // [ADDED] Chart overlay visibility.
   // [ADDED] Persist configurable indicator periods, parameters, and colors.
   const [indicatorSettings, setIndicatorSettings] = useState(DEFAULT_INDICATOR_SETTINGS);
@@ -255,7 +254,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         );
         if (!response.ok) throw new Error("Market indicators API returned HTTP " + response.status);
         const payload = await response.json();
-        if (!payload?.success || !Array.isArray(payload.candles) || !payload.indicators) {
+        if (!payload?.success || !Array.isArray(payload.candles)) {
           throw new Error(payload?.message || "Invalid market indicators response");
         }
         const normalized = payload.candles
@@ -265,12 +264,10 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         if (!active) return;
         setCandles(normalized.slice(-1500));
         indicatorCandleTimeRef.current = normalized.length ? normalized[normalized.length - 1].time : null;
-        setIndicatorData(payload.indicators);
         if (!normalized.length) setChartError(t("No candle data is available for this market."));
       } catch (error) {
         if (active && error.name !== "AbortError") {
           setCandles([]);
-          setIndicatorData(null);
           setChartError(error.message || t("Failed to load candle data."));
         }
       }
@@ -302,10 +299,9 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             return response.json();
           })
           .then((payload) => {
-            if (!active || !payload?.success || !Array.isArray(payload.candles) || !payload.indicators) return;
+            if (!active || !payload?.success || !Array.isArray(payload.candles)) return;
             const refreshedCandles = payload.candles.map(normalizeCandle).filter(Boolean).sort((a, b) => a.time - b.time);
             setCandles(refreshedCandles);
-            setIndicatorData(payload.indicators);
             indicatorCandleTimeRef.current = refreshedCandles.length ? refreshedCandles[refreshedCandles.length - 1].time : candle.time;
           })
           .catch((error) => {
@@ -322,7 +318,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     };
 
     setCandles([]);
-    setIndicatorData(null);
     indicatorCandleTimeRef.current = null;
     window.addEventListener("beanance:market-kline", handleMarketKline);
     loadCandles();
