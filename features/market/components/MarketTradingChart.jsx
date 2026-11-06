@@ -5,6 +5,7 @@ import { CandlestickSeries, HistogramSeries, LineSeries, createChart } from "lig
 import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { translationKeys } from "../../../i18n/config";
+import "./MarketIndicatorLegend.css";
 
 const TIMEFRAME_SECONDS = {
   "1m": 60,
@@ -453,6 +454,41 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
+  // [ADDED] Indicator legend: values follow the crosshair candle, or the latest candle when idle.
+  const legendTime = hoverCandle?.time ?? candles[candles.length - 1]?.time;
+  const legendIndex = useMemo(
+    () => (legendTime == null ? -1 : candles.findIndex((c) => c.time === legendTime)),
+    [candles, legendTime]
+  );
+
+  const indicatorLegend = useMemo(() => {
+    if (!indicatorData || legendIndex < 0) return [];
+    const at = (arr) => {
+      const raw = arr?.[legendIndex];
+      if (raw === null || raw === undefined) return null;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : null;
+    };
+    const st = indicatorData.supertrend;
+    const dir = st?.direction?.[legendIndex];
+    return [
+      { key: "ma", label: "MA 20", color: "#f0b90b", value: at(indicatorData.ma?.[20]) },
+      { key: "ma", label: "MA 50", color: "#9b7cff", value: at(indicatorData.ma?.[50]) },
+      { key: "ema", label: "EMA 9", color: "#35b9e9", value: at(indicatorData.ema?.[9]) },
+      { key: "ema", label: "EMA 21", color: "#f28b52", value: at(indicatorData.ema?.[21]) },
+      { key: "bollinger", label: "BB Upper", color: "#9aa4b2", value: at(indicatorData.bollinger?.upper) },
+      { key: "bollinger", label: "BB Basis", color: "#a0a8b5", value: at(indicatorData.bollinger?.middle) },
+      { key: "bollinger", label: "BB Lower", color: "#9aa4b2", value: at(indicatorData.bollinger?.lower) },
+      { key: "sar", label: "SAR", color: "#e6a23c", value: at(indicatorData.sar) },
+      {
+        key: "supertrend",
+        label: dir === -1 ? "ST ▼" : "ST ▲",
+        color: dir === -1 ? "#ef5368" : "#20bd88",
+        value: at(st?.value),
+      },
+    ].filter((item) => enabledIndicators[item.key]);
+  }, [indicatorData, legendIndex, enabledIndicators]);
+
   const visibleTimeframes = ["1m", "5m", "15m", "1h"];
   const extraTimeframes = ["4h", "1d", "1w"];
   const activeExtraTimeframe = extraTimeframes.includes(timeframe);
@@ -546,6 +582,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
+      {/* [ADDED] Indicator values legend, shown directly below the timeframe toolbar. */}
+      {indicatorLegend.length > 0 && (
+        <div className="market-indicator-legend" aria-label="Indicator values">
+          {indicatorLegend.map((item) => (
+            <span className="market-indicator-legend-item" key={item.label}>
+              <i style={{ background: item.color }} />
+              <em>{item.label}</em>
+              <b style={{ color: item.color }}>
+                {item.value === null ? "—" : formatPrice(item.value)}
+              </b>
+            </span>
+          ))}
+        </div>
+      )}
       {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
