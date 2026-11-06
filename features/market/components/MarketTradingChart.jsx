@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, LineSeries, createChart } from "lightweight-charts";
-import { ChevronDown, Expand, LayoutGrid, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Expand, LayoutGrid, Settings2, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { translationKeys } from "../../../i18n/config";
 
@@ -51,6 +51,131 @@ function klineStream(timeframe) {
 }
 
 
+
+// [ADDED] Calculate a configurable simple moving average from candle closes.
+function calculateSma(candles, period) {
+  let total = 0;
+  return candles.map((candle, index) => {
+    total += candle.close;
+    if (index >= period) total -= candles[index - period].close;
+    return index >= period - 1 ? total / period : null;
+  });
+}
+
+// [ADDED] Calculate a configurable exponential moving average from candle closes.
+function calculateEma(candles, period) {
+  const values = Array(candles.length).fill(null);
+  if (candles.length < period) return values;
+  const multiplier = 2 / (period + 1);
+  let previous = candles.slice(0, period).reduce((sum, candle) => sum + candle.close, 0) / period;
+  values[period - 1] = previous;
+  for (let index = period; index < candles.length; index += 1) {
+    previous = (candles[index].close - previous) * multiplier + previous;
+    values[index] = previous;
+  }
+  return values;
+}
+
+// [ADDED] Calculate configurable Bollinger Bands from candle closes.
+function calculateBollinger(candles, period, multiplier) {
+  const middle = calculateSma(candles, period);
+  const upper = [];
+  const lower = [];
+  candles.forEach((candle, index) => {
+    if (middle[index] === null) {
+      upper.push(null);
+      lower.push(null);
+      return;
+    }
+    const window = candles.slice(index - period + 1, index + 1);
+    const variance = window.reduce((sum, item) => sum + Math.pow(item.close - middle[index], 2), 0) / period;
+    const deviation = Math.sqrt(variance) * multiplier;
+    upper.push(middle[index] + deviation);
+    lower.push(middle[index] - deviation);
+  });
+  return { upper, middle, lower };
+}
+
+// [ADDED] Calculate Parabolic SAR using configurable acceleration parameters.
+function calculateParabolicSar(candles, step, maximum) {
+  const values = Array(candles.length).fill(null);
+  if (candles.length < 2) return values;
+  let upTrend = candles[1].close >= candles[0].close;
+  let sar = upTrend ? Math.min(candles[0].low, candles[1].low) : Math.max(candles[0].high, candles[1].high);
+  let extreme = upTrend ? Math.max(candles[0].high, candles[1].high) : Math.min(candles[0].low, candles[1].low);
+  let acceleration = step;
+  for (let index = 2; index < candles.length; index += 1) {
+    const previousSar = sar;
+    sar = previousSar + acceleration * (extreme - previousSar);
+    if (upTrend) {
+      sar = Math.min(sar, candles[index - 1].low, candles[index - 2].low);
+      if (candles[index].low < sar) {
+        upTrend = false;
+        sar = extreme;
+        extreme = candles[index].low;
+        acceleration = step;
+      } else if (candles[index].high > extreme) {
+        extreme = candles[index].high;
+        acceleration = Math.min(acceleration + step, maximum);
+      }
+    } else {
+      sar = Math.max(sar, candles[index - 1].high, candles[index - 2].high);
+      if (candles[index].high > sar) {
+        upTrend = true;
+        sar = extreme;
+        extreme = candles[index].high;
+        acceleration = step;
+      } else if (candles[index].low < extreme) {
+        extreme = candles[index].low;
+        acceleration = Math.min(acceleration + step, maximum);
+      }
+    }
+    values[index] = sar;
+  }
+  return values;
+}
+
+// [ADDED] Calculate Supertrend using configurable ATR period and multiplier.
+function calculateSupertrend(candles, period, multiplier) {
+  const length = candles.length;
+  const values = Array(length).fill(null);
+  const directions = Array(length).fill(null);
+  if (length < period) return { values, directions };
+  const trueRanges = candles.map((candle, index) => {
+    if (index === 0) return candle.high - candle.low;
+    return Math.max(candle.high - candle.low, Math.abs(candle.high - candles[index - 1].close), Math.abs(candle.low - candles[index - 1].close));
+  });
+  const atr = Array(length).fill(null);
+  let initial = trueRanges.slice(0, period).reduce((sum, value) => sum + value, 0) / period;
+  atr[period - 1] = initial;
+  for (let index = period; index < length; index += 1) atr[index] = (atr[index - 1] * (period - 1) + trueRanges[index]) / period;
+  let finalUpper = null;
+  let finalLower = null;
+  let direction = 1;
+  for (let index = period - 1; index < length; index += 1) {
+    const midpoint = (candles[index].high + candles[index].low) / 2;
+    const basicUpper = midpoint + multiplier * atr[index];
+    const basicLower = midpoint - multiplier * atr[index];
+    finalUpper = finalUpper === null || basicUpper < finalUpper || candles[index - 1]?.close > finalUpper ? basicUpper : finalUpper;
+    finalLower = finalLower === null || basicLower > finalLower || candles[index - 1]?.close < finalLower ? basicLower : finalLower;
+    if (index > period - 1) {
+      if (direction === 1 && candles[index].close < finalLower) direction = -1;
+      else if (direction === -1 && candles[index].close > finalUpper) direction = 1;
+    }
+    values[index] = direction === 1 ? finalLower : finalUpper;
+    directions[index] = direction;
+  }
+  return { values, directions };
+}
+
+const DEFAULT_INDICATOR_SETTINGS = {
+  ma: { periods: [{ period: 7, color: "#f0b90b" }, { period: 25, color: "#3b82f6" }, { period: 99, color: "#a855f7" }] },
+  ema: { periods: [{ period: 9, color: "#35b9e9" }, { period: 21, color: "#f28b52" }] },
+  bollinger: { period: 20, multiplier: 2, colors: { upper: "#9aa4b2", middle: "#a0a8b5", lower: "#9aa4b2" } },
+  sar: { step: 0.02, maximum: 0.2, color: "#e6a23c" },
+  supertrend: { period: 10, multiplier: 3, upColor: "#20bd88", downColor: "#ef5368" },
+};
+
 export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
   const { t: translate, i18n: translator } = useTranslation();
   const locale = translator.resolvedLanguage || translator.language || "en";
@@ -78,6 +203,37 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [candles, setCandles] = useState([]);
   const [indicatorData, setIndicatorData] = useState(null); // [ADDED] Backend-calculated overlay values.
   const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: true, bollinger: false, sar: true, supertrend: true }); // [ADDED] Chart overlay visibility.
+  // [ADDED] Persist configurable indicator periods, parameters, and colors.
+  const [indicatorSettings, setIndicatorSettings] = useState(DEFAULT_INDICATOR_SETTINGS);
+  const [openIndicatorSettings, setOpenIndicatorSettings] = useState("");
+  const [newIndicatorPeriods, setNewIndicatorPeriods] = useState({ ma: "", ema: "" });
+  const [indicatorSettingsLoaded, setIndicatorSettingsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("beanance-chart-indicator-settings");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setIndicatorSettings({
+          ...DEFAULT_INDICATOR_SETTINGS,
+          ...parsed,
+          ma: { ...DEFAULT_INDICATOR_SETTINGS.ma, ...parsed.ma },
+          ema: { ...DEFAULT_INDICATOR_SETTINGS.ema, ...parsed.ema },
+          bollinger: { ...DEFAULT_INDICATOR_SETTINGS.bollinger, ...parsed.bollinger, colors: { ...DEFAULT_INDICATOR_SETTINGS.bollinger.colors, ...parsed.bollinger?.colors } },
+          sar: { ...DEFAULT_INDICATOR_SETTINGS.sar, ...parsed.sar },
+          supertrend: { ...DEFAULT_INDICATOR_SETTINGS.supertrend, ...parsed.supertrend },
+        });
+      }
+    } catch (error) {
+      console.warn("Unable to load saved indicator settings:", error);
+    }
+    setIndicatorSettingsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!indicatorSettingsLoaded) return;
+    window.localStorage.setItem("beanance-chart-indicator-settings", JSON.stringify(indicatorSettings));
+  }, [indicatorSettings, indicatorSettingsLoaded]);
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "1m"; // [MODIFIED] Keep chart requests on supported timeframes.
@@ -265,27 +421,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       scaleMargins: { top: 0.84, bottom: 0 },
     });
 
-    // [ADDED] Create native Lightweight Charts overlay series for backend indicators.
+    // [MODIFIED] Build overlay series from the user's configurable periods and colors.
     const lineOptions = { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, lineWidth: 2 };
     const indicatorSeries = {
-      ma: {
-        7: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b" }), // [MODIFIED] Hide the MA label beside the price scale.
-        25: chart.addSeries(LineSeries, { ...lineOptions, color: "#3b82f6" }), // [MODIFIED] Hide the MA label beside the price scale.
-        99: chart.addSeries(LineSeries, { ...lineOptions, color: "#a855f7" }), // [MODIFIED] Hide the MA label beside the price scale.
-      },
-      ema: {
-        9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9" }), // [MODIFIED] Hide EMA label beside price scale.
-        21: chart.addSeries(LineSeries, { ...lineOptions, color: "#f28b52" }), // [MODIFIED] Hide EMA label beside price scale.
-      },
+      ma: Object.fromEntries(indicatorSettings.ma.periods.map((item) => [item.period, chart.addSeries(LineSeries, { ...lineOptions, color: item.color })])),
+      ema: Object.fromEntries(indicatorSettings.ema.periods.map((item) => [item.period, chart.addSeries(LineSeries, { ...lineOptions, color: item.color })])),
       bollinger: {
-        upper: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1 }), // [MODIFIED] Hide Bollinger label beside price scale.
-        middle: chart.addSeries(LineSeries, { ...lineOptions, color: "#a0a8b5", lineWidth: 1, lineStyle: 2 }), // [MODIFIED] Hide Bollinger label beside price scale.
-        lower: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1 }), // [MODIFIED] Hide Bollinger label beside price scale.
+        upper: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.upper, lineWidth: 1 }),
+        middle: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.middle, lineWidth: 1, lineStyle: 2 }),
+        lower: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.lower, lineWidth: 1 }),
       },
-      sar: chart.addSeries(LineSeries, { ...lineOptions, color: "#e6a23c", lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2 }), // [MODIFIED] Hide SAR label beside price scale.
+      sar: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.sar.color, lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2 }),
       supertrend: {
-        up: chart.addSeries(LineSeries, { ...lineOptions, color: "#20bd88", lineWidth: 2 }), // [MODIFIED] Hide Supertrend label beside price scale.
-        down: chart.addSeries(LineSeries, { ...lineOptions, color: "#ef5368", lineWidth: 2 }), // [MODIFIED] Hide Supertrend label beside price scale.
+        up: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.upColor, lineWidth: 2 }),
+        down: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.downColor, lineWidth: 2 }),
       },
     };
 
@@ -336,9 +485,9 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       volumeSeriesRef.current = null;
       indicatorSeriesRef.current = null;
     };
-  }, [activeTheme, locale]);
+  }, [activeTheme, locale, indicatorSettings]);
 
-  // [ADDED] Update chart series without recreating the chart on every live candle.
+  // [MODIFIED] Recalculate and update all overlay series from configurable client-side settings.
   useEffect(() => {
     const candleSeries = candleSeriesRef.current;
     const volumeSeries = volumeSeriesRef.current;
@@ -352,43 +501,36 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       color: candle.close >= candle.open ? getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--positive").trim() || "#35cf86" : getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--negative").trim() || "#ef5368",
     })));
 
-    // [ADDED] Calculate and update the MA overlays from the live candle closes.
-    if (overlays && candles.length) {
-      for (const [period, series] of Object.entries(overlays.ma)) {
-        const values = movingAverageValues[period] || [];
-        series.setData(candles.flatMap((candle, index) => {
-          const value = values[index];
-          return Number.isFinite(value) ? [{ time: candle.time, value }] : [];
-        }));
-        series.applyOptions({ visible: enabledIndicators.ma });
-      }
-    }
+    const toLineData = (values) => candles.flatMap((candle, index) => {
+      const value = values?.[index];
+      return value === null || value === undefined || !Number.isFinite(Number(value)) ? [] : [{ time: candle.time, value: Number(value) }];
+    });
 
-    // [ADDED] Align backend indicator arrays with the exact candle timestamps.
-    if (overlays && indicatorData && candles.length) {
-      const toLineData = (values) => candles.flatMap((candle, index) => {
-        if (values?.[index] === null || values?.[index] === undefined) return [];
-        const value = Number(values[index]);
-        return Number.isFinite(value) ? [{ time: candle.time, value }] : [];
-      });
-      for (const [period, series] of Object.entries(overlays.ema)) {
-        series.setData(toLineData(indicatorData.ema?.[period]));
-        series.applyOptions({ visible: enabledIndicators.ema });
+    if (overlays && candles.length) {
+      for (const item of indicatorSettings.ma.periods) {
+        const values = indicatorValues.ma[item.period] || [];
+        overlays.ma[item.period]?.setData(toLineData(values));
+        overlays.ma[item.period]?.applyOptions({ visible: enabledIndicators.ma });
       }
-      overlays.bollinger.upper.setData(toLineData(indicatorData.bollinger?.upper));
-      overlays.bollinger.middle.setData(toLineData(indicatorData.bollinger?.middle));
-      overlays.bollinger.lower.setData(toLineData(indicatorData.bollinger?.lower));
+      for (const item of indicatorSettings.ema.periods) {
+        const values = indicatorValues.ema[item.period] || [];
+        overlays.ema[item.period]?.setData(toLineData(values));
+        overlays.ema[item.period]?.applyOptions({ visible: enabledIndicators.ema });
+      }
+      overlays.bollinger.upper.setData(toLineData(indicatorValues.bollinger.upper));
+      overlays.bollinger.middle.setData(toLineData(indicatorValues.bollinger.middle));
+      overlays.bollinger.lower.setData(toLineData(indicatorValues.bollinger.lower));
       Object.values(overlays.bollinger).forEach((series) => series.applyOptions({ visible: enabledIndicators.bollinger }));
-      overlays.sar.setData(toLineData(indicatorData.sar));
+      overlays.sar.setData(toLineData(indicatorValues.sar));
       overlays.sar.applyOptions({ visible: enabledIndicators.sar });
       const supertrendUp = [];
       const supertrendDown = [];
       candles.forEach((candle, index) => {
-        const value = indicatorData.supertrend?.value?.[index];
-        const direction = indicatorData.supertrend?.direction?.[index];
+        const value = indicatorValues.supertrend.values[index];
+        const direction = indicatorValues.supertrend.directions[index];
         if (value === null || value === undefined) return;
-        if (direction === 1) supertrendUp.push({ time: candle.time, value: Number(value) });
-        if (direction === -1) supertrendDown.push({ time: candle.time, value: Number(value) });
+        if (direction === 1) supertrendUp.push({ time: candle.time, value });
+        if (direction === -1) supertrendDown.push({ time: candle.time, value });
       });
       overlays.supertrend.up.setData(supertrendUp);
       overlays.supertrend.down.setData(supertrendDown);
@@ -398,7 +540,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
     if (candles.length) setLastCandle(candles[candles.length - 1]);
     else setLastCandle(null);
-  }, [candles, indicatorData, enabledIndicators, activeTheme]);
+  }, [candles, indicatorValues, enabledIndicators, activeTheme, indicatorSettings]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
@@ -462,19 +604,14 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
-  // [ADDED] Calculate simple moving averages from the same live candle series as the chart.
-  const movingAverageValues = useMemo(() => {
-    const periods = [7, 25, 99];
-    return Object.fromEntries(periods.map((period) => {
-      let rollingTotal = 0;
-      const values = candles.map((candle, index) => {
-        rollingTotal += candle.close;
-        if (index >= period) rollingTotal -= candles[index - period].close;
-        return index >= period - 1 ? rollingTotal / period : null;
-      });
-      return [period, values];
-    }));
-  }, [candles]);
+  // [ADDED] Calculate all configured indicators locally so every setting changes the actual chart.
+  const indicatorValues = useMemo(() => ({
+    ma: Object.fromEntries(indicatorSettings.ma.periods.map((item) => [item.period, calculateSma(candles, item.period)])),
+    ema: Object.fromEntries(indicatorSettings.ema.periods.map((item) => [item.period, calculateEma(candles, item.period)])),
+    bollinger: calculateBollinger(candles, indicatorSettings.bollinger.period, indicatorSettings.bollinger.multiplier),
+    sar: calculateParabolicSar(candles, indicatorSettings.sar.step, indicatorSettings.sar.maximum),
+    supertrend: calculateSupertrend(candles, indicatorSettings.supertrend.period, indicatorSettings.supertrend.multiplier),
+  }), [candles, indicatorSettings]);
 
   const visibleTimeframes = ["1m", "5m", "15m", "1h"];
   const extraTimeframes = ["4h", "1d", "1w"];
