@@ -4682,3 +4682,10 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-chart-ma-value.ma-7 span{color:#f0b90b}
 .app-shell .market-chart-ma-value.ma-25 span{color:#60a5fa}
 .app-shell .market-chart-ma-value.ma-99 span{color:#c084fc}
+.app-shell .market-chart-ma-value.ema-9 span{color:#35b9e9}
+.app-shell .market-chart-ma-value.ema-21 span{color:#f28b52}
+.app-shell .market-chart-ma-value.bb-upper span,.app-shell .market-chart-ma-value.bb-lower span{color:#9aa4b2}
+.app-shell .market-chart-ma-value.bb-middle span{color:#a0a8b5}
+.app-shell .market-chart-ma-value.sar span{color:#e6a23c}
+.app-shell .market-chart-ma-value.supertrend-up span{color:#20bd88}
+.app-shell .market-chart-ma-value.supertrend-down span{color:#ef5368}
