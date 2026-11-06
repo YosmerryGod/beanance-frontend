@@ -4659,18 +4659,26 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 }
 
 
-/* [ADDED] Style moving-average rows inside the floating candle detail box. */
-.app-shell .market-candle-info-indicator-heading{
-  margin-top:4px;
-  padding-top:6px;
-  border-top:1px solid rgba(255,255,255,.12);
-  color:#aab3c1;
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:.06em;
-  text-transform:uppercase;
+/* [MODIFIED] Display live MA values in a compact row below the timeframe toolbar. */
+.app-shell .market-chart-ma-values{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px 14px;
+  min-height:22px;
+  padding:0 2px 2px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
 }
-.app-shell .market-candle-info>div b.market-candle-info-ma-label{font-weight:750}
-.app-shell .market-candle-info-ma-label.ma-7{color:#f0b90b}
-.app-shell .market-candle-info-ma-label.ma-25{color:#60a5fa}
-.app-shell .market-candle-info-ma-label.ma-99{color:#c084fc}
+.app-shell .market-chart-ma-value{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+}
+.app-shell .market-chart-ma-value span{font-weight:750}
+.app-shell .market-chart-ma-value b{color:var(--text);font-size:10px;font-weight:700}
+.app-shell .market-chart-ma-value.ma-7 span{color:#f0b90b}
+.app-shell .market-chart-ma-value.ma-25 span{color:#60a5fa}
+.app-shell .market-chart-ma-value.ma-99 span{color:#c084fc}
