@@ -435,7 +435,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         middle: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.middle, lineWidth: 1, lineStyle: 2 }),
         lower: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.lower, lineWidth: 1 }),
       },
-      sar: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.sar.color, lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2 }),
+      sar: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.sar.color, lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3 }), // [MODIFIED] Display Parabolic SAR as dots only, without connecting lines.
       // [MODIFIED] Render Supertrend as one line; its color follows the latest trend direction.
       supertrend: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.upColor, lineWidth: 2 }),
     };
