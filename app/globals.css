@@ -4627,6 +4627,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-chart-icon-actions{position:relative}
 @media(max-width:760px){.app-shell .market-indicator-settings-menu{right:0;width:min(238px,calc(100vw - 40px));min-width:min(238px,calc(100vw - 40px))}}
 
+/* [ADDED] Per-indicator configuration controls, period editors, and color pickers. */
+.app-shell .market-indicator-settings-menu{width:300px;min-width:300px;max-height:min(78vh,620px)}
+.app-shell .market-indicator-setting-group{display:flex;flex-direction:column;gap:0}
+.app-shell .market-indicator-setting-row{min-height:42px}
+.app-shell .market-indicator-setting-actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.app-shell .market-indicator-config-button,.app-shell .market-indicator-toggle-button{display:grid;place-items:center;width:27px;height:27px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer}
+.app-shell .market-indicator-config-button:hover,.app-shell .market-indicator-config-button.active{background:var(--surface-hover,rgba(255,255,255,.08));color:var(--gold)}
+.app-shell .market-indicator-toggle-button{width:auto}
+.app-shell .market-indicator-config-panel{display:flex;flex-direction:column;gap:9px;margin:0 5px 9px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.app-shell .market-indicator-period-row,.app-shell .market-indicator-parameter-row,.app-shell .market-indicator-color-row{display:flex;align-items:flex-end;gap:8px}
+.app-shell .market-indicator-period-row label,.app-shell .market-indicator-parameter-row label,.app-shell .market-indicator-color-row label{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0;color:var(--muted);font-size:9px;font-weight:700}
+.app-shell .market-indicator-period-row input[type=number],.app-shell .market-indicator-parameter-row input[type=number],.app-shell .market-indicator-add-row input{width:100%;min-width:0;height:30px;padding:0 7px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font-size:11px}
+.app-shell .market-indicator-period-row input[type=color],.app-shell .market-indicator-color-row input[type=color]{width:100%;height:30px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}
+.app-shell .market-indicator-period-row label:first-child{flex:1.2}
+.app-shell .market-indicator-period-row label:nth-child(2){flex:.8}
+.app-shell .market-indicator-remove-button{width:27px;height:30px;flex:0 0 27px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--negative);font-size:18px;cursor:pointer}
+.app-shell .market-indicator-add-row{display:flex;gap:7px}
+.app-shell .market-indicator-add-row button{height:30px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel-soft);color:var(--gold);font-size:10px;font-weight:750;white-space:nowrap;cursor:pointer}
+.app-shell .market-indicator-config-panel input:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.app-shell .market-indicator-color-row{align-items:center}
+.app-shell .market-indicator-color-row label{flex:1}
+.app-shell .market-chart-ma-value span{font-weight:750}
+@media(max-width:760px){
+  .app-shell .market-indicator-settings-menu{right:0;width:min(300px,calc(100vw - 28px));min-width:min(300px,calc(100vw - 28px))}
+  .app-shell .market-indicator-config-panel{padding:8px}
+}
+
 
 
 /* [ADDED] Compact live moving-average readout below the chart timeframe toolbar. */
