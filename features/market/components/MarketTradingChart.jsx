@@ -334,6 +334,15 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     };
   }, [normalizedSymbol, interval, t]);
 
+  // [ADDED] Calculate all configured indicators locally so every setting changes the actual chart.
+  const indicatorValues = useMemo(() => ({
+    ma: Object.fromEntries(indicatorSettings.ma.periods.map((item) => [item.period, calculateSma(candles, item.period)])),
+    ema: Object.fromEntries(indicatorSettings.ema.periods.map((item) => [item.period, calculateEma(candles, item.period)])),
+    bollinger: calculateBollinger(candles, indicatorSettings.bollinger.period, indicatorSettings.bollinger.multiplier),
+    sar: calculateParabolicSar(candles, indicatorSettings.sar.step, indicatorSettings.sar.maximum),
+    supertrend: calculateSupertrend(candles, indicatorSettings.supertrend.period, indicatorSettings.supertrend.multiplier),
+  }), [candles, indicatorSettings]);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return undefined;
@@ -604,18 +613,49 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
-  // [ADDED] Calculate all configured indicators locally so every setting changes the actual chart.
-  const indicatorValues = useMemo(() => ({
-    ma: Object.fromEntries(indicatorSettings.ma.periods.map((item) => [item.period, calculateSma(candles, item.period)])),
-    ema: Object.fromEntries(indicatorSettings.ema.periods.map((item) => [item.period, calculateEma(candles, item.period)])),
-    bollinger: calculateBollinger(candles, indicatorSettings.bollinger.period, indicatorSettings.bollinger.multiplier),
-    sar: calculateParabolicSar(candles, indicatorSettings.sar.step, indicatorSettings.sar.maximum),
-    supertrend: calculateSupertrend(candles, indicatorSettings.supertrend.period, indicatorSettings.supertrend.multiplier),
-  }), [candles, indicatorSettings]);
-
   const visibleTimeframes = ["1m", "5m", "15m", "1h"];
   const extraTimeframes = ["4h", "1d", "1w"];
   const activeExtraTimeframe = extraTimeframes.includes(timeframe);
+
+  // [ADDED] Update one indicator setting without disturbing the remaining configurations.
+  const updateIndicatorSetting = (indicator, field, value) => {
+    setIndicatorSettings((current) => ({
+      ...current,
+      [indicator]: { ...current[indicator], [field]: value },
+    }));
+  };
+
+  // [ADDED] Update one period or color for an MA/EMA line.
+  const updateIndicatorPeriod = (indicator, index, field, value) => {
+    setIndicatorSettings((current) => ({
+      ...current,
+      [indicator]: {
+        ...current[indicator],
+        periods: current[indicator].periods.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item),
+      },
+    }));
+  };
+
+  // [ADDED] Add a user-defined MA/EMA period with a distinct default color.
+  const addIndicatorPeriod = (indicator) => {
+    const period = Math.floor(Number(newIndicatorPeriods[indicator]));
+    if (!Number.isInteger(period) || period < 1 || period > 1000) return;
+    setIndicatorSettings((current) => {
+      if (current[indicator].periods.some((item) => item.period === period)) return current;
+      const palette = ["#f0b90b", "#3b82f6", "#a855f7", "#20bd88", "#f28b52", "#35b9e9", "#ef5368"];
+      const color = palette[current[indicator].periods.length % palette.length];
+      return { ...current, [indicator]: { ...current[indicator], periods: [...current[indicator].periods, { period, color }].sort((a, b) => a.period - b.period) } };
+    });
+    setNewIndicatorPeriods((current) => ({ ...current, [indicator]: "" }));
+  };
+
+  // [ADDED] Remove a configurable MA/EMA period.
+  const removeIndicatorPeriod = (indicator, period) => {
+    setIndicatorSettings((current) => ({
+      ...current,
+      [indicator]: { ...current[indicator], periods: current[indicator].periods.filter((item) => item.period !== period) },
+    }));
+  };
 
   return (
     <div className="market-trading-chart">
@@ -675,27 +715,82 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             <div className="market-chart-tools-menu market-indicator-settings-menu">
               <div className="market-indicator-settings-heading">Indicators</div>
               {[
-                { key: "ma", label: "MA", detail: "7 / 25 / 99" }, // [MODIFIED] Match the displayed MA periods.
-                { key: "ema", label: "EMA", detail: "9 / 21" },
-                { key: "bollinger", label: "Bollinger Bands", detail: "20, 2" },
-                { key: "sar", label: "Parabolic SAR", detail: "0.02 / 0.2" },
-                { key: "supertrend", label: "Supertrend", detail: "10, 3" },
+                { key: "ma", label: "MA", detail: indicatorSettings.ma.periods.map((item) => item.period).join(" / ") || "No periods" },
+                { key: "ema", label: "EMA", detail: indicatorSettings.ema.periods.map((item) => item.period).join(" / ") || "No periods" },
+                { key: "bollinger", label: "Bollinger Bands", detail: indicatorSettings.bollinger.period + ", " + indicatorSettings.bollinger.multiplier },
+                { key: "sar", label: "Parabolic SAR", detail: indicatorSettings.sar.step + " / " + indicatorSettings.sar.maximum },
+                { key: "supertrend", label: "Supertrend", detail: indicatorSettings.supertrend.period + ", " + indicatorSettings.supertrend.multiplier },
               ].map((item) => (
-                <button
-                  type="button"
-                  key={item.key}
-                  className="market-indicator-setting-row"
-                  aria-pressed={enabledIndicators[item.key]}
-                  onClick={() => setEnabledIndicators((current) => ({ ...current, [item.key]: !current[item.key] }))}
-                >
-                  <span className="market-indicator-setting-copy">
-                    <strong>{item.label}</strong>
-                    <small>{item.detail}</small>
-                  </span>
-                  <span className={enabledIndicators[item.key] ? "market-indicator-switch is-on" : "market-indicator-switch"}>
-                    <span />
-                  </span>
-                </button>
+                <div className="market-indicator-setting-group" key={item.key}>
+                  <div className="market-indicator-setting-row">
+                    <span className="market-indicator-setting-copy">
+                      <strong>{item.label}</strong>
+                      <small>{item.detail}</small>
+                    </span>
+                    <div className="market-indicator-setting-actions">
+                      <button type="button" className={openIndicatorSettings === item.key ? "market-indicator-config-button active" : "market-indicator-config-button"} aria-label={"Configure " + item.label} title={"Configure " + item.label} onClick={() => setOpenIndicatorSettings((current) => current === item.key ? "" : item.key)}>
+                        <Settings2 size={15} />
+                      </button>
+                      <button type="button" className="market-indicator-toggle-button" aria-label={"Toggle " + item.label} aria-pressed={enabledIndicators[item.key]} onClick={() => setEnabledIndicators((current) => ({ ...current, [item.key]: !current[item.key] }))}>
+                        <span className={enabledIndicators[item.key] ? "market-indicator-switch is-on" : "market-indicator-switch"}><span /></span>
+                      </button>
+                    </div>
+                  </div>
+                  {openIndicatorSettings === item.key && (
+                    <div className="market-indicator-config-panel">
+                      {(item.key === "ma" || item.key === "ema") && (
+                        <>
+                          {indicatorSettings[item.key].periods.map((periodItem, index) => (
+                            <div className="market-indicator-period-row" key={periodItem.period}>
+                              <label>Period<input type="number" min="1" max="1000" value={periodItem.period} onChange={(event) => {
+                                const value = Math.max(1, Math.min(1000, Math.floor(Number(event.target.value) || 1)));
+                                updateIndicatorPeriod(item.key, index, "period", value);
+                              }} /></label>
+                              <label>Color<input type="color" value={periodItem.color} aria-label={item.label + " period " + periodItem.period + " color"} onChange={(event) => updateIndicatorPeriod(item.key, index, "color", event.target.value)} /></label>
+                              <button type="button" className="market-indicator-remove-button" aria-label={"Remove " + item.label + " " + periodItem.period} onClick={() => removeIndicatorPeriod(item.key, periodItem.period)}>×</button>
+                            </div>
+                          ))}
+                          <div className="market-indicator-add-row">
+                            <input type="number" min="1" max="1000" placeholder="New period" value={newIndicatorPeriods[item.key]} onChange={(event) => setNewIndicatorPeriods((current) => ({ ...current, [item.key]: event.target.value }))} />
+                            <button type="button" onClick={() => addIndicatorPeriod(item.key)}>+ Add Period</button>
+                          </div>
+                        </>
+                      )}
+                      {item.key === "bollinger" && (
+                        <>
+                          <div className="market-indicator-parameter-row">
+                            <label>Period<input type="number" min="2" max="500" value={indicatorSettings.bollinger.period} onChange={(event) => updateIndicatorSetting("bollinger", "period", Math.max(2, Math.min(500, Number(event.target.value) || 2)))} /></label>
+                            <label>Deviation<input type="number" min="0.1" max="10" step="0.1" value={indicatorSettings.bollinger.multiplier} onChange={(event) => updateIndicatorSetting("bollinger", "multiplier", Math.max(0.1, Math.min(10, Number(event.target.value) || 0.1)))} /></label>
+                          </div>
+                          <div className="market-indicator-color-row">
+                            {["upper", "middle", "lower"].map((line) => <label key={line}>{line}<input type="color" value={indicatorSettings.bollinger.colors[line]} onChange={(event) => setIndicatorSettings((current) => ({ ...current, bollinger: { ...current.bollinger, colors: { ...current.bollinger.colors, [line]: event.target.value } } }))} /></label>)}
+                          </div>
+                        </>
+                      )}
+                      {item.key === "sar" && (
+                        <>
+                          <div className="market-indicator-parameter-row">
+                            <label>Acceleration<input type="number" min="0.001" max="1" step="0.001" value={indicatorSettings.sar.step} onChange={(event) => updateIndicatorSetting("sar", "step", Math.max(0.001, Math.min(1, Number(event.target.value) || 0.001)))} /></label>
+                            <label>Maximum<input type="number" min="0.01" max="1" step="0.01" value={indicatorSettings.sar.maximum} onChange={(event) => updateIndicatorSetting("sar", "maximum", Math.max(0.01, Math.min(1, Number(event.target.value) || 0.01)))} /></label>
+                          </div>
+                          <div className="market-indicator-color-row"><label>SAR color<input type="color" value={indicatorSettings.sar.color} onChange={(event) => updateIndicatorSetting("sar", "color", event.target.value)} /></label></div>
+                        </>
+                      )}
+                      {item.key === "supertrend" && (
+                        <>
+                          <div className="market-indicator-parameter-row">
+                            <label>ATR Period<input type="number" min="1" max="500" value={indicatorSettings.supertrend.period} onChange={(event) => updateIndicatorSetting("supertrend", "period", Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label>
+                            <label>Multiplier<input type="number" min="0.1" max="20" step="0.1" value={indicatorSettings.supertrend.multiplier} onChange={(event) => updateIndicatorSetting("supertrend", "multiplier", Math.max(0.1, Math.min(20, Number(event.target.value) || 0.1)))} /></label>
+                          </div>
+                          <div className="market-indicator-color-row">
+                            <label>Up color<input type="color" value={indicatorSettings.supertrend.upColor} onChange={(event) => updateIndicatorSetting("supertrend", "upColor", event.target.value)} /></label>
+                            <label>Down color<input type="color" value={indicatorSettings.supertrend.downColor} onChange={(event) => updateIndicatorSetting("supertrend", "downColor", event.target.value)} /></label>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))}
               <div className="market-indicator-settings-divider" />
               <div className="market-indicator-settings-heading">Chart</div>
@@ -717,24 +812,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         };
 
         if (enabledIndicators.ma) {
-          Object.entries(movingAverageValues).forEach(([period, values]) => {
-            addRow("ma-" + period, "MA(" + period + ")", values[candleIndex], "ma-" + period);
-          });
+          indicatorSettings.ma.periods.forEach((item) => addRow("ma-" + item.period, "MA(" + item.period + ")", indicatorValues.ma[item.period]?.[candleIndex], "ma-period-" + item.period));
         }
         if (enabledIndicators.ema) {
-          [9, 21].forEach((period) => addRow("ema-" + period, "EMA(" + period + ")", indicatorData?.ema?.[period]?.[candleIndex], "ema-" + period));
+          indicatorSettings.ema.periods.forEach((item) => addRow("ema-" + item.period, "EMA(" + item.period + ")", indicatorValues.ema[item.period]?.[candleIndex], "ema-period-" + item.period));
         }
         if (enabledIndicators.bollinger) {
-          addRow("bb-upper", "BB Upper", indicatorData?.bollinger?.upper?.[candleIndex], "bb-upper");
-          addRow("bb-middle", "BB Basis", indicatorData?.bollinger?.middle?.[candleIndex], "bb-middle");
-          addRow("bb-lower", "BB Lower", indicatorData?.bollinger?.lower?.[candleIndex], "bb-lower");
+          addRow("bb-upper", "BB Upper", indicatorValues.bollinger.upper[candleIndex], "bb-upper");
+          addRow("bb-middle", "BB Basis", indicatorValues.bollinger.middle[candleIndex], "bb-middle");
+          addRow("bb-lower", "BB Lower", indicatorValues.bollinger.lower[candleIndex], "bb-lower");
         }
-        if (enabledIndicators.sar) {
-          addRow("sar", "SAR", indicatorData?.sar?.[candleIndex], "sar");
-        }
+        if (enabledIndicators.sar) addRow("sar", "SAR", indicatorValues.sar[candleIndex], "sar");
         if (enabledIndicators.supertrend) {
-          const supertrendValue = indicatorData?.supertrend?.value?.[candleIndex];
-          const supertrendDirection = indicatorData?.supertrend?.direction?.[candleIndex];
+          const supertrendValue = indicatorValues.supertrend.values[candleIndex];
+          const supertrendDirection = indicatorValues.supertrend.directions[candleIndex];
           addRow("supertrend", "Supertrend" + (supertrendDirection === 1 ? " ↑" : supertrendDirection === -1 ? " ↓" : ""), supertrendValue, supertrendDirection === 1 ? "supertrend-up" : "supertrend-down");
         }
 
