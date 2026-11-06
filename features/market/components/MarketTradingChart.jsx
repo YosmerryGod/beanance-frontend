@@ -527,14 +527,24 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       Object.values(overlays.bollinger).forEach((series) => series.applyOptions({ visible: enabledIndicators.bollinger }));
       overlays.sar.setData(toLineData(indicatorValues.sar));
       overlays.sar.applyOptions({ visible: enabledIndicators.sar });
+      // [MODIFIED] Keep Supertrend visually continuous while switching color at trend reversals.
       const supertrendUp = [];
       const supertrendDown = [];
+      let previousDirection = null;
+      let previousPoint = null;
       candles.forEach((candle, index) => {
         const value = indicatorValues.supertrend.values[index];
         const direction = indicatorValues.supertrend.directions[index];
-        if (value === null || value === undefined) return;
-        if (direction === 1) supertrendUp.push({ time: candle.time, value });
-        if (direction === -1) supertrendDown.push({ time: candle.time, value });
+        if (value === null || value === undefined || direction === null) return;
+        const point = { time: candle.time, value };
+        if (direction !== previousDirection && previousPoint) {
+          if (direction === 1) supertrendUp.push(previousPoint);
+          if (direction === -1) supertrendDown.push(previousPoint);
+        }
+        if (direction === 1) supertrendUp.push(point);
+        if (direction === -1) supertrendDown.push(point);
+        previousDirection = direction;
+        previousPoint = point;
       });
       overlays.supertrend.up.setData(supertrendUp);
       overlays.supertrend.down.setData(supertrendDown);
