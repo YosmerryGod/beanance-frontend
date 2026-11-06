@@ -274,18 +274,18 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         99: chart.addSeries(LineSeries, { ...lineOptions, color: "#a855f7" }), // [MODIFIED] Hide the MA label beside the price scale.
       },
       ema: {
-        9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9", title: "EMA 9" }),
-        21: chart.addSeries(LineSeries, { ...lineOptions, color: "#f28b52", title: "EMA 21" }),
+        9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9" }), // [MODIFIED] Hide EMA label beside price scale.
+        21: chart.addSeries(LineSeries, { ...lineOptions, color: "#f28b52" }), // [MODIFIED] Hide EMA label beside price scale.
       },
       bollinger: {
-        upper: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1, title: "BB Upper" }),
-        middle: chart.addSeries(LineSeries, { ...lineOptions, color: "#a0a8b5", lineWidth: 1, lineStyle: 2, title: "BB Basis" }),
-        lower: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1, title: "BB Lower" }),
+        upper: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1 }), // [MODIFIED] Hide Bollinger label beside price scale.
+        middle: chart.addSeries(LineSeries, { ...lineOptions, color: "#a0a8b5", lineWidth: 1, lineStyle: 2 }), // [MODIFIED] Hide Bollinger label beside price scale.
+        lower: chart.addSeries(LineSeries, { ...lineOptions, color: "rgba(154,164,178,.75)", lineWidth: 1 }), // [MODIFIED] Hide Bollinger label beside price scale.
       },
-      sar: chart.addSeries(LineSeries, { ...lineOptions, color: "#e6a23c", lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2, title: "SAR" }),
+      sar: chart.addSeries(LineSeries, { ...lineOptions, color: "#e6a23c", lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2 }), // [MODIFIED] Hide SAR label beside price scale.
       supertrend: {
-        up: chart.addSeries(LineSeries, { ...lineOptions, color: "#20bd88", lineWidth: 2, title: "Supertrend Up" }),
-        down: chart.addSeries(LineSeries, { ...lineOptions, color: "#ef5368", lineWidth: 2, title: "Supertrend Down" }),
+        up: chart.addSeries(LineSeries, { ...lineOptions, color: "#20bd88", lineWidth: 2 }), // [MODIFIED] Hide Supertrend label beside price scale.
+        down: chart.addSeries(LineSeries, { ...lineOptions, color: "#ef5368", lineWidth: 2 }), // [MODIFIED] Hide Supertrend label beside price scale.
       },
     };
 
@@ -569,21 +569,47 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
-      {/* [MODIFIED] Show MA values below the timeframe only while crosshair is on a candle. */}
-      {enabledIndicators.ma && displayedCandle && (() => {
+      {/* [MODIFIED] Show enabled indicator values below timeframe for the crosshair-selected candle. */}
+      {displayedCandle && (() => {
         const candleIndex = candles.findIndex((candle) => candle.time === displayedCandle.time);
         if (candleIndex < 0) return null;
+        const indicatorRows = [];
+        const addRow = (key, label, value, colorClass = "") => {
+          if (value === null || value === undefined || !Number.isFinite(Number(value))) return;
+          indicatorRows.push({ key, label, value: formatPrice(value), colorClass });
+        };
+
+        if (enabledIndicators.ma) {
+          Object.entries(movingAverageValues).forEach(([period, values]) => {
+            addRow("ma-" + period, "MA(" + period + ")", values[candleIndex], "ma-" + period);
+          });
+        }
+        if (enabledIndicators.ema) {
+          [9, 21].forEach((period) => addRow("ema-" + period, "EMA(" + period + ")", indicatorData?.ema?.[period]?.[candleIndex], "ema-" + period));
+        }
+        if (enabledIndicators.bollinger) {
+          addRow("bb-upper", "BB Upper", indicatorData?.bollinger?.upper?.[candleIndex], "bb-upper");
+          addRow("bb-middle", "BB Basis", indicatorData?.bollinger?.middle?.[candleIndex], "bb-middle");
+          addRow("bb-lower", "BB Lower", indicatorData?.bollinger?.lower?.[candleIndex], "bb-lower");
+        }
+        if (enabledIndicators.sar) {
+          addRow("sar", "SAR", indicatorData?.sar?.[candleIndex], "sar");
+        }
+        if (enabledIndicators.supertrend) {
+          const supertrendValue = indicatorData?.supertrend?.value?.[candleIndex];
+          const supertrendDirection = indicatorData?.supertrend?.direction?.[candleIndex];
+          addRow("supertrend", "Supertrend" + (supertrendDirection === 1 ? " ↑" : supertrendDirection === -1 ? " ↓" : ""), supertrendValue, supertrendDirection === 1 ? "supertrend-up" : "supertrend-down");
+        }
+
+        if (!indicatorRows.length) return null;
         return (
-          <div className="market-chart-ma-values" aria-label="Moving Average values">
-            {Object.entries(movingAverageValues).map(([period, values]) => {
-              const value = values[candleIndex];
-              return (
-                <div className={"market-chart-ma-value ma-" + period} key={period}>
-                  <span>MA({period})</span>
-                  <b>{Number.isFinite(value) ? formatPrice(value) : "—"}</b>
-                </div>
-              );
-            })}
+          <div className="market-chart-ma-values" aria-label="Indicator values">
+            {indicatorRows.map((item) => (
+              <div className={"market-chart-ma-value " + item.colorClass} key={item.key}>
+                <span>{item.label}</span>
+                <b>{item.value}</b>
+              </div>
+            ))}
           </div>
         );
       })()}
