@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { TokenIcon } from "@web3icons/react/dynamic";
 
 function normalizeSymbol(value) {
@@ -11,8 +12,14 @@ function normalizeSymbol(value) {
     .replace(/(USDT|USDC|BUSD|USDP|FDUSD|USD|PERP)$/i, "");
 }
 
-export default function CoinLogo({ symbol, size, className = "" }) {
+export default function CoinLogo({ symbol, size, logo, className = "" }) {
   const normalizedSymbol = normalizeSymbol(symbol);
+  const [logoFailed, setLogoFailed] = useState(false);
+
+  // [ADDED] Reset the remote-logo fallback when the market asset changes.
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [logo]);
   const fallback = (
     <span className="coin-logo-fallback" aria-hidden="true">
       {normalizedSymbol.slice(0, 3) || "?"}
@@ -55,12 +62,24 @@ export default function CoinLogo({ symbol, size, className = "" }) {
       aria-label={normalizedSymbol}
       data-symbol={normalizedSymbol}
     >
+      {/* [ADDED] Prefer the logo URL supplied by Beanance Market Backend. */}
+      {logo && !logoFailed ? (
+        <img
+          src={logo}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setLogoFailed(true)}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      ) : (
       <TokenIcon
         symbol={normalizedSymbol}
         size={size || "100%"}
         variant="branded"
         fallback={fallback}
       />
+      )}
     </span>
   );
 }
