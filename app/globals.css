@@ -4627,3 +4627,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-chart-icon-actions{position:relative}
 @media(max-width:760px){.app-shell .market-indicator-settings-menu{right:0;width:min(238px,calc(100vw - 40px));min-width:min(238px,calc(100vw - 40px))}}
 
+
+
+/* [ADDED] Compact live moving-average readout below the chart timeframe toolbar. */
+.app-shell .market-chart-ma-values{
+  display:flex;
+  align-items:center;
+  gap:clamp(12px,2.4vw,22px);
+  min-height:29px;
+  padding:2px 16px 7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.app-shell .market-chart-ma-values::-webkit-scrollbar{display:none}
+.app-shell .market-chart-ma-value{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto}
+.app-shell .market-chart-ma-value strong{color:var(--text);font-size:10px;font-weight:700}
+.app-shell .market-chart-ma-label{font-weight:750}
+.app-shell .market-chart-ma-dot{width:6px;height:6px;flex:0 0 6px;border-radius:50%}
+.app-shell .market-chart-ma-label.ma-7{color:#f0b90b}
+.app-shell .market-chart-ma-dot.ma-7{background:#f0b90b}
+.app-shell .market-chart-ma-label.ma-25{color:#3b82f6}
+.app-shell .market-chart-ma-dot.ma-25{background:#3b82f6}
+.app-shell .market-chart-ma-label.ma-99{color:#a855f7}
+.app-shell .market-chart-ma-dot.ma-99{background:#a855f7}
+@media(max-width:760px){
+  .app-shell .market-chart-ma-values{gap:12px;padding:2px 9px 7px;font-size:9px}
+  .app-shell .market-chart-ma-value strong{font-size:9px}
+}
