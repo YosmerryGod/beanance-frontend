@@ -269,8 +269,9 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     const lineOptions = { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, lineWidth: 2 };
     const indicatorSeries = {
       ma: {
-        20: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b", title: "MA 20" }),
-        50: chart.addSeries(LineSeries, { ...lineOptions, color: "#9b7cff", title: "MA 50" }),
+        7: chart.addSeries(LineSeries, { ...lineOptions, color: "#f0b90b", title: "MA 7" }), // [MODIFIED] Default MA period.
+        25: chart.addSeries(LineSeries, { ...lineOptions, color: "#3b82f6", title: "MA 25" }), // [ADDED] Medium MA period.
+        99: chart.addSeries(LineSeries, { ...lineOptions, color: "#a855f7", title: "MA 99" }), // [ADDED] Long MA period.
       },
       ema: {
         9: chart.addSeries(LineSeries, { ...lineOptions, color: "#35b9e9", title: "EMA 9" }),
@@ -351,6 +352,18 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       color: candle.close >= candle.open ? getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--positive").trim() || "#35cf86" : getComputedStyle(containerRef.current || document.documentElement).getPropertyValue("--negative").trim() || "#ef5368",
     })));
 
+    // [ADDED] Calculate and update the MA overlays from the live candle closes.
+    if (overlays && candles.length) {
+      for (const [period, series] of Object.entries(overlays.ma)) {
+        const values = movingAverageValues[period] || [];
+        series.setData(candles.flatMap((candle, index) => {
+          const value = values[index];
+          return Number.isFinite(value) ? [{ time: candle.time, value }] : [];
+        }));
+        series.applyOptions({ visible: enabledIndicators.ma });
+      }
+    }
+
     // [ADDED] Align backend indicator arrays with the exact candle timestamps.
     if (overlays && indicatorData && candles.length) {
       const toLineData = (values) => candles.flatMap((candle, index) => {
@@ -358,10 +371,6 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         const value = Number(values[index]);
         return Number.isFinite(value) ? [{ time: candle.time, value }] : [];
       });
-      for (const [period, series] of Object.entries(overlays.ma)) {
-        series.setData(toLineData(indicatorData.ma?.[period]));
-        series.applyOptions({ visible: enabledIndicators.ma });
-      }
       for (const [period, series] of Object.entries(overlays.ema)) {
         series.setData(toLineData(indicatorData.ema?.[period]));
         series.applyOptions({ visible: enabledIndicators.ema });
@@ -453,6 +462,20 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
+  // [ADDED] Calculate simple moving averages from the same live candle series as the chart.
+  const movingAverageValues = useMemo(() => {
+    const periods = [7, 25, 99];
+    return Object.fromEntries(periods.map((period) => {
+      let rollingTotal = 0;
+      const values = candles.map((candle, index) => {
+        rollingTotal += candle.close;
+        if (index >= period) rollingTotal -= candles[index - period].close;
+        return index >= period - 1 ? rollingTotal / period : null;
+      });
+      return [period, values];
+    }));
+  }, [candles]);
+
   const visibleTimeframes = ["1m", "5m", "15m", "1h"];
   const extraTimeframes = ["4h", "1d", "1w"];
   const activeExtraTimeframe = extraTimeframes.includes(timeframe);
@@ -515,7 +538,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             <div className="market-chart-tools-menu market-indicator-settings-menu">
               <div className="market-indicator-settings-heading">Indicators</div>
               {[
-                { key: "ma", label: "MA", detail: "20 / 50" },
+                { key: "ma", label: "MA", detail: "7 / 25 / 99" }, // [MODIFIED] Match the displayed MA periods.
                 { key: "ema", label: "EMA", detail: "9 / 21" },
                 { key: "bollinger", label: "Bollinger Bands", detail: "20, 2" },
                 { key: "sar", label: "Parabolic SAR", detail: "0.02 / 0.2" },
@@ -546,6 +569,21 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
+      {/* [ADDED] Show live MA values directly below the timeframe toolbar. */}
+      {enabledIndicators.ma && (
+        <div className="market-chart-ma-values" aria-label="Moving average values">
+          {Object.entries(movingAverageValues).map(([period, values]) => {
+            const value = values[values.length - 1];
+            return (
+              <div className="market-chart-ma-value" key={period}>
+                <span className={"market-chart-ma-dot ma-" + period} />
+                <span className={"market-chart-ma-label ma-" + period}>MA({period})</span>
+                <strong>{Number.isFinite(value) ? formatPrice(value) : "—"}</strong>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
