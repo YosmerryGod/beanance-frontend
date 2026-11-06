@@ -627,13 +627,16 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
   // [ADDED] Update one period or color for an MA/EMA line.
   const updateIndicatorPeriod = (indicator, index, field, value) => {
-    setIndicatorSettings((current) => ({
-      ...current,
-      [indicator]: {
-        ...current[indicator],
-        periods: current[indicator].periods.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item),
-      },
-    }));
+    setIndicatorSettings((current) => {
+      if (field === "period" && current[indicator].periods.some((item, itemIndex) => itemIndex !== index && item.period === value)) return current;
+      return {
+        ...current,
+        [indicator]: {
+          ...current[indicator],
+          periods: current[indicator].periods.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item),
+        },
+      };
+    });
   };
 
   // [ADDED] Add a user-defined MA/EMA period with a distinct default color.
@@ -806,27 +809,27 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         const candleIndex = candles.findIndex((candle) => candle.time === displayedCandle.time);
         if (candleIndex < 0) return null;
         const indicatorRows = [];
-        const addRow = (key, label, value, colorClass = "") => {
+        const addRow = (key, label, value, colorClass = "", color = "") => {
           if (value === null || value === undefined || !Number.isFinite(Number(value))) return;
-          indicatorRows.push({ key, label, value: formatPrice(value), colorClass });
+          indicatorRows.push({ key, label, value: formatPrice(value), colorClass, color });
         };
 
         if (enabledIndicators.ma) {
-          indicatorSettings.ma.periods.forEach((item) => addRow("ma-" + item.period, "MA(" + item.period + ")", indicatorValues.ma[item.period]?.[candleIndex], "ma-period-" + item.period));
+          indicatorSettings.ma.periods.forEach((item) => addRow("ma-" + item.period, "MA(" + item.period + ")", indicatorValues.ma[item.period]?.[candleIndex], "ma-period-" + item.period, item.color));
         }
         if (enabledIndicators.ema) {
-          indicatorSettings.ema.periods.forEach((item) => addRow("ema-" + item.period, "EMA(" + item.period + ")", indicatorValues.ema[item.period]?.[candleIndex], "ema-period-" + item.period));
+          indicatorSettings.ema.periods.forEach((item) => addRow("ema-" + item.period, "EMA(" + item.period + ")", indicatorValues.ema[item.period]?.[candleIndex], "ema-period-" + item.period, item.color));
         }
         if (enabledIndicators.bollinger) {
-          addRow("bb-upper", "BB Upper", indicatorValues.bollinger.upper[candleIndex], "bb-upper");
-          addRow("bb-middle", "BB Basis", indicatorValues.bollinger.middle[candleIndex], "bb-middle");
-          addRow("bb-lower", "BB Lower", indicatorValues.bollinger.lower[candleIndex], "bb-lower");
+          addRow("bb-upper", "BB Upper", indicatorValues.bollinger.upper[candleIndex], "bb-upper", indicatorSettings.bollinger.colors.upper);
+          addRow("bb-middle", "BB Basis", indicatorValues.bollinger.middle[candleIndex], "bb-middle", indicatorSettings.bollinger.colors.middle);
+          addRow("bb-lower", "BB Lower", indicatorValues.bollinger.lower[candleIndex], "bb-lower", indicatorSettings.bollinger.colors.lower);
         }
-        if (enabledIndicators.sar) addRow("sar", "SAR", indicatorValues.sar[candleIndex], "sar");
+        if (enabledIndicators.sar) addRow("sar", "SAR", indicatorValues.sar[candleIndex], "sar", indicatorSettings.sar.color);
         if (enabledIndicators.supertrend) {
           const supertrendValue = indicatorValues.supertrend.values[candleIndex];
           const supertrendDirection = indicatorValues.supertrend.directions[candleIndex];
-          addRow("supertrend", "Supertrend" + (supertrendDirection === 1 ? " ↑" : supertrendDirection === -1 ? " ↓" : ""), supertrendValue, supertrendDirection === 1 ? "supertrend-up" : "supertrend-down");
+          addRow("supertrend", "Supertrend" + (supertrendDirection === 1 ? " ↑" : supertrendDirection === -1 ? " ↓" : ""), supertrendValue, supertrendDirection === 1 ? "supertrend-up" : "supertrend-down", supertrendDirection === 1 ? indicatorSettings.supertrend.upColor : indicatorSettings.supertrend.downColor);
         }
 
         if (!indicatorRows.length) return null;
@@ -834,7 +837,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           <div className="market-chart-ma-values" aria-label="Indicator values">
             {indicatorRows.map((item) => (
               <div className={"market-chart-ma-value " + item.colorClass} key={item.key}>
-                <span>{item.label}</span>
+                <span style={item.color ? { color: item.color } : undefined}>{item.label}</span>
                 <b>{item.value}</b>
               </div>
             ))}
