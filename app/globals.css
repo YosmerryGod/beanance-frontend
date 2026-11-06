@@ -4657,3 +4657,20 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .market-chart-ma-values{gap:12px;padding:2px 9px 7px;font-size:9px}
   .app-shell .market-chart-ma-value strong{font-size:9px}
 }
+
+
+/* [ADDED] Style moving-average rows inside the floating candle detail box. */
+.app-shell .market-candle-info-indicator-heading{
+  margin-top:4px;
+  padding-top:6px;
+  border-top:1px solid rgba(255,255,255,.12);
+  color:#aab3c1;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.app-shell .market-candle-info>div b.market-candle-info-ma-label{font-weight:750}
+.app-shell .market-candle-info-ma-label.ma-7{color:#f0b90b}
+.app-shell .market-candle-info-ma-label.ma-25{color:#60a5fa}
+.app-shell .market-candle-info-ma-label.ma-99{color:#c084fc}
