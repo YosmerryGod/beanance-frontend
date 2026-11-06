@@ -569,20 +569,24 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
           )}
         </div>
       </div>
-      {/* [MODIFIED] Show live MA values directly below the timeframe toolbar, outside the candle detail box. */}
-      {enabledIndicators.ma && candles.length > 0 && (
-        <div className="market-chart-ma-values" aria-label="Moving Average values">
-          {Object.entries(movingAverageValues).map(([period, values]) => {
-            const value = values[values.length - 1];
-            return (
-              <div className={"market-chart-ma-value ma-" + period} key={period}>
-                <span>MA({period})</span>
-                <b>{Number.isFinite(value) ? formatPrice(value) : "—"}</b>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {/* [MODIFIED] Show MA values below the timeframe only while crosshair is on a candle. */}
+      {enabledIndicators.ma && displayedCandle && (() => {
+        const candleIndex = candles.findIndex((candle) => candle.time === displayedCandle.time);
+        if (candleIndex < 0) return null;
+        return (
+          <div className="market-chart-ma-values" aria-label="Moving Average values">
+            {Object.entries(movingAverageValues).map(([period, values]) => {
+              const value = values[candleIndex];
+              return (
+                <div className={"market-chart-ma-value ma-" + period} key={period}>
+                  <span>MA({period})</span>
+                  <b>{Number.isFinite(value) ? formatPrice(value) : "—"}</b>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
       {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
         {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
