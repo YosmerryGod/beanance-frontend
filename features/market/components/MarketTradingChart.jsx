@@ -436,10 +436,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         lower: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.bollinger.colors.lower, lineWidth: 1 }),
       },
       sar: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.sar.color, lineWidth: 1, lineStyle: 2, pointMarkersVisible: true, pointMarkersRadius: 2 }),
-      supertrend: {
-        up: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.upColor, lineWidth: 2 }),
-        down: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.downColor, lineWidth: 2 }),
-      },
+      // [MODIFIED] Render Supertrend as one line; its color follows the latest trend direction.
+      supertrend: chart.addSeries(LineSeries, { ...lineOptions, color: indicatorSettings.supertrend.upColor, lineWidth: 2 }),
     };
 
     const resizeObserver = new ResizeObserver((entries) => {
@@ -527,29 +525,14 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       Object.values(overlays.bollinger).forEach((series) => series.applyOptions({ visible: enabledIndicators.bollinger }));
       overlays.sar.setData(toLineData(indicatorValues.sar));
       overlays.sar.applyOptions({ visible: enabledIndicators.sar });
-      // [MODIFIED] Keep Supertrend visually continuous while switching color at trend reversals.
-      const supertrendUp = [];
-      const supertrendDown = [];
-      let previousDirection = null;
-      let previousPoint = null;
-      candles.forEach((candle, index) => {
-        const value = indicatorValues.supertrend.values[index];
-        const direction = indicatorValues.supertrend.directions[index];
-        if (value === null || value === undefined || direction === null) return;
-        const point = { time: candle.time, value };
-        if (direction !== previousDirection && previousPoint) {
-          if (direction === 1) supertrendUp.push(previousPoint);
-          if (direction === -1) supertrendDown.push(previousPoint);
-        }
-        if (direction === 1) supertrendUp.push(point);
-        if (direction === -1) supertrendDown.push(point);
-        previousDirection = direction;
-        previousPoint = point;
-      });
-      overlays.supertrend.up.setData(supertrendUp);
-      overlays.supertrend.down.setData(supertrendDown);
-      overlays.supertrend.up.applyOptions({ visible: enabledIndicators.supertrend });
-      overlays.supertrend.down.applyOptions({ visible: enabledIndicators.supertrend });
+      // [MODIFIED] Use one continuous Supertrend line colored by the latest trend direction.
+      const supertrendData = toLineData(indicatorValues.supertrend.values);
+      const latestDirection = [...indicatorValues.supertrend.directions].reverse().find((direction) => direction !== null);
+      const supertrendColor = latestDirection === -1
+        ? indicatorSettings.supertrend.downColor
+        : indicatorSettings.supertrend.upColor;
+      overlays.supertrend.setData(supertrendData);
+      overlays.supertrend.applyOptions({ visible: enabledIndicators.supertrend, color: supertrendColor });
     }
 
     if (candles.length) setLastCandle(candles[candles.length - 1]);
