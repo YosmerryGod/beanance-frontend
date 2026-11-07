@@ -388,7 +388,8 @@
     "app.k386": "All intervals",
     "app.k387": "Available intervals",
     "app.k388": "available",
-    "app.k389": "Maximum 8 quick intervals."
+    "app.k389": "Maximum 8 quick intervals.",
+    "app.k390": "Maximum 4 quick intervals."
   },
   "sidebar": {
     "account": "ACCOUNT",
