@@ -1491,7 +1491,7 @@ function App() {
               <section className="market-info-panel market-info-complete">
                 <div className="market-info-intro">
                   <div className="market-info-identity">
-                    <div className="market-info-identity-icon">{selectedMarket.icon ? <img src={selectedMarket.icon} alt="" /> : <span>{selectedMarket.symbol.slice(0,1)}</span>}</div>
+                    <div className="market-info-identity-icon">{selectedMarket.logo ? <img src={selectedMarket.logo} alt="" /> : <span>{selectedMarket.symbol.slice(0,1)}</span>}</div>
                     <div>
                       <h2>{selectedMarket.name || selectedMarket.symbol}</h2>
                       <p>{selectedMarket.symbol}/USDT · {marketExchangeInfo?.contractType || selectedMarket.contractType || t("Perpetual")}</p>
