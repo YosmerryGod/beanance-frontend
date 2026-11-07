@@ -492,7 +492,26 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       volumeSeriesRef.current = null;
       indicatorSeriesRef.current = null;
     };
-  }, [activeTheme, locale, indicatorSettings, pricePrecision, priceMinMove]);
+  }, [activeTheme, locale, indicatorSettings]); // [MODIFIED] Keep chart instance stable when tick-size metadata arrives.
+
+  // [ADDED] Update price precision in-place; do not recreate the chart or clear candle data.
+  useEffect(() => {
+    const chart = chartRef.current;
+    const candleSeries = candleSeriesRef.current;
+    if (!chart || !candleSeries) return;
+
+    candleSeries.applyOptions({
+      priceFormat: { type: "price", precision: pricePrecision, minMove: priceMinMove },
+    });
+    chart.applyOptions({
+      localization: {
+        priceFormatter: (value) => Number(value).toLocaleString(locale, {
+          minimumFractionDigits: pricePrecision,
+          maximumFractionDigits: pricePrecision,
+        }),
+      },
+    });
+  }, [pricePrecision, priceMinMove, locale]);
 
   // [MODIFIED] Recalculate and update all overlay series from configurable client-side settings.
   useEffect(() => {
