@@ -1489,7 +1489,7 @@ function App() {
                   <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} onTimeframeChange={setMarketTimeframe} tickSize={marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize} />
                   
                 </section>
-                <section className="market-performance-grid">
+                <section className="market-performance-grid" aria-label="Market performance">
                   {[["Hari Ini",selectedMarket.change],["7 Hari",formatMarketPeriodReturn(marketDailyCandles,7)],["30 Hari",formatMarketPeriodReturn(marketDailyCandles,30)],["90 Hari",formatMarketPeriodReturn(marketDailyCandles,90)],["180 Hari",formatMarketPeriodReturn(marketDailyCandles,180)],["1 Tahun",formatMarketPeriodReturn(marketDailyCandles,365)]].map(([label,value])=><div key={label}><span>{label}</span><strong className={value.startsWith("-")?"negative":"positive"}>{value}</strong></div>)}
                 </section>
                 <section className="market-orderbook">
