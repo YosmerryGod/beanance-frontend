@@ -4904,3 +4904,95 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   width:min(calc(100% - 28px),720px);
   margin:0 auto;
 }
+
+
+/* [ADDED] Binance-style interval picker bottom sheet for mobile and desktop. */
+.app-shell .market-interval-backdrop{
+  position:fixed;
+  z-index:1000;
+  inset:0;
+  width:100%;
+  height:100%;
+  padding:0;
+  border:0;
+  background:rgba(0,0,0,.58);
+}
+.app-shell .market-interval-sheet{
+  position:fixed;
+  z-index:1001;
+  right:0;
+  bottom:0;
+  left:0;
+  max-height:min(76dvh,720px);
+  overflow-y:auto;
+  padding:10px 20px calc(24px + env(safe-area-inset-bottom));
+  border:1px solid rgba(255,255,255,.06);
+  border-bottom:0;
+  border-radius:24px 24px 0 0;
+  background:var(--panel);
+  box-shadow:0 -14px 45px rgba(0,0,0,.28);
+  color:var(--text);
+  overscroll-behavior:contain;
+}
+.app-shell .market-interval-handle{
+  width:42px;
+  height:5px;
+  margin:0 auto 24px;
+  border-radius:99px;
+  background:var(--muted);
+  opacity:.55;
+}
+.app-shell .market-interval-sheet-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:20px;
+}
+.app-shell .market-interval-sheet-heading h3{
+  margin:0;
+  font-size:20px;
+  font-weight:800;
+}
+.app-shell .market-interval-sheet-heading button{
+  padding:5px 0;
+  border:0;
+  background:transparent;
+  color:var(--gold);
+  font-size:13px;
+  font-weight:750;
+}
+.app-shell .market-interval-options{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.app-shell .market-interval-options button{
+  min-width:0;
+  min-height:56px;
+  padding:8px 4px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:transparent;
+  color:var(--text);
+  font-size:14px;
+  font-weight:650;
+}
+.app-shell .market-interval-options button.selected{
+  border:2px solid var(--text);
+  background:var(--panel-soft);
+  color:var(--text);
+  font-weight:800;
+}
+@media(min-width:700px){
+  .app-shell .market-interval-sheet{
+    right:50%;
+    bottom:24px;
+    left:auto;
+    width:min(520px,calc(100vw - 32px));
+    max-height:min(70dvh,620px);
+    border:1px solid var(--line);
+    border-radius:20px;
+    transform:translateX(50%);
+  }
+}
