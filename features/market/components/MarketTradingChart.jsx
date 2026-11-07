@@ -196,6 +196,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const volumeSeriesRef = useRef(null);
   const indicatorSeriesRef = useRef(null); // [ADDED] Native overlay series references.
   const indicatorCandleTimeRef = useRef(null); // [ADDED] Refresh overlays only when a new candle starts.
+  const initialVisibleRangeKeyRef = useRef(""); // [ADDED] Track first viewport setup per symbol and timeframe.
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
   const [hoverCandle, setHoverCandle] = useState(null);
@@ -521,6 +522,19 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     if (!candleSeries || !volumeSeries) return;
 
     candleSeries.setData(candles);
+
+    // [ADDED] On first load of each market/timeframe, show the latest 50 candles.
+    // If fewer than 50 candles exist, display the complete available history.
+    const visibleRangeKey = normalizedSymbol + ":" + interval;
+    if (candles.length && initialVisibleRangeKeyRef.current !== visibleRangeKey) {
+      const firstVisibleIndex = Math.max(0, candles.length - 50);
+      chartRef.current?.timeScale().setVisibleLogicalRange({
+        from: firstVisibleIndex,
+        to: candles.length - 1,
+      });
+      initialVisibleRangeKeyRef.current = visibleRangeKey;
+    }
+
     volumeSeries.setData(candles.map((candle) => ({
       time: candle.time,
       value: candle.volume,
@@ -561,7 +575,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
     if (candles.length) setLastCandle(candles[candles.length - 1]);
     else setLastCandle(null);
-  }, [candles, indicatorValues, enabledIndicators, activeTheme, indicatorSettings]);
+  }, [candles, indicatorValues, enabledIndicators, activeTheme, indicatorSettings, normalizedSymbol, interval]);
 
   const zoomIn = () => {
     const chart = chartRef.current;
