@@ -4233,6 +4233,12 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-last-price>strong{max-width:100%;font-size:clamp(23px,5vw,34px);line-height:1.1;font-weight:850;letter-spacing:-.7px;overflow-wrap:anywhere}
 .app-shell .market-last-price>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .app-shell .market-last-price>div b{font-size:12px;font-weight:700}
+/* [ADDED] Brief directional flash for live market price ticks. */
+.app-shell .market-last-price>div b.market-live-price{display:inline-block;border-radius:4px;transition:background-color .12s ease,color .12s ease}
+.app-shell .market-last-price>div b.market-live-price-up{animation:market-price-flash-up .45s ease-out}
+.app-shell .market-last-price>div b.market-live-price-down{animation:market-price-flash-down .45s ease-out}
+@keyframes market-price-flash-up{0%,35%{background:rgba(32,189,136,.24);color:#20bd88}100%{background:transparent;color:var(--text)}}
+@keyframes market-price-flash-down{0%,35%{background:rgba(239,83,104,.24);color:#ef5368}100%{background:transparent;color:var(--text)}}
 .app-shell .market-last-price>div em{font-size:12px;font-style:normal;font-weight:750}
 .app-shell .market-last-price>small{margin-top:2px;color:var(--muted);font-size:10px}
 .app-shell .market-compact-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;align-content:center}
