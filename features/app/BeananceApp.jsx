@@ -55,7 +55,7 @@ import {
 } from "lucide-react";
 import CoinLogo from "../../components/ui/CoinLogo";
 import MarketTradingChart from "../market/components/MarketTradingChart";
-import { formatMarketPeriodReturn, formatMarketPrice, formatMarketVolume } from "../market/lib/format"; // [ADDED] Interactive TradingView-style market chart
+import { formatMarketPeriodReturn, formatMarketPrice, formatMarketVolume, formatMarketPriceByTick } from "../market/lib/format"; // [ADDED] Contract tick-size aware price formatting. // [ADDED] Interactive TradingView-style market chart
 
 
 const navigation = [
@@ -1458,9 +1458,9 @@ function App() {
                 <section className="market-price-summary">
                   <div className="market-last-price">
                     <span>Harga Terakhir</span>
-                    <strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong>
-                    <div><b>{selectedMarket.price}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
-                    <small>Harga Mark {selectedMarket.price}</small>
+                    <strong className={selectedMarket.positive?"positive":"negative"}>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</strong>
+                    <div><b>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
+                    <small>Harga Mark {marketMetrics?.markPrice !== undefined && marketMetrics?.markPrice !== null ? formatMarketPriceByTick(marketMetrics.markPrice, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language) : "—"}</small>
                   </div>
                   <div className="market-compact-stats">
                     <div><span>High 24 jam</span><strong>{selectedMarket.high||"—"}</strong></div>
@@ -1471,7 +1471,7 @@ function App() {
                 </section>
                 <section className="market-chart-section">
                   {/* [MODIFIED] Timeframe controls and three chart actions are now integrated into the chart toolbar. */}
-                  <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} onTimeframeChange={setMarketTimeframe} />
+                  <MarketTradingChart symbol={selectedMarket.symbol} timeframe={marketTimeframe} onTimeframeChange={setMarketTimeframe} tickSize={marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize} />
                   
                 </section>
                 <section className="market-performance-grid">
@@ -1513,7 +1513,7 @@ function App() {
                   </div>
                   <div className="market-info-section">
                     <h2>{t("Trading Statistics")}</h2>
-                    <div><span>{t("Last Price")}</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong></div>
+                    <div><span>{t("Last Price")}</span><strong className={selectedMarket.positive?"positive":"negative"}>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</strong></div>
                     <div><span>{t("24h Change")}</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div>
                     <div><span>{t("24h High")}</span><strong>{selectedMarket.high || "—"}</strong></div>
                     <div><span>{t("24h Low")}</span><strong>{selectedMarket.low || "—"}</strong></div>
@@ -1523,7 +1523,7 @@ function App() {
                   </div>
                   <div className="market-info-section">
                     <h2>{t("Mark Price & Funding")}</h2>
-                    <div><span>{t("Mark Price")}</span><strong>{marketMetrics?.markPrice ? formatMarketPrice(marketMetrics.markPrice, language) : "—"}</strong></div>
+                    <div><span>{t("Mark Price")}</span><strong>{marketMetrics?.markPrice !== undefined && marketMetrics?.markPrice !== null ? formatMarketPriceByTick(marketMetrics.markPrice, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language) : "—"}</strong></div>
                     <div><span>{t("Index Price")}</span><strong>{marketMetrics?.indexPrice ? formatMarketPrice(marketMetrics.indexPrice, language) : "—"}</strong></div>
                     <div><span>{t("Estimated Settlement Price")}</span><strong>{marketMetrics?.estimatedSettlePrice ? formatMarketPrice(marketMetrics.estimatedSettlePrice, language) : "—"}</strong></div>
                     <div><span>{t("Funding Rate")}</span><strong>{Number.isFinite(Number(marketMetrics?.fundingRate)) ? (Number(marketMetrics.fundingRate) * 100).toFixed(4) + "%" : "—"}</strong></div>
