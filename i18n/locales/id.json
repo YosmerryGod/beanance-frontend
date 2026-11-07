@@ -339,7 +339,8 @@
     "app.k337": "Harga Naik + Volume Tinggi",
     "app.k338": "Harga Turun + Volume Tinggi",
     "app.k339": "Perubahan Candle / Sinyal",
-    "app.k340": "Kategori Top Movers"
+    "app.k340": "Kategori Top Movers",
+    "app.k341": "Kategori aset market"
   },
   "sidebar": {
     "account": "AKUN",
