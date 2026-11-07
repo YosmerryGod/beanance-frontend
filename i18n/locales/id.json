@@ -385,7 +385,10 @@
     "app.k383": "Sembunyikan",
     "app.k384": "Tambah",
     "app.k385": "Semua interval yang didukung sudah ditambahkan.",
-    "app.k386": "Semua interval"
+    "app.k386": "Semua interval",
+    "app.k387": "Interval tersedia",
+    "app.k388": "tersedia",
+    "app.k389": "Maksimal 8 interval cepat."
   },
   "sidebar": {
     "account": "AKUN",
