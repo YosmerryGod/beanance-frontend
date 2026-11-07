@@ -375,7 +375,17 @@
     "app.k374": "Perpetual",
     "app.k375": "TRADING",
     "app.k341": "Market asset categories",
-    "app.k376": "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend."
+    "app.k376": "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.",
+    "app.k377": "Close interval picker",
+    "app.k378": "Interval",
+    "app.k379": "Edit",
+    "app.k380": "Done",
+    "app.k381": "Quick intervals",
+    "app.k382": "Custom intervals",
+    "app.k383": "Hide",
+    "app.k384": "Add",
+    "app.k385": "All supported intervals are already added.",
+    "app.k386": "All intervals"
   },
   "sidebar": {
     "account": "ACCOUNT",
