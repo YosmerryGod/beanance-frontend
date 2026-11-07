@@ -4810,3 +4810,37 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   .app-shell .market-info-complete .market-info-section>div{min-height:40px;font-size:11px}
   .app-shell .market-info-complete .market-info-section>div strong{max-width:58%}
 }
+
+
+/* [ADDED] Market Info uses a compact two-column data layout inspired by the reference, with Beanance tokens and surfaces. */
+.app-shell .market-info-complete{gap:14px;padding:16px;background:var(--panel);border-color:var(--line)}
+.app-shell .market-info-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
+.app-shell .market-info-identity{display:flex;align-items:center;gap:10px;min-width:0}
+.app-shell .market-info-identity-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;overflow:hidden;border-radius:50%;background:var(--panel-soft);color:var(--text);font-size:15px;font-weight:850}
+.app-shell .market-info-identity-icon img{width:100%;height:100%;object-fit:cover}
+.app-shell .market-info-identity h2{margin:0;color:var(--text);font-size:17px;font-weight:850;letter-spacing:-.3px}
+.app-shell .market-info-identity p{margin:3px 0 0;color:var(--muted);font-size:10px}
+.app-shell .market-info-status{flex:0 0 auto;padding:5px 8px;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.3px}
+.app-shell .market-info-status.is-live{border-color:rgba(34,185,130,.24);background:rgba(34,185,130,.08);color:var(--green,#22b982)}
+.app-shell .market-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 22px}
+.app-shell .market-info-complete .market-info-section{display:flex;flex-direction:column;gap:0;min-width:0}
+.app-shell .market-info-complete .market-info-section h2{margin:0 0 5px;color:var(--text);font-size:13px;font-weight:850;letter-spacing:-.15px}
+.app-shell .market-info-complete .market-info-section p{margin:0 0 8px;color:var(--muted);font-size:10px;line-height:1.55}
+.app-shell .market-info-complete .market-info-section>div{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;min-height:36px;padding:7px 0;border-top:1px solid var(--line);font-size:10px}
+.app-shell .market-info-complete .market-info-section>div span{flex:1;min-width:0;color:var(--muted)}
+.app-shell .market-info-complete .market-info-section>div strong{max-width:58%;color:var(--text);font-size:10px;font-weight:750;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.app-shell .market-info-complete .market-info-section>div strong.positive{color:var(--green,#22b982)}
+.app-shell .market-info-complete .market-info-section>div strong.negative{color:var(--red,#e35b70)}
+.app-shell .market-info-complete .market-info-footnote{margin:0;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:9px;line-height:1.55}
+@media(max-width:760px){
+  .app-shell .market-info-complete{gap:13px;padding:14px;border-radius:16px}
+  .app-shell .market-info-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 13px}
+  .app-shell .market-info-identity-icon{flex-basis:34px;width:34px;height:34px}
+  .app-shell .market-info-identity h2{font-size:15px}
+  .app-shell .market-info-complete .market-info-section h2{font-size:12px}
+  .app-shell .market-info-complete .market-info-section>div{min-height:38px;gap:5px;font-size:9px}
+  .app-shell .market-info-complete .market-info-section>div strong{max-width:60%;font-size:9px}
+}
+@media(max-width:360px){
+  .app-shell .market-info-grid{grid-template-columns:minmax(0,1fr)}
+}
