@@ -4875,3 +4875,20 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     min-height:54px;
   }
 }
+
+
+/* [MODIFIED] The page-enter animation applies transform to the page and traps fixed descendants.
+   Disable that transform on market detail so its action bar is fixed to the actual viewport. */
+.app-shell .market-detail-page{
+  animation:none!important;
+  transform:none!important;
+}
+.app-shell .market-detail-page .market-create-sticky{
+  position:fixed!important;
+  z-index:999;
+  right:0;
+  bottom:calc(8px + env(safe-area-inset-bottom));
+  left:0;
+  width:min(calc(100% - 28px),720px);
+  margin:0 auto;
+}
