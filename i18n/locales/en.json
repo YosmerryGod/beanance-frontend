@@ -340,11 +340,8 @@
     "app.k338": "Price Down + High Volume",
     "app.k339": "Candle Change / Signal",
     "app.k340": "Top Movers categories",
-        undefined: "Price",
     "app.k342": "Market Information",
-    undefined: "Market Overview",
     "app.k343": "Live contract and trading statistics for {{symbol}}.",
-    undefined: "Trading Pair",
     "app.k344": "Contract Type",
     "app.k345": "Market Status",
     "app.k346": "Base Asset",
@@ -354,7 +351,6 @@
     "app.k350": "Listing Date",
     "app.k351": "Trading Statistics",
     "app.k352": "Last Price",
-    undefined: "24h Change",
     "app.k353": "24h High",
     "app.k354": "24h Low",
     "app.k355": "24h Base Volume",
@@ -378,7 +374,7 @@
     "app.k373": "Supported Time in Force",
     "app.k374": "Perpetual",
     "app.k375": "TRADING",
-"app.k341": "Market asset categories"
+    "app.k341": "Market asset categories"
   },
   "sidebar": {
     "account": "ACCOUNT",
