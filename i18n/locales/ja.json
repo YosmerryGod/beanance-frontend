@@ -375,7 +375,17 @@
     "app.k374": "無期限",
     "app.k375": "取引中",
     "app.k341": "マーケット資産カテゴリー",
-    "app.k376": "契約メタデータとリアルタイム市場統計は、Binance USDⓈ-M Futures を通じて Beanance Market Backend から提供されます。"
+    "app.k376": "契約メタデータとリアルタイム市場統計は、Binance USDⓈ-M Futures を通じて Beanance Market Backend から提供されます。",
+    "app.k377": "インターバル選択を閉じる",
+    "app.k378": "時間足",
+    "app.k379": "編集",
+    "app.k380": "完了",
+    "app.k381": "クイック時間足",
+    "app.k382": "カスタム時間足",
+    "app.k383": "非表示",
+    "app.k384": "追加",
+    "app.k385": "サポートされている時間足はすべて追加済みです。",
+    "app.k386": "すべての時間足"
   },
   "sidebar": {
     "account": "アカウント",
