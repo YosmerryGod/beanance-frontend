@@ -388,7 +388,8 @@
     "app.k386": "Semua interval",
     "app.k387": "Interval tersedia",
     "app.k388": "tersedia",
-    "app.k389": "Maksimal 8 interval cepat."
+    "app.k389": "Maksimal 8 interval cepat.",
+    "app.k390": "Maksimal 4 interval cepat."
   },
   "sidebar": {
     "account": "AKUN",
