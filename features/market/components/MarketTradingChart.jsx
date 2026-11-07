@@ -795,11 +795,11 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               {editingIntervals && <div className="market-interval-custom-section">
                 <div className="market-interval-section-heading"><span>{t("Available intervals")}</span><span className="market-interval-count">{availableQuickTimeframes.length} {t("available")}</span></div>
                 <div className="market-interval-options market-interval-add-options">
-                  {availableQuickTimeframes.map((time) => <button type="button" key={time} onClick={() => setQuickTimeframes((current) => current.length < 8 ? [...current, time] : current)} disabled={quickTimeframes.length >= 8}>
+                  {availableQuickTimeframes.map((time) => <button type="button" key={time} onClick={() => setQuickTimeframes((current) => current.length < 4 ? [...current, time] : current) // [MODIFIED] Limit quick interval shortcuts to four.} disabled={quickTimeframes.length >= 8}>
                     {time}<Plus size={13}/>
                   </button>)}
                 </div>
-                {quickTimeframes.length >= 8 && <p className="market-interval-empty">{t("Maximum 8 quick intervals.")}</p>}
+                {quickTimeframes.length >= 8 && <p className="market-interval-empty">{t("Maximum 4 quick intervals.")}</p>}
                 {!availableQuickTimeframes.length && <p className="market-interval-empty">{t("All supported intervals are already added.")}</p>}
               </div>}
               {!editingIntervals && <><div className="market-interval-section-heading market-interval-all-heading"><span>{t("All intervals")}</span></div><div className="market-interval-options">
