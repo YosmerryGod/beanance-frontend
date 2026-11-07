@@ -1,6 +1,7 @@
 import "./globals.css";
 import "../styles/tokens.css";
-import "../styles/design-system.css"; /* keep LAST: unified yellow/black neumorphic layer */
+import "../styles/design-system.css";
+import "../styles/design-system-pages.css"; /* keep LAST: page coverage + yellow-on-yellow fixes */
 import { DM_Sans, Manrope } from "next/font/google";
 
 const dmSans = DM_Sans({

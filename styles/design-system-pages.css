@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Beanance Design System — page coverage layer (import AFTER design-system.css)
+   Closes the gaps found in the audit: Help, About, Portfolio, Market detail,
+   Strategy modal, Sidebar, Notifications + "yellow on yellow" fixes for Light.
+   ========================================================================== */
+
+/* ---------- A. MORE RAISED SURFACES ---------- */
+main.app-shell .about-body-copy,
+main.app-shell .about-feature-list,
+main.app-shell .portfolio-strategy-list-section,
+main.app-shell .portfolio-wallet-panel,
+main.app-shell .portfolio-wallet-actions,
+main.app-shell .sidebar-account,
+main.app-shell .strategy-detail-footer,
+main.app-shell .strategy-detail-owner-card,
+main.app-shell .market-info-complete,
+main.app-shell .discover-nav-tabs,
+main.app-shell .market-price-summary,
+main.app-shell .market-compact-stats,
+main.app-shell .market-performance-grid {
+  background: var(--ds-surface) !important;
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border) !important;
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-raised) !important;
+}
+
+/* ---------- B. PAGE WRAPPERS: never draw a second box around a page ---------- */
+main.app-shell .market-overview-section,
+main.app-shell .market-page,
+main.app-shell .portfolio-profile-page,
+main.app-shell .portfolio-strategy-page,
+main.app-shell .portfolio-wallet-modern,
+main.app-shell .portfolio-wallet-token-heading,
+main.app-shell .portfolio-history-list,
+main.app-shell .portfolio-wallet-address,
+main.app-shell .trader-strategy-metrics,
+main.app-shell .market-detail-page,
+main.app-shell .market-create-sticky {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+main.app-shell .market-create-sticky { background: linear-gradient(180deg, transparent, var(--ds-canvas) 40%) !important; }
+
+/* ---------- C. INSET PANELS (stat grids, tabs, timeframes, filters) ---------- */
+main.app-shell .strategy-detail-capital-grid,
+main.app-shell .strategy-detail-stat-grid,
+main.app-shell .strategy-detail-tabs,
+main.app-shell .strategy-detail-timeframes,
+main.app-shell .portfolio-strategy-all-filters,
+main.app-shell .discover-filter-popover-head,
+main.app-shell .trader-strategy-chart,
+main.app-shell .market-detail-pair {
+  background: var(--ds-tray) !important;
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-inset) !important;
+}
+main.app-shell .strategy-detail-tabs button,
+main.app-shell .strategy-detail-timeframes button { background: transparent; color: var(--ds-muted); border: 0; border-radius: var(--ds-radius-pill); font-weight: 700; }
+main.app-shell .strategy-detail-tabs button.selected,
+main.app-shell .strategy-detail-tabs button.active,
+main.app-shell .strategy-detail-timeframes button.selected,
+main.app-shell .strategy-detail-timeframes button.active { background: var(--ds-surface); color: var(--ds-text); box-shadow: var(--ds-shadow-raised-sm); }
+
+/* Icon chips */
+main.app-shell .strategy-detail-close,
+main.app-shell .discover-filter-icon,
+main.app-shell .market-detail-icon,
+main.app-shell .strategy-detail-icon,
+main.app-shell .notification-button {
+  background: var(--ds-surface) !important;
+  color: var(--ds-muted);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-raised-sm) !important;
+}
+main.app-shell .notification-heading { background: transparent; border-bottom: 1px solid var(--ds-border); color: var(--ds-text); }
+main.app-shell .notification-symbol { background: var(--ds-tray); color: var(--ds-accent); box-shadow: var(--ds-shadow-inset); }
+main.app-shell .notification-dot { background: var(--ds-negative); }
+main.app-shell .sidebar-language-list { background: var(--ds-tray) !important; box-shadow: var(--ds-shadow-inset); border-radius: var(--ds-radius-md); }
+main.app-shell .portfolio-account-badge,
+main.app-shell .trader-strategy-count,
+main.app-shell .trader-strategy-risk-inline,
+main.app-shell .strategy-detail-status { background: var(--ds-tray) !important; color: var(--ds-text); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-pill); box-shadow: var(--ds-shadow-inset); }
+main.app-shell .about-disclaimer,
+main.app-shell .trader-profile-disclaimer,
+main.app-shell .market-data-disclaimer { background: var(--ds-tray); color: var(--ds-muted); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-md); box-shadow: var(--ds-shadow-inset); }
+main.app-shell .about-section-heading { background: transparent; }
+main.app-shell .market-info-identity-icon,
+main.app-shell .strategy-detail-owner-avatar { background: var(--ds-surface); border: 1px solid var(--ds-border); box-shadow: var(--ds-shadow-raised-sm); }
+
+/* ---------- D. LIGHT MODE: yellow on yellow → black ---------- */
+/* Brand mark, About logo, Help hero art, avatar upload, create button: ink tile + yellow glyph */
+main.app-shell.theme-light .brand-mark,
+main.app-shell.theme-light .about-logo-mark,
+main.app-shell.theme-light .help-center-hero-art,
+main.app-shell.theme-light .help-center-brand-icon,
+main.app-shell.theme-light .edit-profile-photo,
+main.app-shell.theme-light .create-orb,
+main.app-shell.theme-light .nav-create,
+main.app-shell.theme-light .portfolio-wallet-onboarding-icon {
+  background: #17150d !important;
+  color: #ffd84d !important;
+  border-color: rgba(255, 216, 77, .25);
+  box-shadow: var(--ds-shadow-raised-sm) !important;
+}
+main.app-shell.theme-light .brand-mark span { border-color: #ffd84d; }
+main.app-shell.theme-light .about-logo-mark svg,
+main.app-shell.theme-light .help-center-hero-art svg { color: #ffd84d; }
+
+/* CSS-drawn coin tiles that were yellow */
+main.app-shell.theme-light .strategy-coin.bnb,
+main.app-shell.theme-light .strategy-coin.bean,
+main.app-shell.theme-light .discover-avatar.bnb,
+main.app-shell.theme-light .discover-avatar.bitcoin,
+main.app-shell.theme-light .portfolio-asset-icon.bnb,
+main.app-shell.theme-light .portfolio-wallet-token-logo.bnb,
+main.app-shell.theme-light .portfolio-wallet-token-logo.bean {
+  background: #17150d !important;
+  color: #ffd84d !important;
+  border: 1px solid rgba(255, 216, 77, .22);
+}
+
+/* Real crypto logos: yellow family → black disc with white glyph (Light only).
+   BNB keeps its existing dark chip. `data-tone="yellow"` is set by components/ui/CoinLogo.jsx */
+main.app-shell.theme-light .coin-logo[data-tone="yellow"] > svg,
+main.app-shell.theme-light .coin-logo[data-tone="yellow"] > img {
+  filter: grayscale(1) brightness(.58) contrast(8);
+}
+main.app-shell.theme-light .coin-logo[data-symbol="BNB"] { background: #17150d !important; border: 1px solid rgba(255, 216, 77, .22) !important; }
+
+/* Remaining small yellow accents on the canvas */
+main.app-shell.theme-light .market-indicator-switch.is-on { background: #17150d; }
+main.app-shell.theme-light .trader-profile-cover,
+main.app-shell.theme-light .portfolio-profile-cover { background: linear-gradient(135deg, #17150d, #3a2f08) !important; }

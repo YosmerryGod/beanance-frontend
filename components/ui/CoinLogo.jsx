@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 import { TokenIcon } from "@web3icons/react/dynamic";
 
+/* Logos whose brand colour is yellow/gold. In Light mode they would blend into the
+   yellow canvas, so styles/design-system-pages.css flips them to black (data-tone="yellow").
+   Add more symbols here when needed. BNB is handled separately with a dark chip. */
+const YELLOW_SYMBOLS = new Set(["DOGE", "1000DOGE", "BUSD", "XAUT", "PAXG", "BEAN", "BTCB", "OKB", "FTT"]);
+
 function normalizeSymbol(value) {
   return String(value || "")
     .trim()
@@ -15,8 +20,9 @@ function normalizeSymbol(value) {
 export default function CoinLogo({ symbol, size, logo, className = "" }) {
   const normalizedSymbol = normalizeSymbol(symbol);
   const [logoFailed, setLogoFailed] = useState(false);
+  const tone = YELLOW_SYMBOLS.has(normalizedSymbol) ? "yellow" : undefined;
 
-  // [ADDED] Reset the remote-logo fallback when the market asset changes.
+  // Reset the remote-logo fallback when the market asset changes.
   useEffect(() => {
     setLogoFailed(false);
   }, [logo]);
@@ -26,7 +32,7 @@ export default function CoinLogo({ symbol, size, logo, className = "" }) {
     </span>
   );
 
-  // [ADDED] Use the official Beanance token mark for the BEAN asset.
+  // Official Beanance token mark for the BEAN asset.
   if (normalizedSymbol === "BEAN") {
     return (
       <span
@@ -35,6 +41,7 @@ export default function CoinLogo({ symbol, size, logo, className = "" }) {
         role="img"
         aria-label="BEAN"
         data-symbol="BEAN"
+        data-tone={tone}
       >
         <img src="/icons/bean.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       </span>
@@ -61,8 +68,9 @@ export default function CoinLogo({ symbol, size, logo, className = "" }) {
       role="img"
       aria-label={normalizedSymbol}
       data-symbol={normalizedSymbol}
+      data-tone={tone}
     >
-      {/* [ADDED] Prefer the logo URL supplied by Beanance Market Backend. */}
+      {/* Prefer the logo URL supplied by Beanance Market Backend. */}
       {logo && !logoFailed ? (
         <img
           src={logo}
