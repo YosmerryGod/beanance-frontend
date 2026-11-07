@@ -4791,3 +4791,22 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     margin-bottom:18px;
   }
 }
+
+
+/* [ADDED] Market information layout follows Beanance's existing panel, border, and gold accent system. */
+.app-shell .market-info-complete{gap:18px;padding:17px;border-color:var(--line);background:var(--panel)}
+.app-shell .market-info-complete .market-info-section{display:flex;flex-direction:column;gap:0;min-width:0}
+.app-shell .market-info-complete .market-info-section h2{margin:0 0 5px;color:var(--text);font-size:15px;font-weight:850;letter-spacing:-.2px}
+.app-shell .market-info-complete .market-info-section p{margin:0 0 9px;color:var(--muted);font-size:11px;line-height:1.6}
+.app-shell .market-info-complete .market-info-section>div{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:39px;padding:7px 0;border-top:1px solid var(--line);font-size:11px}
+.app-shell .market-info-complete .market-info-section>div span{color:var(--muted);flex:1;min-width:0}
+.app-shell .market-info-complete .market-info-section>div strong{color:var(--text);font-weight:750;text-align:right;max-width:62%;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.app-shell .market-info-complete .market-info-section>div strong.positive{color:var(--green,#22b982)}
+.app-shell .market-info-complete .market-info-section>div strong.negative{color:var(--red,#e35b70)}
+.app-shell .market-info-complete .market-info-footnote{margin:0;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;line-height:1.6}
+@media(max-width:760px){
+  .app-shell .market-info-complete{gap:16px;padding:15px;border-radius:16px}
+  .app-shell .market-info-complete .market-info-section h2{font-size:14px}
+  .app-shell .market-info-complete .market-info-section>div{min-height:40px;font-size:11px}
+  .app-shell .market-info-complete .market-info-section>div strong{max-width:58%}
+}
