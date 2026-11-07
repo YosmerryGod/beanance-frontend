@@ -4779,3 +4779,15 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-chart-ma-value.sar span{color:#e6a23c}
 .app-shell .market-chart-ma-value.supertrend-up span{color:#20bd88}
 .app-shell .market-chart-ma-value.supertrend-down span{color:#ef5368}
+
+
+/* [ADDED] Give the mobile Market screen more breathing room below the top navigation. */
+@media(max-width:760px){
+  .app-shell .market-page{
+    padding-top:42px;
+  }
+  .app-shell .market-page .market-asset-categories{
+    margin-top:4px;
+    margin-bottom:18px;
+  }
+}
