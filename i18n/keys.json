@@ -384,5 +384,8 @@
   "Hide": "app.k383",
   "Add": "app.k384",
   "All supported intervals are already added.": "app.k385",
-  "All intervals": "app.k386"
+  "All intervals": "app.k386",
+  "Available intervals": "app.k387",
+  "available": "app.k388",
+  "Maximum 8 quick intervals.": "app.k389"
 }
