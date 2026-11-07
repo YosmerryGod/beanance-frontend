@@ -21,3 +21,25 @@ export function formatMarketPeriodReturn(candles, days) {
   const change = ((current - previous) / previous) * 100;
   return (change > 0 ? "+" : "") + change.toFixed(2) + "%";
 }
+
+
+// [ADDED] Derive Binance display precision from PRICE_FILTER.tickSize.
+// Trailing zeroes are insignificant: 0.0000010 requires 6 decimal places, not 7.
+export function getMarketPricePrecision(tickSize, fallback = 8) {
+  const tick = String(tickSize ?? "").trim();
+  if (!tick || !/^(?:\d+)(?:\.\d+)?$/.test(tick)) return fallback;
+  const fraction = tick.includes(".") ? tick.split(".")[1].replace(/0+$/, "") : "";
+  return fraction.length;
+}
+
+// [ADDED] Format prices using the exact decimal precision allowed by the contract tick size.
+export function formatMarketPriceByTick(value, tickSize, locale = "en", prefix = "$") {
+  const price = Number(value);
+  if (!Number.isFinite(price)) return "—";
+  const precision = getMarketPricePrecision(tickSize);
+  return prefix + price.toLocaleString(locale, {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+    useGrouping: true,
+  });
+}
