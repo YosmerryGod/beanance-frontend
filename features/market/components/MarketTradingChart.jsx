@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CandlestickSeries, HistogramSeries, LineSeries, createChart } from "lightweight-charts";
-import { ChevronDown, Expand, LayoutGrid, Settings2, SlidersHorizontal, X } from "lucide-react"; // [MODIFIED] Add remove icon for quick interval editing.
+import { ChevronDown, Expand, LayoutGrid, Plus, Settings2, SlidersHorizontal, X } from "lucide-react"; // [MODIFIED] Add interval add/remove icons.
 import { useTranslation } from "react-i18next";
 import { translationKeys } from "../../../i18n/config";
 import { getMarketPricePrecision } from "../lib/format"; // [ADDED] Use Binance contract tick size for chart precision.
