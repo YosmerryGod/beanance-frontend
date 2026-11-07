@@ -339,7 +339,8 @@
     "app.k337": "Price Up + High Volume",
     "app.k338": "Price Down + High Volume",
     "app.k339": "Candle Change / Signal",
-    "app.k340": "Top Movers categories"
+    "app.k340": "Top Movers categories",
+    "app.k341": "Market asset categories"
   },
   "sidebar": {
     "account": "ACCOUNT",
