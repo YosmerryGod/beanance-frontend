@@ -773,7 +773,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             </button>
           </div>
         </div>
-        <button type="button" className="market-interval-edit-trigger" onClick={() => { setMoreTimeframesOpen(true); setEditingIntervals(true); setShowCustomIntervals(false); }}>{t("Edit")}</button>
+        {/* [REMOVED] Standalone Edit button; interval editing remains inside Lainnya. */}
         {moreTimeframesOpen && (
           <>
             {/* [MODIFIED] Refined interval picker with editable quick shortcuts. */}
