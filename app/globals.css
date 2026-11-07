@@ -4253,10 +4253,16 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 .app-shell .market-indicators{display:flex;align-items:center;justify-content:space-between;gap:12px;overflow-x:auto;scrollbar-width:none}
 .app-shell .market-indicators::-webkit-scrollbar{display:none}
 .app-shell .market-indicators button{font-size:10px}
-.app-shell .market-performance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.app-shell .market-performance-grid>div{display:flex;flex-direction:column;gap:4px;min-width:0}
-.app-shell .market-performance-grid span{color:var(--muted);font-size:10px}
-.app-shell .market-performance-grid strong{font-size:12px;font-weight:800}
+/* [MODIFIED] Keep market performance periods in one horizontal row with swipe scrolling on narrow screens. */
+.app-shell .market-performance-grid{display:flex;align-items:stretch;gap:0;overflow-x:auto;overflow-y:hidden;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.app-shell .market-performance-grid::-webkit-scrollbar{display:none}
+.app-shell .market-performance-grid>div{display:flex;flex:1 0 92px;flex-direction:column;gap:5px;min-width:92px;padding:0 12px;border-right:1px solid var(--line)}
+.app-shell .market-performance-grid>div:first-child{padding-left:0}
+.app-shell .market-performance-grid>div:last-child{padding-right:0;border-right:0}
+.app-shell .market-performance-grid span{color:var(--muted);font-size:10px;white-space:nowrap}
+.app-shell .market-performance-grid strong{font-size:12px;font-weight:800;white-space:nowrap}
+.app-shell .market-performance-grid strong.positive{color:#20bd88}
+.app-shell .market-performance-grid strong.negative{color:#ef5368}
 .app-shell .market-orderbook{display:flex;flex-direction:column;gap:11px;padding-bottom:10px}
 .app-shell .market-order-tabs{display:flex;align-items:center;gap:24px;border-bottom:1px solid var(--line)}
 .app-shell .market-order-tabs button{padding:9px 0;border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer}
