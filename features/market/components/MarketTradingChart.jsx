@@ -527,7 +527,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     // If fewer than 50 candles exist, display the complete available history.
     const visibleRangeKey = normalizedSymbol + ":" + interval;
     if (candles.length && initialVisibleRangeKeyRef.current !== visibleRangeKey) {
-      const firstVisibleIndex = Math.max(0, candles.length - 50);
+      const firstVisibleIndex = Math.max(0, candles.length - 100); // [MODIFIED] Show 100 latest candles by default.
       chartRef.current?.timeScale().setVisibleLogicalRange({
         from: firstVisibleIndex,
         to: candles.length - 1,
