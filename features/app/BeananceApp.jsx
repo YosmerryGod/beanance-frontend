@@ -281,7 +281,7 @@ function App() {
   // [ADDED] Restore the last visited app page after the initial client render.
   useEffect(() => {
     const savedPage = window.localStorage.getItem("beanance-last-active-page");
-    const validPages = ["dashboard", "dapps", "market", "profile", "create", "help", "about"];
+    const validPages = ["dashboard", "dapps", "market", "market-detail", "profile", "edit-profile", "trader-profile", "help-center", "about"]; // [MODIFIED] Include every page ID rendered by the app so refresh can restore the actual last page.
     if (savedPage && validPages.includes(savedPage)) setActive(savedPage);
     setActivePageLoaded(true);
   }, []);
