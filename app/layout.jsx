@@ -1,5 +1,6 @@
 import "./globals.css";
 import "../styles/tokens.css";
+import "../styles/design-system.css"; /* keep LAST: unified yellow/black neumorphic layer */
 import { DM_Sans, Manrope } from "next/font/google";
 
 const dmSans = DM_Sans({
@@ -36,7 +37,7 @@ export const viewport = {
   viewportFit: "cover",
 };
 
-const themeBootstrap = `(function(){try{var saved=localStorage.getItem("beanance-theme");var theme=saved==="light"||saved==="dark"?saved:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=theme;var language=localStorage.getItem("beanance-language");if(["en","id","zh","ja","vi"].indexOf(language)>=0){document.documentElement.lang=language;}document.documentElement.style.colorScheme=theme;var meta=document.querySelector('meta[name="theme-color"]');if(meta){meta.setAttribute("content",theme==="light"?"#F5F6F8":"#090909");}}catch(error){document.documentElement.dataset.theme="dark";}})();`;
+const themeBootstrap = `(function(){try{var saved=localStorage.getItem("beanance-theme");var theme=saved==="light"||saved==="dark"?saved:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=theme;var language=localStorage.getItem("beanance-language");if(["en","id","zh","ja","vi"].indexOf(language)>=0){document.documentElement.lang=language;}document.documentElement.style.colorScheme=theme;var meta=document.querySelector('meta[name="theme-color"]');if(meta){meta.setAttribute("content",theme==="light"?"#EFC400":"#090909");}}catch(error){document.documentElement.dataset.theme="dark";}})();`;
 
 export default function RootLayout({ children }) {
   return (

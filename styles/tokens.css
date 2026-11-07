@@ -1,16 +1,17 @@
-/* Unified Beanance design tokens. Theme is applied to the document root so portals and browser chrome inherit it. */
+/* Unified Beanance design tokens. Theme is applied to the document root so portals and browser chrome inherit it.
+   Light = yellow canvas, Dark = black canvas. Component-level neumorphism lives in styles/design-system.css. */
 :root {
   color-scheme: dark;
   --theme-bg: #090909;
-  --theme-surface: #141414;
-  --theme-surface-2: #1c1b17;
-  --theme-border: rgba(255, 216, 77, 0.13);
-  --theme-text: #fff5d6;
-  --theme-text-muted: #a8a18e;
+  --theme-surface: #111111;
+  --theme-surface-2: #181818;
+  --theme-border: rgba(255, 255, 255, 0.06);
+  --theme-text: #f5f1e5;
+  --theme-text-muted: #9a9487;
   --theme-accent: #f5c400;
   --theme-positive: #35cf86;
   --theme-negative: #ef5368;
-  --theme-shadow: 8px 8px 18px rgba(0, 0, 0, 0.55), -5px -5px 14px rgba(255, 255, 255, 0.025);
+  --theme-shadow: 8px 8px 18px rgba(0, 0, 0, 0.75), -5px -5px 14px rgba(255, 255, 255, 0.025);
   --bg: var(--theme-bg);
   --panel: var(--theme-surface);
   --panel-soft: var(--theme-surface-2);
@@ -31,16 +32,16 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --theme-bg: #f5f6f8;
-  --theme-surface: #ffffff;
-  --theme-surface-2: #edf0f5;
-  --theme-border: rgba(26, 35, 50, 0.11);
-  --theme-text: #202938;
-  --theme-text-muted: #687386;
-  --theme-accent: #dca900;
-  --theme-positive: #159b68;
-  --theme-negative: #d94359;
-  --theme-shadow: 7px 7px 16px rgba(26, 35, 50, 0.08), -6px -6px 16px rgba(255, 255, 255, 0.9);
+  --theme-bg: #efc400;
+  --theme-surface: #fff8df;
+  --theme-surface-2: #f8ecc0;
+  --theme-border: rgba(91, 68, 0, 0.14);
+  --theme-text: #28200b;
+  --theme-text-muted: #645210;
+  --theme-accent: #6b5000;
+  --theme-positive: #0c7a4d;
+  --theme-negative: #c2263f;
+  --theme-shadow: 8px 8px 18px rgba(111, 82, 0, 0.24), -8px -8px 18px rgba(255, 240, 140, 0.55);
 }
 html, body {
   min-height: 100%;
@@ -53,44 +54,18 @@ body {
 h1, h2, h3, h4, .brand, .balance-value {
   font-family: var(--font-manrope), "Manrope", sans-serif;
 }
-html[data-theme="dark"] .app-shell,
-html[data-theme="light"] .app-shell {
-  --bg: var(--theme-bg);
-  --panel: var(--theme-surface);
-  --panel-soft: var(--theme-surface-2);
-  --muted: var(--theme-text-muted);
-  --line: var(--theme-border);
-  --gold: var(--theme-accent);
-  --green: var(--theme-positive);
-  --text: var(--theme-text);
-  --gold-soft: color-mix(in srgb, var(--theme-accent) 12%, transparent);
-  color: var(--theme-text);
-  background-color: var(--theme-bg);
-}
-:root[data-theme="light"] .app-shell {
-  background-image: radial-gradient(ellipse at 50% -18%, color-mix(in srgb, var(--theme-accent) 9%, transparent), transparent 44%);
-}
-:root[data-theme="dark"] .app-shell {
-  background-image: radial-gradient(ellipse at 50% -18%, color-mix(in srgb, var(--theme-accent) 12%, transparent), transparent 42%);
-}
 ::selection {
   color: #17150d;
   background: var(--theme-accent);
 }
-
 
 /* Native browser controls and scrollbars follow the active document theme. */
 html {
   scrollbar-color: var(--theme-text-muted) var(--theme-bg);
   scrollbar-width: thin;
 }
-::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
-}
-::-webkit-scrollbar-track {
-  background: var(--theme-bg);
-}
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: var(--theme-bg); }
 ::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--theme-text-muted) 42%, transparent);
   border: 2px solid var(--theme-bg);

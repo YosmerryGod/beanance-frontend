@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Beanance Design System — final layer (import LAST in app/layout.jsx)
+   Light  : yellow canvas + cream neumorphic surfaces
+   Dark   : black canvas  + graphite neumorphic surfaces
+   One token set → every page (Dashboard, Discover, Market, Trader, Portfolio,
+   Profile, Help, About) + sidebar, nav, sheets and modals.
+   ========================================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+main.app-shell,
+:root {
+  --ds-radius-sm: 10px;
+  --ds-radius-md: 14px;
+  --ds-radius-lg: 20px;
+  --ds-radius-pill: 999px;
+  --ds-ease: cubic-bezier(.2, .7, .2, 1);
+  --ds-font-display: var(--font-manrope), "Manrope", sans-serif;
+  --ds-font-body: var(--font-dm-sans), "DM Sans", sans-serif;
+}
+
+main.app-shell.theme-light,
+:root[data-theme="light"] {
+  --ds-canvas: #efc400;
+  --ds-surface: #fff8df;
+  --ds-surface-2: #f8ecc0;
+  --ds-tray: #e3b800;
+  --ds-border: rgba(91, 68, 0, .14);
+  --ds-text: #28200b;
+  --ds-muted: #645210;
+  --ds-accent: #6b5000;
+  --ds-accent-fill: #28200b;
+  --ds-accent-ink: #ffd84d;
+  --ds-positive: #0c7a4d;
+  --ds-negative: #c2263f;
+  --ds-shadow-raised: 8px 8px 18px rgba(111, 82, 0, .24), -8px -8px 18px rgba(255, 240, 140, .55);
+  --ds-shadow-raised-sm: 4px 4px 9px rgba(111, 82, 0, .2), -4px -4px 9px rgba(255, 240, 140, .5);
+  --ds-shadow-inset: inset 4px 4px 9px rgba(111, 82, 0, .24), inset -4px -4px 9px rgba(255, 240, 140, .5);
+  --ds-overlay: rgba(40, 32, 11, .45);
+}
+
+main.app-shell.theme-dark,
+:root[data-theme="dark"] {
+  --ds-canvas: #090909;
+  --ds-surface: #111111;
+  --ds-surface-2: #181818;
+  --ds-tray: #0b0b0b;
+  --ds-border: rgba(255, 255, 255, .06);
+  --ds-text: #f5f1e5;
+  --ds-muted: #9a9487;
+  --ds-accent: #f5c400;
+  --ds-accent-fill: #f5c400;
+  --ds-accent-ink: #17150d;
+  --ds-positive: #35cf86;
+  --ds-negative: #ef5368;
+  --ds-shadow-raised: 8px 8px 18px rgba(0, 0, 0, .75), -5px -5px 14px rgba(255, 255, 255, .025);
+  --ds-shadow-raised-sm: 4px 4px 9px rgba(0, 0, 0, .7), -3px -3px 8px rgba(255, 255, 255, .025);
+  --ds-shadow-inset: inset 4px 4px 9px rgba(0, 0, 0, .75), inset -3px -3px 8px rgba(255, 255, 255, .03);
+  --ds-overlay: rgba(0, 0, 0, .65);
+}
+
+/* Map legacy variables so every existing rule that uses var(--panel) etc. follows the system */
+main.app-shell {
+  --bg: var(--ds-canvas);
+  --panel: var(--ds-surface);
+  --panel-soft: var(--ds-surface-2);
+  --muted: var(--ds-muted);
+  --line: var(--ds-border);
+  --gold: var(--ds-accent);
+  --green: var(--ds-positive);
+  --text: var(--ds-text);
+  --gold-soft: color-mix(in srgb, var(--ds-accent) 14%, transparent);
+  color: var(--ds-text);
+  background: var(--ds-canvas);
+  box-shadow: none;
+  font-family: var(--ds-font-body);
+}
+main.app-shell.theme-light { background-image: radial-gradient(ellipse at 50% -20%, rgba(255, 236, 130, .55), transparent 46%); }
+main.app-shell.theme-dark  { background-image: radial-gradient(ellipse at 50% -20%, rgba(245, 196, 0, .09), transparent 44%); }
+
+html[data-theme="light"], html[data-theme="light"] body { background: #efc400; }
+html[data-theme="dark"],  html[data-theme="dark"] body  { background: #090909; }
+
+/* ---------- 2. TYPOGRAPHY ---------- */
+main.app-shell h1, main.app-shell h2, main.app-shell h3, main.app-shell .brand {
+  font-family: var(--ds-font-display);
+  color: var(--ds-text) !important;
+  letter-spacing: -.02em;
+}
+main.app-shell h1 { font-size: clamp(24px, 4.6vw, 30px); line-height: 1.2; font-weight: 800; }
+main.app-shell h2 { font-size: 18px; line-height: 1.3; font-weight: 800; }
+main.app-shell h3 { font-size: 15px; font-weight: 700; }
+main.app-shell .muted,
+main.app-shell .eyebrow { color: var(--ds-muted) !important; }
+main.app-shell .eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+main.app-shell .positive { color: var(--ds-positive) !important; }
+main.app-shell .negative { color: var(--ds-negative) !important; }
+
+/* ---------- 3. LAYOUT RHYTHM ---------- */
+main.app-shell .page { padding-block: 24px 28px; }
+main.app-shell .dashboard-section,
+main.app-shell .discover-section,
+main.app-shell .portfolio-strategy-content { margin-bottom: 28px; }
+main.app-shell .section-heading,
+main.app-shell .dashboard-section-heading,
+main.app-shell .discover-section-heading,
+main.app-shell .trader-profile-section-heading { margin-bottom: 14px; }
+main.app-shell .topbar { background: transparent; border-bottom: 1px solid var(--ds-border); }
+
+/* ---------- 4. SURFACES — raised neumorphic cards ---------- */
+main.app-shell .ds-card,
+main.app-shell .strategy-card,
+main.app-shell .dashboard-table-wrap,
+main.app-shell .discover-podium-card,
+main.app-shell .discover-list-card,
+main.app-shell .trader-discover-card,
+main.app-shell .trader-profile-hero,
+main.app-shell .trader-profile-section,
+main.app-shell .trader-trade-card,
+main.app-shell .trader-strategy-performance-card,
+main.app-shell .portfolio-profile-hero,
+main.app-shell .portfolio-owned-strategy-card,
+main.app-shell .portfolio-wallet-balance-card,
+main.app-shell .portfolio-wallet-token-card,
+main.app-shell .portfolio-history-item,
+main.app-shell .portfolio-strategy-history-item,
+main.app-shell .balance-card,
+main.app-shell .market-summary,
+main.app-shell .market-info-panel,
+main.app-shell .market-orderbook,
+main.app-shell .profile-card,
+main.app-shell .promo-card,
+main.app-shell .feature-tile,
+main.app-shell .asset-list,
+main.app-shell .settings-list,
+main.app-shell .dapp-list,
+main.app-shell .help-center-hero,
+main.app-shell .help-center-contact,
+main.app-shell .help-center-articles,
+main.app-shell .about-hero,
+main.app-shell .about-section,
+main.app-shell .about-value-card,
+main.app-shell .edit-profile-form,
+main.app-shell .notification-popover,
+main.app-shell .discover-filter-popover {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-raised);
+}
+main.app-shell .strategy-card,
+main.app-shell .discover-list-card,
+main.app-shell .trader-trade-card { transition: transform .2s var(--ds-ease), box-shadow .2s var(--ds-ease); }
+@media (hover: hover) {
+  main.app-shell .strategy-card:hover,
+  main.app-shell .discover-list-card:hover { transform: translateY(-2px); }
+}
+main.app-shell .strategy-card:active,
+main.app-shell .discover-list-card:active { box-shadow: var(--ds-shadow-inset); transform: none; }
+
+/* Nested surfaces never double-raise */
+main.app-shell .trader-profile-section .trader-trade-card,
+main.app-shell .trader-profile-section .trader-strategy-performance-card,
+main.app-shell .portfolio-profile-hero .portfolio-owned-strategy-card { box-shadow: var(--ds-shadow-raised-sm); }
+
+/* Overlays: sheets, modals, sidebar, bottom nav */
+main.app-shell .bottom-nav,
+main.app-shell .app-sidebar,
+main.app-shell .create-sheet,
+main.app-shell .strategy-detail-modal,
+main.app-shell .market-interval-sheet {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  box-shadow: var(--ds-shadow-raised);
+}
+main.app-shell .modal-backdrop,
+main.app-shell .sidebar-backdrop,
+main.app-shell .strategy-detail-overlay { background: var(--ds-overlay); backdrop-filter: blur(3px); }
+
+/* ---------- 5. TRAYS & TABS — inset container, raised selected pill ---------- */
+main.app-shell .ds-tabs,
+main.app-shell .period-tabs,
+main.app-shell .mobile-dashboard-tabs,
+main.app-shell .discover-switch,
+main.app-shell .discover-filters,
+main.app-shell .trader-subtabs,
+main.app-shell .trader-profile-tabs,
+main.app-shell .market-tabs,
+main.app-shell .market-detail-tabs,
+main.app-shell .market-order-tabs,
+main.app-shell .portfolio-icon-tabs,
+main.app-shell .portfolio-history-tabs,
+main.app-shell .portfolio-history-icon-tabs,
+main.app-shell .portfolio-strategy-filters {
+  background: var(--ds-tray);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  box-shadow: var(--ds-shadow-inset);
+  padding: 4px;
+}
+main.app-shell .ds-tabs button,
+main.app-shell .period-tabs button,
+main.app-shell .mobile-dashboard-tabs button,
+main.app-shell .discover-switch button,
+main.app-shell .discover-filters button,
+main.app-shell .trader-subtabs button,
+main.app-shell .trader-profile-tabs button,
+main.app-shell .market-tabs button,
+main.app-shell .market-detail-tabs button,
+main.app-shell .market-order-tabs button,
+main.app-shell .portfolio-icon-tabs button,
+main.app-shell .portfolio-history-tabs button,
+main.app-shell .portfolio-strategy-filters button {
+  background: transparent;
+  color: var(--ds-muted);
+  border: 0;
+  border-radius: var(--ds-radius-pill);
+  font-weight: 700;
+  box-shadow: none;
+  transition: color .15s, background .15s, box-shadow .15s;
+}
+main.app-shell .ds-tabs button.selected,
+main.app-shell .period-tabs button.selected,
+main.app-shell .mobile-dashboard-tabs button.selected,
+main.app-shell .discover-switch button.selected,
+main.app-shell .discover-filters button.selected,
+main.app-shell .trader-subtabs button.selected,
+main.app-shell .trader-profile-tabs button.selected,
+main.app-shell .market-tabs button.selected,
+main.app-shell .market-detail-tabs button.selected,
+main.app-shell .market-order-tabs button.selected,
+main.app-shell .portfolio-icon-tabs button.selected,
+main.app-shell .portfolio-history-tabs button.selected,
+main.app-shell .portfolio-strategy-filters button.selected,
+main.app-shell .ds-tabs button[aria-selected="true"] {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  box-shadow: var(--ds-shadow-raised-sm);
+}
+main.app-shell.theme-dark .ds-tabs button.selected,
+main.app-shell.theme-dark .period-tabs button.selected,
+main.app-shell.theme-dark .mobile-dashboard-tabs button.selected,
+main.app-shell.theme-dark .discover-switch button.selected,
+main.app-shell.theme-dark .trader-subtabs button.selected,
+main.app-shell.theme-dark .market-tabs button.selected { color: var(--ds-accent); }
+
+/* Bottom nav active item */
+main.app-shell .nav-item { color: var(--ds-muted); }
+main.app-shell .nav-item.active { color: var(--ds-text); background: var(--ds-tray); box-shadow: var(--ds-shadow-inset); }
+main.app-shell.theme-dark .nav-item.active { color: var(--ds-accent); }
+main.app-shell .sidebar-nav-item { color: var(--ds-text); border-radius: var(--ds-radius-md); }
+main.app-shell .sidebar-nav-item.selected { background: var(--ds-tray); box-shadow: var(--ds-shadow-inset); }
+
+/* ---------- 6. INPUTS — inset ---------- */
+main.app-shell .ds-input,
+main.app-shell .search-field,
+main.app-shell .header-search,
+main.app-shell .help-center-search,
+main.app-shell .edit-profile-field input,
+main.app-shell .edit-profile-field textarea,
+main.app-shell .edit-profile-field select,
+main.app-shell .discover-filter-popover select,
+main.app-shell .discover-filter-popover input {
+  background: var(--ds-tray);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-inset);
+  transition: border-color .15s, box-shadow .15s;
+}
+main.app-shell .header-search input,
+main.app-shell .search-field input,
+main.app-shell .help-center-search input { background: transparent; color: var(--ds-text); box-shadow: none; border: 0; }
+main.app-shell ::placeholder { color: var(--ds-muted); opacity: .8; }
+main.app-shell .ds-input:focus-within,
+main.app-shell .header-search.is-open,
+main.app-shell .edit-profile-field input:focus,
+main.app-shell .edit-profile-field textarea:focus { border-color: var(--ds-accent); }
+
+/* ---------- 7. BUTTONS ---------- */
+/* Primary */
+main.app-shell .ds-btn--primary,
+main.app-shell .trader-follow-button,
+main.app-shell .strategy-detail-copy-button,
+main.app-shell .edit-profile-save,
+main.app-shell .portfolio-wallet-primary-action,
+main.app-shell .avatar-button,
+main.app-shell .create-orb {
+  background: var(--ds-accent-fill);
+  color: var(--ds-accent-ink);
+  border: 0;
+  border-radius: var(--ds-radius-pill);
+  font-weight: 800;
+  box-shadow: var(--ds-shadow-raised-sm);
+  transition: transform .15s var(--ds-ease), box-shadow .15s var(--ds-ease), filter .15s;
+}
+/* Secondary */
+main.app-shell .ds-btn--secondary,
+main.app-shell .trader-copy-button,
+main.app-shell .table-follow,
+main.app-shell .portfolio-wallet-secondary-action,
+main.app-shell .edit-profile-photo-button,
+main.app-shell .portfolio-edit-button {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  font-weight: 700;
+  box-shadow: var(--ds-shadow-raised-sm);
+  transition: transform .15s var(--ds-ease), box-shadow .15s var(--ds-ease);
+}
+/* Icon buttons */
+main.app-shell .ds-icon-btn,
+main.app-shell .icon-button,
+main.app-shell .sidebar-trigger,
+main.app-shell .search-trigger,
+main.app-shell .market-detail-back,
+main.app-shell .help-center-back,
+main.app-shell .edit-profile-back,
+main.app-shell .trader-profile-back,
+main.app-shell .trader-profile-inline-back,
+main.app-shell .strategy-more {
+  background: var(--ds-surface);
+  color: var(--ds-muted);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-raised-sm);
+  transition: transform .15s var(--ds-ease), box-shadow .15s var(--ds-ease), color .15s;
+}
+main.app-shell .favorite-star { background: transparent; border: 0; box-shadow: none; color: var(--ds-muted); }
+main.app-shell .favorite-star.active,
+main.app-shell .favorite-star.is-favorite { color: var(--ds-accent); }
+main.app-shell .text-link { background: transparent; border: 0; color: var(--ds-accent); font-weight: 800; box-shadow: none; }
+
+@media (hover: hover) {
+  main.app-shell .ds-btn--primary:hover,
+  main.app-shell .trader-follow-button:hover,
+  main.app-shell .strategy-detail-copy-button:hover,
+  main.app-shell .edit-profile-save:hover,
+  main.app-shell .portfolio-wallet-primary-action:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  main.app-shell .ds-icon-btn:hover,
+  main.app-shell .icon-button:hover,
+  main.app-shell .ds-btn--secondary:hover,
+  main.app-shell .trader-copy-button:hover { color: var(--ds-text); transform: translateY(-1px); }
+}
+main.app-shell .ds-btn--primary:active,
+main.app-shell .ds-btn--secondary:active,
+main.app-shell .ds-icon-btn:active,
+main.app-shell .icon-button:active,
+main.app-shell .trader-follow-button:active,
+main.app-shell .trader-copy-button:active,
+main.app-shell .edit-profile-save:active { box-shadow: var(--ds-shadow-inset); transform: none; }
+main.app-shell button:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+
+/* ---------- 8. BADGES ---------- */
+main.app-shell .ds-badge,
+main.app-shell .strategy-tag,
+main.app-shell .perp-tag,
+main.app-shell .status-pill {
+  background: var(--ds-tray);
+  color: var(--ds-muted);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  box-shadow: var(--ds-shadow-inset);
+  font-weight: 700;
+}
+main.app-shell .risk-tag { border-radius: var(--ds-radius-pill); font-weight: 800; border: 1px solid transparent; }
+main.app-shell .risk-low    { color: var(--ds-positive); background: color-mix(in srgb, var(--ds-positive) 14%, transparent); }
+main.app-shell .risk-medium { color: var(--ds-accent);   background: color-mix(in srgb, var(--ds-accent) 14%, transparent); }
+main.app-shell .risk-high   { color: var(--ds-negative); background: color-mix(in srgb, var(--ds-negative) 14%, transparent); }
+
+/* ---------- 9. TABLES ---------- */
+main.app-shell .dashboard-table,
+main.app-shell .market-table,
+main.app-shell .trader-table { border-collapse: collapse; width: 100%; }
+main.app-shell .dashboard-table th,
+main.app-shell .market-table-head,
+main.app-shell .top-movers-list-head {
+  color: var(--ds-muted) !important;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ds-border);
+}
+main.app-shell .dashboard-table td,
+main.app-shell .market-table-row,
+main.app-shell .top-mover-row { color: var(--ds-text); border-bottom: 1px solid var(--ds-border); }
+main.app-shell .dashboard-table tbody tr:last-child td,
+main.app-shell .market-table-row:last-child { border-bottom: 0; }
+@media (hover: hover) {
+  main.app-shell .dashboard-table tbody tr:hover,
+  main.app-shell .market-clickable-row:hover,
+  main.app-shell .top-mover-row:hover { background: color-mix(in srgb, var(--ds-tray) 55%, transparent); }
+}
+main.app-shell .rank-cell { background: var(--ds-tray); color: var(--ds-text); border-radius: 50%; box-shadow: var(--ds-shadow-inset); font-weight: 800; }
+main.app-shell .market-page-full .market-table-flat,
+main.app-shell .market-page-full .market-table { background: transparent; box-shadow: none; border: 0; }
+
+/* ---------- 10. LISTS / ROWS / EMPTY ---------- */
+main.app-shell .asset-row,
+main.app-shell .dapp-row,
+main.app-shell .sheet-option,
+main.app-shell .help-article-row,
+main.app-shell .notification-item,
+main.app-shell .strategy-detail-trade-row { border-bottom: 1px solid var(--ds-border); color: var(--ds-text); }
+main.app-shell .empty-state,
+main.app-shell .trader-empty-state,
+main.app-shell .help-center-empty,
+main.app-shell .top-movers-empty,
+main.app-shell .market-depth-placeholder {
+  background: transparent;
+  color: var(--ds-muted);
+  border: 1.5px dashed var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+}
+main.app-shell .quick-actions button span,
+main.app-shell .sheet-option-icon,
+main.app-shell .feature-symbol,
+main.app-shell .promo-icon,
+main.app-shell .help-category-icon,
+main.app-shell .help-contact-icon,
+main.app-shell .strategy-coin,
+main.app-shell .trader-owned-strategy-icon {
+  background: var(--ds-surface);
+  color: var(--ds-accent);
+  border: 1px solid var(--ds-border);
+  box-shadow: var(--ds-shadow-raised-sm);
+}
+main.app-shell .trader-profile-avatar,
+main.app-shell .portfolio-profile-avatar,
+main.app-shell .sidebar-avatar { border: 3px solid var(--ds-surface); box-shadow: var(--ds-shadow-raised-sm); }
+
+/* ---------- 11. STATES & A11Y ---------- */
+main.app-shell :focus-visible { outline: 2px solid var(--ds-accent); outline-offset: 2px; }
+main.app-shell ::selection { background: var(--ds-accent-fill); color: var(--ds-accent-ink); }
+.toast { background: var(--ds-accent-fill) !important; color: var(--ds-accent-ink) !important; border-radius: var(--ds-radius-pill) !important; }
+main.app-shell hr { border: 0; border-top: 1px solid var(--ds-border); }
+
+@media (prefers-reduced-motion: reduce) {
+  main.app-shell *, main.app-shell *::before, main.app-shell *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ---------- 12. SHARED COMPONENT HELPERS (components/ui) ---------- */
+.ds-card { padding: 18px; }
+.ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 18px; font: inherit; font-size: 13.5px; cursor: pointer; }
+.ds-icon-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; cursor: pointer; }
+.ds-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; font-size: 11px; }
+.ds-tabs { display: inline-flex; gap: 2px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ds-tabs::-webkit-scrollbar { display: none; }
+.ds-tabs button { min-height: 34px; padding: 0 14px; font: inherit; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
+.ds-input { padding: 0 14px; }
+.ds-input--row { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ds-muted); }
+.ds-input--row input { flex: 1; min-width: 0; height: 100%; font: inherit; font-size: 14px; outline: 0; }
