@@ -204,6 +204,7 @@ function mapHistoricalTopMover(item, locale = "en") {
 function App() {
   const { t: translate, i18n: translator } = useTranslation(); // [ADDED] Subscribe every page section to global language changes.
   const [active, setActive] = useState("dashboard");
+  const [activePageLoaded, setActivePageLoaded] = useState(false); // [ADDED] Restore the last visited page after hydration.
   const [helpReturnTo, setHelpReturnTo] = useState("dashboard"); // [ADDED] Return destination for standalone Help Center
   const [aboutReturnTo, setAboutReturnTo] = useState("dashboard"); // [ADDED] Return destination for standalone About page
   const [helpSearch, setHelpSearch] = useState(""); // [ADDED] Help Center article search
@@ -276,6 +277,20 @@ function App() {
   const pendingMarketUpdatesRef = useRef(new Map()); // [ADDED] Coalesce high-frequency ticker events before React state updates.
   const marketFlushTimerRef = useRef(null); // [ADDED] Limit ticker-driven renders to four per second.
   const marketInitialFetchRef = useRef(false); // [ADDED] Prevent repeated initial market snapshots when socket status changes.
+
+  // [ADDED] Restore the last visited app page after the initial client render.
+  useEffect(() => {
+    const savedPage = window.localStorage.getItem("beanance-last-active-page");
+    const validPages = ["dashboard", "dapps", "market", "profile", "create", "help", "about"];
+    if (savedPage && validPages.includes(savedPage)) setActive(savedPage);
+    setActivePageLoaded(true);
+  }, []);
+
+  // [ADDED] Save page navigation so refresh returns to the same page.
+  useEffect(() => {
+    if (!activePageLoaded) return;
+    window.localStorage.setItem("beanance-last-active-page", active);
+  }, [active, activePageLoaded]);
 
   useEffect(() => {
     const savedProfileName = window.localStorage.getItem("beanance-profile-name");
