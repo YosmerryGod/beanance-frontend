@@ -374,7 +374,8 @@
     "app.k373": "Supported Time in Force",
     "app.k374": "Perpetual",
     "app.k375": "TRADING",
-    "app.k341": "Market asset categories"
+    "app.k341": "Market asset categories",
+    "app.k376": "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend."
   },
   "sidebar": {
     "account": "ACCOUNT",
