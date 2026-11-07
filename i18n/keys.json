@@ -373,5 +373,6 @@
   "Supported Order Types": "app.k372",
   "Supported Time in Force": "app.k373",
   "Perpetual": "app.k374",
-  "TRADING": "app.k375"
+  "TRADING": "app.k375",
+  "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.": "app.k376"
 }
