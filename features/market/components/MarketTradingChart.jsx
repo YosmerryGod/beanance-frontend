@@ -207,6 +207,10 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [lastCandle, setLastCandle] = useState(null);
   const [hoverCandle, setHoverCandle] = useState(null);
   const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false); // [MODIFIED] Controls the Binance-style interval bottom sheet.
+  const [editingIntervals, setEditingIntervals] = useState(false); // [ADDED] Customize quick interval shortcuts.
+  const [quickTimeframes, setQuickTimeframes] = useState(["1m", "5m", "15m", "1h"]); // [ADDED] Default quick intervals.
+  const [quickTimeframesLoaded, setQuickTimeframesLoaded] = useState(false); // [ADDED] Wait for saved shortcuts before persisting.
+  const [showCustomIntervals, setShowCustomIntervals] = useState(false); // [ADDED] Toggle supported intervals available to add.
   const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
   const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: false, bollinger: false, sar: false, supertrend: false }); // [MODIFIED] First visit enables MA only.
@@ -216,6 +220,28 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [openIndicatorSettings, setOpenIndicatorSettings] = useState("");
   const [newIndicatorPeriods, setNewIndicatorPeriods] = useState({ ma: "", ema: "" });
   const [indicatorSettingsLoaded, setIndicatorSettingsLoaded] = useState(false);
+
+  // [ADDED] Restore and persist quick interval shortcuts locally.
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("beanance-chart-quick-timeframes");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const supported = new Set(["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"]);
+        if (Array.isArray(parsed)) {
+          const valid = parsed.filter((item) => supported.has(item));
+          if (valid.length) setQuickTimeframes([...new Set(valid)]);
+        }
+      }
+    } catch (error) {
+      console.warn("Unable to load saved chart intervals:", error);
+    }
+    setQuickTimeframesLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (quickTimeframesLoaded) window.localStorage.setItem("beanance-chart-quick-timeframes", JSON.stringify(quickTimeframes));
+  }, [quickTimeframes, quickTimeframesLoaded]);
 
   // [ADDED] Restore enabled indicators from local storage; MA is the only first-visit default.
   useEffect(() => {
@@ -672,10 +698,9 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })
     : t("Waiting for data");
 
-  const visibleTimeframes = ["1m", "5m", "15m", "1h"];
-  const extraTimeframes = ["3m", "30m", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"]; // [MODIFIED] Include supported Binance USDⓈ-M Futures intervals.
-  const allTimeframes = [...visibleTimeframes, ...extraTimeframes];
-  const activeExtraTimeframe = extraTimeframes.includes(timeframe);
+  const allTimeframes = ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"];
+  const availableQuickTimeframes = allTimeframes.filter((item) => !quickTimeframes.includes(item));
+  const activeExtraTimeframe = !quickTimeframes.includes(timeframe);
 
   // [ADDED] Update one indicator setting without disturbing the remaining configurations.
   const updateIndicatorSetting = (indicator, field, value) => {
@@ -725,53 +750,59 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       {/* [ADDED] Binance-style timeframe toolbar with three compact chart controls. */}
       <div className="market-chart-toolbar market-chart-toolbar-inside">
         <div className="market-timeframes">
-          {visibleTimeframes.map((time) => (
+          {quickTimeframes.map((time) => (
             <button
               type="button"
               key={time}
-              className={timeframe === time ? "selected" : ""}
-              onClick={() => onTimeframeChange?.(time)}
+              className={`${timeframe === time ? "selected" : ""}${editingIntervals ? " interval-editing" : ""}`}
+              onClick={() => editingIntervals ? setQuickTimeframes((current) => current.filter((item) => item !== time)) : onTimeframeChange?.(time)}
+              aria-label={editingIntervals ? `Remove ${time} shortcut` : `Select ${time} interval`}
             >
-              {time === "1h" ? "1h" : time}
+              {time}{editingIntervals && <span className="interval-remove-mark">−</span>}
             </button>
           ))}
           <div className="market-chart-more-wrap">
             <button
               type="button"
               className={activeExtraTimeframe ? "selected" : ""}
-              onClick={() => setMoreTimeframesOpen((open) => !open)}
+              onClick={() => { setMoreTimeframesOpen(true); setEditingIntervals(false); setShowCustomIntervals(false); }}
               aria-expanded={moreTimeframesOpen}
             >
               {activeExtraTimeframe ? (timeframe === "1d" ? "1D" : timeframe === "1w" ? "1W" : timeframe) : "Lainnya"}
               <ChevronDown size={13} />
             </button>
-            {moreTimeframesOpen && (
-              <>
-                {/* [ADDED] Binance-style interval picker backdrop and bottom sheet. */}
-                <button type="button" className="market-interval-backdrop" onClick={() => setMoreTimeframesOpen(false)} aria-label={t("Close interval picker")} />
-                <section className="market-interval-sheet" role="dialog" aria-modal="true" aria-label={t("Interval")}>
-                  <div className="market-interval-handle" />
-                  <div className="market-interval-sheet-heading"><h3>{t("Interval")}</h3><button type="button" onClick={() => setMoreTimeframesOpen(false)}>{t("Close")}</button></div>
-                  <div className="market-interval-options">
-                    {allTimeframes.map((time) => (
-                      <button
-                        type="button"
-                        key={time}
-                        className={timeframe === time ? "selected" : ""}
-                        onClick={() => {
-                          onTimeframeChange?.(time);
-                          setMoreTimeframesOpen(false);
-                        }}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              </>
-            )}
           </div>
         </div>
+        <button type="button" className="market-interval-edit-trigger" onClick={() => { setMoreTimeframesOpen(true); setEditingIntervals(true); setShowCustomIntervals(false); }}>{t("Edit")}</button>
+        {moreTimeframesOpen && (
+          <>
+            {/* [MODIFIED] Refined interval picker with editable quick shortcuts. */}
+            <button type="button" className="market-interval-backdrop" onClick={() => { setMoreTimeframesOpen(false); setEditingIntervals(false); setShowCustomIntervals(false); }} aria-label={t("Close interval picker")} />
+            <section className="market-interval-sheet" role="dialog" aria-modal="true" aria-label={t("Interval")}>
+              <div className="market-interval-handle" />
+              <div className="market-interval-sheet-heading"><h3>{t("Interval")}</h3><button type="button" onClick={() => { setMoreTimeframesOpen(false); setEditingIntervals(false); setShowCustomIntervals(false); }}>{t("Done")}</button></div>
+              <div className="market-interval-section-heading"><span>{t("Quick intervals")}</span><button type="button" onClick={() => setEditingIntervals((value) => !value)}>{editingIntervals ? t("Done") : t("Edit")}</button></div>
+              <div className="market-interval-options">
+                {quickTimeframes.map((time) => (
+                  <button type="button" key={time} className={`${timeframe === time ? "selected" : ""}${editingIntervals ? " is-editing" : ""}`} onClick={() => {
+                    if (editingIntervals) setQuickTimeframes((current) => current.filter((item) => item !== time));
+                    else { onTimeframeChange?.(time); setMoreTimeframesOpen(false); }
+                  }}>{time}{editingIntervals && <span className="interval-remove-mark">−</span>}</button>
+                ))}
+              </div>
+              {editingIntervals && <div className="market-interval-custom-section">
+                <div className="market-interval-section-heading"><span>{t("Custom intervals")}</span><button type="button" onClick={() => setShowCustomIntervals((value) => !value)}>{showCustomIntervals ? t("Hide") : <><Plus size={16}/>{t("Add")}</>}</button></div>
+                {showCustomIntervals && <div className="market-interval-options market-interval-add-options">
+                  {availableQuickTimeframes.map((time) => <button type="button" key={time} onClick={() => { setQuickTimeframes((current) => [...current, time]); setShowCustomIntervals(false); }}>{time}<Plus size={13}/></button>)}
+                </div>}
+                {!availableQuickTimeframes.length && <p className="market-interval-empty">{t("All supported intervals are already added.")}</p>}
+              </div>}
+              {!editingIntervals && <><div className="market-interval-section-heading market-interval-all-heading"><span>{t("All intervals")}</span></div><div className="market-interval-options">
+                {allTimeframes.map((time) => <button type="button" key={time} className={timeframe === time ? "selected" : ""} onClick={() => { onTimeframeChange?.(time); setMoreTimeframesOpen(false); }}>{time}</button>)}
+              </div></>}
+            </section>
+          </>
+        )}
         <div className="market-chart-icon-actions">
           <button type="button" onClick={toggleFullscreen} aria-label={t("Fullscreen chart")} title={t("Fullscreen")}>
             <Expand size={18} />
