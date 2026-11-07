@@ -374,5 +374,15 @@
   "Supported Time in Force": "app.k373",
   "Perpetual": "app.k374",
   "TRADING": "app.k375",
-  "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.": "app.k376"
+  "Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.": "app.k376",
+  "Close interval picker": "app.k377",
+  "Interval": "app.k378",
+  "Edit": "app.k379",
+  "Done": "app.k380",
+  "Quick intervals": "app.k381",
+  "Custom intervals": "app.k382",
+  "Hide": "app.k383",
+  "Add": "app.k384",
+  "All supported intervals are already added.": "app.k385",
+  "All intervals": "app.k386"
 }
