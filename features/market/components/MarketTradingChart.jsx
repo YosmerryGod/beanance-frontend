@@ -200,7 +200,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lastCandle, setLastCandle] = useState(null);
   const [hoverCandle, setHoverCandle] = useState(null);
-  const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false);
+  const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false); // [MODIFIED] Controls the Binance-style interval bottom sheet.
   const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
   const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: false, bollinger: false, sar: false, supertrend: false }); // [MODIFIED] First visit enables MA only.
@@ -667,7 +667,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     : t("Waiting for data");
 
   const visibleTimeframes = ["1m", "5m", "15m", "1h"];
-  const extraTimeframes = ["4h", "1d", "1w"];
+  const extraTimeframes = ["3m", "30m", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"]; // [MODIFIED] Include supported Binance USDⓈ-M Futures intervals.
+  const allTimeframes = [...visibleTimeframes, ...extraTimeframes];
   const activeExtraTimeframe = extraTimeframes.includes(timeframe);
 
   // [ADDED] Update one indicator setting without disturbing the remaining configurations.
@@ -739,21 +740,29 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               <ChevronDown size={13} />
             </button>
             {moreTimeframesOpen && (
-              <div className="market-chart-dropdown">
-                {extraTimeframes.map((time) => (
-                  <button
-                    type="button"
-                    key={time}
-                    className={timeframe === time ? "selected" : ""}
-                    onClick={() => {
-                      onTimeframeChange?.(time);
-                      setMoreTimeframesOpen(false);
-                    }}
-                  >
-                    {time === "1d" ? "1D" : time === "1w" ? "1W" : time}
-                  </button>
-                ))}
-              </div>
+              <>
+                {/* [ADDED] Binance-style interval picker backdrop and bottom sheet. */}
+                <button type="button" className="market-interval-backdrop" onClick={() => setMoreTimeframesOpen(false)} aria-label={t("Close interval picker")} />
+                <section className="market-interval-sheet" role="dialog" aria-modal="true" aria-label={t("Interval")}>
+                  <div className="market-interval-handle" />
+                  <div className="market-interval-sheet-heading"><h3>{t("Interval")}</h3><button type="button" onClick={() => setMoreTimeframesOpen(false)}>{t("Close")}</button></div>
+                  <div className="market-interval-options">
+                    {allTimeframes.map((time) => (
+                      <button
+                        type="button"
+                        key={time}
+                        className={timeframe === time ? "selected" : ""}
+                        onClick={() => {
+                          onTimeframeChange?.(time);
+                          setMoreTimeframesOpen(false);
+                        }}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              </>
             )}
           </div>
         </div>
