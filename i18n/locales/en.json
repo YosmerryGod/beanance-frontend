@@ -385,7 +385,10 @@
     "app.k383": "Hide",
     "app.k384": "Add",
     "app.k385": "All supported intervals are already added.",
-    "app.k386": "All intervals"
+    "app.k386": "All intervals",
+    "app.k387": "Available intervals",
+    "app.k388": "available",
+    "app.k389": "Maximum 8 quick intervals."
   },
   "sidebar": {
     "account": "ACCOUNT",
