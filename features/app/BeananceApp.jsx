@@ -1485,9 +1485,53 @@ function App() {
                 </section>
               </>
             )}
-            {marketDetailTab==="info" && <section className="market-info-panel"><h2>{selectedMarket.name} ({selectedMarket.symbol})</h2><p>Market descriptions, network information, and contract details will be populated when the asset data provider is connected.</p><div><span>Pair</span><strong>{selectedMarket.symbol}/USDT</strong></div><div><span>Market Type</span><strong>Perpetual</strong></div><div><span>Quote Asset</span><strong>USDT</strong></div><div><span>Base Asset</span><strong>{selectedMarket.symbol}</strong></div></section>}
-            {marketDetailTab==="trading-data" && <section className="market-info-panel"><h2>Data Perdagangan</h2><div><span>24h Change</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div><div><span>24h Volume</span><strong>{selectedMarket.volume}</strong></div><div><span>24h High</span><strong>{selectedMarket.high||"—"}</strong></div><div><span>24h Low</span><strong>{selectedMarket.low||"—"}</strong></div><div><span>Quote Volume</span><strong>{selectedMarket.quoteVolume||"—"}</strong></div></section>}
-            {marketDetailTab==="trades" && <section className="market-info-panel"><h2>{t("Recent Trades")}</h2><p>{t("Live public trades for {{symbol}}.", { symbol: selectedMarket.symbol + "/USDT" })}</p>{marketRecentTrades.map((trade,index)=><div key={String(trade.id ?? trade.time) + "-" + index}><span>{new Date(Number(trade.time)).toLocaleTimeString(language, { hour12: false })}</span><strong className={trade.isBuyerMaker?"negative":"positive"}>{Number(trade.price).toLocaleString(language, { maximumFractionDigits: 8 })}</strong><span>{Number(trade.quantity).toLocaleString(language, { maximumFractionDigits: 4 })} {selectedMarket.symbol}</span></div>)}{!marketRecentTrades.length && <div className="market-live-empty">{t("Waiting for recent trades...")}</div>}</section>}
+            {marketDetailTab==="info" && (
+              <section className="market-info-panel market-info-complete">
+                <div className="market-info-section">
+                  <h2>{t("Market Overview")}</h2>
+                  <p>{t("Live contract and trading statistics for {{symbol}}.", { symbol: selectedMarket.symbol + "/USDT" })}</p>
+                  <div><span>{t("Trading Pair")}</span><strong>{marketExchangeInfo?.pair || selectedMarket.symbol + "USDT"}</strong></div>
+                  <div><span>{t("Contract Type")}</span><strong>{marketExchangeInfo?.contractType || selectedMarket.contractType || t("Perpetual")}</strong></div>
+                  <div><span>{t("Market Status")}</span><strong className={marketExchangeInfo?.status === "TRADING" || selectedMarket.isTrading ? "positive" : "negative"}>{marketExchangeInfo?.status || (selectedMarket.isTrading ? "TRADING" : "—")}</strong></div>
+                  <div><span>{t("Base Asset")}</span><strong>{marketExchangeInfo?.baseAsset || selectedMarket.symbol}</strong></div>
+                  <div><span>{t("Quote Asset")}</span><strong>{marketExchangeInfo?.quoteAsset || "USDT"}</strong></div>
+                  <div><span>{t("Margin Asset")}</span><strong>{marketExchangeInfo?.marginAsset || "USDT"}</strong></div>
+                  <div><span>{t("Asset Categories")}</span><strong>{Array.isArray(marketExchangeInfo?.underlyingSubType) ? marketExchangeInfo.underlyingSubType.join(", ") : "—"}</strong></div>
+                  <div><span>{t("Listing Date")}</span><strong>{marketExchangeInfo?.onboardDate ? new Date(Number(marketExchangeInfo.onboardDate)).toLocaleDateString(language) : "—"}</strong></div>
+                </div>
+                <div className="market-info-section">
+                  <h2>{t("Trading Statistics")}</h2>
+                  <div><span>{t("Last Price")}</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.price}</strong></div>
+                  <div><span>{t("24h Change")}</span><strong className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</strong></div>
+                  <div><span>{t("24h High")}</span><strong>{selectedMarket.high || "—"}</strong></div>
+                  <div><span>{t("24h Low")}</span><strong>{selectedMarket.low || "—"}</strong></div>
+                  <div><span>{t("24h Base Volume")}</span><strong>{selectedMarket.baseVolume || "—"}</strong></div>
+                  <div><span>{t("24h Quote Volume")}</span><strong>{selectedMarket.quoteVolume || "—"}</strong></div>
+                  <div><span>{t("24h Trades")}</span><strong>{selectedMarket.tradeCount ? Number(selectedMarket.tradeCount).toLocaleString(language) : "—"}</strong></div>
+                </div>
+                <div className="market-info-section">
+                  <h2>{t("Mark Price & Funding")}</h2>
+                  <div><span>{t("Mark Price")}</span><strong>{marketMetrics?.markPrice ? formatMarketPrice(marketMetrics.markPrice, language) : "—"}</strong></div>
+                  <div><span>{t("Index Price")}</span><strong>{marketMetrics?.indexPrice ? formatMarketPrice(marketMetrics.indexPrice, language) : "—"}</strong></div>
+                  <div><span>{t("Estimated Settlement Price")}</span><strong>{marketMetrics?.estimatedSettlePrice ? formatMarketPrice(marketMetrics.estimatedSettlePrice, language) : "—"}</strong></div>
+                  <div><span>{t("Funding Rate")}</span><strong>{Number.isFinite(Number(marketMetrics?.fundingRate)) ? (Number(marketMetrics.fundingRate) * 100).toFixed(4) + "%" : "—"}</strong></div>
+                  <div><span>{t("Next Funding Time")}</span><strong>{marketMetrics?.nextFundingTime ? new Date(Number(marketMetrics.nextFundingTime)).toLocaleString(language) : "—"}</strong></div>
+                  <div><span>{t("Open Interest")}</span><strong>{marketMetrics?.openInterest ? Number(marketMetrics.openInterest).toLocaleString(language, { maximumFractionDigits: 4 }) + " " + selectedMarket.symbol : "—"}</strong></div>
+                </div>
+                <div className="market-info-section">
+                  <h2>{t("Contract Specifications")}</h2>
+                  <div><span>{t("Price Precision")}</span><strong>{marketExchangeInfo?.pricePrecision ?? "—"}</strong></div>
+                  <div><span>{t("Quantity Precision")}</span><strong>{marketExchangeInfo?.quantityPrecision ?? "—"}</strong></div>
+                  <div><span>{t("Tick Size")}</span><strong>{marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize || "—"}</strong></div>
+                  <div><span>{t("Quantity Step Size")}</span><strong>{marketExchangeInfo?.filters?.find((filter) => filter.filterType === "LOT_SIZE")?.stepSize || "—"}</strong></div>
+                  <div><span>{t("Minimum Order Quantity")}</span><strong>{marketExchangeInfo?.filters?.find((filter) => filter.filterType === "LOT_SIZE")?.minQty || "—"}</strong></div>
+                  <div><span>{t("Minimum Notional")}</span><strong>{marketExchangeInfo?.filters?.find((filter) => filter.filterType === "MIN_NOTIONAL")?.notional || marketExchangeInfo?.filters?.find((filter) => filter.filterType === "NOTIONAL")?.minNotional || "—"}</strong></div>
+                  <div><span>{t("Supported Order Types")}</span><strong>{Array.isArray(marketExchangeInfo?.orderTypes) ? marketExchangeInfo.orderTypes.join(", ") : "—"}</strong></div>
+                  <div><span>{t("Supported Time in Force")}</span><strong>{Array.isArray(marketExchangeInfo?.timeInForce) ? marketExchangeInfo.timeInForce.join(", ") : "—"}</strong></div>
+                </div>
+                <p className="market-info-footnote">{t("Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.")}</p>
+              </section>
+            )}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
             <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades are supplied by Beanance Market Backend.</p>
           </section>
