@@ -5,6 +5,7 @@ import { CandlestickSeries, HistogramSeries, LineSeries, createChart } from "lig
 import { ChevronDown, Expand, LayoutGrid, Settings2, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { translationKeys } from "../../../i18n/config";
+import { getMarketPricePrecision } from "../lib/format"; // [ADDED] Use Binance contract tick size for chart precision.
 
 const TIMEFRAME_SECONDS = {
   "1m": 60,
@@ -176,7 +177,7 @@ const DEFAULT_INDICATOR_SETTINGS = {
   supertrend: { period: 10, multiplier: 3, upColor: "#20bd88", downColor: "#ef5368" },
 };
 
-export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange }) {
+export default function MarketTradingChart({ symbol, timeframe, onTimeframeChange, tickSize }) {
   const { t: translate, i18n: translator } = useTranslation();
   const locale = translator.resolvedLanguage || translator.language || "en";
   const t = useCallback((value) => translate(translationKeys[value] || value, { defaultValue: value }), [translate]);
@@ -236,6 +237,8 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
   const interval = TIMEFRAME_SECONDS[timeframe] ? timeframe : "1m"; // [MODIFIED] Keep chart requests on supported timeframes.
+  const pricePrecision = getMarketPricePrecision(tickSize); // [ADDED] Contract price decimals derived from PRICE_FILTER.tickSize.
+  const priceMinMove = 10 ** -pricePrecision; // [ADDED] Smallest chart price increment for the selected contract.
 
   // [MODIFIED] Load historical candles over REST and consume the app-wide market WebSocket.
   useEffect(() => {
@@ -398,9 +401,10 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
         axisDoubleClickReset: { time: true, price: true },
       },
       localization: {
-        priceFormatter: (value) => value >= 1000
-          ? value.toLocaleString(locale, { maximumFractionDigits: 2 })
-          : value.toLocaleString(locale, { maximumFractionDigits: 8 }),
+        priceFormatter: (value) => Number(value).toLocaleString(locale, {
+          minimumFractionDigits: pricePrecision,
+          maximumFractionDigits: pricePrecision,
+        }),
       },
     });
 
@@ -413,6 +417,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       wickDownColor: negativeColor,
       priceLineVisible: true,
       lastValueVisible: true,
+      priceFormat: { type: "price", precision: pricePrecision, minMove: priceMinMove }, // [ADDED] Match candle scale labels to Binance tick size.
     });
 
     const volumeSeries = chart.addSeries(HistogramSeries, {
@@ -487,7 +492,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       volumeSeriesRef.current = null;
       indicatorSeriesRef.current = null;
     };
-  }, [activeTheme, locale, indicatorSettings]);
+  }, [activeTheme, locale, indicatorSettings, pricePrecision, priceMinMove]);
 
   // [MODIFIED] Recalculate and update all overlay series from configurable client-side settings.
   useEffect(() => {
@@ -586,7 +591,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   }, []);
 
   const displayedCandle = hoverCandle; // [MODIFIED] Show candle details only while crosshair is over a candle.
-  const formatPrice = (value) => Number(value).toLocaleString(locale, { maximumFractionDigits: 8 });
+  const formatPrice = (value) => Number(value).toLocaleString(locale, { minimumFractionDigits: pricePrecision, maximumFractionDigits: pricePrecision }); // [MODIFIED] OHLC and indicator prices use contract tick precision.
   const formatVolume = (value) => Number(value || 0).toLocaleString(locale, { maximumFractionDigits: 2 });
   const candleChange = displayedCandle && displayedCandle.open
     ? ((displayedCandle.close - displayedCandle.open) / displayedCandle.open) * 100
