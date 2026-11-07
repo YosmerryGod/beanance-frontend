@@ -242,6 +242,7 @@ function App() {
   const [marketOrderBook, setMarketOrderBook] = useState({ bids: [], asks: [] });
   const [marketRecentTrades, setMarketRecentTrades] = useState([]);
   const [marketMetrics, setMarketMetrics] = useState(null);
+  const [marketExchangeInfo, setMarketExchangeInfo] = useState(null); // [ADDED] Full Binance contract metadata.
   const [marketDailyCandles, setMarketDailyCandles] = useState([]); // [ADDED] Daily history used to calculate real period returns.
   const [marketDetailStatus, setMarketDetailStatus] = useState("loading");
   const [marketDetailError, setMarketDetailError] = useState("");
@@ -505,26 +506,29 @@ function App() {
     setMarketOrderBook({ bids: [], asks: [] });
     setMarketRecentTrades([]);
     setMarketMetrics(null);
+    setMarketExchangeInfo(null); // [ADDED] Reset contract metadata on market change.
     setMarketDailyCandles([]);
 
     const loadDetails = async () => {
       try {
-        const [depthResponse, tradesResponse, metricsResponse, dailyResponse] = await Promise.all([
+        const [depthResponse, tradesResponse, metricsResponse, dailyResponse, exchangeInfoResponse] = await Promise.all([
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/depth?limit=20", { cache: "no-store", signal: controller.signal }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/trades?limit=50", { cache: "no-store", signal: controller.signal }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/metrics", { cache: "no-store", signal: controller.signal }),
           fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/klines?interval=1d&limit=366", { cache: "no-store", signal: controller.signal }),
+          fetch("/market-api/futures/" + encodeURIComponent(symbol) + "/exchange-info", { cache: "no-store", signal: controller.signal }),
         ]);
 
         if (!depthResponse.ok || !tradesResponse.ok || !metricsResponse.ok) {
           throw new Error("Market detail API returned an unsuccessful response");
         }
 
-        const [depthPayload, tradesPayload, metricsPayload, dailyPayload] = await Promise.all([
+        const [depthPayload, tradesPayload, metricsPayload, dailyPayload, exchangeInfoPayload] = await Promise.all([
           depthResponse.json(),
           tradesResponse.json(),
           metricsResponse.json(),
           dailyResponse.ok ? dailyResponse.json() : Promise.resolve({ success: false, data: [] }),
+          exchangeInfoResponse.ok ? exchangeInfoResponse.json() : Promise.resolve({ success: false, data: null }),
         ]);
 
         if (!activeRequest) return;
@@ -545,6 +549,9 @@ function App() {
 
         if (metricsPayload.success && metricsPayload.data) {
           setMarketMetrics(metricsPayload.data);
+        }
+        if (exchangeInfoPayload.success && exchangeInfoPayload.data) {
+          setMarketExchangeInfo(exchangeInfoPayload.data); // [ADDED] Store Binance contract specifications.
         }
 
         if (dailyPayload.success && Array.isArray(dailyPayload.data)) {
@@ -1442,7 +1449,7 @@ function App() {
               <button type="button" className="market-detail-icon" onClick={() => setNotice("Price alert is coming soon")} aria-label="Price alert"><Bell size={20}/></button>
             </div>
             <div className="market-detail-tabs" role="tablist" aria-label="Market detail sections">
-              {[["price","Harga"],["info","Info"],["trading-data","Data Perdagangan"],["trades","Trades"]].map(([id,label])=><button type="button" role="tab" aria-selected={marketDetailTab===id} className={marketDetailTab===id?"selected":""} key={id} onClick={()=>setMarketDetailTab(id)}>{label}</button>)}
+              {[["price",t("Price")],["info",t("Market Information")]].map(([id,label])=><button type="button" role="tab" aria-selected={marketDetailTab===id} className={marketDetailTab===id?"selected":""} key={id} onClick={()=>setMarketDetailTab(id)}>{label}</button>)}
             </div>
             {marketDetailTab==="price" && (
               <>
