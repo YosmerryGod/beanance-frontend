@@ -121,6 +121,8 @@ function mapLiveMarketAsset(item, locale = "en") {
     high: formatMarketPrice(item.highPrice, locale),
     low: formatMarketPrice(item.lowPrice, locale),
     quoteVolume: formatMarketVolume(item.quoteVolume, "$", locale),
+    tradeCount: Number(item.tradeCount || 0), // [ADDED] Show actual 24h trade count in market information.
+    weightedAvgPrice: Number(item.weightedAvgPrice || 0), // [ADDED] Preserve Binance weighted average price.
     priceNumber: Number(item.lastPrice || 0),
     changeNumber: changeValue,
     volumeNumber: Number(item.quoteVolume || 0),
