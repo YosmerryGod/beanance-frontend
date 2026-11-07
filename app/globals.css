@@ -4844,3 +4844,34 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
 @media(max-width:360px){
   .app-shell .market-info-grid{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* [MODIFIED] Keep Create Strategy docked as a persistent bottom action on market detail only. */
+.app-shell .market-detail-page .market-create-sticky{
+  position:fixed;
+  z-index:90;
+  right:0;
+  bottom:calc(10px + env(safe-area-inset-bottom));
+  left:0;
+  width:min(100% - 28px,720px);
+  margin:0 auto;
+  padding:10px 0;
+  background:linear-gradient(180deg,transparent,var(--bg) 22%,var(--bg));
+}
+.app-shell .market-detail-page .market-create-sticky button{
+  min-height:56px;
+  border-radius:15px;
+  box-shadow:0 8px 24px rgba(0,0,0,.28),inset 1px 1px 2px rgba(255,255,255,.42);
+}
+.app-shell .market-detail-page{
+  padding-bottom:calc(112px + env(safe-area-inset-bottom));
+}
+@media(max-width:760px){
+  .app-shell .market-detail-page .market-create-sticky{
+    width:calc(100% - 28px);
+    padding:9px 0 calc(9px + env(safe-area-inset-bottom));
+  }
+  .app-shell .market-detail-page .market-create-sticky button{
+    min-height:54px;
+  }
+}
