@@ -203,12 +203,39 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   const [moreTimeframesOpen, setMoreTimeframesOpen] = useState(false);
   const [chartToolsOpen, setChartToolsOpen] = useState(false);
   const [candles, setCandles] = useState([]);
-  const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: true, bollinger: false, sar: true, supertrend: true }); // [ADDED] Chart overlay visibility.
+  const [enabledIndicators, setEnabledIndicators] = useState({ ma: true, ema: false, bollinger: false, sar: false, supertrend: false }); // [MODIFIED] First visit enables MA only.
+  const [indicatorVisibilityLoaded, setIndicatorVisibilityLoaded] = useState(false); // [ADDED] Wait for saved indicator visibility before applying defaults.
   // [ADDED] Persist configurable indicator periods, parameters, and colors.
   const [indicatorSettings, setIndicatorSettings] = useState(DEFAULT_INDICATOR_SETTINGS);
   const [openIndicatorSettings, setOpenIndicatorSettings] = useState("");
   const [newIndicatorPeriods, setNewIndicatorPeriods] = useState({ ma: "", ema: "" });
   const [indicatorSettingsLoaded, setIndicatorSettingsLoaded] = useState(false);
+
+  // [ADDED] Restore enabled indicators from local storage; MA is the only first-visit default.
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("beanance-chart-enabled-indicators");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setEnabledIndicators({
+          ma: parsed.ma !== undefined ? Boolean(parsed.ma) : true,
+          ema: Boolean(parsed.ema),
+          bollinger: Boolean(parsed.bollinger),
+          sar: Boolean(parsed.sar),
+          supertrend: Boolean(parsed.supertrend),
+        });
+      }
+    } catch (error) {
+      console.warn("Unable to load saved indicator visibility:", error);
+    }
+    setIndicatorVisibilityLoaded(true);
+  }, []);
+
+  // [ADDED] Persist indicator visibility whenever the user changes enabled indicators.
+  useEffect(() => {
+    if (!indicatorVisibilityLoaded) return;
+    window.localStorage.setItem("beanance-chart-enabled-indicators", JSON.stringify(enabledIndicators));
+  }, [enabledIndicators, indicatorVisibilityLoaded]);
 
   useEffect(() => {
     try {
