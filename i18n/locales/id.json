@@ -375,7 +375,17 @@
     "app.k374": "Perpetual",
     "app.k375": "DIPERDAGANGKAN",
     "app.k341": "Kategori aset market",
-    "app.k376": "Metadata kontrak dan statistik pasar langsung disediakan oleh Binance USDⓈ-M Futures melalui Beanance Market Backend."
+    "app.k376": "Metadata kontrak dan statistik pasar langsung disediakan oleh Binance USDⓈ-M Futures melalui Beanance Market Backend.",
+    "app.k377": "Tutup pemilih interval",
+    "app.k378": "Interval",
+    "app.k379": "Edit",
+    "app.k380": "Selesai",
+    "app.k381": "Interval cepat",
+    "app.k382": "Interval khusus",
+    "app.k383": "Sembunyikan",
+    "app.k384": "Tambah",
+    "app.k385": "Semua interval yang didukung sudah ditambahkan.",
+    "app.k386": "Semua interval"
   },
   "sidebar": {
     "account": "AKUN",
