@@ -4962,6 +4962,76 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   font-size:13px;
   font-weight:750;
 }
+
+/* [ADDED] Clear section controls and shortcut editing affordances. */
+.app-shell .market-interval-section-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 12px;
+}
+.app-shell .market-interval-section-heading span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:750;
+  letter-spacing:.02em;
+}
+.app-shell .market-interval-section-heading button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  min-height:30px;
+  padding:4px 8px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+}
+.app-shell .market-interval-custom-section{margin-top:24px}
+.app-shell .market-interval-all-heading{margin-top:22px}
+.app-shell .market-interval-add-options{margin-top:12px}
+.app-shell .market-interval-options button.is-editing,
+.app-shell .market-timeframes button.interval-editing{border-color:rgba(239,83,104,.55);color:#ef5368}
+.app-shell .interval-remove-mark{
+  display:inline-grid;
+  place-items:center;
+  width:16px;
+  height:16px;
+  margin-left:5px;
+  border-radius:50%;
+  background:rgba(239,83,104,.14);
+  color:#ef5368;
+  font-size:14px;
+  font-weight:900;
+  line-height:1;
+}
+.app-shell .market-interval-add-options button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-style:dashed;
+  color:var(--gold);
+}
+.app-shell .market-interval-empty{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:11px;
+}
+.app-shell .market-interval-edit-trigger{
+  flex:0 0 auto;
+  padding:5px 2px;
+  border:0;
+  background:transparent;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
 .app-shell .market-interval-options{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
