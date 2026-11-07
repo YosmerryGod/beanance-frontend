@@ -5037,17 +5037,33 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
   border:2px solid var(--gold);
   color:var(--text);
 }
-.app-shell .market-interval-quick-options .interval-remove-mark{
+/* [MODIFIED] Place remove/add controls consistently in the upper-left corner of each interval tile. */
+.app-shell .market-interval-quick-options .interval-remove-mark,
+.app-shell .market-interval-add-options .interval-add-mark{
   position:absolute;
-  top:-7px;
-  right:-6px;
-  width:20px;
-  height:20px;
+  top:6px;
+  left:6px;
+  display:grid;
+  place-items:center;
+  width:19px;
+  height:19px;
   margin:0;
-  border:2px solid var(--panel);
-  background:#ef5368;
-  color:#fff;
+  border-radius:50%;
+}
+.app-shell .market-interval-quick-options .interval-remove-mark{
+  border:1px solid rgba(239,83,104,.25);
+  background:rgba(239,83,104,.14);
+  color:#ef5368;
   cursor:pointer;
+}
+.app-shell .market-interval-add-options .interval-add-mark{
+  border:1px solid rgba(32,189,136,.25);
+  background:rgba(32,189,136,.13);
+  color:#20bd88;
+}
+.app-shell .market-interval-quick-options.is-editing button,
+.app-shell .market-interval-add-options button{
+  padding-top:16px;
 }
 .app-shell .market-interval-custom-section{padding-top:18px;border-top:1px solid var(--line)}
 .app-shell .market-interval-count{
