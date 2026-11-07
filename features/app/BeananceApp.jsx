@@ -234,7 +234,23 @@ function App() {
   const [marketNavTab, setMarketNavTab] = useState("all-market"); // [ADDED] Market navbar tabs
   const [marketAssetCategory, setMarketAssetCategory] = useState("all"); // [ADDED] Active Binance Futures asset category filter.
   const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
+  const [marketPriceFlash, setMarketPriceFlash] = useState(""); // [ADDED] Briefly flash the live price green or red when it moves.
+  const previousMarketPriceRef = useRef({ symbol: marketAssets[0]?.symbol, price: marketAssets[0]?.priceNumber }); // [ADDED] Track the previous live price for direction feedback.
   const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from Beanance Market API
+
+  // [ADDED] Flash the current market price briefly whenever a live ticker moves.
+  useEffect(() => {
+    const currentPrice = Number(selectedMarket?.priceNumber);
+    const previous = previousMarketPriceRef.current;
+    if (selectedMarket?.symbol && Number.isFinite(currentPrice) && previous.symbol === selectedMarket.symbol && Number.isFinite(Number(previous.price)) && currentPrice !== Number(previous.price)) {
+      setMarketPriceFlash(currentPrice > Number(previous.price) ? "up" : "down");
+      const flashTimer = window.setTimeout(() => setMarketPriceFlash(""), 450);
+      previousMarketPriceRef.current = { symbol: selectedMarket.symbol, price: currentPrice };
+      return () => window.clearTimeout(flashTimer);
+    }
+    previousMarketPriceRef.current = { symbol: selectedMarket?.symbol, price: currentPrice };
+    setMarketPriceFlash("");
+  }, [selectedMarket?.symbol, selectedMarket?.priceNumber]);
   const [liveTopMoverEvents, setLiveTopMoverEvents] = useState([]); // [MODIFIED] Live one-minute candle momentum events
   const [marketConnectionStatus, setMarketConnectionStatus] = useState("connecting"); // [ADDED] Market feed connection state
   const [marketDetailTab, setMarketDetailTab] = useState("price"); // [ADDED] Market detail section tab
@@ -1474,7 +1490,7 @@ function App() {
                   <div className="market-last-price">
                     <span>Harga Terakhir</span>
                     <strong className={selectedMarket.positive?"positive":"negative"}>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</strong>
-                    <div><b>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</b><em className={selectedMarket.positive?"positive":"negative"}>{selectedMarket.change}</em></div>
+                    <div><b className={`market-live-price ${marketPriceFlash ? `market-live-price-${marketPriceFlash}` : ""}`}>{formatMarketPriceByTick(selectedMarket.priceNumber, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language)}</b><em className={String(selectedMarket.change || "").trim().startsWith("-") ? "negative" : "positive"}>{selectedMarket.change}</em></div>
                     <small>Harga Mark {marketMetrics?.markPrice !== undefined && marketMetrics?.markPrice !== null ? formatMarketPriceByTick(marketMetrics.markPrice, marketExchangeInfo?.filters?.find((filter) => filter.filterType === "PRICE_FILTER")?.tickSize, language) : "—"}</small>
                   </div>
                   <div className="market-compact-stats">
