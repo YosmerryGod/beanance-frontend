@@ -375,7 +375,17 @@
     "app.k374": "Vĩnh cửu",
     "app.k375": "ĐANG GIAO DỊCH",
     "app.k341": "Danh mục tài sản thị trường",
-    "app.k376": "Siêu dữ liệu hợp đồng và thống kê thị trường trực tiếp được cung cấp bởi Binance USDⓈ-M Futures thông qua Beanance Market Backend."
+    "app.k376": "Siêu dữ liệu hợp đồng và thống kê thị trường trực tiếp được cung cấp bởi Binance USDⓈ-M Futures thông qua Beanance Market Backend.",
+    "app.k377": "Đóng bộ chọn khoảng thời gian",
+    "app.k378": "Khoảng thời gian",
+    "app.k379": "Chỉnh sửa",
+    "app.k380": "Xong",
+    "app.k381": "Khoảng thời gian nhanh",
+    "app.k382": "Khoảng thời gian tùy chỉnh",
+    "app.k383": "Ẩn",
+    "app.k384": "Thêm",
+    "app.k385": "Tất cả khoảng thời gian được hỗ trợ đã được thêm.",
+    "app.k386": "Tất cả khoảng thời gian"
   },
   "sidebar": {
     "account": "TÀI KHOẢN",
