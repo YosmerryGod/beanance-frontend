@@ -374,7 +374,8 @@
     "app.k373": "支持的有效时间",
     "app.k374": "永续合约",
     "app.k375": "交易中",
-    "app.k341": "市场资产类别"
+    "app.k341": "市场资产类别",
+    "app.k376": "合约元数据和实时市场统计由 Binance USDⓈ-M Futures 通过 Beanance Market Backend 提供。"
   },
   "sidebar": {
     "account": "账户",
