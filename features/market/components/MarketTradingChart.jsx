@@ -782,19 +782,24 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
               <div className="market-interval-handle" />
               <div className="market-interval-sheet-heading"><h3>{t("Interval")}</h3><button type="button" onClick={() => { setMoreTimeframesOpen(false); setEditingIntervals(false); setShowCustomIntervals(false); }}>{t("Done")}</button></div>
               <div className="market-interval-section-heading"><span>{t("Quick intervals")}</span><button type="button" onClick={() => setEditingIntervals((value) => !value)}>{editingIntervals ? t("Done") : t("Edit")}</button></div>
-              <div className="market-interval-options">
+              <div className={`market-interval-options market-interval-quick-options${editingIntervals ? " is-editing" : ""}`}>
                 {quickTimeframes.map((time) => (
-                  <button type="button" key={time} className={`${timeframe === time ? "selected" : ""}${editingIntervals ? " is-editing" : ""}`} onClick={() => {
-                    if (editingIntervals) setQuickTimeframes((current) => current.filter((item) => item !== time));
-                    else { onTimeframeChange?.(time); setMoreTimeframesOpen(false); }
-                  }}>{time}{editingIntervals && <span className="interval-remove-mark">−</span>}</button>
+                  <button type="button" key={time} className={timeframe === time ? "selected" : ""} onClick={() => {
+                    if (!editingIntervals) { onTimeframeChange?.(time); setMoreTimeframesOpen(false); }
+                  }}>
+                    <span>{time}</span>
+                    {editingIntervals && <span className="interval-remove-mark" onClick={(event) => { event.stopPropagation(); setQuickTimeframes((current) => current.filter((item) => item !== time)); }} aria-label={`Remove ${time}`}><X size={11}/></span>}
+                  </button>
                 ))}
               </div>
               {editingIntervals && <div className="market-interval-custom-section">
-                <div className="market-interval-section-heading"><span>{t("Custom intervals")}</span><button type="button" onClick={() => setShowCustomIntervals((value) => !value)}>{showCustomIntervals ? t("Hide") : <><Plus size={16}/>{t("Add")}</>}</button></div>
-                {showCustomIntervals && <div className="market-interval-options market-interval-add-options">
-                  {availableQuickTimeframes.map((time) => <button type="button" key={time} onClick={() => { setQuickTimeframes((current) => [...current, time]); setShowCustomIntervals(false); }}>{time}<Plus size={13}/></button>)}
-                </div>}
+                <div className="market-interval-section-heading"><span>{t("Available intervals")}</span><span className="market-interval-count">{availableQuickTimeframes.length} {t("available")}</span></div>
+                <div className="market-interval-options market-interval-add-options">
+                  {availableQuickTimeframes.map((time) => <button type="button" key={time} onClick={() => setQuickTimeframes((current) => current.length < 8 ? [...current, time] : current)} disabled={quickTimeframes.length >= 8}>
+                    {time}<Plus size={13}/>
+                  </button>)}
+                </div>
+                {quickTimeframes.length >= 8 && <p className="market-interval-empty">{t("Maximum 8 quick intervals.")}</p>}
                 {!availableQuickTimeframes.length && <p className="market-interval-empty">{t("All supported intervals are already added.")}</p>}
               </div>}
               {!editingIntervals && <><div className="market-interval-section-heading market-interval-all-heading"><span>{t("All intervals")}</span></div><div className="market-interval-options">
