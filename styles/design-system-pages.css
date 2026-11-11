@@ -795,3 +795,10 @@ main.app-shell.theme-light .bottom-nav {
   background: #ffffff !important;
   border: 1px solid #e8e8e8 !important;
 }
+
+
+/* [ADDED] Use a neutral text-selection color inside Discover strategy cards. */
+main.app-shell .discover-list-card ::selection {
+  background: rgba(32, 41, 56, .16) !important;
+  color: inherit !important;
+}
