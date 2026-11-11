@@ -822,3 +822,20 @@ main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(3)::before {
   color: #3d2110 !important;
   border-color: #ffffff !important;
 }
+
+/* [ADDED] Discover strategy podium medals: gold, silver, bronze. */
+main.app-shell.theme-light .discover-podium-card.podium-rank-1 .podium-rank {
+  background: linear-gradient(145deg, #f8df83, #d4af37) !important;
+  color: #3b2b08 !important;
+  border-color: #ffffff !important;
+}
+main.app-shell.theme-light .discover-podium-card.podium-rank-2 .podium-rank {
+  background: linear-gradient(145deg, #f4f6f8, #bfc7d1) !important;
+  color: #26313d !important;
+  border-color: #ffffff !important;
+}
+main.app-shell.theme-light .discover-podium-card.podium-rank-3 .podium-rank {
+  background: linear-gradient(145deg, #e7b18a, #b87333) !important;
+  color: #3d2110 !important;
+  border-color: #ffffff !important;
+}
