@@ -280,3 +280,145 @@ main.app-shell .discover-avatar.bitcoin,
 main.app-shell .discover-avatar.bnb {
   /* Preserve native crypto asset identity; these are token-brand colors, not UI theme accents. */
 }
+
+
+/* [ADDED] MILION light mode: pure-white page surfaces and consistent accent actions. */
+html[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] body > div,
+main.app-shell.theme-light {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #111111 !important;
+  --ds-canvas: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #ffffff;
+  --ds-tray: #ffffff;
+  --ds-border: rgba(17, 17, 17, .10);
+  --ds-text: #111111;
+  --ds-muted: #737373;
+  --ds-accent: #a8d94f;
+  --ds-accent-fill: #a8d94f;
+  --ds-accent-ink: #111111;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-soft: #ffffff;
+  --line: rgba(17, 17, 17, .10);
+  --gold: #a8d94f;
+}
+
+main.app-shell.theme-light .page,
+main.app-shell.theme-light .simple-page,
+main.app-shell.theme-light .app-content,
+main.app-shell.theme-light .market-page,
+main.app-shell.theme-light .market-overview-section,
+main.app-shell.theme-light .market-detail-page,
+main.app-shell.theme-light .portfolio-profile-page,
+main.app-shell.theme-light .portfolio-strategy-page,
+main.app-shell.theme-light .portfolio-wallet-modern,
+main.app-shell.theme-light .portfolio-history-list,
+main.app-shell.theme-light .help-center-page,
+main.app-shell.theme-light .about-page,
+main.app-shell.theme-light .trader-page,
+main.app-shell.theme-light .discover-page {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light [class*="card"],
+main.app-shell.theme-light [class*="panel"],
+main.app-shell.theme-light [class*="tile"],
+main.app-shell.theme-light [class*="list"],
+main.app-shell.theme-light [class*="summary"],
+main.app-shell.theme-light [class*="popover"],
+main.app-shell.theme-light [class*="dropdown"],
+main.app-shell.theme-light [class*="sheet"],
+main.app-shell.theme-light [class*="section-box"] {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #111111;
+  border-color: var(--ds-border);
+}
+
+main.app-shell.theme-light .balance-card,
+main.app-shell.theme-light .market-summary,
+main.app-shell.theme-light .market-price-summary,
+main.app-shell.theme-light .market-compact-stats,
+main.app-shell.theme-light .market-performance-grid,
+main.app-shell.theme-light .portfolio-wallet-panel,
+main.app-shell.theme-light .portfolio-wallet-actions,
+main.app-shell.theme-light .sidebar-account,
+main.app-shell.theme-light .strategy-detail-footer,
+main.app-shell.theme-light .strategy-detail-owner-card,
+main.app-shell.theme-light .about-body-copy,
+main.app-shell.theme-light .about-feature-list,
+main.app-shell.theme-light .feature-tile,
+main.app-shell.theme-light .promo-card,
+main.app-shell.theme-light .profile-card,
+main.app-shell.theme-light .asset-list,
+main.app-shell.theme-light .dapp-list,
+main.app-shell.theme-light .settings-list,
+main.app-shell.theme-light .notification-panel,
+main.app-shell.theme-light .help-center-card {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #111111 !important;
+  border-color: var(--ds-border) !important;
+  box-shadow: 0 2px 10px rgba(17, 17, 17, .035) !important;
+}
+
+main.app-shell.theme-light .bottom-nav,
+main.app-shell.theme-light .create-sheet,
+main.app-shell.theme-light .search-field,
+main.app-shell.theme-light .header-search,
+main.app-shell.theme-light input,
+main.app-shell.theme-light textarea,
+main.app-shell.theme-light select {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #111111 !important;
+  border-color: var(--ds-border) !important;
+}
+
+main.app-shell.theme-light button:not(.nav-item):not(.icon-button):not(.search-trigger):not(.search-close):not(.visibility-button):not(.theme-toggle):not(.tab-button):not([role="tab"]):not([data-variant="ghost"]):not([data-variant="outline"]) {
+  background-color: var(--ds-accent-fill);
+  color: var(--ds-accent-ink);
+  border-color: color-mix(in srgb, var(--ds-accent) 55%, #111111 12%);
+}
+
+main.app-shell.theme-light .nav-item.active,
+main.app-shell.theme-light .create-orb,
+main.app-shell.theme-light .quick-actions button span,
+main.app-shell.theme-light .feature-symbol,
+main.app-shell.theme-light .sheet-option-icon,
+main.app-shell.theme-light .brand-mark,
+main.app-shell.theme-light .avatar-button,
+main.app-shell.theme-light .profile-avatar,
+main.app-shell.theme-light .market-indicator-switch.is-on,
+main.app-shell.theme-light .ds-btn--primary,
+main.app-shell.theme-light .ds-btn.primary {
+  background: var(--ds-accent-fill) !important;
+  color: var(--ds-accent-ink) !important;
+  border-color: var(--ds-border) !important;
+}
+
+main.app-shell.theme-light .balance-glow,
+main.app-shell.theme-light .glow-one,
+main.app-shell.theme-light .glow-two {
+  display: none !important;
+}
+
+main.app-shell.theme-light .nav-item,
+main.app-shell.theme-light .icon-button,
+main.app-shell.theme-light .theme-toggle,
+main.app-shell.theme-light .search-close,
+main.app-shell.theme-light .visibility-button {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light .nav-item.active {
+  background-color: var(--ds-accent-fill) !important;
+  color: var(--ds-accent-ink) !important;
+}
