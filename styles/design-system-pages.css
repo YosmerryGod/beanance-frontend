@@ -237,3 +237,46 @@ main.app-shell.theme-light .trader-profile-cover,
 main.app-shell.theme-light .portfolio-profile-cover {
   background: linear-gradient(135deg, #f5f5f5, #e8f2d8) !important;
 }
+
+
+/* [MODIFIED] Final cleanup: remove remaining legacy yellow/gold UI accents. */
+main.app-shell .brand-mark,
+main.app-shell .avatar-button,
+main.app-shell .profile-avatar,
+main.app-shell .create-orb,
+main.app-shell .nav-create .create-orb,
+main.app-shell .quick-actions button span,
+main.app-shell .feature-symbol,
+main.app-shell .sheet-option-icon {
+  background: var(--ds-accent-fill) !important;
+  color: var(--ds-accent-ink) !important;
+  border-color: var(--ds-border) !important;
+  box-shadow: var(--ds-shadow-raised-sm) !important;
+}
+main.app-shell .balance-card {
+  border-color: color-mix(in srgb, var(--ds-accent) 28%, var(--ds-border)) !important;
+  background: linear-gradient(118deg, color-mix(in srgb, var(--ds-accent) 9%, var(--ds-surface)) 0%, var(--ds-surface) 58%, var(--ds-surface-2) 100%) !important;
+}
+main.app-shell .balance-glow,
+main.app-shell .glow-one,
+main.app-shell .glow-two {
+  opacity: .28;
+}
+main.app-shell .brand-mark span { border-color: var(--ds-accent-ink) !important; }
+main.app-shell .market-chart-ma-label.ma-7,
+main.app-shell .market-chart-ma-value.ma-7 span {
+  color: var(--ds-accent) !important;
+}
+main.app-shell .market-chart-ma-dot.ma-7 {
+  background: var(--ds-accent) !important;
+}
+main.app-shell .dapp-yellow {
+  background: var(--ds-surface-2) !important;
+  color: var(--ds-text) !important;
+}
+main.app-shell .bitcoin,
+main.app-shell .bnb,
+main.app-shell .discover-avatar.bitcoin,
+main.app-shell .discover-avatar.bnb {
+  /* Preserve native crypto asset identity; these are token-brand colors, not UI theme accents. */
+}
