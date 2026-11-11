@@ -1,5 +1,5 @@
-import MilionApp from "../features/app/MILIONApp";
+import MilionApp from "../features/app/MilionApp";
 
 export default function HomePage() {
-  return <MILIONApp />;
+  return <MilionApp />;
 }
