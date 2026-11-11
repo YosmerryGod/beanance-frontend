@@ -136,3 +136,104 @@ main.app-shell.theme-light .coin-logo[data-symbol="BNB"] { background: #17150d !
 main.app-shell.theme-light .market-indicator-switch.is-on { background: #17150d; }
 main.app-shell.theme-light .trader-profile-cover,
 main.app-shell.theme-light .portfolio-profile-cover { background: linear-gradient(135deg, #17150d, #3a2f08) !important; }
+
+
+/* [MODIFIED] MILION Modern Playful Geometry final theme override.
+   Keep layout and component behavior intact; only unify colors and surface treatment. */
+main.app-shell.theme-light,
+:root[data-theme="light"] {
+  --ds-canvas: #ffffff;
+  --ds-surface: #f5f5f5;
+  --ds-surface-2: #ededed;
+  --ds-tray: #eaeaea;
+  --ds-border: rgba(17, 17, 17, .1);
+  --ds-text: #111111;
+  --ds-muted: #737373;
+  --ds-accent: #a8d94f;
+  --ds-accent-fill: #a8d94f;
+  --ds-accent-ink: #111111;
+  --ds-positive: #16865a;
+  --ds-negative: #d43d55;
+  --ds-shadow-raised: 5px 5px 14px rgba(17, 17, 17, .055), -5px -5px 14px rgba(255, 255, 255, .9);
+  --ds-shadow-raised-sm: 3px 3px 8px rgba(17, 17, 17, .06), -3px -3px 8px rgba(255, 255, 255, .9);
+  --ds-shadow-inset: inset 3px 3px 7px rgba(17, 17, 17, .055), inset -3px -3px 7px rgba(255, 255, 255, .9);
+  --ds-overlay: rgba(17, 17, 17, .42);
+}
+main.app-shell.theme-dark,
+:root[data-theme="dark"] {
+  --ds-canvas: #111111;
+  --ds-surface: #1d1d1d;
+  --ds-surface-2: #252525;
+  --ds-tray: #171717;
+  --ds-border: rgba(255, 255, 255, .09);
+  --ds-text: #ffffff;
+  --ds-muted: #a1a1aa;
+  --ds-accent: #c7f36b;
+  --ds-accent-fill: #c7f36b;
+  --ds-accent-ink: #111111;
+  --ds-positive: #35cf86;
+  --ds-negative: #ef5368;
+  --ds-shadow-raised: 6px 6px 14px rgba(0, 0, 0, .24), -4px -4px 12px rgba(255, 255, 255, .018);
+  --ds-shadow-raised-sm: 3px 3px 8px rgba(0, 0, 0, .22), -2px -2px 7px rgba(255, 255, 255, .018);
+  --ds-shadow-inset: inset 3px 3px 7px rgba(0, 0, 0, .28), inset -2px -2px 7px rgba(255, 255, 255, .018);
+  --ds-overlay: rgba(0, 0, 0, .65);
+}
+main.app-shell {
+  --bg: var(--ds-canvas);
+  --panel: var(--ds-surface);
+  --panel-soft: var(--ds-surface-2);
+  --muted: var(--ds-muted);
+  --line: var(--ds-border);
+  --gold: var(--ds-accent);
+  --green: var(--ds-positive);
+  --text: var(--ds-text);
+  --gold-soft: color-mix(in srgb, var(--ds-accent) 14%, transparent);
+  background: var(--ds-canvas);
+  color: var(--ds-text);
+}
+main.app-shell.theme-light { background-image: none; }
+main.app-shell.theme-dark { background-image: radial-gradient(ellipse at 50% -20%, rgba(199, 243, 107, .055), transparent 44%); }
+html[data-theme="light"], html[data-theme="light"] body { background: #ffffff; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #111111; }
+
+/* [MODIFIED] Replace the previous yellow-canvas treatment with a restrained lime identity. */
+main.app-shell.theme-light .brand-mark,
+main.app-shell.theme-light .about-logo-mark,
+main.app-shell.theme-light .help-center-hero-art,
+main.app-shell.theme-light .help-center-brand-icon,
+main.app-shell.theme-light .edit-profile-photo,
+main.app-shell.theme-light .create-orb,
+main.app-shell.theme-light .nav-create,
+main.app-shell.theme-light .portfolio-wallet-onboarding-icon {
+  background: #a8d94f !important;
+  color: #111111 !important;
+  border-color: rgba(17, 17, 17, .1);
+  box-shadow: var(--ds-shadow-raised-sm) !important;
+}
+main.app-shell.theme-light .brand-mark span { border-color: #111111; }
+main.app-shell.theme-light .about-logo-mark svg,
+main.app-shell.theme-light .help-center-hero-art svg { color: #111111; }
+main.app-shell.theme-light .strategy-coin.bnb,
+main.app-shell.theme-light .strategy-coin.bean,
+main.app-shell.theme-light .discover-avatar.bnb,
+main.app-shell.theme-light .discover-avatar.bitcoin,
+main.app-shell.theme-light .portfolio-asset-icon.bnb,
+main.app-shell.theme-light .portfolio-wallet-token-logo.bnb,
+main.app-shell.theme-light .portfolio-wallet-token-logo.bean {
+  background: #ededed !important;
+  color: #111111 !important;
+  border: 1px solid var(--ds-border);
+}
+main.app-shell.theme-light .coin-logo[data-tone="yellow"] > svg,
+main.app-shell.theme-light .coin-logo[data-tone="yellow"] > img {
+  filter: none;
+}
+main.app-shell.theme-light .coin-logo[data-symbol="BNB"] {
+  background: #ededed !important;
+  border: 1px solid var(--ds-border) !important;
+}
+main.app-shell.theme-light .market-indicator-switch.is-on { background: #a8d94f; }
+main.app-shell.theme-light .trader-profile-cover,
+main.app-shell.theme-light .portfolio-profile-cover {
+  background: linear-gradient(135deg, #f5f5f5, #e8f2d8) !important;
+}
