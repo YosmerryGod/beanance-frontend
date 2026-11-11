@@ -1,0 +1,101 @@
+/* Dashboard theme (dark lime / light yellow) — dimuat PALING AKHIR di app/layout.jsx.
+   Semua nilai warna lewat variabel --d-* supaya halaman lain bisa memakai gaya yang sama. */
+main.app-shell.theme-light{
+  --d-card:#ffffff;--d-line:#efe9ea;--d-tray:#ffffff;--d-muted:#7a7476;--d-text:#14110f;
+  --d-sh:0 8px 24px rgba(120,100,40,.13);--d-sh-sm:0 4px 10px rgba(120,100,40,.15);
+  --d-grad:linear-gradient(180deg,#fbe35a,#f1c40f);--d-ink:#1a1500;
+  --d-pill-bg:linear-gradient(180deg,#fbe35a,#f1c40f);--d-pill-fg:#1a1500;
+  --d-link:#8a6d00;--d-chart:#e6b800;--d-chart-fill:rgba(249,212,35,.22);
+  --d-r1:linear-gradient(145deg,#fbe35a,#f1c40f);--d-r1t:#2a2000;
+  --d-r2:linear-gradient(145deg,#f4f6f8,#bfc7d1);--d-r2t:#26313d;
+  --d-r3:linear-gradient(145deg,#f7b97f,#e0792b);--d-r3t:#3d1c08;
+  --d-gain:#c99700;--d-gain-bg:#fff0b8;--d-gain-fg:#6b4f00;
+  --d-glow:0 10px 30px rgba(241,196,15,.3);--d-first:rgba(241,196,15,.6);
+  --d-av:linear-gradient(145deg,#5a5a5a,#1f1f1f);--d-avt:#ffffff;--d-add:#ffffff;
+}
+main.app-shell.theme-dark{
+  --d-card:linear-gradient(160deg,#1a1a1a,#121212);--d-line:#262626;--d-tray:#141414;--d-muted:#a3a3a3;--d-text:#ffffff;
+  --d-sh:0 10px 30px rgba(0,0,0,.6);--d-sh-sm:0 4px 12px rgba(0,0,0,.55);
+  --d-grad:linear-gradient(180deg,#d4ff3d,#a8e000);--d-ink:#0d1400;
+  --d-pill-bg:#1d1d1d;--d-pill-fg:#c6f432;
+  --d-link:#c6f432;--d-chart:#c6f432;--d-chart-fill:rgba(198,244,50,.2);
+  --d-r1:linear-gradient(145deg,#ffe27a,#f2b705);--d-r1t:#2a1d00;
+  --d-r2:linear-gradient(145deg,#f1f3f6,#aeb6c2);--d-r2t:#1f2630;
+  --d-r3:linear-gradient(145deg,#f7a15c,#d9691a);--d-r3t:#2e1204;
+  --d-gain:#c6f432;--d-gain-bg:rgba(198,244,50,.14);--d-gain-fg:#c6f432;
+  --d-glow:0 0 40px rgba(247,201,43,.2);--d-first:rgba(247,201,43,.55);
+  --d-av:#2b2b2b;--d-avt:#ffffff;--d-add:#222222;
+  --ds-canvas:#0a0a0a;--bg:#0a0a0a;
+}
+html[data-theme="dark"],html[data-theme="dark"] body{background:#0a0a0a}
+main.app-shell.theme-dark{background-color:#0a0a0a}
+main.app-shell.app-shell .topbar{border-bottom-color:transparent!important}
+main.app-shell .topbar .icon-button,main.app-shell .topbar .sidebar-trigger,main.app-shell .topbar .notification-button{box-shadow:var(--d-sh-sm)!important;background:var(--d-card)!important;border:1px solid var(--d-line)!important;border-radius:16px!important}
+main.app-shell .bottom-nav{background:var(--d-card)!important;border:1px solid var(--d-line)!important;box-shadow:var(--d-sh)!important;border-radius:999px}
+main.app-shell .bottom-nav .nav-item.active{background:var(--d-grad)!important;color:var(--d-ink)!important;border-radius:999px;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .bottom-nav .nav-item:not(.active){background:transparent!important;box-shadow:none!important;color:var(--d-text)!important}
+main.app-shell .bottom-nav .nav-create,main.app-shell .bottom-nav .create-orb{background:var(--d-add)!important;color:var(--d-text)!important;border:1px solid var(--d-line)!important;box-shadow:var(--d-sh)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page{position:relative;background:transparent!important;gap:26px!important;padding-top:20px!important;color:var(--d-text)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-section-heading{align-items:flex-start!important;gap:10px!important;margin-bottom:34px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-section-heading h2{font-size:28px!important;font-weight:800!important;letter-spacing:-.03em!important;line-height:1.1!important;color:var(--d-text)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-section-heading .muted{font-size:13px!important;color:var(--d-muted)!important;margin-top:6px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-section-heading .text-link{background:var(--d-pill-bg)!important;color:var(--d-pill-fg)!important;border:0!important;border-radius:999px!important;padding:11px 16px!important;font-size:13px!important;font-weight:800!important;box-shadow:var(--d-sh-sm)!important;white-space:nowrap}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .traders-heading .text-link{display:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .traders-heading{margin-bottom:18px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .traders-heading h2{font-size:26px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;align-items:end!important;padding-top:6px}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card, main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:last-child{position:relative!important;grid-column:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important;height:auto!important;min-height:0!important;overflow:visible!important;box-sizing:border-box!important;padding:36px 7px 12px!important;background:var(--d-card)!important;background-image:none!important;border:1px solid var(--d-line)!important;border-radius:26px!important;box-shadow:var(--d-sh)!important;color:var(--d-text)!important;transform:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2){padding-top:44px!important;border-color:var(--d-first)!important;box-shadow:var(--d-glow),var(--d-sh)!important;margin-bottom:6px}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card::before{display:grid!important;place-items:center!important;position:absolute!important;left:50%!important;top:-22px!important;transform:translateX(-50%)!important;width:44px!important;height:44px!important;border-radius:50%!important;border:3px solid var(--d-line)!important;box-shadow:var(--d-sh-sm)!important;font-size:20px!important;font-weight:800!important;z-index:2}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2)::before{width:54px!important;height:54px!important;top:-30px!important;font-size:24px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(1)::before{background:var(--d-r2)!important;color:var(--d-r2t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2)::before{background:var(--d-r1)!important;color:var(--d-r1t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(3)::before{background:var(--d-r3)!important;color:var(--d-r3t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-head{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;gap:6px!important;width:100%!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-coin{width:40px!important;height:40px!important;flex:0 0 40px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:var(--d-tray)!important;color:var(--d-text)!important;border:1px solid var(--d-line)!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-identity{display:flex!important;flex-direction:column!important;align-items:center!important;gap:5px!important;width:100%!important;min-width:0!important;text-align:center!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-identity strong{font-size:12px!important;font-weight:800!important;line-height:1.2!important;color:var(--d-text)!important;white-space:normal!important;text-align:center!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-owner-link{background:var(--d-tray)!important;background-image:none!important;color:var(--d-muted)!important;border:1px solid var(--d-line)!important;border-radius:999px!important;padding:2px 9px!important;font-size:10px!important;font-weight:600!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;box-shadow:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-more{display:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-chart{width:100%!important;height:30px!important;margin:8px 0 4px!important;overflow:visible!important;background:transparent!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-chart path[fill='none']{stroke:var(--d-chart)!important;stroke-width:2.2px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-chart defs stop{stop-color:var(--d-chart)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px!important;width:100%!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics>div{min-width:0!important;align-items:center!important;text-align:center!important;gap:2px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics>div+div{border-left:1px solid var(--d-line)!important;padding-left:3px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics strong{font-size:13px!important;font-weight:800!important;white-space:nowrap!important;color:var(--d-text)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics strong.positive{color:var(--d-gain)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics span{font-size:8px!important;color:var(--d-muted)!important;white-space:nowrap!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;margin-top:10px!important;position:static!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer .strategy-tag, main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer .risk-tag{display:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer button{display:block!important;width:100%!important;margin:0!important;padding:9px 4px!important;font-size:12px!important;font-weight:800!important;border-radius:999px!important;background:var(--d-tray)!important;color:var(--d-text)!important;border:1px solid var(--d-line)!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2) .strategy-card-footer button{background:var(--d-grad)!important;color:var(--d-ink)!important;border-color:transparent!important;font-size:14px!important;padding:11px 4px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .mobile-dashboard-tabs{display:flex!important;gap:6px!important;padding:7px!important;background:var(--d-tray)!important;border:1px solid var(--d-line)!important;border-radius:999px!important;box-shadow:var(--d-sh)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .mobile-dashboard-tabs button{flex:1!important;padding:14px 8px!important;border-radius:999px!important;background:transparent!important;color:var(--d-muted)!important;font-size:15px!important;font-weight:800!important;border:0!important;box-shadow:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .mobile-dashboard-tabs button.selected{background:var(--d-grad)!important;color:var(--d-ink)!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .period-tabs{display:flex!important;gap:0!important;padding:4px!important;background:var(--d-tray)!important;border:1px solid var(--d-line)!important;border-radius:999px!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .period-tabs button{min-width:0!important;padding:7px 10px!important;border-radius:999px!important;background:transparent!important;color:var(--d-muted)!important;font-size:12px!important;font-weight:800!important;border:0!important;box-shadow:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .period-tabs button.selected{background:var(--d-grad)!important;color:var(--d-ink)!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table-wrap{background:var(--d-card)!important;background-image:none!important;border:1px solid var(--d-line)!important;border-radius:24px!important;box-shadow:var(--d-sh)!important;overflow-x:auto!important;overflow-y:hidden!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(3), main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table td:nth-child(3), main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(6), main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table td:nth-child(6){display:none!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(1){width:38px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(2){width:34%!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table th{background:var(--d-tray)!important;color:var(--d-muted)!important;font-size:10px!important;font-weight:800!important;letter-spacing:.04em!important;text-transform:uppercase!important;padding:0 6px!important;height:44px!important;border-bottom:1px solid var(--d-line)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table td{background:transparent!important;color:var(--d-text)!important;font-size:13px!important;font-weight:700!important;padding:10px 6px!important;height:60px!important;border-bottom:1px solid var(--d-line)!important;overflow:hidden}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table tbody tr:last-child td{border-bottom:0!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .rank-cell{display:grid!important;place-items:center!important;width:30px!important;height:30px!important;border-radius:50%!important;font-size:13px!important;font-weight:800!important;background:var(--d-r2)!important;color:var(--d-r2t)!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table tbody tr:nth-child(1) .rank-cell{background:var(--d-r1)!important;color:var(--d-r1t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table tbody tr:nth-child(2) .rank-cell{background:var(--d-r2)!important;color:var(--d-r2t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table tbody tr:nth-child(3) .rank-cell{background:var(--d-r3)!important;color:var(--d-r3t)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-name-button{background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--d-text)!important;padding:0!important;gap:7px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-name-button strong{font-size:13px!important;font-weight:800!important;color:var(--d-text)!important;overflow:hidden;text-overflow:ellipsis}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-avatar{width:32px!important;height:32px!important;flex:0 0 32px!important;background:var(--d-av)!important;background-image:none!important;color:var(--d-avt)!important;font-size:13px!important;font-weight:800!important;box-shadow:var(--d-sh-sm)!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .verified-mark{color:var(--d-gain)!important;background:transparent!important;width:16px!important;height:16px!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table td.positive{position:relative!important;isolation:isolate!important;text-align:center!important;color:var(--d-gain-fg)!important;font-size:12px!important;font-weight:800!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table td.positive::before{content:''!important;position:absolute!important;inset:17px 3px!important;border-radius:999px!important;background:var(--d-gain-bg)!important;z-index:-1!important}
+main.app-shell .dashboard-page.dashboard-page.dashboard-page .table-follow{background:var(--d-grad)!important;color:var(--d-ink)!important;border:0!important;border-radius:999px!important;padding:8px 10px!important;min-width:0!important;width:100%!important;font-size:12px!important;font-weight:800!important;box-shadow:var(--d-sh-sm)!important}
+@media (max-width:360px){
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card::before{width:38px!important;height:38px!important;font-size:17px!important}
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics strong{font-size:11.5px!important}
+}

@@ -1,7 +1,8 @@
 import "./globals.css";
 import "../styles/tokens.css";
 import "../styles/design-system.css";
-import "../styles/design-system-pages.css"; /* keep LAST: page coverage + yellow-on-yellow fixes */
+import "../styles/design-system-pages.css"; /* page coverage + yellow-on-yellow fixes */
+import "../styles/dashboard-theme.css"; /* keep LAST: dashboard dark lime / light yellow theme */
 import { DM_Sans, Manrope } from "next/font/google";
 
 const dmSans = DM_Sans({
