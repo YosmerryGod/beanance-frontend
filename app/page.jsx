@@ -1,5 +1,5 @@
-import BeananceApp from "../features/app/BeananceApp";
+import MILIONApp from "../features/app/MILIONApp";
 
 export default function HomePage() {
-  return <BeananceApp />;
+  return <MILIONApp />;
 }

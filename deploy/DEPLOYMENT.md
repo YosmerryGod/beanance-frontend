@@ -1,10 +1,10 @@
-# Beanance Frontend Deployment
+# MILION Frontend Deployment
 
 ## Production architecture
 
 - GitHub Actions builds the Next.js standalone output on the GitHub runner.
 - The VPS does not run `npm install` or `next build` during deployment.
-- The release archive is uploaded to the VPS and extracted into a timestamped directory under `/var/www/beanance-frontend/releases`.
+- The release archive is uploaded to the VPS and extracted into a timestamped directory under `/var/www/milion-frontend/releases`.
 - The `current` symlink is switched atomically after the archive passes structural checks.
 - PM2 runs the standalone `server.js` from the `current` symlink on port `3099`.
 - The deploy runner uses an exclusive lock, bounded health checks, rollback, and release retention.
@@ -25,32 +25,32 @@ The workflow deploys only from `main`. The validation workflow runs on `refactor
 Run as the deployment user with permission to manage PM2 and the application directories:
 
 ```bash
-sudo mkdir -p /opt/beanance-frontend-deploy
-sudo mkdir -p /var/www/beanance-frontend/releases
-sudo mkdir -p /var/log/beanance-deploy /var/log/beanance-frontend
-sudo mkdir -p /var/cache/nginx/beanance_market
+sudo mkdir -p /opt/milion-frontend-deploy
+sudo mkdir -p /var/www/milion-frontend/releases
+sudo mkdir -p /var/log/milion-deploy /var/log/milion-frontend
+sudo mkdir -p /var/cache/nginx/milion_market
 ```
 
-The deployment workflow uploads `deploy.js` and `ecosystem.config.cjs` to `/opt/beanance-frontend-deploy` on every release. The legacy rollback target is created from the currently deployed Next.js app on the first atomic deployment. After merging the Nginx changes, refresh the source checkout once so the configuration files are available on the VPS; the production deployment workflow itself does not run `git pull`.
+The deployment workflow uploads `deploy.js` and `ecosystem.config.cjs` to `/opt/milion-frontend-deploy` on every release. The legacy rollback target is created from the currently deployed Next.js app on the first atomic deployment. After merging the Nginx changes, refresh the source checkout once so the configuration files are available on the VPS; the production deployment workflow itself does not run `git pull`.
 
 ## Nginx setup
 
 The cache-zone file contains an `http {}`-level directive. Include it inside the Nginx `http` block:
 
 ```nginx
-include /var/www/beanance-frontend/nginx/market-cache-zone.conf;
+include /var/www/milion-frontend/nginx/market-cache-zone.conf;
 ```
 
-Include the location file inside the Beanance HTTPS `server {}` block:
+Include the location file inside the MILION HTTPS `server {}` block:
 
 ```nginx
-include /var/www/beanance-frontend/nginx/market-websocket-location.conf;
+include /var/www/milion-frontend/nginx/market-websocket-location.conf;
 ```
 
 Ensure the Nginx worker user can write to the cache directory, then validate and reload:
 
 ```bash
-sudo chown -R www-data:www-data /var/cache/nginx/beanance_market
+sudo chown -R www-data:www-data /var/cache/nginx/milion_market
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -62,15 +62,15 @@ The REST micro-cache is limited to two seconds and bypasses requests carrying an
 Install the repository logrotate policy:
 
 ```bash
-sudo cp /var/www/beanance-frontend/deploy/logrotate/beanance-frontend /etc/logrotate.d/beanance-frontend
-sudo chmod 644 /etc/logrotate.d/beanance-frontend
-sudo logrotate -d /etc/logrotate.d/beanance-frontend
+sudo cp /var/www/milion-frontend/deploy/logrotate/milion-frontend /etc/logrotate.d/milion-frontend
+sudo chmod 644 /etc/logrotate.d/milion-frontend
+sudo logrotate -d /etc/logrotate.d/milion-frontend
 ```
 
 Configure PM2's log rotation once:
 
 ```bash
-bash /var/www/beanance-frontend/deploy/setup-pm2-logrotate.sh
+bash /var/www/milion-frontend/deploy/setup-pm2-logrotate.sh
 ```
 
 The PM2 policy retains seven compressed application logs with a 10 MB rotation threshold. The OS logrotate policy handles deployment logs only, avoiding double rotation of PM2 output files. Deployment logs are also pruned to the latest seven files by the deploy runner.
@@ -95,9 +95,9 @@ After deployment:
 
 ```bash
 pm2 status
-pm2 logs beanance-frontend --lines 80
+pm2 logs milion-frontend --lines 80
 curl -fsS http://127.0.0.1:3099/api/health
-readlink -f /var/www/beanance-frontend/current
+readlink -f /var/www/milion-frontend/current
 df -h
 free -h
 ```

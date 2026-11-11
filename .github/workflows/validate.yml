@@ -1,4 +1,4 @@
-name: Validate Beanance Frontend
+name: Validate MILION Frontend
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
       - "package-lock.json"
 
 concurrency:
-  group: beanance-frontend-validation-${{ github.ref }}
+  group: milion-frontend-validation-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

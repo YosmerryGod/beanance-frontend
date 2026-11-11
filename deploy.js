@@ -6,16 +6,16 @@ const path = require("node:path");
 const os = require("node:os");
 const { spawnSync } = require("node:child_process");
 
-const PROJECT_DIR = path.resolve(process.env.PROJECT_DIR || "/var/www/beanance-frontend");
+const PROJECT_DIR = path.resolve(process.env.PROJECT_DIR || "/var/www/milion-frontend");
 const DEPLOY_DIR = __dirname;
 const RELEASES_DIR = path.join(PROJECT_DIR, "releases");
 const CURRENT_LINK = path.join(PROJECT_DIR, "current");
 const APP_PORT = Number(process.env.APP_PORT || 3099);
 const APP_HOST = process.env.APP_HOST || "127.0.0.1";
-const PM2_TARGET = process.env.PM2_TARGET || "beanance-frontend";
-const LOG_DIR = process.env.DEPLOY_LOG_DIR || "/var/log/beanance-deploy";
-const APP_LOG_DIR = process.env.APP_LOG_DIR || "/var/log/beanance-frontend";
-const LOCK_FILE = process.env.DEPLOY_LOCK_FILE || "/var/lock/beanance-frontend-deploy.lock";
+const PM2_TARGET = process.env.PM2_TARGET || "milion-frontend";
+const LOG_DIR = process.env.DEPLOY_LOG_DIR || "/var/log/milion-deploy";
+const APP_LOG_DIR = process.env.APP_LOG_DIR || "/var/log/milion-frontend";
+const LOCK_FILE = process.env.DEPLOY_LOCK_FILE || "/var/lock/milion-frontend-deploy.lock";
 const KEEP_RELEASES = Math.max(2, Number(process.env.KEEP_RELEASES || 3));
 const HEALTH_ATTEMPTS = 30;
 const HEALTH_TIMEOUT_MS = 2000;
@@ -127,12 +127,12 @@ app.prepare().then(() => {
   http.createServer((request, response) => {
   if (request.url === "/api/health") {
     response.writeHead(200, { "content-type": "application/json", "cache-control": "no-store" });
-    response.end(JSON.stringify({ success: true, service: "beanance-frontend", status: "ok" }));
+    response.end(JSON.stringify({ success: true, service: "milion-frontend", status: "ok" }));
     return;
   }
   handle(request, response);
 }).listen(port, host, () => {
-    process.stdout.write("Legacy Beanance server listening on " + host + ":" + port + "\\n");
+    process.stdout.write("Legacy MILION server listening on " + host + ":" + port + "\\n");
   });
 }).catch((error) => {
   process.stderr.write(String(error.stack || error) + "\\n");
@@ -150,7 +150,7 @@ async function waitForHealth() {
       const response = await fetch(url, { signal: AbortSignal.timeout(HEALTH_TIMEOUT_MS), cache: "no-store" });
       if (response.ok) {
         const payload = await response.json();
-        if (payload?.success && payload?.service === "beanance-frontend") {
+        if (payload?.success && payload?.service === "milion-frontend") {
           writeLog("HEALTH CHECK OK: " + url);
           return;
         }
@@ -189,7 +189,7 @@ function pruneReleases(current, previous) {
 
 async function main() {
   const archive = process.argv[2] || process.env.RELEASE_ARCHIVE;
-  if (!archive) throw new Error("Usage: node deploy.js /path/to/beanance-release.tar.gz");
+  if (!archive) throw new Error("Usage: node deploy.js /path/to/milion-release.tar.gz");
   if (!fs.existsSync(archive)) throw new Error("Release archive not found: " + archive);
 
   acquireLock();

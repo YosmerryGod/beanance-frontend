@@ -1,4 +1,4 @@
-name: Deploy Beanance Frontend
+name: Deploy MILION Frontend
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: beanance-frontend-production
+  group: milion-frontend-production
   cancel-in-progress: false
 
 permissions:
@@ -51,12 +51,12 @@ jobs:
           if [ -d public ]; then
             cp -a public .next/standalone/
           fi
-          tar -czf beanance-release.tar.gz -C .next/standalone .
-          test -s beanance-release.tar.gz
+          tar -czf milion-release.tar.gz -C .next/standalone .
+          test -s milion-release.tar.gz
 
       - name: Smoke test standalone health endpoint
         run: |
-          PORT=3100 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/beanance-standalone-smoke.log 2>&1 &
+          PORT=3100 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/milion-standalone-smoke.log 2>&1 &
           SERVER_PID=$!
           cleanup() {
             kill "$SERVER_PID" 2>/dev/null || true
@@ -64,13 +64,13 @@ jobs:
           }
           trap cleanup EXIT
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:3100/api/health -o /tmp/beanance-health.json; then
+            if curl --fail --silent http://127.0.0.1:3100/api/health -o /tmp/milion-health.json; then
               break
             fi
             sleep 1
           done
-          node -e 'const fs = require("node:fs"); const data = JSON.parse(fs.readFileSync("/tmp/beanance-health.json", "utf8")); if (!data.success || data.service !== "beanance-frontend") { throw new Error("Standalone health response is invalid: " + JSON.stringify(data)); }'
-          cat /tmp/beanance-health.json
+          node -e 'const fs = require("node:fs"); const data = JSON.parse(fs.readFileSync("/tmp/milion-health.json", "utf8")); if (!data.success || data.service !== "milion-frontend") { throw new Error("Standalone health response is invalid: " + JSON.stringify(data)); }'
+          cat /tmp/milion-health.json
 
       - name: Upload release and deployment runner
         uses: appleboy/scp-action@v0.1.7
@@ -79,8 +79,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          source: "beanance-release.tar.gz,deploy.js,ecosystem.config.cjs,start-current.js"
-          target: "/tmp/beanance-frontend-release"
+          source: "milion-release.tar.gz,deploy.js,ecosystem.config.cjs,start-current.js"
+          target: "/tmp/milion-frontend-release"
           overwrite: true
 
       - name: Activate release on VPS
@@ -93,8 +93,8 @@ jobs:
           command_timeout: 10m
           script: |
             set -eu
-            mkdir -p /opt/beanance-frontend-deploy
-            cp /tmp/beanance-frontend-release/deploy.js /opt/beanance-frontend-deploy/deploy.js
-            cp /tmp/beanance-frontend-release/ecosystem.config.cjs /opt/beanance-frontend-deploy/ecosystem.config.cjs
-            cp /tmp/beanance-frontend-release/start-current.js /opt/beanance-frontend-deploy/start-current.js
-            PROJECT_DIR=/var/www/beanance-frontend APP_PORT=3099 node /opt/beanance-frontend-deploy/deploy.js /tmp/beanance-frontend-release/beanance-release.tar.gz
+            mkdir -p /opt/milion-frontend-deploy
+            cp /tmp/milion-frontend-release/deploy.js /opt/milion-frontend-deploy/deploy.js
+            cp /tmp/milion-frontend-release/ecosystem.config.cjs /opt/milion-frontend-deploy/ecosystem.config.cjs
+            cp /tmp/milion-frontend-release/start-current.js /opt/milion-frontend-deploy/start-current.js
+            PROJECT_DIR=/var/www/milion-frontend APP_PORT=3099 node /opt/milion-frontend-deploy/deploy.js /tmp/milion-frontend-release/milion-release.tar.gz

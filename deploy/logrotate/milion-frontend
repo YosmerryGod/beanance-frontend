@@ -1,4 +1,4 @@
-/var/log/beanance-deploy/*.log {
+/var/log/milion-deploy/*.log {
     daily
     rotate 7
     compress

@@ -1,12 +1,12 @@
-# Beanance Frontend
+# MILION Frontend
 
-Frontend komunitas trading dan discovery strategi Beanance.
+Frontend komunitas trading dan discovery strategi MILION.
 
 ## Dashboard — Backend API Requirements
 
 Dokumen ini menjadi kontrak kebutuhan API untuk halaman Dashboard agar backend dapat menyiapkan database, service, dan endpoint sesuai kebutuhan UI.
 
-> Status saat ini: Dashboard masih menggunakan data demo/hardcoded. Endpoint di bawah adalah rancangan kontrak API, bukan endpoint yang sudah tersedia. Sesuaikan prefix dan autentikasi dengan standar backend Beanance.
+> Status saat ini: Dashboard masih menggunakan data demo/hardcoded. Endpoint di bawah adalah rancangan kontrak API, bukan endpoint yang sudah tersedia. Sesuaikan prefix dan autentikasi dengan standar backend MILION.
 
 ### 1. Komponen Dashboard
 
@@ -575,9 +575,9 @@ REST tetap digunakan untuk initial snapshot, pagination, daftar trade, dan metad
 - Frontend bertanggung jawab pada rendering, interaksi, loading state, dan error handling.
 
 
-## Beanance Market Backend Integration
+## MILION Market Backend Integration
 
-The Market page uses the private Beanance Market Backend for USDT-M perpetual futures data.
+The Market page uses the private MILION Market Backend for USDT-M perpetual futures data.
 
 - REST proxy: `/market-api/*` is rewritten to `http://127.0.0.1:3030/api/v1/market/*`.
 - WebSocket: browser clients connect to same-origin `/ws/market`.

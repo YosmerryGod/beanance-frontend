@@ -224,7 +224,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   // [ADDED] Restore and persist quick interval shortcuts locally.
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem("beanance-chart-quick-timeframes");
+      const saved = window.localStorage.getItem("milion-chart-quick-timeframes");
       if (saved) {
         const parsed = JSON.parse(saved);
         const supported = new Set(["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"]);
@@ -240,13 +240,13 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   }, []);
 
   useEffect(() => {
-    if (quickTimeframesLoaded) window.localStorage.setItem("beanance-chart-quick-timeframes", JSON.stringify(quickTimeframes));
+    if (quickTimeframesLoaded) window.localStorage.setItem("milion-chart-quick-timeframes", JSON.stringify(quickTimeframes));
   }, [quickTimeframes, quickTimeframesLoaded]);
 
   // [ADDED] Restore enabled indicators from local storage; MA is the only first-visit default.
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem("beanance-chart-enabled-indicators");
+      const saved = window.localStorage.getItem("milion-chart-enabled-indicators");
       if (saved) {
         const parsed = JSON.parse(saved);
         setEnabledIndicators({
@@ -266,12 +266,12 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
   // [ADDED] Persist indicator visibility whenever the user changes enabled indicators.
   useEffect(() => {
     if (!indicatorVisibilityLoaded) return;
-    window.localStorage.setItem("beanance-chart-enabled-indicators", JSON.stringify(enabledIndicators));
+    window.localStorage.setItem("milion-chart-enabled-indicators", JSON.stringify(enabledIndicators));
   }, [enabledIndicators, indicatorVisibilityLoaded]);
 
   useEffect(() => {
     try {
-      const saved = window.localStorage.getItem("beanance-chart-indicator-settings");
+      const saved = window.localStorage.getItem("milion-chart-indicator-settings");
       if (saved) {
         const parsed = JSON.parse(saved);
         setIndicatorSettings({
@@ -292,7 +292,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
   useEffect(() => {
     if (!indicatorSettingsLoaded) return;
-    window.localStorage.setItem("beanance-chart-indicator-settings", JSON.stringify(indicatorSettings));
+    window.localStorage.setItem("milion-chart-indicator-settings", JSON.stringify(indicatorSettings));
   }, [indicatorSettings, indicatorSettingsLoaded]);
   const [chartError, setChartError] = useState("");
   const normalizedSymbol = useMemo(() => marketSymbol(symbol), [symbol]);
@@ -368,7 +368,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
             indicatorCandleTimeRef.current = refreshedCandles.length ? refreshedCandles[refreshedCandles.length - 1].time : candle.time;
           })
           .catch((error) => {
-            if (active && error.name !== "AbortError") console.warn("Beanance indicator refresh:", error.message);
+            if (active && error.name !== "AbortError") console.warn("MILION indicator refresh:", error.message);
           });
       }
       setCandles((current) => {
@@ -382,13 +382,13 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
 
     setCandles([]);
     indicatorCandleTimeRef.current = null;
-    window.addEventListener("beanance:market-kline", handleMarketKline);
+    window.addEventListener("milion:market-kline", handleMarketKline);
     loadCandles();
 
     return () => {
       active = false;
       controller.abort();
-      window.removeEventListener("beanance:market-kline", handleMarketKline);
+      window.removeEventListener("milion:market-kline", handleMarketKline);
     };
   }, [normalizedSymbol, interval, t]);
 
@@ -951,11 +951,11 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
       })()}
       {/* [MODIFIED] Indicator controls are now inside the chart settings icon menu. */}
       <div className="market-trading-chart-canvas" ref={containerRef} role="img" aria-label={symbol + " interactive candlestick chart, " + timeframe}>
-        {/* [ADDED] Low-opacity Beanance watermark centered behind the chart data. */}
+        {/* [ADDED] Low-opacity MILION watermark centered behind the chart data. */}
         <div className="market-chart-watermark" aria-hidden="true">
-          {/* [MODIFIED] Use the existing Beanance brand logo from public assets. */}
+          {/* [MODIFIED] Use the existing MILION brand logo from public assets. */}
           <img src="/icons/logo.png" alt="" />
-          <span>BEANANCE</span>
+          <span>MILION</span>
         </div>
         {/* [ADDED] Floating candle information panel, updated from crosshair position. */}
         {/* [MODIFIED] Keep the compact OHLC panel hidden until a candle is selected by crosshair. */}

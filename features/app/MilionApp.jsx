@@ -22,7 +22,7 @@ import {
   LayoutDashboard,
   Languages, // [ADDED] Language settings icon
   Palette, // [ADDED] Appearance settings icon
-  Info, // [ADDED] About Beanance icon
+  Info, // [ADDED] About MILION icon
   Menu, // [ADDED] Sidebar menu icon
   Plus,
   Search,
@@ -98,7 +98,7 @@ const topMoverEvents = [
 
 
 
-// [ADDED] Normalize Binance USDT-M ticker values for the existing Beanance market UI.
+// [ADDED] Normalize Binance USDT-M ticker values for the existing MILION market UI.
 function mapLiveMarketAsset(item, locale = "en") {
   const symbol = item.baseAsset || String(item.symbol || "").replace(/USDT$/, "");
   const metadata = marketAssets.find((asset) => asset.symbol === symbol);
@@ -218,7 +218,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // [ADDED] Global navigation drawer
-  const [profileName, setProfileName] = useState("Ezy"); // [ADDED] Editable Beanance username
+  const [profileName, setProfileName] = useState("Ezy"); // [ADDED] Editable MILION username
   const [profileEmail, setProfileEmail] = useState(""); // [ADDED] Email is shown only when available
   const [profilePhoto, setProfilePhoto] = useState(""); // [ADDED] User-selected profile photo
   const [binanceConnected, setBinanceConnected] = useState(false); // [ADDED] Reflects a verified Binance connection when integration is available
@@ -236,7 +236,7 @@ function App() {
   const [selectedMarket, setSelectedMarket] = useState(marketAssets[0]); // [ADDED] Selected asset for full market detail
   const [marketPriceFlash, setMarketPriceFlash] = useState(""); // [ADDED] Briefly flash the live price green or red when it moves.
   const previousMarketPriceRef = useRef({ symbol: marketAssets[0]?.symbol, price: marketAssets[0]?.priceNumber }); // [ADDED] Track the previous live price for direction feedback.
-  const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from Beanance Market API
+  const [liveMarketAssets, setLiveMarketAssets] = useState(marketAssets); // [ADDED] Live USDT-M futures data from MILION Market API
 
   // [ADDED] Flash the current market price briefly whenever a live ticker moves.
   useEffect(() => {
@@ -257,7 +257,7 @@ function App() {
   const [marketTimeframe, setMarketTimeframe] = useState("1m"); // [MODIFIED] Start with a supported chart timeframe. // [ADDED] Market chart timeframe
   const [marketIndicator, setMarketIndicator] = useState("RSI"); // [ADDED] Active technical indicator
   const [marketOrderTab, setMarketOrderTab] = useState("book"); // [ADDED] Order book, depth, and trades tabs
-  // [ADDED] Live market detail data from Beanance Market Backend.
+  // [ADDED] Live market detail data from MILION Market Backend.
   const [marketOrderBook, setMarketOrderBook] = useState({ bids: [], asks: [] });
   const [marketRecentTrades, setMarketRecentTrades] = useState([]);
   const [marketMetrics, setMarketMetrics] = useState(null);
@@ -296,7 +296,7 @@ function App() {
 
   // [ADDED] Restore the last visited app page after the initial client render.
   useEffect(() => {
-    const savedPage = window.localStorage.getItem("beanance-last-active-page");
+    const savedPage = window.localStorage.getItem("milion-last-active-page");
     const validPages = ["dashboard", "dapps", "market", "market-detail", "profile", "edit-profile", "trader-profile", "help-center", "about"]; // [MODIFIED] Include every page ID rendered by the app so refresh can restore the actual last page.
     if (savedPage && validPages.includes(savedPage)) setActive(savedPage);
     setActivePageLoaded(true);
@@ -305,20 +305,20 @@ function App() {
   // [ADDED] Save page navigation so refresh returns to the same page.
   useEffect(() => {
     if (!activePageLoaded) return;
-    window.localStorage.setItem("beanance-last-active-page", active);
+    window.localStorage.setItem("milion-last-active-page", active);
   }, [active, activePageLoaded]);
 
   useEffect(() => {
-    const savedProfileName = window.localStorage.getItem("beanance-profile-name");
-    const savedProfileEmail = window.localStorage.getItem("beanance-profile-email");
-    const savedProfilePhoto = window.localStorage.getItem("beanance-profile-photo");
+    const savedProfileName = window.localStorage.getItem("milion-profile-name");
+    const savedProfileEmail = window.localStorage.getItem("milion-profile-email");
+    const savedProfilePhoto = window.localStorage.getItem("milion-profile-photo");
     if (savedProfileName) setProfileName(savedProfileName);
     if (savedProfileEmail) setProfileEmail(savedProfileEmail);
     if (savedProfilePhoto) setProfilePhoto(savedProfilePhoto);
   }, []);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("beanance-theme");
+    const savedTheme = window.localStorage.getItem("milion-theme");
     const initialTheme = savedTheme === "light" || savedTheme === "dark"
       ? savedTheme
       : document.documentElement.dataset.theme === "light" ? "light" : "dark";
@@ -329,7 +329,7 @@ function App() {
 
   useEffect(() => {
     if (!themeReady) return;
-    window.localStorage.setItem("beanance-theme", theme);
+    window.localStorage.setItem("milion-theme", theme);
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
     const themeColor = document.querySelector('meta[name="theme-color"]');
@@ -337,7 +337,7 @@ function App() {
   }, [theme, themeReady]);
 
   useEffect(() => {
-    const savedLanguage = window.localStorage.getItem("beanance-language");
+    const savedLanguage = window.localStorage.getItem("milion-language");
     if (supportedLanguages.some((item) => item.code === savedLanguage)) setLanguage(savedLanguage);
     setLanguageReady(true);
   }, []);
@@ -348,7 +348,7 @@ function App() {
 
   useEffect(() => {
     if (!languageReady) return;
-    window.localStorage.setItem("beanance-language", language);
+    window.localStorage.setItem("milion-language", language);
     document.documentElement.lang = language;
     translator.changeLanguage(language); // [ADDED] Update the shared translation engine across all rendered pages.
   }, [language, languageReady]);
@@ -462,7 +462,7 @@ function App() {
           message.type === "market.detail.kline" &&
           message.symbol === (selectedMarket?.symbol || "") + "USDT"
         ) {
-          window.dispatchEvent(new CustomEvent("beanance:market-kline", { detail: message }));
+          window.dispatchEvent(new CustomEvent("milion:market-kline", { detail: message }));
           return;
         }
 
@@ -852,8 +852,8 @@ function App() {
       setNotice("Username cannot be empty");
       return;
     }
-    window.localStorage.setItem("beanance-profile-name", cleanName);
-    window.localStorage.setItem("beanance-profile-photo", profilePhoto);
+    window.localStorage.setItem("milion-profile-name", cleanName);
+    window.localStorage.setItem("milion-profile-photo", profilePhoto);
     setProfileName(cleanName);
     setNotice("Profile updated on this device");
     window.setTimeout(() => setNotice(""), 2200);
@@ -912,7 +912,7 @@ function App() {
                     <div className="notification-heading"><strong>{t("Notifications")}</strong><button onClick={() => setShowNotifications(false)} aria-label="Close notifications"><X size={16} /></button></div>
                     <div className="notification-item unread"><span className="notification-dot" /><div><strong>{t("Wallet connected")}</strong><p>{t("Your demo wallet is ready to use.")}</p><small>{t("Just now")}</small></div></div>
                     <div className="notification-item"><span className="notification-symbol"><ArrowUpRight size={17} strokeWidth={1.75} /></span><div><strong>{t("Market update")}</strong><p>{t("Bitcoin is up 2.45% in the demo market.")}</p><small>{t("12 minutes ago")}</small></div></div>
-                    <div className="notification-item"><span className="notification-symbol"><Sparkles size={17} strokeWidth={1.75} /></span><div><strong>{t("Welcome to Beanance")}</strong><p>{t("Explore assets and discover Web3 apps.")}</p><small>{t("Today")}</small></div></div>
+                    <div className="notification-item"><span className="notification-symbol"><Sparkles size={17} strokeWidth={1.75} /></span><div><strong>{t("Welcome to MILION")}</strong><p>{t("Explore assets and discover Web3 apps.")}</p><small>{t("Today")}</small></div></div>
                     <button className="notification-footer" onClick={() => setShowNotifications(false)}>{t("Mark all as read")}</button>
                   </div>
                 )}
@@ -950,7 +950,7 @@ function App() {
               </button>
               <div className="help-center-brand">
                 <span className="help-center-brand-icon"><Headset size={23}/></span>
-                <div><strong>Help Center</strong><small>Beanance Support</small></div>
+                <div><strong>Help Center</strong><small>MILION Support</small></div>
               </div>
             </div>
 
@@ -970,7 +970,7 @@ function App() {
 
             <section className="help-center-categories" aria-label="Help categories">
               {[
-                {name:"Getting Started",description:"Set up and start using Beanance",icon:Rocket},
+                {name:"Getting Started",description:"Set up and start using MILION",icon:Rocket},
                 {name:"Account & Security",description:"Profile, login, and account safety",icon:UserRound},
                 {name:"Wallet & Assets",description:"Wallet, deposits, and assets",icon:Wallet},
                 {name:"Markets & Trading",description:"Markets, orders, and trading",icon:CandlestickChart},
@@ -996,7 +996,7 @@ function App() {
                 {(helpSearch || helpCategory!=="All") && <button type="button" onClick={() => {setHelpSearch("");setHelpCategory("All");}}>Clear</button>}
               </div>
               {[
-                {title:"How to get started with Beanance",category:"Getting Started",body:"Explore the Beanance dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
+                {title:"How to get started with MILION",category:"Getting Started",body:"Explore the MILION dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
                 {title:"How to secure your account",category:"Account & Security",body:"Use a unique password, keep your account details private, and only connect wallets or services you trust. Review connected accounts regularly."},
                 {title:"Understanding your wallet and assets",category:"Wallet & Assets",body:"The wallet area helps you review connected wallet information and supported assets. Always verify network and address details before sending assets."},
                 {title:"Understanding markets and trading",category:"Markets & Trading",body:"Review market pairs, price movements, volume, and trading information before making decisions. Market data and demo indicators may not represent live execution."},
@@ -1011,7 +1011,7 @@ function App() {
                 </details>
               ))}
               {[
-                {title:"How to get started with Beanance",category:"Getting Started",body:"Explore the Beanance dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
+                {title:"How to get started with MILION",category:"Getting Started",body:"Explore the MILION dashboard, discover strategies, and learn where to find the tools you need. Start by completing your profile and reviewing the available sections."},
                 {title:"How to secure your account",category:"Account & Security",body:"Use a unique password, keep your account details private, and only connect wallets or services you trust. Review connected accounts regularly."},
                 {title:"Understanding your wallet and assets",category:"Wallet & Assets",body:"The wallet area helps you review connected wallet information and supported assets. Always verify network and address details before sending assets."},
                 {title:"Understanding markets and trading",category:"Markets & Trading",body:"Review market pairs, price movements, volume, and trading information before making decisions. Market data and demo indicators may not represent live execution."},
@@ -1029,7 +1029,7 @@ function App() {
               <div><h2>Still need help?</h2><p>Our support team is here to help you anytime.</p></div>
               <button type="button" onClick={() => setNotice("Support contact is coming soon") }><MessageCircle size={17}/> Contact Support</button>
             </section>
-            <p className="help-center-footnote">Beanance Help Center · Support resources</p>
+            <p className="help-center-footnote">MILION Help Center · Support resources</p>
           </section>
         )}
 
@@ -1039,20 +1039,20 @@ function App() {
               <button type="button" className="help-center-back" onClick={() => setActive(aboutReturnTo)} aria-label={t("Back")}><ArrowLeft size={19}/></button>
               <div className="help-center-brand">
                 <span className="help-center-brand-icon"><Info size={23}/></span>
-                <div><strong>About Beanance</strong><small>Discover our platform</small></div>
+                <div><strong>About MILION</strong><small>Discover our platform</small></div>
               </div>
             </div>
 
             <section className="about-hero">
-              <div className="about-hero-brand"><span className="about-logo-mark"><Layers size={34}/></span><strong>BEANANCE</strong></div>
+              <div className="about-hero-brand"><span className="about-logo-mark"><Layers size={34}/></span><strong>MILION</strong></div>
               <p className="about-eyebrow">DISCOVER · CONNECT · GROW</p>
               <h1>Trade smarter.<br/><span>Build together.</span></h1>
               <p className="about-hero-description">A community-driven platform to discover traders, explore strategies, and navigate the crypto ecosystem.</p>
             </section>
 
             <section className="about-section">
-              <div className="about-section-heading"><span>01</span><div><h2>Our Mission</h2><p>Why we are building Beanance</p></div></div>
-              <p className="about-body-copy">We believe useful trading insights should be easier to discover and understand. Beanance brings traders, strategies, market information, and portfolio tools together in one place — helping the community make more informed decisions.</p>
+              <div className="about-section-heading"><span>01</span><div><h2>Our Mission</h2><p>Why we are building MILION</p></div></div>
+              <p className="about-body-copy">We believe useful trading insights should be easier to discover and understand. MILION brings traders, strategies, market information, and portfolio tools together in one place — helping the community make more informed decisions.</p>
             </section>
 
             <section className="about-section">
@@ -1066,7 +1066,7 @@ function App() {
             </section>
 
             <section className="about-section">
-              <div className="about-section-heading"><span>03</span><div><h2>One platform, connected tools</h2><p>Explore the Beanance experience</p></div></div>
+              <div className="about-section-heading"><span>03</span><div><h2>One platform, connected tools</h2><p>Explore the MILION experience</p></div></div>
               <div className="about-feature-list">
                 <div><span><Compass size={20}/></span><div><strong>Discover</strong><p>Explore traders and community strategies.</p></div></div>
                 <div><span><BarChart3 size={20}/></span><div><strong>Markets</strong><p>Review market movements and asset information.</p></div></div>
@@ -1082,12 +1082,12 @@ function App() {
 
             <section className="about-platform-info">
               <h2>Platform Information</h2>
-              <div><span>Platform</span><strong>Beanance</strong></div>
+              <div><span>Platform</span><strong>MILION</strong></div>
               <div><span>Category</span><strong>Crypto & Web3</strong></div>
               <div><span>Purpose</span><strong>Trading discovery & insights</strong></div>
               <div><span>Legal</span><button type="button" onClick={() => setNotice("Legal documents are coming soon")}>Terms & Privacy <ChevronRight size={15}/></button></div>
             </section>
-            <p className="about-footer">© 2026 Beanance. Built for the crypto community.</p>
+            <p className="about-footer">© 2026 MILION. Built for the crypto community.</p>
           </section>
         )}
 
@@ -1246,7 +1246,7 @@ function App() {
             <div className="trader-profile-hero">
               <div className="trader-profile-cover">
                 <button className="trader-profile-back trader-profile-inline-back" onClick={closeTraderProfile}><ArrowLeft size={17} /><span>{t("Back")}</span></button>
-                <span>{t("BEANANCE TRADER")}</span><div className="trader-profile-cover-mark">B</div>
+                <span>{t("MILION TRADER")}</span><div className="trader-profile-cover-mark">B</div>
               </div>
               <div className="trader-profile-identity">
                 <div className={`trader-profile-avatar trader-avatar-${["tradewiz","cryptofox","moontrade","quantalab","solking"].indexOf(selectedTrader)+1}`}>{selectedTrader.charAt(0).toUpperCase()}</div>
@@ -1349,7 +1349,7 @@ function App() {
                 </section>
               )}
             </div>
-            <p className="trader-profile-disclaimer">{t("Trade history and strategy performance shown here are sample data for the Beanance demo.")}</p>
+            <p className="trader-profile-disclaimer">{t("Trade history and strategy performance shown here are sample data for the MILION demo.")}</p>
           </section>
         )}
 
@@ -1573,11 +1573,11 @@ function App() {
                     <div><span>{t("Supported Time in Force")}</span><strong>{Array.isArray(marketExchangeInfo?.timeInForce) ? marketExchangeInfo.timeInForce.join(", ") : "—"}</strong></div>
                   </div>
                 </div>
-                <p className="market-info-footnote">{t("Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through Beanance Market Backend.")}</p>
+                <p className="market-info-footnote">{t("Contract metadata and live market statistics are supplied by Binance USDⓈ-M Futures through MILION Market Backend.")}</p>
               </section>
             )}
             <div className="market-create-sticky"><button type="button" onClick={()=>setNotice("Create Strategy for "+selectedMarket.symbol+"USDT is coming soon")}><Layers size={19}/> Create Strategy <span>{selectedMarket.symbol}USDT</span></button></div>
-            <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades are supplied by Beanance Market Backend.</p>
+            <p className="market-data-disclaimer">Live ticker figures are supplied by Binance USDⓈ-M Futures. Candlestick history, order book, depth, and recent trades are supplied by MILION Market Backend.</p>
           </section>
         )}
 
@@ -1585,7 +1585,7 @@ function App() {
           <section className="page page-enter trader-profile-page portfolio-profile-page portfolio-strategy-page">
             <section className="trader-profile-hero portfolio-profile-hero">
               <div className="trader-profile-cover portfolio-profile-cover">
-                <span>{t("BEANANCE TRADER")}</span>
+                <span>{t("MILION TRADER")}</span>
                 <div className="trader-profile-cover-mark">B</div>
               </div>
               <div className="trader-profile-identity portfolio-profile-identity">
@@ -1682,7 +1682,7 @@ function App() {
                       <div className="portfolio-wallet-token-heading"><h3>{t("Assets")}</h3><button type="button" onClick={() => setNotice("Add token is coming soon")}><Plus size={16}/>{t("Add Token")}</button></div>
                       <div className="portfolio-wallet-token-list">
                         <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bnb"><CoinLogo symbol="BNB" /></span><span className="portfolio-wallet-token-info"><strong>BNB</strong><small>BNB Chain</small></span><span className="portfolio-wallet-token-value"><strong>4.25 BNB</strong><small>$2,465.00</small></span></article>
-                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean"><CoinLogo symbol="BEAN" /></span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>Beanance Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
+                        <article className="portfolio-wallet-token-card"><span className="portfolio-wallet-token-logo bean"><CoinLogo symbol="BEAN" /></span><span className="portfolio-wallet-token-info"><strong>BEAN</strong><small>MILION Token</small></span><span className="portfolio-wallet-token-value"><strong>1,250 BEAN</strong><small>$15.65</small></span></article>
                       </div>
                     </>
                   )}
@@ -1788,7 +1788,7 @@ function App() {
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}>
           <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label={t("Main menu")} onClick={(event) => event.stopPropagation()}>
             <div className="sidebar-heading">
-              <div className="sidebar-brand">{/* [MODIFIED] Use the official Beanance logo asset. */}<img className="sidebar-brand-logo" src="/icons/logo.png" alt="Beanance" /><strong>beanance</strong></div>
+              <div className="sidebar-brand">{/* [MODIFIED] Use the official MILION logo asset. */}<img className="sidebar-brand-logo" src="/icons/logo.png" alt="MILION" /><strong>milion</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
             <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "edit-profile" });}}>
@@ -1966,7 +1966,7 @@ function App() {
                       {pair:selectedStrategy.pair,side:"LONG",entry:"$64,250.00",exit:"$66,176.50",pnl:"+3.00%",time:"Oct 30 · 14:45"}
                     ].map((trade,index) => <div className="strategy-detail-trade-row" key={trade.time}><div><strong>{trade.pair}</strong><span>{trade.side} · {trade.time}</span><small>{t("Entry")}: {trade.entry} · {t("Exit")}: {trade.exit}</small></div><b className={trade.pnl.startsWith("-") ? "negative" : "positive"}>{trade.pnl}</b></div>)}
                   </div>
-                  <p className="strategy-detail-note">{t("Recent trades shown are sample data for the Beanance demo.")}</p>
+                  <p className="strategy-detail-note">{t("Recent trades shown are sample data for the MILION demo.")}</p>
                 </div>
               )}
 

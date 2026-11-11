@@ -1,13 +1,13 @@
 const path = require("node:path");
 
-const projectDir = path.resolve(process.env.PROJECT_DIR || "/var/www/beanance-frontend");
+const projectDir = path.resolve(process.env.PROJECT_DIR || "/var/www/milion-frontend");
 const launcherPath = path.join(__dirname, "start-current.js");
 const appPort = String(process.env.APP_PORT || "3099");
 
 module.exports = {
   apps: [
     {
-      name: "beanance-frontend",
+      name: "milion-frontend",
       cwd: projectDir,
       script: launcherPath,
       interpreter: process.execPath,
@@ -25,8 +25,8 @@ module.exports = {
       wait_ready: false,
       time: true,
       merge_logs: true,
-      out_file: "/var/log/beanance-frontend/out.log",
-      error_file: "/var/log/beanance-frontend/error.log",
+      out_file: "/var/log/milion-frontend/out.log",
+      error_file: "/var/log/milion-frontend/error.log",
       env: {
         NODE_ENV: "production",
         PROJECT_DIR: projectDir,

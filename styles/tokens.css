@@ -1,4 +1,4 @@
-/* Unified Beanance design tokens. Theme is applied to the document root so portals and browser chrome inherit it.
+/* Unified MILION design tokens. Theme is applied to the document root so portals and browser chrome inherit it.
    Light = yellow canvas, Dark = black canvas. Component-level neumorphism lives in styles/design-system.css. */
 :root {
   color-scheme: dark;

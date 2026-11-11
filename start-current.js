@@ -30,7 +30,7 @@ http.Server.prototype.emit = function (event, req, socket, head) {
   return originalEmit.apply(this, arguments);
 };
 
-const projectDir = path.resolve(process.env.PROJECT_DIR || "/var/www/beanance-frontend");
+const projectDir = path.resolve(process.env.PROJECT_DIR || "/var/www/milion-frontend");
 const currentLink = path.resolve(process.env.CURRENT_RELEASE_LINK || path.join(projectDir, "current"));
 const releaseDir = fs.realpathSync(currentLink);
 const serverPath = path.join(releaseDir, "server.js");
@@ -44,5 +44,5 @@ process.env.NODE_ENV = process.env.NODE_ENV || "production";
 process.env.PORT = process.env.PORT || "3099";
 process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 
-process.stdout.write("Starting Beanance release: " + releaseDir + "\n");
+process.stdout.write("Starting MILION release: " + releaseDir + "\n");
 require(serverPath);

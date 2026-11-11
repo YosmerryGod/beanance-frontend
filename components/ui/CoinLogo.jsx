@@ -32,7 +32,7 @@ export default function CoinLogo({ symbol, size, logo, className = "" }) {
     </span>
   );
 
-  // Official Beanance token mark for the BEAN asset.
+  // Official MILION token mark for the BEAN asset.
   if (normalizedSymbol === "BEAN") {
     return (
       <span
@@ -70,7 +70,7 @@ export default function CoinLogo({ symbol, size, logo, className = "" }) {
       data-symbol={normalizedSymbol}
       data-tone={tone}
     >
-      {/* Prefer the logo URL supplied by Beanance Market Backend. */}
+      {/* Prefer the logo URL supplied by MILION Market Backend. */}
       {logo && !logoFailed ? (
         <img
           src={logo}
