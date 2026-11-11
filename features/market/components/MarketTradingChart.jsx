@@ -176,7 +176,7 @@ function calculateSupertrend(candles, period, multiplier) {
 }
 
 const DEFAULT_INDICATOR_SETTINGS = {
-  ma: { periods: [{ period: 7, color: "#f0b90b" }, { period: 25, color: "#3b82f6" }, { period: 99, color: "#a855f7" }] },
+  ma: { periods: [{ period: 7, color: "#c7f36b" }, { period: 25, color: "#3b82f6" }, { period: 99, color: "#a855f7" }] },
   ema: { periods: [{ period: 9, color: "#35b9e9" }, { period: 21, color: "#f28b52" }] },
   bollinger: { period: 20, multiplier: 2, colors: { upper: "#9aa4b2", middle: "#a0a8b5", lower: "#9aa4b2" } },
   sar: { step: 0.02, maximum: 0.2, color: "#e6a23c" },
@@ -409,7 +409,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     const background = styles.getPropertyValue("--bg").trim() || "#090909";
     const textColor = styles.getPropertyValue("--text-muted").trim() || "#a8a18e";
     const gridColor = styles.getPropertyValue("--border").trim() || "rgba(255,216,77,.13)";
-    const accentColor = styles.getPropertyValue("--accent").trim() || "#f5c400";
+    const accentColor = styles.getPropertyValue("--accent").trim() || "#c7f36b";
     const positiveColor = styles.getPropertyValue("--positive").trim() || "#35cf86";
     const negativeColor = styles.getPropertyValue("--negative").trim() || "#ef5368";
     const chart = createChart(container, {
@@ -730,7 +730,7 @@ export default function MarketTradingChart({ symbol, timeframe, onTimeframeChang
     if (!Number.isInteger(period) || period < 1 || period > 1000) return;
     setIndicatorSettings((current) => {
       if (current[indicator].periods.some((item) => item.period === period)) return current;
-      const palette = ["#f0b90b", "#3b82f6", "#a855f7", "#20bd88", "#f28b52", "#35b9e9", "#ef5368"];
+      const palette = ["#c7f36b", "#3b82f6", "#a855f7", "#20bd88", "#f28b52", "#35b9e9", "#ef5368"];
       const color = palette[current[indicator].periods.length % palette.length];
       return { ...current, [indicator]: { ...current[indicator], periods: [...current[indicator].periods, { period, color }].sort((a, b) => a.period - b.period) } };
     });
