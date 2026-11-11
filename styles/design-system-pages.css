@@ -422,3 +422,212 @@ main.app-shell.theme-light .nav-item.active {
   background-color: var(--ds-accent-fill) !important;
   color: var(--ds-accent-ink) !important;
 }
+
+
+/* [ADDED] Dashboard visual polish: clean white surfaces with MILION lime actions. */
+main.app-shell.theme-light .dashboard-page {
+  background: #ffffff !important;
+  color: #111111 !important;
+  gap: 26px;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-section-heading h2 {
+  color: #111111 !important;
+  font-weight: 800;
+  letter-spacing: -.55px;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-section-heading .muted {
+  color: #737373 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-card {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid rgba(17, 17, 17, .09) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 5px 18px rgba(17, 17, 17, .055) !important;
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2) {
+  border-color: rgba(168, 217, 79, .65) !important;
+  box-shadow: 0 7px 22px rgba(17, 17, 17, .07) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-card::before {
+  background: #ededed !important;
+  color: #111111 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 2px 7px rgba(17, 17, 17, .08) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2)::before {
+  background: #a8d94f !important;
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-coin {
+  background: #f5f5f5 !important;
+  color: #111111 !important;
+  border: 1px solid rgba(17, 17, 17, .07) !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-identity strong,
+main.app-shell.theme-light .dashboard-page .strategy-metrics div strong:not(.positive) {
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-owner-link {
+  background: transparent !important;
+  color: #5b7730 !important;
+  text-decoration: none;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-tag,
+main.app-shell.theme-light .dashboard-page .risk-tag {
+  background: #f5f5f5 !important;
+  color: #666666 !important;
+  border: 1px solid rgba(17, 17, 17, .07) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-card-footer button,
+main.app-shell.theme-light .dashboard-page .table-follow {
+  background: #a8d94f !important;
+  color: #111111 !important;
+  border: 1px solid rgba(17, 17, 17, .08) !important;
+  border-radius: 11px !important;
+  box-shadow: 0 2px 6px rgba(17, 17, 17, .08) !important;
+  font-weight: 750;
+}
+
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs {
+  padding: 5px !important;
+  gap: 5px !important;
+  background: #f5f5f5 !important;
+  background-image: none !important;
+  border: 1px solid rgba(17, 17, 17, .08) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs button {
+  background: transparent !important;
+  color: #737373 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs button.selected {
+  background: #a8d94f !important;
+  color: #111111 !important;
+  box-shadow: 0 2px 6px rgba(17, 17, 17, .08) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .period-tabs {
+  padding: 4px !important;
+  gap: 3px !important;
+  background: #f5f5f5 !important;
+  border: 1px solid rgba(17, 17, 17, .08) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .period-tabs button {
+  background: transparent !important;
+  color: #737373 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+
+main.app-shell.theme-light .dashboard-page .period-tabs button.selected {
+  background: #a8d94f !important;
+  color: #111111 !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table-wrap {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid rgba(17, 17, 17, .09) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 16px rgba(17, 17, 17, .04) !important;
+  overflow: hidden;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table th {
+  background: #f5f5f5 !important;
+  color: #737373 !important;
+  border-bottom: 1px solid rgba(17, 17, 17, .08) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table td {
+  background: #ffffff !important;
+  color: #333333 !important;
+  border-bottom: 1px solid rgba(17, 17, 17, .07) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .trader-name {
+  background: transparent !important;
+  color: #111111 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .rank-cell {
+  background: #f0f0f0 !important;
+  color: #333333 !important;
+  box-shadow: none !important;
+}
+
+main.app-shell.theme-light .dashboard-page .text-link {
+  background: transparent !important;
+  color: #5b7730 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .market-overview-section .market-table,
+main.app-shell.theme-light .dashboard-page .market-overview-section .market-table td,
+main.app-shell.theme-light .dashboard-page .market-overview-section .market-table th {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .market-overview-section .market-table th {
+  background-color: #f5f5f5 !important;
+  color: #737373 !important;
+}
+
+main.app-shell.theme-light .dashboard-page .table-sparkline path {
+  stroke: #79ad31;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-chart path {
+  stroke: #79ad31;
+}
+
+main.app-shell.theme-light .dashboard-page .strategy-chart defs linearGradient stop {
+  stop-color: #a8d94f;
+}
+
+@media (max-width: 760px) {
+  main.app-shell.theme-light .dashboard-page {
+    gap: 20px;
+    padding-top: 24px;
+  }
+
+  main.app-shell.theme-light .dashboard-page .strategy-card {
+    box-shadow: 0 4px 13px rgba(17, 17, 17, .06) !important;
+  }
+
+  main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs {
+    margin-top: 2px;
+  }
+
+  main.app-shell.theme-light .dashboard-page .dashboard-table-wrap {
+    border-radius: 15px !important;
+  }
+}
