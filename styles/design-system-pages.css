@@ -839,3 +839,57 @@ main.app-shell.theme-light .discover-podium-card.podium-rank-3 .podium-rank {
   color: #3d2110 !important;
   border-color: #ffffff !important;
 }
+
+/* [ADDED] MILION theme accent system: yellow for Light Mode, lime green for Dark Mode. */
+main.app-shell.theme-light {
+  --ds-accent: #e7b900;
+  --ds-accent-fill: #ffd633;
+  --ds-accent-ink: #171300;
+  --gold: #e7b900;
+  --gold-soft: rgba(255, 214, 51, .18);
+}
+main.app-shell.theme-dark {
+  --ds-accent: #a8d94f;
+  --ds-accent-fill: #a8d94f;
+  --ds-accent-ink: #111111;
+  --gold: #a8d94f;
+  --gold-soft: rgba(168, 217, 79, .16);
+}
+
+/* Primary actions and selected controls follow the active theme accent. */
+main.app-shell.theme-light .ds-btn--primary,
+main.app-shell.theme-light .ds-btn.primary,
+main.app-shell.theme-light .nav-item.active,
+main.app-shell.theme-light .discover-podium-card > button,
+main.app-shell.theme-light .discover-list-card > button,
+main.app-shell.theme-light .dashboard-page .strategy-card-footer button,
+main.app-shell.theme-light .dashboard-page .table-follow {
+  background: #ffd633 !important;
+  color: #171300 !important;
+  border-color: rgba(180, 139, 0, .24) !important;
+}
+main.app-shell.theme-dark .ds-btn--primary,
+main.app-shell.theme-dark .ds-btn.primary,
+main.app-shell.theme-dark .nav-item.active,
+main.app-shell.theme-dark .discover-podium-card > button,
+main.app-shell.theme-dark .discover-list-card > button,
+main.app-shell.theme-dark .dashboard-page .strategy-card-footer button,
+main.app-shell.theme-dark .dashboard-page .table-follow {
+  background: #a8d94f !important;
+  color: #111111 !important;
+  border-color: rgba(168, 217, 79, .3) !important;
+}
+main.app-shell.theme-light .discover-switch button.selected,
+main.app-shell.theme-light .discover-filters button.selected,
+main.app-shell.theme-light .discover-nav-tabs button.selected,
+main.app-shell.theme-light .mobile-dashboard-tabs button.selected {
+  background: #ffd633 !important;
+  color: #171300 !important;
+}
+main.app-shell.theme-dark .discover-switch button.selected,
+main.app-shell.theme-dark .discover-filters button.selected,
+main.app-shell.theme-dark .discover-nav-tabs button.selected,
+main.app-shell.theme-dark .mobile-dashboard-tabs button.selected {
+  background: #a8d94f !important;
+  color: #111111 !important;
+}
