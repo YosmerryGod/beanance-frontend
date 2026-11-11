@@ -802,3 +802,23 @@ main.app-shell .discover-list-card ::selection {
   background: rgba(32, 41, 56, .16) !important;
   color: inherit !important;
 }
+
+/* [ADDED] Dashboard strategy podium medals: gold, silver, bronze. */
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2) {
+  border-color: rgba(212, 175, 55, .62) !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2)::before {
+  background: linear-gradient(145deg, #f8df83, #d4af37) !important;
+  color: #3b2b08 !important;
+  border-color: #ffffff !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(1)::before {
+  background: linear-gradient(145deg, #f4f6f8, #bfc7d1) !important;
+  color: #26313d !important;
+  border-color: #ffffff !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(3)::before {
+  background: linear-gradient(145deg, #e7b18a, #b87333) !important;
+  color: #3d2110 !important;
+  border-color: #ffffff !important;
+}
