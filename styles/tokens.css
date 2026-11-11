@@ -1,17 +1,26 @@
 /* Unified MILION design tokens. Light and dark themes share the same neutral geometry. */
-/* [MODIFIED] Modern Playful Geometry palette: clean white/charcoal surfaces with lime accent. */
+/* [MODIFIED] Dashboard theme: dark = charcoal + lime, light = warm white + yellow. Semua halaman ikut lewat token ini. */
 :root {
   color-scheme: dark;
-  --theme-bg: #111111;
-  --theme-surface: #1d1d1d;
-  --theme-surface-2: #252525;
+  --theme-bg: #0a0a0a;
+  --theme-surface: #161616;
+  --theme-surface-2: #1d1d1d;
   --theme-border: rgba(255, 255, 255, 0.09);
   --theme-text: #ffffff;
-  --theme-text-muted: #a1a1aa;
-  --theme-accent: #c7f36b;
+  --theme-text-muted: #a3a3a3;
+  --theme-accent: #c6f432;
+  --theme-accent-2: #a8e000;
+  --theme-accent-text: #0d1400;
+  --theme-accent-ink: #c6f432;
+  --theme-accent-gradient: linear-gradient(180deg, #d4ff3d, #a8e000);
   --theme-positive: #35cf86;
   --theme-negative: #ef5368;
-  --theme-shadow: 6px 6px 14px rgba(0, 0, 0, 0.24), -4px -4px 12px rgba(255, 255, 255, 0.018);
+  --theme-rank-1: #f7c92b;
+  --theme-rank-2: #cfd3dc;
+  --theme-rank-3: #f08a3c;
+  --theme-rank-text: #1a1200;
+  --theme-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --theme-glow: 0 0 40px rgba(247, 201, 43, 0.18);
   --bg: var(--theme-bg);
   --panel: var(--theme-surface);
   --panel-soft: var(--theme-surface-2);
@@ -32,16 +41,25 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --theme-bg: #ffffff;
-  --theme-surface: #f5f5f5;
-  --theme-surface-2: #ededed;
-  --theme-border: rgba(17, 17, 17, 0.1);
-  --theme-text: #111111;
-  --theme-text-muted: #737373;
-  --theme-accent: #a8d94f;
+  --theme-bg: #fdf8f9;
+  --theme-surface: #ffffff;
+  --theme-surface-2: #f7f3f4;
+  --theme-border: #ece6e8;
+  --theme-text: #14110f;
+  --theme-text-muted: #7a7476;
+  --theme-accent: #f9d423;
+  --theme-accent-2: #f1c40f;
+  --theme-accent-text: #1a1500;
+  --theme-accent-ink: #8a6d00;
+  --theme-accent-gradient: linear-gradient(180deg, #fbe35a, #f1c40f);
   --theme-positive: #16865a;
   --theme-negative: #d43d55;
-  --theme-shadow: 5px 5px 14px rgba(17, 17, 17, 0.055), -5px -5px 14px rgba(255, 255, 255, 0.9);
+  --theme-rank-1: #f9d423;
+  --theme-rank-2: #cfd3dc;
+  --theme-rank-3: #c98a62;
+  --theme-rank-text: #2a2000;
+  --theme-shadow: 0 8px 24px rgba(120, 100, 40, 0.12);
+  --theme-glow: none;
 }
 html, body {
   min-height: 100%;
