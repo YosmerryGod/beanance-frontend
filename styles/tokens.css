@@ -1,17 +1,17 @@
-/* Unified MILION design tokens. Theme is applied to the document root so portals and browser chrome inherit it.
-   Light = yellow canvas, Dark = black canvas. Component-level neumorphism lives in styles/design-system.css. */
+/* Unified MILION design tokens. Light and dark themes share the same neutral geometry. */
+/* [MODIFIED] Modern Playful Geometry palette: clean white/charcoal surfaces with lime accent. */
 :root {
   color-scheme: dark;
-  --theme-bg: #090909;
-  --theme-surface: #111111;
-  --theme-surface-2: #181818;
-  --theme-border: rgba(255, 255, 255, 0.06);
-  --theme-text: #f5f1e5;
-  --theme-text-muted: #9a9487;
-  --theme-accent: #f5c400;
+  --theme-bg: #111111;
+  --theme-surface: #1d1d1d;
+  --theme-surface-2: #252525;
+  --theme-border: rgba(255, 255, 255, 0.09);
+  --theme-text: #ffffff;
+  --theme-text-muted: #a1a1aa;
+  --theme-accent: #c7f36b;
   --theme-positive: #35cf86;
   --theme-negative: #ef5368;
-  --theme-shadow: 8px 8px 18px rgba(0, 0, 0, 0.75), -5px -5px 14px rgba(255, 255, 255, 0.025);
+  --theme-shadow: 6px 6px 14px rgba(0, 0, 0, 0.24), -4px -4px 12px rgba(255, 255, 255, 0.018);
   --bg: var(--theme-bg);
   --panel: var(--theme-surface);
   --panel-soft: var(--theme-surface-2);
@@ -32,16 +32,16 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --theme-bg: #efc400;
-  --theme-surface: #fff8df;
-  --theme-surface-2: #f8ecc0;
-  --theme-border: rgba(91, 68, 0, 0.14);
-  --theme-text: #28200b;
-  --theme-text-muted: #645210;
-  --theme-accent: #6b5000;
-  --theme-positive: #0c7a4d;
-  --theme-negative: #c2263f;
-  --theme-shadow: 8px 8px 18px rgba(111, 82, 0, 0.24), -8px -8px 18px rgba(255, 240, 140, 0.55);
+  --theme-bg: #ffffff;
+  --theme-surface: #f5f5f5;
+  --theme-surface-2: #ededed;
+  --theme-border: rgba(17, 17, 17, 0.1);
+  --theme-text: #111111;
+  --theme-text-muted: #737373;
+  --theme-accent: #a8d94f;
+  --theme-positive: #16865a;
+  --theme-negative: #d43d55;
+  --theme-shadow: 5px 5px 14px rgba(17, 17, 17, 0.055), -5px -5px 14px rgba(255, 255, 255, 0.9);
 }
 html, body {
   min-height: 100%;
@@ -55,10 +55,9 @@ h1, h2, h3, h4, .brand, .balance-value {
   font-family: var(--font-manrope), "Manrope", sans-serif;
 }
 ::selection {
-  color: #17150d;
+  color: #111111;
   background: var(--theme-accent);
 }
-
 /* Native browser controls and scrollbars follow the active document theme. */
 html {
   scrollbar-color: var(--theme-text-muted) var(--theme-bg);
