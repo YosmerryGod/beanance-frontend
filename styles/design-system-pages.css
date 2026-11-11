@@ -888,3 +888,137 @@ main.app-shell.theme-light .dashboard-page .dashboard-table tbody tr:nth-child(3
   main.app-shell.theme-light .dashboard-page .strategy-metrics { gap: 5px !important; }
   main.app-shell.theme-light .dashboard-page .strategy-metrics>div+div { padding-left: 7px !important; }
 }
+
+/* [FIXED] Restore compact three-column strategy podium on mobile.
+   The previous desktop-oriented card styling caused overflow and overlap. */
+@media (max-width: 760px) {
+  main.app-shell.theme-light .dashboard-page .strategy-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card,
+  main.app-shell.theme-light .dashboard-page .strategy-card:last-child {
+    grid-column: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    padding: 23px 7px 10px !important;
+    overflow: visible !important;
+    border-radius: 21px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    width: 100% !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-coin {
+    width: 38px !important;
+    height: 38px !important;
+    flex: 0 0 38px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-identity {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
+    align-items: center !important;
+    gap: 3px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-identity strong {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-owner-link {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: 9px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-more {
+    display: none !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-chart {
+    width: 100% !important;
+    height: 27px !important;
+    margin: 6px 0 3px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 3px !important;
+    width: 100% !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics>div {
+    min-width: 0 !important;
+    align-items: center !important;
+    gap: 2px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics>div+div {
+    padding-left: 3px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics strong {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics span {
+    font-size: 7px !important;
+    white-space: nowrap !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card-footer .strategy-tag,
+  main.app-shell.theme-light .dashboard-page .strategy-card-footer .risk-tag {
+    display: none !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card-footer button {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 7px 2px !important;
+    font-size: 9px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .strategy-card::before {
+    top: -15px !important;
+    width: 39px !important;
+    height: 39px !important;
+    font-size: 15px !important;
+    border-width: 2px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .traders-heading {
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+  main.app-shell.theme-light .dashboard-page .traders-heading .section-tools {
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+  main.app-shell.theme-light .dashboard-page .dashboard-table-wrap {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+}
+@media (max-width: 390px) {
+  main.app-shell.theme-light .dashboard-page .strategy-grid { gap: 6px !important; }
+  main.app-shell.theme-light .dashboard-page .strategy-card { padding-inline: 5px !important; }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics strong { font-size: 11px !important; }
+}
