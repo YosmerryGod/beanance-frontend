@@ -704,3 +704,187 @@ main.app-shell.theme-dark .mobile-dashboard-tabs button.selected {
   background: #a8d94f !important;
   color: #111111 !important;
 }
+
+/* [ADDED] Dashboard mobile visual target: white neumorphic surfaces and metallic podium. */
+main.app-shell.theme-light .dashboard-page {
+  background: #fff !important;
+  color: #111 !important;
+  gap: 28px !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-section-heading h2 {
+  color: #111 !important;
+  font-size: 23px !important;
+  font-weight: 850 !important;
+  letter-spacing: -.7px !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-section-heading .muted {
+  color: #858585 !important;
+  font-size: 12px !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-section-heading .text-link {
+  color: #7a6500 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-grid {
+  gap: 10px !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card {
+  position: relative !important;
+  padding: 25px 10px 12px !important;
+  background: linear-gradient(145deg, #fff, #fbfbfb) !important;
+  border: 1px solid rgba(190, 165, 65, .2) !important;
+  border-radius: 25px !important;
+  box-shadow: 9px 9px 20px rgba(20, 20, 20, .10), -7px -7px 18px #fff !important;
+  color: #111 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2) {
+  border-color: rgba(232, 190, 39, .55) !important;
+  box-shadow: 0 10px 26px rgba(232, 190, 39, .17), 8px 8px 20px rgba(20, 20, 20, .08), -7px -7px 18px #fff !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card::before {
+  top: -17px !important;
+  width: 52px !important;
+  height: 52px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 3px solid #fff !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .14) !important;
+  font-size: 19px !important;
+  font-weight: 850 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(1)::before {
+  background: linear-gradient(145deg, #f7f9fb, #c4cbd4) !important;
+  color: #28313c !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(2)::before {
+  background: linear-gradient(145deg, #fff0a0, #e5b900) !important;
+  color: #493500 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card:nth-child(3)::before {
+  background: linear-gradient(145deg, #f5c49d, #bd7138) !important;
+  color: #51270e !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card-head {
+  justify-content: center !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  text-align: center !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-coin {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(145deg, #fff, #ededed) !important;
+  color: #111 !important;
+  border: 1px solid rgba(0, 0, 0, .06) !important;
+  box-shadow: 4px 4px 9px rgba(0, 0, 0, .10), -4px -4px 9px #fff !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-identity {
+  align-items: center !important;
+  text-align: center !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-identity strong {
+  color: #111 !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-identity span,
+main.app-shell.theme-light .dashboard-page .strategy-owner-link {
+  color: #786a34 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-chart {
+  height: 42px !important;
+  margin: 8px 0 3px !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-chart path {
+  stroke: #e7b900 !important;
+  stroke-width: 2.5px !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-metrics strong {
+  color: #111 !important;
+  font-size: 18px !important;
+  font-weight: 850 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-metrics strong.positive {
+  color: #c69b00 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-metrics span {
+  color: #858585 !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card-footer {
+  justify-content: center !important;
+  margin-top: 10px !important;
+}
+main.app-shell.theme-light .dashboard-page .strategy-card-footer button,
+main.app-shell.theme-light .dashboard-page .table-follow {
+  background: linear-gradient(145deg, #ffe76b, #f3c900) !important;
+  color: #171300 !important;
+  border: 1px solid rgba(194, 151, 0, .2) !important;
+  border-radius: 999px !important;
+  box-shadow: 4px 4px 9px rgba(175, 139, 0, .18), -3px -3px 8px #fff !important;
+  font-weight: 850 !important;
+}
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs,
+main.app-shell.theme-light .dashboard-page .period-tabs {
+  background: linear-gradient(145deg, #fff, #f7f7f7) !important;
+  border: 1px solid rgba(0, 0, 0, .07) !important;
+  border-radius: 999px !important;
+  box-shadow: 5px 5px 13px rgba(0, 0, 0, .08), -5px -5px 13px #fff !important;
+}
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs button,
+main.app-shell.theme-light .dashboard-page .period-tabs button {
+  background: transparent !important;
+  color: #777 !important;
+  border-radius: 999px !important;
+}
+main.app-shell.theme-light .dashboard-page .mobile-dashboard-tabs button.selected,
+main.app-shell.theme-light .dashboard-page .period-tabs button.selected {
+  background: linear-gradient(145deg, #ffe76b, #f3c900) !important;
+  color: #171300 !important;
+  box-shadow: 3px 3px 8px rgba(175, 139, 0, .18), -3px -3px 8px #fff !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table-wrap {
+  background: linear-gradient(145deg, #fff, #fafafa) !important;
+  border: 1px solid rgba(0, 0, 0, .07) !important;
+  border-radius: 22px !important;
+  box-shadow: 7px 7px 17px rgba(0, 0, 0, .09), -6px -6px 15px #fff !important;
+  overflow: hidden !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table th {
+  background: #f7f7f7 !important;
+  color: #777 !important;
+  font-weight: 800 !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table td {
+  background: transparent !important;
+  color: #222 !important;
+}
+main.app-shell.theme-light .dashboard-page .rank-cell {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  text-align: center !important;
+  font-weight: 850 !important;
+  background: #eceff2 !important;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, .12), -2px -2px 5px #fff !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table tbody tr:nth-child(1) .rank-cell {
+  background: linear-gradient(145deg, #fff0a0, #e5b900) !important;
+  color: #493500 !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table tbody tr:nth-child(2) .rank-cell {
+  background: linear-gradient(145deg, #f7f9fb, #c4cbd4) !important;
+  color: #28313c !important;
+}
+main.app-shell.theme-light .dashboard-page .dashboard-table tbody tr:nth-child(3) .rank-cell {
+  background: linear-gradient(145deg, #f5c49d, #bd7138) !important;
+  color: #51270e !important;
+}
+@media (max-width: 760px) {
+  main.app-shell.theme-light .dashboard-page .strategy-grid { gap: 8px !important; }
+  main.app-shell.theme-light .dashboard-page .strategy-card { padding-inline: 8px !important; }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics { gap: 5px !important; }
+  main.app-shell.theme-light .dashboard-page .strategy-metrics>div+div { padding-left: 7px !important; }
+}
