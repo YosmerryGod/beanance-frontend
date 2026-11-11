@@ -5133,3 +5133,26 @@ main.app-shell .portfolio-wallet-preview-exit{padding:5px 9px!important;border:1
     transform:translateX(50%);
   }
 }
+
+/* [ADDED] Fix unintended lime text highlighting in the Discover strategy list. */
+main.app-shell .discover-list-card .discover-card-main .discover-strategy-title-button,
+main.app-shell .discover-list-card .discover-card-main .discover-owner-link {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-box-decoration-break: initial !important;
+  box-decoration-break: initial !important;
+}
+main.app-shell .discover-list-card .discover-card-main .discover-strategy-title-button {
+  color: var(--text) !important;
+}
+main.app-shell .discover-list-card .discover-card-main .discover-owner-link {
+  color: var(--muted) !important;
+  text-decoration: none !important;
+}
+main.app-shell .discover-list-card .discover-card-main .discover-strategy-title-button:hover,
+main.app-shell .discover-list-card .discover-card-main .discover-owner-link:hover {
+  background: transparent !important;
+  color: var(--gold) !important;
+}
