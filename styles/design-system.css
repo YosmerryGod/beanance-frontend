@@ -456,3 +456,169 @@ main.app-shell hr { border: 0; border-top: 1px solid var(--ds-border); }
 .ds-input { padding: 0 14px; }
 .ds-input--row { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ds-muted); }
 .ds-input--row input { flex: 1; min-width: 0; height: 100%; font: inherit; font-size: 14px; outline: 0; }
+
+/* [ADDED] MILION shared component language.
+   Dashboard's reusable visual rules live here so every page uses the same
+   cards, controls, tabs, tables, badges, and theme-aware accent colors. */
+main.app-shell.theme-light {
+  --ds-canvas: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #fafafa;
+  --ds-tray: #f5f5f5;
+  --ds-border: rgba(17, 17, 17, .10);
+  --ds-text: #111111;
+  --ds-muted: #737373;
+  --ds-accent: #e7b900;
+  --ds-accent-fill: #ffd633;
+  --ds-accent-ink: #171300;
+  --ds-shadow-raised: 5px 5px 14px rgba(17, 17, 17, .07), -5px -5px 14px rgba(255, 255, 255, .95);
+  --ds-shadow-raised-sm: 3px 3px 8px rgba(17, 17, 17, .06), -3px -3px 8px rgba(255, 255, 255, .95);
+  --ds-shadow-inset: inset 3px 3px 7px rgba(17, 17, 17, .07), inset -3px -3px 7px rgba(255, 255, 255, .95);
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-soft: #fafafa;
+  --gold: #e7b900;
+}
+main.app-shell.theme-dark {
+  --ds-canvas: #111111;
+  --ds-surface: #1b1b1b;
+  --ds-surface-2: #222222;
+  --ds-tray: #151515;
+  --ds-border: rgba(255, 255, 255, .09);
+  --ds-text: #f5f5f5;
+  --ds-muted: #a3a3a3;
+  --ds-accent: #a8d94f;
+  --ds-accent-fill: #a8d94f;
+  --ds-accent-ink: #111111;
+  --ds-shadow-raised: 7px 7px 16px rgba(0, 0, 0, .72), -4px -4px 12px rgba(255, 255, 255, .035);
+  --ds-shadow-raised-sm: 4px 4px 9px rgba(0, 0, 0, .65), -3px -3px 8px rgba(255, 255, 255, .03);
+  --ds-shadow-inset: inset 4px 4px 9px rgba(0, 0, 0, .7), inset -3px -3px 8px rgba(255, 255, 255, .025);
+  --bg: #111111;
+  --panel: #1b1b1b;
+  --panel-soft: #222222;
+  --gold: #a8d94f;
+}
+
+/* Shared card surfaces */
+main.app-shell .strategy-card,
+main.app-shell .discover-podium-card,
+main.app-shell .discover-list-card,
+main.app-shell .trader-discover-card,
+main.app-shell .dashboard-table-wrap,
+main.app-shell .dashboard-section-card,
+main.app-shell .market-summary,
+main.app-shell .market-info-panel,
+main.app-shell .market-orderbook,
+main.app-shell .portfolio-owned-strategy-card,
+main.app-shell .portfolio-wallet-balance-card,
+main.app-shell .portfolio-wallet-token-card,
+main.app-shell .trader-profile-hero,
+main.app-shell .trader-profile-section {
+  background: var(--ds-surface) !important;
+  background-image: none;
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+/* Shared primary and secondary actions */
+main.app-shell .strategy-card-footer button,
+main.app-shell .table-follow,
+main.app-shell .discover-podium-card > button,
+main.app-shell .discover-list-card > button,
+main.app-shell .ds-btn--primary,
+main.app-shell .ds-btn.primary,
+main.app-shell .trader-follow-button,
+main.app-shell .strategy-detail-copy-button,
+main.app-shell .edit-profile-save,
+main.app-shell .portfolio-wallet-primary-action,
+main.app-shell .create-orb {
+  background: var(--ds-accent-fill) !important;
+  color: var(--ds-accent-ink) !important;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  box-shadow: var(--ds-shadow-raised-sm);
+  font-weight: 800;
+}
+main.app-shell .ds-btn--secondary,
+main.app-shell .trader-copy-button,
+main.app-shell .portfolio-wallet-secondary-action,
+main.app-shell .edit-profile-photo-button,
+main.app-shell .portfolio-edit-button {
+  background: var(--ds-surface) !important;
+  color: var(--ds-text) !important;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  box-shadow: var(--ds-shadow-raised-sm);
+}
+
+/* Shared selected tabs and filters */
+main.app-shell .mobile-dashboard-tabs button.selected,
+main.app-shell .period-tabs button.selected,
+main.app-shell .discover-switch button.selected,
+main.app-shell .discover-filters button.selected,
+main.app-shell .discover-nav-tabs button.selected,
+main.app-shell .trader-subtabs button.selected,
+main.app-shell .trader-profile-tabs button.selected,
+main.app-shell .market-tabs button.selected,
+main.app-shell .market-detail-tabs button.selected,
+main.app-shell .market-order-tabs button.selected,
+main.app-shell .portfolio-icon-tabs button.selected,
+main.app-shell .portfolio-history-tabs button.selected,
+main.app-shell .portfolio-strategy-filters button.selected {
+  background: var(--ds-accent-fill) !important;
+  color: var(--ds-accent-ink) !important;
+  box-shadow: var(--ds-shadow-raised-sm);
+}
+
+/* Shared table treatment */
+main.app-shell .dashboard-table-wrap,
+main.app-shell .dashboard-table,
+main.app-shell .trader-table {
+  color: var(--ds-text);
+}
+main.app-shell .dashboard-table th,
+main.app-shell .trader-table th {
+  background: var(--ds-tray);
+  color: var(--ds-muted);
+  border-bottom: 1px solid var(--ds-border);
+}
+main.app-shell .dashboard-table td,
+main.app-shell .trader-table td {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  border-bottom: 1px solid var(--ds-border);
+}
+main.app-shell .dashboard-table tr:last-child td,
+main.app-shell .trader-table tr:last-child td { border-bottom: 0; }
+
+/* Shared labels, tags, and rank markers */
+main.app-shell .strategy-tag,
+main.app-shell .risk-tag,
+main.app-shell .ds-badge,
+main.app-shell .status-pill {
+  border-radius: var(--ds-radius-pill);
+}
+main.app-shell .rank-cell {
+  background: var(--ds-tray);
+  color: var(--ds-text);
+  box-shadow: var(--ds-shadow-inset);
+}
+
+/* Dashboard podium colors are reusable anywhere a ranked podium appears. */
+main.app-shell .strategy-card:nth-child(1)::before,
+main.app-shell .discover-podium-card.podium-rank-1 .podium-rank {
+  background: linear-gradient(145deg, #f8df83, #d4af37) !important;
+  color: #3b2b08 !important;
+}
+main.app-shell .strategy-card:nth-child(2)::before,
+main.app-shell .discover-podium-card.podium-rank-2 .podium-rank {
+  background: linear-gradient(145deg, #f4f6f8, #bfc7d1) !important;
+  color: #26313d !important;
+}
+main.app-shell .strategy-card:nth-child(3)::before,
+main.app-shell .discover-podium-card.podium-rank-3 .podium-rank {
+  background: linear-gradient(145deg, #e7b18a, #b87333) !important;
+  color: #3d2110 !important;
+}
