@@ -97,4 +97,4 @@ jobs:
             cp /tmp/milion-frontend-release/deploy.js /opt/milion-frontend-deploy/deploy.js
             cp /tmp/milion-frontend-release/ecosystem.config.cjs /opt/milion-frontend-deploy/ecosystem.config.cjs
             cp /tmp/milion-frontend-release/start-current.js /opt/milion-frontend-deploy/start-current.js
-            PROJECT_DIR=/var/www/milion-frontend APP_PORT=3099 node /opt/milion-frontend-deploy/deploy.js /tmp/milion-frontend-release/milion-release.tar.gz
+            PROJECT_DIR=/var/www/milion-frontend APP_PORT=3100 node /opt/milion-frontend-deploy/deploy.js /tmp/milion-frontend-release/milion-release.tar.gz
