@@ -1,0 +1,4 @@
+/* Brand: logo baru menggantikan logo lama di sidebar dan halaman About. Dimuat terakhir. */
+main.app-shell .sidebar-brand-logo{content:url("/icons/logo.svg")!important;object-fit:contain!important;border-radius:10px!important}
+main.app-shell .about-logo-mark{background:url("/icons/logo.svg") center/cover no-repeat!important;border-radius:16px!important;box-shadow:none!important}
+main.app-shell .about-logo-mark svg{display:none!important}

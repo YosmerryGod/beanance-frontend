@@ -2,7 +2,8 @@ import "./globals.css";
 import "../styles/tokens.css";
 import "../styles/design-system.css";
 import "../styles/design-system-pages.css"; /* page coverage + yellow-on-yellow fixes */
-import "../styles/dashboard-theme.css"; /* keep LAST: dashboard dark lime / light yellow theme */
+import "../styles/dashboard-theme.css"; /* dashboard dark lime / light yellow theme */
+import "../styles/brand.css"; /* keep LAST: logo */
 import { DM_Sans, Manrope } from "next/font/google";
 
 const dmSans = DM_Sans({
@@ -24,6 +25,7 @@ export const metadata = {
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
+      { url: "/icons/logo.svg", type: "image/svg+xml" },
       { url: "/icons/favicon.ico" },
       { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
