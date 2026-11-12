@@ -1,4 +1,7 @@
-/* Brand: logo baru menggantikan logo lama di sidebar dan halaman About. Dimuat terakhir. */
-main.app-shell .sidebar-brand-logo{content:url("/icons/logo.svg")!important;object-fit:contain!important;border-radius:10px!important}
-main.app-shell .about-logo-mark{background:url("/icons/logo.svg") center/cover no-repeat!important;border-radius:16px!important;box-shadow:none!important}
+/* Brand: logo transparan, otomatis putih di dark dan hitam di light. Dimuat terakhir. */
+main.app-shell.theme-dark .sidebar-brand-logo{content:url("/icons/logo-white.svg")!important;object-fit:contain!important;background:transparent!important;border-radius:0!important;box-shadow:none!important}
+main.app-shell.theme-light .sidebar-brand-logo{content:url("/icons/logo-black.svg")!important;object-fit:contain!important;background:transparent!important;border-radius:0!important;box-shadow:none!important}
+main.app-shell .about-logo-mark{background:transparent center/contain no-repeat!important;box-shadow:none!important;border:0!important}
+main.app-shell.theme-dark .about-logo-mark{background-image:url("/icons/logo-white.svg")!important}
+main.app-shell.theme-light .about-logo-mark{background-image:url("/icons/logo-black.svg")!important}
 main.app-shell .about-logo-mark svg{display:none!important}
