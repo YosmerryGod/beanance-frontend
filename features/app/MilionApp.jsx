@@ -936,7 +936,7 @@ function App() {
             )}
             {active !== "profile" && (
               <button className="icon-button theme-toggle" aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")} onClick={toggleTheme}>
-                {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+                {/* [MODIFIED] Keep the crescent theme icon consistent with the visual reference in both modes. */}<Moon size={19} />
               </button>
             )}
           </div>
