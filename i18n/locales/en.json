@@ -389,7 +389,10 @@
     "app.k387": "Available intervals",
     "app.k388": "available",
     "app.k389": "Maximum 8 quick intervals.",
-    "app.k390": "Maximum 4 quick intervals."
+    "app.k390": "Maximum 4 quick intervals.",
+    "app.k391": "Search strategies, traders, or assets...",
+    "app.k392": "Open portfolio profile",
+    "app.k393": "Settings"
   },
   "sidebar": {
     "account": "ACCOUNT",
