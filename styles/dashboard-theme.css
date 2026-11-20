@@ -602,11 +602,19 @@ main.app-shell.theme-dark .dashboard-page .dashboard-table td {
   main.app-shell .app-content {
     width: auto !important;
     max-width: none !important;
+    height: 100dvh !important; /* [MODIFIED] Keep the dashboard inside the viewport so its content can scroll. */
+    max-height: 100dvh !important; /* [ADDED] Bound the content area to the device viewport. */
+    min-height: 0 !important; /* [ADDED] Allow the scroll container to shrink below its content height. */
     margin: 0 0 0 264px !important;
     padding: 0 34px !important;
-    overflow: visible !important;
+    overflow-x: hidden !important; /* [MODIFIED] Prevent horizontal page overflow. */
+    overflow-y: auto !important; /* [MODIFIED] Enable vertical scrolling on desktop-width mobile browsers too. */
+    -webkit-overflow-scrolling: touch; /* [ADDED] Keep touch scrolling smooth on mobile browsers. */
   }
   main.app-shell .topbar {
+    position: sticky !important; /* [ADDED] Keep search and account controls visible while scrolling. */
+    top: 0 !important;
+    z-index: 60 !important;
     height: 76px !important;
     display: flex !important;
     justify-content: flex-end !important;
