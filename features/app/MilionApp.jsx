@@ -900,7 +900,11 @@ function App() {
             </div>
           )}
           <div className="top-actions">
-
+            {active === "dashboard" && (
+              <button type="button" className="desktop-search-trigger" onClick={() => { setActive("dapps"); setDiscoverTopTab("strategies"); setSearchOpen(true); }} aria-label={t("Search strategies and traders")}>
+                <Search size={17} /><span>{t("Search strategies, traders, or assets...")}</span><kbd>Ctrl K</kbd>
+              </button>
+            )}
         {active === "dashboard" && (
               <div className="notification-wrap">
                 <button className="icon-button notification-button" aria-label={t("Notifications")} aria-expanded={showNotifications} onClick={() => setShowNotifications((current) => !current)}>
@@ -933,6 +937,12 @@ function App() {
                 {searchOpen && <button className="search-close" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} aria-label={t("Close search")}><X size={17} /></button>}
                 {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label={t("Open search")} />}
               </div>
+            )}
+            {active === "dashboard" && (
+              <button type="button" className="desktop-profile-trigger" onClick={() => setActive("profile")} aria-label={t("Open portfolio profile")}>
+                <span className="desktop-profile-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
+                <span>{profileName}</span>
+              </button>
             )}
             {active !== "profile" && (
               <button className="icon-button theme-toggle" aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")} onClick={toggleTheme}>
@@ -1133,7 +1143,7 @@ function App() {
               </div>
               <div className="dashboard-table-wrap">
                 <table className="dashboard-table trader-table">
-                  <thead><tr><th>#</th><th>{t("Trader")}</th><th>{t("Followers")}</th><th>{t("Return (30D)")}</th><th>{t("Win Rate")}</th><th>{t("Equity Curve")}</th><th>{t("Action")}</th></tr></thead>
+                  <thead><tr><th>#</th><th>{t("Trader")}</th><th>{t("Followers")}</th><th>{t("Total Return")}</th><th>{t("Win Rate")}</th><th>{t("Equity Curve")}</th><th>{t("Action")}</th></tr></thead>
                   <tbody>
                     {[
                       ["tradewiz","342","+124.5%","68%"],
@@ -1784,13 +1794,21 @@ function App() {
         })}
       </nav>
 
-      {sidebarOpen && (
-        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}>
+      {(
+        <div className={`sidebar-backdrop ${sidebarOpen ? "is-open" : ""}`} onClick={() => setSidebarOpen(false)}>
           <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label={t("Main menu")} onClick={(event) => event.stopPropagation()}>
             <div className="sidebar-heading">
               <div className="sidebar-brand">{/* [MODIFIED] Use the official MILION logo asset. */}<img className="sidebar-brand-logo" src="/icons/logo.png" alt="MILION" /><strong>milion</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
+            <nav className="desktop-sidebar-navigation" aria-label={t("Main navigation")}>
+              <button type="button" className={active === "dashboard" ? "selected" : ""} onClick={() => { setActive("dashboard"); setSidebarOpen(false); }}><LayoutDashboard size={19} /><span>{t("Dashboard")}</span></button>
+              <button type="button" className={active === "dapps" && discoverTopTab === "strategies" ? "selected" : ""} onClick={() => { setActive("dapps"); setDiscoverTopTab("strategies"); setSidebarOpen(false); }}><Compass size={19} /><span>{t("Discover")}</span></button>
+              <button type="button" className={active === "dapps" && discoverTopTab === "strategies" ? "selected" : ""} onClick={() => { setActive("dapps"); setDiscoverTopTab("strategies"); setSidebarOpen(false); }}><Layers size={19} /><span>{t("Strategies")}</span></button>
+              <button type="button" className={active === "dapps" && discoverTopTab === "traders" ? "selected" : ""} onClick={() => { setActive("dapps"); setDiscoverTopTab("traders"); setSidebarOpen(false); }}><Users size={19} /><span>{t("Traders")}</span></button>
+              <button type="button" className={active === "profile" ? "selected" : ""} onClick={() => { setActive("profile"); setSidebarOpen(false); }}><Wallet size={19} /><span>{t("Portfolio")}</span></button>
+              <button type="button" onClick={() => { setSidebarOpen(false); setNotice("Settings are available from your account menu"); }}><Palette size={19} /><span>{t("Settings")}</span></button>
+            </nav>
             <button className="sidebar-account" type="button" onClick={() => {setSidebarOpen(false);selectTab({ id: "edit-profile" });}}>
               <span className="sidebar-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
               <span className="sidebar-account-copy">
