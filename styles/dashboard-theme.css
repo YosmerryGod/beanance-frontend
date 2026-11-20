@@ -564,3 +564,29 @@ main.app-shell.theme-dark .dashboard-page .dashboard-table td {
     scroll-margin-bottom: calc(112px + env(safe-area-inset-bottom));
   }
 }
+
+
+/* [ADDED] Add the reference's subtle laurel framing to the first-place strategy medal. */
+@media (max-width: 760px) {
+  main.app-shell .dashboard-page .strategy-card:nth-child(2)::after {
+    content: "❧      ❧";
+    position: absolute;
+    inset-block-start: -15px;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: 126px;
+    color: #d9ae24;
+    font-size: 23px;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-align: center;
+    white-space: pre;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  main.app-shell.theme-dark .dashboard-page .strategy-card:nth-child(2)::after {
+    color: #e6bf36;
+    text-shadow: 0 0 12px rgba(230, 191, 54, .35);
+  }
+}
