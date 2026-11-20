@@ -900,6 +900,7 @@ function App() {
             </div>
           )}
           <div className="top-actions">
+            {/* [ADDED] Desktop dashboard search shortcut matching the reference topbar. */}
             {active === "dashboard" && (
               <button type="button" className="desktop-search-trigger" onClick={() => { setActive("dapps"); setDiscoverTopTab("strategies"); setSearchOpen(true); }} aria-label={t("Search strategies and traders")}>
                 <Search size={17} /><span>{t("Search strategies, traders, or assets...")}</span><kbd>Ctrl K</kbd>
@@ -938,6 +939,7 @@ function App() {
                 {!searchOpen && <button className="search-trigger" onClick={() => setSearchOpen(true)} aria-label={t("Open search")} />}
               </div>
             )}
+            {/* [ADDED] Keep the account/profile entry visible on desktop. */}
             {active === "dashboard" && (
               <button type="button" className="desktop-profile-trigger" onClick={() => setActive("profile")} aria-label={t("Open portfolio profile")}>
                 <span className="desktop-profile-avatar">{profilePhoto ? <img src={profilePhoto} alt="" /> : (profileName.trim()[0] || "E").toUpperCase()}</span>
@@ -1125,7 +1127,7 @@ function App() {
                       <path d={`${strategy.chart} L274 48 L2 48 Z`} fill={`url(#strategy-fill-${strategy.name.replaceAll(" ","-")})`}/>
                       <path d={strategy.chart} fill="none" stroke="#20bd68" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
                     </svg>
-                    <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
+                    <div className="strategy-metrics"><div><strong className="positive">{strategy.returns}</strong><span>{/* [MODIFIED] Match the desktop leaderboard reference label. */}{t("Total Return")}</span></div><div><strong>{strategy.win}</strong><span>{t("Win Rate")}</span></div></div>
                     <div className="strategy-card-footer"><span className="strategy-tag">{t(strategy.type)}</span><span className={`risk-tag risk-${strategy.riskTone}`}>{t(strategy.risk)}</span><button onClick={(event) => { event.stopPropagation(); setNotice(`Copy trading for ${strategy.name} is coming soon`); }}>{t("Copy")}</button></div>
                   </article>
                 ))}
@@ -1794,6 +1796,7 @@ function App() {
         })}
       </nav>
 
+      {/* [MODIFIED] Keep the navigation shell mounted for the fixed desktop sidebar; mobile still opens it on demand. */}
       {(
         <div className={`sidebar-backdrop ${sidebarOpen ? "is-open" : ""}`} onClick={() => setSidebarOpen(false)}>
           <aside className="app-sidebar" role="dialog" aria-modal="true" aria-label={t("Main menu")} onClick={(event) => event.stopPropagation()}>
@@ -1801,6 +1804,7 @@ function App() {
               <div className="sidebar-brand">{/* [MODIFIED] Use the official MILION logo asset. */}<img className="sidebar-brand-logo" src="/icons/logo.png" alt="MILION" /><strong>milion</strong></div>
               <button className="icon-button" type="button" aria-label="Close menu" onClick={() => setSidebarOpen(false)}><X size={19} /></button>
             </div>
+            {/* [ADDED] Reference-aligned desktop primary navigation. */}
             <nav className="desktop-sidebar-navigation" aria-label={t("Main navigation")}>
               <button type="button" className={active === "dashboard" ? "selected" : ""} onClick={() => { setActive("dashboard"); setSidebarOpen(false); }}><LayoutDashboard size={19} /><span>{t("Dashboard")}</span></button>
               <button type="button" className={active === "dapps" && discoverTopTab === "strategies" ? "selected" : ""} onClick={() => { setActive("dapps"); setDiscoverTopTab("strategies"); setSidebarOpen(false); }}><Compass size={19} /><span>{t("Discover")}</span></button>
