@@ -263,3 +263,304 @@ main.app-shell .dashboard-page.dashboard-page.dashboard-page .table-follow{backg
     font-size:10px!important;
   }
 }
+
+ 
+/* [ADDED] Match the mobile dashboard hierarchy and density to the approved visual reference. */
+@media (max-width: 760px) {
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page {
+    padding-top: 12px !important;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    gap: 16px !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-section:first-child .dashboard-section-heading {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    margin-bottom: 22px !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-section:first-child .dashboard-section-heading > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-section:first-child .dashboard-section-heading h2 {
+    font-size: clamp(22px, 6vw, 25px) !important;
+    line-height: 1.12 !important;
+    letter-spacing: -.045em !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-section:first-child .dashboard-section-heading .muted {
+    margin-top: 5px !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-section:first-child .dashboard-section-heading .text-link {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    margin: 0 0 0 auto !important;
+    padding: 9px 13px !important;
+    min-height: 38px !important;
+    font-size: 11px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-grid {
+    align-items: end !important;
+    gap: 8px !important;
+    padding-top: 4px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card,
+  main.app-shell .dashboard-page .strategy-card:last-child {
+    block-size: 190px !important;
+    min-block-size: 190px !important;
+    height: 190px !important;
+    min-height: 190px !important;
+    box-sizing: border-box !important;
+    padding: 24px 6px 9px !important;
+    border-radius: 21px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card:nth-child(2) {
+    block-size: 198px !important;
+    min-block-size: 198px !important;
+    height: 198px !important;
+    min-height: 198px !important;
+    padding-top: 29px !important;
+    margin-bottom: 4px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card-head {
+    gap: 4px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-coin {
+    inline-size: 35px !important;
+    block-size: 35px !important;
+    flex: 0 0 35px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-identity {
+    gap: 3px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-identity strong {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-owner-link {
+    padding: 2px 7px !important;
+    font-size: 9px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-chart {
+    display: block !important;
+    block-size: 25px !important;
+    height: 25px !important;
+    margin: 5px 0 2px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-metrics {
+    gap: 2px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-metrics strong {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-metrics span {
+    font-size: 7px !important;
+    line-height: 1.2 !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card-footer {
+    margin-top: 7px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card-footer button {
+    min-height: 29px !important;
+    padding: 6px 3px !important;
+    font-size: 10px !important;
+  }
+
+  main.app-shell .dashboard-page .strategy-card:nth-child(2) .strategy-card-footer button {
+    min-height: 31px !important;
+    padding: 7px 3px !important;
+    font-size: 11px !important;
+  }
+
+  main.app-shell .dashboard-page .mobile-dashboard-tabs {
+    min-height: 58px !important;
+    padding: 5px !important;
+    gap: 5px !important;
+  }
+
+  main.app-shell .dashboard-page .mobile-dashboard-tabs button {
+    min-width: 0 !important;
+    padding: 10px 6px !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+
+  main.app-shell .dashboard-page .traders-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  main.app-shell .dashboard-page .traders-heading > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  main.app-shell .dashboard-page .traders-heading h2 {
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+  }
+
+  main.app-shell .dashboard-page .traders-heading .muted {
+    margin-top: 4px !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  main.app-shell .dashboard-page .traders-heading .section-tools {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    margin-inline-start: auto !important;
+  }
+
+  main.app-shell .dashboard-page .period-tabs {
+    padding: 3px !important;
+  }
+
+  main.app-shell .dashboard-page .period-tabs button {
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-table-wrap {
+    overflow: hidden !important;
+    border-radius: 20px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table {
+    table-layout: fixed !important;
+    inline-size: 100% !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table tbody tr:nth-child(n + 4) {
+    display: none !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-table th {
+    height: 38px !important;
+    padding-inline: 4px !important;
+    font-size: 8px !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  main.app-shell .dashboard-page .dashboard-table td {
+    height: 52px !important;
+    padding: 7px 4px !important;
+    font-size: 10px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table th:nth-child(1) {
+    width: 30px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table th:nth-child(2) {
+    width: 34% !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table th:nth-child(4) {
+    width: 21% !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table th:nth-child(5) {
+    width: 16% !important;
+  }
+
+  main.app-shell .dashboard-page .trader-table th:nth-child(7) {
+    width: 68px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-name-button {
+    gap: 4px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-name-button strong {
+    font-size: 9px !important;
+  }
+
+  main.app-shell .dashboard-page .trader-avatar {
+    inline-size: 24px !important;
+    block-size: 24px !important;
+    flex: 0 0 24px !important;
+    font-size: 9px !important;
+  }
+
+  main.app-shell .dashboard-page .verified-mark {
+    inline-size: 11px !important;
+    block-size: 11px !important;
+  }
+
+  main.app-shell .dashboard-page .table-follow {
+    min-height: 28px !important;
+    padding: 6px 4px !important;
+    font-size: 9px !important;
+  }
+}
+
+/* [ADDED] Improve light/dark surface separation and keep fixed navigation clear of content. */
+main.app-shell.theme-light .dashboard-page .dashboard-table-wrap {
+  border-color: #e4e0dc !important;
+  background: linear-gradient(145deg, #fff, #fafafa) !important;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table th {
+  background: #f2f2f2 !important;
+  color: #625d5d !important;
+}
+
+main.app-shell.theme-light .dashboard-page .dashboard-table td {
+  color: #171717 !important;
+}
+
+main.app-shell.theme-dark .dashboard-page .dashboard-table-wrap {
+  border-color: #343434 !important;
+  background: linear-gradient(160deg, #191919, #101010) !important;
+}
+
+main.app-shell.theme-dark .dashboard-page .dashboard-table th {
+  background: #202020 !important;
+  color: #b8b8b8 !important;
+}
+
+main.app-shell.theme-dark .dashboard-page .dashboard-table td {
+  color: #f5f5f5 !important;
+}
+
+@media (max-width: 760px) {
+  main.app-shell .bottom-nav {
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    z-index: 50 !important;
+  }
+
+  main.app-shell .dashboard-page {
+    scroll-margin-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+}
