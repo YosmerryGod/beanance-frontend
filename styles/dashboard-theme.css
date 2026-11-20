@@ -99,3 +99,167 @@ main.app-shell .dashboard-page.dashboard-page.dashboard-page .table-follow{backg
   main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card::before{width:38px!important;height:38px!important;font-size:17px!important}
   main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics strong{font-size:11.5px!important}
 }
+
+
+/* [ADDED] Keep the desktop dashboard content in normal flow so strategy cards cannot be clipped by fixed grid tracks. */
+@media(min-width:1000px){
+  main.app-shell .app-content{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page{
+    display:flex!important;
+    flex:0 0 auto!important;
+    flex-direction:column!important;
+    height:auto!important;
+    min-height:calc(100dvh - 68px)!important;
+    max-height:none!important;
+    overflow:visible!important;
+    padding:24px 0 40px!important;
+    gap:26px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page>.dashboard-section{
+    flex:0 0 auto!important;
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-grid{
+    flex:0 0 auto!important;
+    min-height:0!important;
+    align-items:stretch!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card{
+    height:auto!important;
+    min-height:260px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-table-wrap{
+    flex:0 0 auto!important;
+    min-height:0!important;
+    overflow-x:auto!important;
+    overflow-y:visible!important;
+  }
+}
+
+/* [ADDED] Compact the mobile podium and keep the trader preview clear of the fixed bottom navigation. */
+@media(max-width:760px){
+  main.app-shell.theme-light{
+    --d-line:#e4dedf;
+    --d-muted:#6d6668;
+    --d-gain:#a77b00;
+    --d-gain-fg:#705200;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page{
+    padding-bottom:calc(124px + env(safe-area-inset-bottom))!important;
+    gap:18px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .dashboard-section-heading{
+    margin-bottom:14px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card,
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:last-child{
+    height:194px!important;
+    min-height:194px!important;
+    padding:28px 7px 9px!important;
+    border-radius:18px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2){
+    height:202px!important;
+    min-height:202px!important;
+    padding-top:34px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card::before{
+    top:-18px!important;
+    width:36px!important;
+    height:36px!important;
+    font-size:17px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2)::before{
+    top:-22px!important;
+    width:42px!important;
+    height:42px!important;
+    font-size:19px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-head{
+    gap:4px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-coin{
+    width:32px!important;
+    height:32px!important;
+    flex:0 0 32px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-identity{
+    gap:3px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-identity strong{
+    font-size:10px!important;
+    line-height:1.25!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-owner-link{
+    font-size:9px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-chart{
+    height:21px!important;
+    margin:4px 0 3px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics strong{
+    font-size:12px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-metrics span{
+    font-size:8px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer{
+    margin-top:6px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card-footer button{
+    padding:7px 4px!important;
+    font-size:10px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .strategy-card:nth-child(2) .strategy-card-footer button{
+    padding:8px 4px!important;
+    font-size:11px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(1){
+    width:26px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(2){
+    width:32%!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(4){
+    width:22%!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(5){
+    width:17%!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th:nth-child(7){
+    width:70px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table th{
+    padding:0 4px!important;
+    font-size:9px!important;
+    letter-spacing:0!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-table td{
+    padding:9px 4px!important;
+    font-size:11px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-name-button{
+    gap:5px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-name-button strong{
+    font-size:10px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .trader-avatar{
+    width:25px!important;
+    height:25px!important;
+    flex:0 0 25px!important;
+    font-size:10px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .verified-mark{
+    width:12px!important;
+    height:12px!important;
+  }
+  main.app-shell .dashboard-page.dashboard-page.dashboard-page .table-follow{
+    padding:7px 5px!important;
+    font-size:10px!important;
+  }
+}
