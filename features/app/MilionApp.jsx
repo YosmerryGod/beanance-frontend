@@ -1179,15 +1179,23 @@ function App() {
         {active === "dapps" && (
           <section className="page page-enter simple-page discover-page">
             <section className="discover-top-section">
+              {/* [ADDED] Restore the Top Strategies heading and its Explore shortcut from the mobile reference. */}
+              <div className="discover-section-heading discover-top-heading">
+                <div>
+                  <h2>{t(discoverTopTab === "strategies" ? "Top Strategies" : "Top Traders")}</h2>
+                  <p className="muted">{t(discoverTopTab === "strategies" ? "Best performing strategies from our community" : "Discover the top traders in our community")}</p>
+                </div>
+                {discoverTopTab === "strategies" && <a className="text-link" href="#discover-list-section">{t("See All")} <ChevronRight size={15} /></a>}
+              </div>
               <div className="discover-podium">
                 {(discoverTopTab === "strategies" ? [
-                  {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",avatar:"BTC",tone:"bitcoin"},
-                  {rank:1,name:"Scalping AI v2",user:"@cryptofox",metric:"+89.2%",detail:"Total return",avatar:"ETH",tone:"ethereum"},
-                  {rank:3,name:"ETH Breakout",user:"@moontrade",metric:"+68.1%",detail:"Total return",avatar:"SOL",tone:"solana"}
+                  {rank:2,name:"BTC Trend Master",user:"@tradewiz",metric:"+124.5%",detail:"Total return",win:"68%",avatar:"BTC",tone:"bitcoin"},
+                  {rank:1,name:"Scalping AI v2",user:"@cryptofox",metric:"+89.2%",detail:"Total return",win:"72%",avatar:"ETH",tone:"ethereum"},
+                  {rank:3,name:"ETH Breakout",user:"@moontrade",metric:"+68.1%",detail:"Total return",win:"63%",avatar:"SOL",tone:"solana"}
                 ] : [
-                  {rank:2,name:"cryptofox",user:"1.2K followers",metric:"+89.2%",detail:"30D return",avatar:"C",tone:"trader-avatar-2"},
-                  {rank:1,name:"tradewiz",user:"342 followers",metric:"+124.5%",detail:"30D return",avatar:"T",tone:"trader-avatar-1"},
-                  {rank:3,name:"moontrade",user:"856 followers",metric:"+68.1%",detail:"30D return",avatar:"M",tone:"trader-avatar-3"}
+                  {rank:2,name:"cryptofox",user:"1.2K followers",metric:"+89.2%",detail:"30D return",win:"72%",avatar:"C",tone:"trader-avatar-2"},
+                  {rank:1,name:"tradewiz",user:"342 followers",metric:"+124.5%",detail:"30D return",win:"68%",avatar:"T",tone:"trader-avatar-1"},
+                  {rank:3,name:"moontrade",user:"856 followers",metric:"+68.1%",detail:"30D return",win:"63%",avatar:"M",tone:"trader-avatar-3"}
                 ]).map((item) => (
                   <article className={`discover-podium-card podium-rank-${item.rank}`} key={item.name} role={discoverTopTab === "strategies" ? "button" : undefined} tabIndex={discoverTopTab === "strategies" ? 0 : undefined} onClick={() => { if (discoverTopTab === "strategies") openStrategy({ ...item, type: item.name === "Scalping AI v2" ? "Scalping" : item.name === "ETH Breakout" ? "Breakout" : "Trend Following", risk: item.name === "Scalping AI v2" ? "Low Risk" : "Medium Risk", win: item.name === "BTC Trend Master" ? "68%" : item.name === "Scalping AI v2" ? "72%" : "63%", trades: item.name === "BTC Trend Master" ? 680 : item.name === "Scalping AI v2" ? 1240 : 310, age: item.name === "BTC Trend Master" ? 240 : item.name === "Scalping AI v2" ? 120 : 75, symbol: item.avatar }); }} onKeyDown={(event) => { if (discoverTopTab === "strategies" && event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy({ ...item, type: item.name === "Scalping AI v2" ? "Scalping" : item.name === "ETH Breakout" ? "Breakout" : "Trend Following", risk: item.name === "Scalping AI v2" ? "Low Risk" : "Medium Risk", win: item.name === "BTC Trend Master" ? "68%" : item.name === "Scalping AI v2" ? "72%" : "63%", trades: item.name === "BTC Trend Master" ? 680 : item.name === "Scalping AI v2" ? 1240 : 310, age: item.name === "BTC Trend Master" ? 240 : item.name === "Scalping AI v2" ? 120 : 75, symbol: item.avatar }); } }}>
                     <span className="podium-rank">{item.rank}</span>
@@ -1196,13 +1204,15 @@ function App() {
                     <small>{item.user}</small>
                     <b className="positive">{item.metric}</b>
                     <span className="podium-detail">{t(item.detail)}</span>
+                    {/* [ADDED] Show win rate on every podium card. */}
+                    <span className="podium-win-rate">{item.win} {t("win rate")}</span>
                     <button onClick={(event) => { event.stopPropagation(); if (discoverTopTab === "strategies") setNotice(`Copy trading for ${item.name} is coming soon`); else openTrader(item.name); }}>{discoverTopTab === "strategies" ? t("Copy") : t("View profile")}</button>
                   </article>
                 ))}
               </div>
             </section>
 
-            <section className="discover-list-section">
+            <section className="discover-list-section" id="discover-list-section">
               <div className="discover-section-heading discover-list-heading">
                 <div><h2>{discoverTopTab === "strategies" ? t("Explore Strategies") : t("Explore Traders")}</h2><p className="muted">{discoverTopTab === "strategies" ? t("Pilih strategi sesuai gaya trading kamu.") : t("Kenali trader dan performa mereka.")}</p></div>
                 <div className="discover-filter-wrap">
@@ -1229,7 +1239,7 @@ function App() {
                 ].filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.user.toLowerCase().includes(searchQuery.toLowerCase())).filter((item) => Number(item.win.replace("%","")) >= Number(discoverCriteria.minWinRate) && item.age >= Number(discoverCriteria.minAge) && item.trades >= Number(discoverCriteria.minTrades) && Number(item.returns.replace(/[+%]/g,"")) >= Number(discoverCriteria.minReturn) && (discoverCriteria.risk === "All" || item.risk === discoverCriteria.risk) && (discoverFilter === "All" || (discoverFilter === "Trending" ? item.tag === "Trending" : discoverFilter === "Low Risk" ? item.risk === "Low Risk" : Number(item.returns.replace(/[+%]/g,"")) >= 80))).sort((a,b) => discoverCriteria.sort === "win" ? Number(b.win.replace("%","")) - Number(a.win.replace("%","")) : discoverCriteria.sort === "return" ? Number(b.returns.replace(/[+%]/g,"")) - Number(a.returns.replace(/[+%]/g,"")) : discoverCriteria.sort === "newest" ? a.age - b.age : 0).map((item) => (
                   <article className="discover-list-card" key={item.name} role="button" tabIndex={0} aria-label={`View ${item.name} strategy details`} onClick={() => openStrategy(item)} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); openStrategy(item); } }}>
                     <div className={`discover-avatar ${item.tone}`}><Layers size={21} strokeWidth={1.75} /></div>
-                    <div className="discover-card-main"><button type="button" className="discover-strategy-title-button" onClick={() => openStrategy(item)}>{item.name}</button><button className="discover-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(item.user); }}>{item.user} · {t(item.type)}</button><small>{t(item.risk)}</small></div>
+                    <div className="discover-card-main"><button type="button" className="discover-strategy-title-button" onClick={() => openStrategy(item)}>{item.name}</button><button className="discover-owner-link" onClick={(event) => { event.stopPropagation(); openTrader(item.user); }}>{item.user} · {t(item.type)}</button><small className={`discover-risk-pill risk-${item.risk.toLowerCase().replace(" risk", "")}`}>{t(item.risk)}</small></div>
                     <div className="discover-card-stats"><strong className="positive">{item.returns}</strong><span>{item.win} {t("win rate")}</span></div>
                     <button onClick={(event) => { event.stopPropagation(); setNotice(`Copy trading for ${item.name} is coming soon`); }}><Copy size={13}/>{t("Copy")}</button>
                   </article>
